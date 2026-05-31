@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMaths | Apprentissage Interactif</title>
+    <style>
+        /* --- DESIGN SYSTEM & VARIABLES --- */
+
+        :root {
+            --primary: #2563eb;       /* Bleu principal */
+            --primary-light: #dbeafe; /* Bleu clair pour les accents */
+            --secondary: #7c3aed;     /* Violet pour l'entraînement */
+            --bg: #f8fafc;            /* Fond de page gris très léger */
+            --card-bg: #ffffff;       /* Blanc pur pour les cartes */
+            --text-main: #1e293b;     /* Texte sombre */
+            --text-muted: #64748b;    /* Texte secondaire */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+        }
+
+       * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- LAYOUT --- */
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+
+        header { 
+            text-align: center; 
+            padding: 40px 0 20px; 
+        }
+
+        h1 { font-size: 3rem; color: var(--primary); margin-bottom: 10px; }
+        .subtitle { color: var(--text-muted); font-size: 1.2rem; }
+
+        /* --- ÉCRAN 1 : GRILLE DES NIVEAUX (LES CARTES) --- */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .level-card {
+            background: var(--card-bg); /* Le fond blanc que vous voulez */
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow); /* L'ombre qui fait ressortir la carte */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent; /* Bordure invisible par défaut */
+        }
+
+        /* Effet au survol pour l'interactivité */
+        .level-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .level-card h3 { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; }
+        .level-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* --- ÉCRAN 2 : MODE & CONTENU --- */
+        .view { display: none; animation: fadeIn 0.4s ease-out; }
+        .view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mode-selector {
+            display: flex;
+            background: #e2e8f0;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* --- CONTENU DES CHAPITRES (COURS/EXERCICES) --- */
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .theme-section { margin-bottom: 3rem; }
+        .theme-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chapter-item:hover { background: #eff6ff; border-color: var(--primary); }
+
+        .chapter-icon {
+            width: 35px; height: 35px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 12px; font-weight: bold; flex-shrink: 0;
+        }
+/* Nouveau style du badge : ultra-discret */
+.chapter-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.7rem;          /* Plus petit */
+    font-weight: 500;           /* Moins gras */
+    color: var(--text-muted);   /* Couleur grise pour se fondre dans le décor */
+    opacity: 0.6;               /* Légère transparence */
+    pointer-events: none;
+}
+
+/* Optionnel : On peut ajouter un petit indicateur visuel très fin 
+   sur la carte pour signaler qu'il y a du contenu sans être agressif */
+.chapter-item:has(.chapter-badge) {
+    border-bottom: 2px solid var(--primary-light); /* Une fine ligne en bas au lieu d'une bordure complète */
+}
+
+
+
+        .notion-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+     /* --- FORMULAIRE D'EXERCICE ---
+        */
+        .quiz-container { margin-top: 20px; }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover { opacity: 0.9; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none; /* Caché par défaut */
+        }
+
+/* Pour les erreurs de saisie (le petit feedback immédiat) */
+.feedback.error { 
+    display: block; 
+    background: #fee2e2; 
+    color: #991b1b; 
+}
+
+/* Pour le mode aide (quand on a répondu faux et qu'on montre la solution) */
+/* On utilise un rouge/rose très pâle pour ne pas stresser l'élève */
+.feedback.help-mode { 
+    display: block; 
+    background: #fff1f2; /* Rose très pâle */
+    color: #be123c;      /* Texte rouge foncé pour la lisibilité */
+    border: 1px solid #fecdd3;
+}
+
+.feedback.success { 
+    display: block; 
+    background: #dcfce7; 
+    color: #166534; 
+}
+       /* --- BOUTON RETOUR --- */
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 15px; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"></div>
+        <div id="level-display"></div>
+    </header>
+
+    <main class="container">
+        <!-- ÉCRAN 1 : CHOIX DU NIVEAU -->
+        <section id="view-levels" class="view active">
+            <div class="hero-section">
+                <h1>AutoMaths</h1>
+                <p>Choisis ta classe pour commencer</p>
+            </div>
+            <div class="level-grid">
+                <div class="level-card" onclick="selectLevel(0)"><h3>6ème</h3><p>Débutant</p></div>
+                <div class="level-card" onclick="selectLevel(1)"><h3>5ème</h3><p>Intermédiaire</p></div>
+                <div class="level-card" onclick="selectLevel(2)"><h3>4ème</h3><p>Avancé</p></div>
+                <div class="level-card" onclick="selectLevel(3)"><h3>3ème</h3><p>Expert</p></div>
+            </div>
+        </section>
+      <!-- ÉCRAN 2 : MODE ET CONTENU -->
+<section id="view-app" class="view">
+    <!-- Ce bloc contient le bouton de retour ET le bouton de création -->
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <button class="btn-back" onclick="resetApp()">← Retour au menu</button>
+        <button onclick="openCreator()" style="background:none; border:1.5px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:bold;">➕ Créer une carte</button>
+    </div>
+
+    <div class="mode-selector">
+        <button class="mode-btn active" id="btn-cours" onclick="setMode('cours')">📖 Cours</button>
+        <button class="mode-btn" id="btn-entrainement" onclick="setMode('entrainement')">✍️ Entraînement</button>
+    </div>
+
+    <div id="content-area">
+        <!-- Le contenu sera injecté ici -->
+    </div>
+</section>
+
+ <!-- FORMULAIRE DE CRÉATION (Caché par défaut) -->
+<section id="view-creator" class="view">
+    <button class="btn-back" onclick="resetApp()">← Retour</button>
+    <div class="card">
+        <h2 style="color: var(--primary); margin-bottom: 10px;">✨ Créer ma carte de révision</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Choisis le format et crée ta question !</p>
+        <hr style="margin: 20px 0; opacity: 0.1;">
+        
+        <!-- 1. Choix du chapitre -->
+        <label style="display:block; font-weight:bold; margin-bottom:5px;">Dans quel chapitre ajouter ta carte ?</label>
+        <select id="new-chap-select" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;">
+        </select>
+
+        <!-- 2. Choix du type de question -->
+        <label style="display:block; font-weight:bold; margin-bottom:5px;">Type de question</label>
+        <select id="new-question-type" onchange="toggleQuestionType()" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;">
+            <option value="ouverte">❓ Question ouverte</option>
+            <option value="qcm">🔘 QCM (Choix multiples)</option>
+        </select>
+
+        <!-- 3. La Question -->
+        <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Question</label>
+        <input type="text" id="new-quiz-q" placeholder="ex: Combien font 1/2 + 1/4 ?">
+
+        <!-- 4. Zone dynamique pour la réponse (Ouverte ou QCM) -->
+        <div id="zone-reponse-ouverte">
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
+            <input type="text" id="new-quiz-a" placeholder="ex: 3/4">
+        </div>
+
+        <div id="zone-reponse-qcm" style="display:none;">
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Réponse correcte</label>
+            <input type="text" id="new-qcm-correct" placeholder="ex: 3/4">
+            
+            <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:10px;">Options (séparées par un antislash "\" )</label>
+            <input type="text" id="new-qcm-options" placeholder="ex: 0,5 \ 1 \ 2 \ 0,75 \ 2/3">
+        </div>
+
+        <!-- 5. Contenu de la leçon-->
+        <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:15px;">Contenu de la leçon (optionnel)</label>
+        <textarea id="new-chap-content" style="width:100%; border-radius:10px; padding:10px; border:2px solid #e2e8f0; min-height:80px; margin-bottom:15px; font-family:inherit;" placeholder="Explique la règle ici..."></textarea>
+
+        <button class="action-btn" style="background: var(--secondary); margin-top:10px;" onclick="saveNewCard()">Enregistrer ma carte</button>
+    </div>
+</section>
+
+    </main>
+
+    <footer>
+        &copy; 2026 AutoMaths - Plateforme d'apprentissage numérique
+    </footer>
+
+<!-- Bibliothèque Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+
+    // CONFIGURATION SUPABASE (À REMPLIR AVEC VOS CLÉS)
+  const SUPABASE_URL = 'https://ppedtegkqcklkleeghbc.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+// On utilise 'client' pour la variable, et 'supabase' pour la bibliothèque
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+ // 1. BASE DE DONNÉES DU PROJET (Contenu pédagogique)
+    // Cette variable contient tous les chapitres organisés par niveau et par thème.
+    // 1. BASE DE DONNÉES DU PROJET (Contenu pédagogique officiel écrit en dur)
+ const officialData = [
+    {
+        name: "6ème",
+        themes: []
+    },
+    {
+        name: "5ème",
+        themes: []
+    },
+    {
+        name: "4ème",
+        themes: [   
+             {
+                name: "NOMBRES ET CALCULS",
+                chapters: [
+                    { id: 1, title: "Les nombres relatifs", content: "Étude des nombres positifs et négatifs...", quiz: { q: "Calculer : -3 + (-5)", a: "-8" }, eleve: "non" },
+                    { id: 2, title: "Arithmétique", content: "Diviseurs, multiples...", quiz: { q: "Est-ce que 12 est un multiple de 4 ?", a: "oui" }, eleve: "non" },
+                    { id: 3, title: "Les fractions", content: "Addition, soustraction...", quiz: { q: "Calculer : 1/2 + 1/4", a: "3/4" }, eleve: "non" },
+                    { id: 4, title: "Puissances et racine carrée", content: "Utilisation des puissances...", quiz: { q: "Racine carrée de 16 ?", a: "4" }, eleve: "non" },
+                    { id: 5, title: "Calcul littéral", content: "Simplification d'expressions...", quiz: { q: "Développer : 3(x - 2)", a: "3x-6" }, eleve: "non" },
+                    { id: 6, title: "Équations", content: "Résolution d'équations...", quiz: { q: "Résoudre : 2x = 10", a: "5" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "ORGANISATION ET GESTION DE DONNÉES",
+                chapters: [
+                    { id: 7, title: "Proportionnalité", content: "Calcul de coefficients...", quiz: { q: "Si 10% de 50, combien ça fait ?", a: "5" }, eleve: "non" },
+                    { id: 8, title: "Les statistiques", content: "Lecture de graphiques...", quiz: { q: "Moyenne de 5, 10 et 15 ?", a: "10" }, eleve: "non" },
+                    { id: 9, title: "Probabilités", content: "Calcul de chances...", quiz: { q: "Probabilité de tirer un As dans un jeu de 32 cartes ?", a: "4/32" }, eleve: "non" },
+                    { id: 10, title: "Fonctions", content: "Introduction à la notion de fonction...", quiz: { q: "Si f(x)=x+1, f(5) = ?", a: "6" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "GRANDEURS ET MESURES",
+                chapters: [
+                    { id: 11, title: "Grandeurs et mesures", content: "Calcul d'aires...", quiz: { q: "Périmètre d'un carré de côté 5 ?", a: "20" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "ESPACE ET GÉOMÉTRIE",
+                chapters: [
+                    { id: 12, title: "Triangle rectangle", content: "Propriétés du triangle...", quiz: { q: "Un triangle rectangle a un angle de 90° ?", a: "oui" }, eleve: "non" },
+                    { id: 13, title: "Triangles et parallèles", content: "Étude des propriétés...", quiz: { q: "Deux droites parallèles ont-elles le même sens ?", a: "oui" }, eleve: "non" },
+                    { id: 14, title: "Trigonométrie : cosinus", content: "Utilisation du cosinus...", quiz: { q: "Cos = Adjacent / ... ?", a: "hypoténuse" }, eleve: "non" },
+                    { id: 15, title: "Transformations", content: "Symétries axiales...", quiz: { q: "Une symétrie centrale utilise un point ?", a: "oui" }, eleve: "non" },
+                    { id: 16, title: "Espace (Repérage, pyramides et cônes)", content: "Étude des solides...", quiz: { q: "Combien de sommets a une pyramide à base carrée ?", a: "5" }, eleve: "non" }
+                ]
+            }
+        ]
+    },
+    {
+        name: "3ème",
+        themes: [
+           {
+                name: "NOMBRES ET CALCULS",
+                chapters: [
+                    { id: 1, title: "Nombres et calculs (Relatifs, fractions, racine carrée, puissances)", content: "Les nombres relatifs...", quiz: { q: "Calculer : -5 + 8", a: "3" }, eleve: "non" },
+                    { id: 2, title: "Arithmétique", content: "L'arithmétique étudie...", quiz: { q: "Est-ce que 15 est divisible par 3 ?", a: "oui" }, eleve: "non" },
+                    { id: 3, title: "Calcul littéral", content: "Le calcul littéral utilise...", quiz: { q: "Développer : 2(x + 4)", a: "2x+8" }, eleve: "non" },
+                    { id: 4, title: "Équations", content: "Une équation est une égalité...", quiz: { q: "Résoudre : x + 5 = 12", a: "7" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "ORGANISATION ET GESTION DE DONNÉES",
+                chapters: [
+                    { id: 5, title: "Les statistiques", content: "L'étude des données...", quiz: { q: "Quelle est la moyenne de 10 et 20 ?", a: "15" }, eleve: "non" },
+                    { id: 6, title: "Probabilités", content: "L'étude du hasard...", quiz: { q: "Probabilité d'obtenir pile sur une pièce ?", a: "1/2" }, eleve: "non" },
+                    { id: 7, title: "Proportionnalité", content: "Relation entre deux grandeurs...", quiz: { q: "Si 2 kg coûtent 4€, combien coûtent 5 kg ?", a: "10" }, eleve: "non" },
+                    { id: 8, title: "Fonctions", content: "Une fonction associe une seule valeur...", quiz: { q: "Si f(x) = 2x, que vaut f(3) ?", a: "6" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "GRANDEURS ET MESURES",
+                chapters: [
+                    { id: 9, title: "Grandeurs et mesures", content: "Calcul d'aires...", quiz: { q: "Aire d'un carré de côté 3 ?", a: "9" }, eleve: "non" }
+                ]
+            },
+            {
+                name: "ESPACE ET GÉOMÉTRIE",
+                chapters: [
+                    { id: 10, title: "Théorème de Pythagore", content: "Dans un triangle rectangle...", quiz: { q: "Si a=3 et b=4, que vaut c² ?", a: "25" }, eleve: "non" },
+                    { id: 11, title: "Triangles et parallèles (Thalès ; semblables)", content: "Le théorème de Thalès...", quiz: { q: "Thalès sert à calculer des... ?", a: "longueurs" }, eleve: "non" },
+                    { id: 12, title: "Trigonométrie", content: "Relations entre les angles...", quiz: { q: "Cos = Adjacent / ... ?", a: "hypoténuse" }, eleve: "non" },
+                    { id: 13, title: "Transformations", content: "Symétries, translations, rotations et homothéties.", quiz: { q: "Une rotation change-t-elle la taille ?", a: "non" }, eleve: "non" },
+                    { id: 14, title: "Espace (Repérage, Sphère, sections)", content: "Étude des solides dans l'espace et de leurs projections.", quiz: { q: "Combien de faces a un cube ?", a: "6" }, eleve: "non" }
+                ]
+            }
+        ]
+    }
+];
+  // 3. VARIABLES D'ÉTAT ET INITIALISATION
+    let data = []; // La variable qui contiendra le mélange (Officiel + Élèves)
+    let currentLevel = "";
+    let currentMode = "cours";
+    let studentCardsGlobal = []; 
+    // Fonction pour copier le programme officiel dans notre variable de travail
+    function initializeData() {
+        data = JSON.parse(JSON.stringify(officialData));
+    }
+    initializeData();
+
+       // Variables pour gérer la session d'entraînement
+    let trainingSession = {
+        score: 0,
+        totalAnswered: 0,
+         currentCards: [], // Les cartes tirées au sort pour cette session
+        currentIndex: 0,
+        isReviewMode: false // Pour savoir si on affiche l'aide après une erreur
+    };
+
+    // 4. LOGIQUE DE DONNÉES (Le lien avec le serveur)
+    
+async function loadDataFromSupabase() {
+    const container = document.getElementById('content-area');
+    if (!container) return;
+
+    initializeData(); 
+    studentCardsGlobal = []; 
+
+    try {
+        const { data: remoteData, error } = await supabaseClient
+            .from('chapters')
+            .select('*')
+            .eq('level', currentLevel);
+
+        if (error) throw error;
+        studentCardsGlobal = remoteData || [];
+    } catch (e) {
+        console.error("Erreur Supabase:", e);
+    }
+
+    // --- NOUVELLE ÉTAPE : Calculer les compteurs pour chaque chapitre officiel ---
+    const currentLevelData = data.find(item => item.name === currentLevel);
+    if (currentLevelData && Array.isArray(currentLevelData.themes)) {
+        currentLevelData.themes.forEach(theme => {
+            theme.chapters.forEach(officialChap => {
+                // On compte combien de cartes d'élèves correspondent à ce titre
+                officialChap.studentCount = studentCardsGlobal.filter(card => 
+                    card.title && card.title.trim().toLowerCase() === officialChap.title.trim().toLowerCase()
+                ).length;
+            });
+        });
+    }
+
+    renderContent(); 
+}
+
+
+
+   async function saveNewCard() {
+        const selectedId = document.getElementById('new-chap-select').value;
+        const type = document.getElementById('new-question-type').value;
+        const content = document.getElementById('new-chap-content').value;
+        const q = document.getElementById('new-quiz-q').value;
+    
+        let a = "";
+     let optionsStr = "";
+
+     if (type === 'ouverte') {
+         a = document.getElementById('new-quiz-a').value;
+     } else {
+         a = document.getElementById('new-qcm-correct').value;
+         optionsStr = document.getElementById('new-qcm-options').value; 
+     }
+
+      if(!selectedId || !q || !a) {
+        alert("Erreur : Veuillez remplir les champs obligatoires.");
+        return;
+      }
+
+     const btn = document.querySelector('#view-creator .action-btn');
+     const originalBtnText = btn.innerText;
+     btn.innerText = "Envoi en cours...";
+     btn.disabled = true;
+
+        // Recherche du titre et du thème officiel pour la cohérence
+        let targetThemeName = "";
+        let targetChapterTitle = "";
+        const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+        const levelIndex = levelsOrder.indexOf(currentLevel);
+        const levelData = officialData[levelIndex];
+
+     for (let theme of levelData.themes) {
+        const chap = theme.chapters.find(c => c.id == selectedId);
+        if (chap) {
+            targetThemeName = theme.name;
+            targetChapterTitle = chap.title;
+            break;
+        }
+      }
+
+     // Construction de l'objet conforme à votre table Supabase
+      const newRow = {
+        level: currentLevel,
+        theme_name: targetThemeName,
+        title: targetChapterTitle,
+        content: content,
+        question: q,
+        answer: a,
+        type: type,
+        options: optionsStr,
+        eleve: "oui" // <--- On remplit le nouveau champ demandé
+      };
+
+     try {
+        const { error } = await supabaseClient
+            .from('chapters')
+            .insert([newRow]);
+
+        if (error) throw error;
+
+        alert("Bravo ! Ta question a été publiée.");
+        document.getElementById('new-chap-content').value = "";
+        document.getElementById('new-quiz-q').value = "";
+        document.getElementById('new-quiz-a').value = "";
+        document.getElementById('new-qcm-correct').value = "";
+        document.getElementById('new-qcm-options').value = "";
+
+        // On recharge tout pour voir la nouvelle carte
+        await loadDataFromSupabase(); 
+        document.getElementById('view-creator').classList.remove('active');
+        document.getElementById('view-app').classList.add('active');
+        setMode('cours');
+
+      } catch (error) {
+        console.error("Erreur Supabase:", error);
+        alert("Erreur : " + error.message);
+      } finally {
+        btn.innerText = originalBtnText;
+        btn.disabled = false;
+      }
+    }
+
+
+
+
+
+  // 4. FONCTIONS DE NAVIGATION et VUES(ce qui change l'écran)
+    async function selectLevel(index) {
+        const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+        currentLevel = levelsOrder[index];
+        
+        document.getElementById('level-display').innerText = currentLevel;
+        document.getElementById('view-levels').classList.remove('active');
+        document.getElementById('view-app').classList.add('active');
+
+        const container = document.getElementById('content-area');
+        if (container) {
+            container.innerHTML = "<p style='text-align:center; margin-top:50px;'>Chargement du programme...</p>";
+        }
+
+        await loadDataFromSupabase();
+        setMode('cours');
+    }
+
+
+    function resetApp() {                                                                   /** Revient à l'écran de sélection des niveaux et nettoie toutes les vues **/
+         // 1. On cache TOUTES les vues pour éviter les superpositions
+        document.getElementById('view-levels').classList.remove('active');
+        document.getElementById('view-app').classList.remove('active');
+        document.getElementById('view-creator').classList.remove('active');
+
+        // 2. On affiche uniquement la vue des niveaux (le menu principal)
+        document.getElementById('view-levels').classList.add('active');
+    
+        // 3. Réinitialisation du titre du header
+        document.getElementById('level-display').innerText = "Sélectionnez un niveau";
+
+        // 4. Optionnel : On vide le formulaire de création pour la prochaine fois
+        document.getElementById('new-chap-content').value = "";
+        document.getElementById('new-quiz-q').value = "";
+        document.getElementById('new-quiz-a').value = "";
+        document.getElementById('new-qcm-correct').value = "";
+        document.getElementById('new-qcm-options').value = "";
+    }
+
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('btn-cours').classList.toggle('active', mode === 'cours');
+        document.getElementById('btn-entrainement').classList.toggle('active', mode === 'entrainement');
+        renderContent();
+    }
+
+    function openCreator() {
+        // 1. On cache TOUTES les vues pour repartir de zéro
+        document.getElementById('view-levels').classList.remove('active');
+        document.getElementById('view-app').classList.remove('active');
+        document.getElementById('view-creator').classList.remove('active');
+
+        const selectElement = document.getElementById('new-chap-select');
+        selectElement.innerHTML = ""; 
+    
+        const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+        const levelIndex = levelsOrder.indexOf(currentLevel);
+        const levelData = data[levelIndex];
+
+        if (levelData && levelData.themes.length > 0) {
+        levelData.themes.forEach(theme => {
+            theme.chapters.forEach(chap => {
+                const option = document.createElement('option');
+                option.value = chap.id;
+                option.text = chap.title; 
+                selectElement.appendChild(option);
+            });
+        });
+        } else {
+        const option = document.createElement('option');
+        option.text = "Aucun chapitre disponible";
+        selectElement.appendChild(option);
+        }
+
+         // 2. On affiche uniquement la vue création
+        document.getElementById('view-creator').classList.add('active');
+    }
+
+    function toggleQuestionType() {                        // --- GESTION DU FORMULAIRE DE CRÉATION ---
+        const type = document.getElementById('new-question-type').value;
+        const zoneOuverte = document.getElementById('zone-reponse-ouverte');
+        const zoneQcm = document.getElementById('zone-reponse-qcm');
+
+        if (type === 'qcm') {
+            zoneOuverte.style.display = 'none';
+            zoneQcm.style.display = 'block';
+        } else {
+            zoneOuverte.style.display = 'block';
+            zoneQcm.style.display = 'none';
+        }
+    }
+
+
+// 5. MOTEUR D AFFICHAGE (le rendu HTML)
+
+   function renderContent() {
+    const container = document.getElementById('content-area');
+    if (!container) return;
+    container.innerHTML = "";
+
+    const levelData = data.find(item => item.name === currentLevel);
+    if (!levelData) {
+        container.innerHTML = "<p>Contenu en cours de préparation...</p>";
+        return;
+    }
+
+    levelData.themes.forEach(group => {
+        const section = document.createElement('div');
+        section.className = 'theme-section';
+        section.innerHTML = `<h2 class="theme-title">${group.name}</h2>`;
+
+        const grid = document.createElement('div');
+        grid.className = 'chapters-grid';
+
+                group.chapters.forEach(chap => {
+            const card = document.createElement('div');
+            card.className = 'chapter-item';
+            card.style.position = 'relative'; 
+            
+            const displayTitle = chap.title;
+
+            // Construction du contenu HTML de base
+            let contentHTML = `
+                <span class="chapter-icon">${chap.id}</span>
+                <span class="chapter-name">${displayTitle}</span>
+            `;
+
+            // CONDITION : On n'affiche le badge QUE si on est en mode entraînement 
+            // ET qu'il y a des questions disponibles
+ 
+            if (currentMode === 'entrainement' && chap.studentCount > 0) {
+                contentHTML += `
+                 <span class="chapter-badge">${chap.studentCount} Q</span>
+                `;
+                }
+
+
+            card.innerHTML = contentHTML;
+            card.onclick = () => launchChapter(chap);
+            grid.appendChild(card);
+        });
+
+
+        section.appendChild(grid);
+        container.appendChild(section);
+    });
+}
+
+
+function launchChapter(chapter) {
+    const container = document.getElementById('content-area');
+    container.innerHTML = ""; 
+
+    if (currentMode === 'cours') {
+        // --- MODE COURS (Inchangé) ---
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h2 style="margin-bottom:15px;">${chapter.title}</h2>
+            <p>${chapter.content || "Aucun contenu de cours disponible."}</p>
+            <div class="notion-box"><strong>💡 Petit test rapide :</strong></div>
+            <div class="quiz-container">
+                <p>${chapter.quiz ? chapter.quiz.q : "Pas de question disponible"}</p>
+                <input type="text" id="user-answer" placeholder="Votre réponse...">
+                <button class="action-btn" onclick="checkMiniQuiz('${chapter.quiz ? chapter.quiz.a : ""}')">Vérifier</button>
+                <div id="feedback" class="feedback"></div>
+            </div>`;
+        container.appendChild(card);
+
+    } else {
+        // --- MODE ENTRAÎNEMENT ---
+        
+        // On filtre les cartes de Supabase en étant très souple sur le titre
+        let trainingCards = studentCardsGlobal.filter(card => {
+            if (!card.title) return false;
+            // On compare les titres en minuscules et sans espaces inutiles au début/fin
+            return card.title.trim().toLowerCase() === chapter.title.trim().toLowerCase();
+        }).map(card => ({
+            quiz: { 
+                q: card.question || "Sans question", 
+                a: card.answer || "" 
+            },
+            content: card.content || "",
+            type: card.type || 'ouverte',
+            options: (card.options && typeof card.options === 'string') ? card.options.split('\\') : []
+        }));
+
+        if (trainingCards.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="text-align:center;">
+                    <h2 style="color:var(--secondary);">Entraînement indisponible</h2>
+                    <p>Aucune question d'élève n'a été trouvée pour le chapitre : <br><strong>"${chapter.title}"</strong></p>
+                    <p style="font-size:0.8rem; color:gray; margin-top:10px;">(Vérifiez que le titre dans Supabase est identique)</p>
+                    <button class="action-btn" onclick="renderContent()" style="margin-top:20px;">Retour aux chapitres</button>
+                </div>`;
+            return;
+        }
+
+        // Initialisation de la session
+        trainingSession.score = 0;
+        trainingSession.totalAnswered = 0;
+        trainingSession.isReviewMode = false;
+        trainingSession.currentCards = [...trainingCards].sort(() => Math.random() - 0.5);
+        trainingSession.currentIndex = 0;
+
+        displayTrainingQuestion(chapter.title);
+    }
+}
+
+
+
+
+
+
+
+
+    
+ function displayTrainingQuestion(chapterTitle) {
+    const container = document.getElementById('content-area');
+    const currentCard = trainingSession.currentCards[trainingSession.currentIndex];
+
+    if (!currentCard) {
+        showFinalScore();
+        return;
+    }
+
+    // On vérifie si la question vient d'un élève (on peut utiliser une propriété ou simplement 
+    // savoir qu'en mode entraînement, toutes les cartes sont des cartes élèves)
+    const sparkle = "✨ "; 
+
+    container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <span style="font-weight:bold; color:var(--primary);">Score: ${trainingSession.score}/${trainingSession.totalAnswered}</span>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Question ${trainingSession.currentIndex + 1}/${trainingSession.currentCards.length}</span>
+        </div>
+        <div class="card">
+            <h2 style="margin-bottom:15px;">Entraînement</h2>
+            <p style="margin-bottom:15px; color:var(--text-muted);">${chapterTitle}</p>
+            <hr style="margin-bottom:20px; opacity:0.2">
+            <!-- On ajoute le sparkle ici -->
+            <p style="font-size:1.2rem; margin-bottom:20px;">${sparkle}${currentCard.quiz.q}</p>
+            <div id="quiz-interaction-zone"></div>
+        </div>`;
+
+    const zone = document.getElementById('quiz-interaction-zone');
+
+
+
+        if (trainingSession.isReviewMode) {
+    // MODE AIDE : On affiche la réponse avec le nouveau style rouge pâle
+    zone.innerHTML = `
+        <div class="feedback help-mode" style="display:block; margin-bottom:15px;">
+            La réponse était : <strong>${currentCard.quiz.a}</strong>
+        </div>
+        <div class="notion-box">
+            <strong>📖 Aide :</strong><br>
+            ${currentCard.content || "Consultez votre cours pour plus de détails."}
+        </div>
+        <button class="action-btn" onclick="nextQuestion('${chapterTitle}')">Question suivante ➔</button>
+        `;
+        } else {
+
+        // MODE QUESTION : On affiche les inputs ou le QCM
+        if (currentCard.type === 'qcm' && currentCard.options && currentCard.options.length > 0) {
+            let qcmHTML = `<div style="display:grid; gap:10px; margin-bottom:20px;">`;
+            currentCard.options.forEach(opt => {
+                qcmHTML += `<button class="action-btn" style="background:white; color:var(--primary); border:2px solid var(--primary);" onclick="checkFullQuiz('${currentCard.quiz.a}', '${chapterTitle}', '${opt}')">${opt}</button>`;
+            });
+            qcmHTML += `</div>`;
+            zone.innerHTML = qcmHTML;
+         } else {
+            zone.innerHTML = `
+                <input type="text" id="user-answer" placeholder="Votre réponse...">
+                <button class="action-btn" onclick="checkFullQuiz('${currentCard.quiz.a}', '${chapterTitle}')">Valider</button>
+                <div id="feedback" class="feedback"></div>
+            `;
+            }
+        }
+    }
+
+function showFinalScore() {    // Affiche le score final proprement
+    const container = document.getElementById('content-area');
+    container.innerHTML = `
+        <div class="card" style="text-align:center; padding: 3rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 10px;">🎉</div>
+            <h2 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 10px;">Session terminée !</h2>
+            
+            <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px;">
+                Ton résultat final :
+            </p>
+            
+            <div style="background: var(--bg); padding: 20px; border-radius: var(--radius); margin-bottom: 40px; display: inline-block; min-width: 200px;">
+                <span style="font-size: 3rem; font-weight: 800; color: var(--secondary);">
+                    ${trainingSession.score} <span style="font-size: 1.5rem; color: var(--text-muted);">/</span> ${trainingSession.totalAnswered}
+                </span>
+            </div>
+
+            <div style="display: block;">
+                <button class="action-btn" onclick="resetApp()" style="max-width: 250px; margin: 0 auto;">
+                    Retour au menu principal
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+
+  // 6. LOGIQUE DES CHAPITRES ET QUIZ (Launch, Check, ShowCourse)
+
+      function checkMiniQuiz(correctAnswer) {
+        const input = document.getElementById('user-answer');
+        const feedback = document.getElementById('feedback');
+        if (input.value.trim().toLowerCase() === correctAnswer.toLowerCase()) {
+            feedback.innerText = "Bravo ! ✅";
+            feedback.className = "feedback success";
+        } else {
+            feedback.innerText = "Réessaie encore ! ❌";
+            feedback.className = "feedback error";
+        }
+    }
+
+    function checkFullQuiz(correctAnswer, chapterTitle, userAnsInput = null) {
+        const input = document.getElementById('user-answer');
+        const feedback = document.getElementById('feedback');
+        const userAns = userAnsInput !== null ? userAnsInput : input.value.trim().toLowerCase();
+
+        trainingSession.totalAnswered++;
+
+        if (userAns === correctAnswer.toLowerCase()) {
+        trainingSession.score++;
+        // On passe directement à la suivante en cas de succès
+        nextQuestion(chapterTitle);
+        } else {
+        // En cas d'erreur, on active le mode aide
+        trainingSession.isReviewMode = true;
+        // On relance l'affichage pour montrer l'aide
+        displayTrainingQuestion(chapterTitle);
+        }
+    }
+
+
+    function nextQuestion(chapterTitle) {      // Passe à la question suivante ou finit la session
+        trainingSession.currentIndex++;
+        trainingSession.isReviewMode = false; // Reset le mode aide pour la prochaine question
+        displayTrainingQuestion(chapterTitle);
+    }
+
+
+
+    function showCourse(chapterTitle) {
+        setMode('cours');
+        const levelData = data.find(item => item.name === currentLevel);
+        const chapter = levelData.themes.flatMap(g => g.chapters).find(c => c.title === chapterTitle);
+            
+        if (chapter) {
+            launchChapter(chapter);
+        }
+    }
+
+
+</script>
+</body>
+</html>
+
+
+
+
