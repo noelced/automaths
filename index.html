@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,9 @@
         .container { 
             max-width: 1000px; 
             margin: 0 auto; 
-            padding: 20px; 
+            padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header { 
@@ -74,7 +76,7 @@
         .level-card p { color: var(--text-muted); font-size: 0.95rem; }
 
         /* --- ÉCRAN 2 : MODE & CONTENU --- */
-        .view { display: none; animation: fadeIn 0.4s ease-out; }
+        .view { display: none; animation: fadeIn 0.4s ease-out;position: relative;z-index: 1; }
         .view.active { display: block; }
 
         @keyframes fadeIn {
@@ -115,7 +117,11 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
+
+        
 
         .theme-section { margin-bottom: 3rem; }
         .theme-title {
@@ -167,6 +173,20 @@
     pointer-events: none;
 }
 
+input[type="text"], 
+input[type="number"], 
+textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem; /* Taille uniforme */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Police uniforme */
+    margin-bottom: 15px;
+    outline: none;
+    box-sizing: border-box; /* Très important pour le mobile */
+}
+
 /* Optionnel : On peut ajouter un petit indicateur visuel très fin 
    sur la carte pour signaler qu'il y a du contenu sans être agressif */
 .chapter-item:has(.chapter-badge) {
@@ -182,7 +202,155 @@
             margin: 1.5rem 0;
             font-style: italic;
         }
+/* STYLE DU COURS */
+/* Styles spécifiques au contenu de leçon long */
+.course-container {
+    color: var(--text-main);
+}
 
+.course-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.course-container ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.course-container li {
+    margin-bottom: 8px;
+}
+
+/* Amélioration de la notion-box pour le cours */
+.course-container .notion-box {
+    background: #f0f7ff; /* Bleu très léger */
+    border-left: 4px solid var(--primary);
+    font-style: normal; /* On enlève l'italique pour plus de lisibilité */
+}
+
+/* Pour les exposants mathématiques */
+sup {
+    font-size: 0.8em;
+}
+
+/* Bouton "Ai-je bien compris" */
+.btn-check-understanding {
+    display: block;
+    margin-left: auto; /* Pousse vers la droite */
+    margin-right: 0;
+    width: auto;       /* Largeur adaptée au texte */
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-check-understanding:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Conteneur du quiz injecté */
+.injected-quiz-container {
+    width: 100%;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8fafc; /* Fond très léger pour le distinguer du cours */
+    border: 2px dashed var(--primary-light);
+    border-radius: var(--radius);
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Pour que le quiz ne bloque pas le défilement, il est simplement inséré dans le DOM */
+
+/* Conteneur de la fraction visuelle */
+.fraction-editor {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    margin: 0 5px;
+}
+
+/* La ligne de fraction */
+.fraction-line {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-main);
+    margin: 4px 0;
+}
+
+/* Les cases pour numérateur et dénominateur */
+.fraction-input {
+    width: 40px; /* Taille adaptée au mobile */
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+/* Police adaptée pour l'aperçu (plus lisible) */
+#preview-q, #preview-a, #preview-content {
+    font-family: 'Verdana', sans-serif; /* Verdana est excellente pour la dyslexie */
+    line-height: 1.4;
+}
+
+/* Conteneur du clavier mathématique */
+/* Pour que le clavier ne soit pas trop encombré */
+.math-keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+/* Style des touches du clavier */
+.math-key {
+    background: white;
+    border: 1px solid #cbd5e1;
+    padding: 10px 5px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s;
+    user-select: none; /* Empêche la sélection de texte lors du tapotement */
+    position: relative;
+    z-index: 100; /* On l'élève au premier plan */
+    pointer-events: auto !important; /* On force la capture du clic */
+}
+
+.math-key:active {
+    background: var(--primary-light);
+    transform: scale(0.95);
+}
+
+/* Pour les touches plus larges si besoin (ex: le symbole racine) */
+.math-key.wide {
+    grid-column: span 2;
+}
+#user-answer, #new-quiz-q, #new-quiz-a {
+    font-family: 'Courier New', Courier, monospace; /* Police mono pour mieux voir le LaTeX */
+    font-size: 1.1rem;
+}
+#view-creator {
+    z-index: 10;
+}
      /* --- FORMULAIRE D'EXERCICE ---
         */
         .quiz-container { margin-top: 20px; }
@@ -276,6 +444,22 @@
             .card { padding: 1.5rem; }
         }
     </style>
+<!-- Chargement de MathJax pour un rendu mathématique parfait -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']], // Permet d'écrire $x^2$ dans le texte
+      displayMath: [['$$', '$$'], ['\\[', '\\]']], // Pour les formules centrées
+      processEscapes: true
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
 </head>
 <body>
 
@@ -303,7 +487,7 @@
     <!-- Ce bloc contient le bouton de retour ET le bouton de création -->
     <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <button class="btn-back" onclick="resetApp()">← Retour au menu</button>
-        <button onclick="openCreator()" style="background:none; border:1.5px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:bold;">➕ Créer une carte</button>
+        <button id="btn-create-card" onclick="openCreator()" style="background:none; border:1.5px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:bold;">➕ Créer une carte</button>
     </div>
 
     <div class="mode-selector">
@@ -316,7 +500,7 @@
     </div>
 </section>
 
- <!-- FORMULAIRE DE CRÉATION (Caché par défaut) -->
+ <!-- FORMULAIRE DE CRÉATION -->
 <section id="view-creator" class="view">
     <button class="btn-back" onclick="resetApp()">← Retour</button>
     <div class="card">
@@ -324,43 +508,73 @@
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Choisis le format et crée ta question !</p>
         <hr style="margin: 20px 0; opacity: 0.1;">
         
-        <!-- 1. Choix du chapitre -->
+        <!-- 1 & 2. Chapitre et Type -->
         <label style="display:block; font-weight:bold; margin-bottom:5px;">Dans quel chapitre ajouter ta carte ?</label>
         <select id="new-chap-select" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;">
         </select>
 
-        <!-- 2. Choix du type de question -->
         <label style="display:block; font-weight:bold; margin-bottom:5px;">Type de question</label>
         <select id="new-question-type" onchange="toggleQuestionType()" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;">
             <option value="ouverte">❓ Question ouverte</option>
             <option value="qcm">🔘 QCM (Choix multiples)</option>
         </select>
 
-        <!-- 3. La Question -->
+        <!-- 4. MA QUESTION -->
         <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Question</label>
-        <input type="text" id="new-quiz-q" placeholder="ex: Combien font 1/2 + 1/4 ?">
-
-        <!-- 4. Zone dynamique pour la réponse (Ouverte ou QCM) -->
-        <div id="zone-reponse-ouverte">
-            <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
-            <input type="text" id="new-quiz-a" placeholder="ex: 3/4">
+        <!-- Aperçu Question -->
+        <div id="preview-q" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+        <!-- Champ Question -->
+        <input type="text" id="new-quiz-q" placeholder="$\frac{1}{2}$ écrit 1/2      $\sqrt2$ écrit √2  et  5^{2} écrit 5²" >
+        <!-- Clavier Question -->
+        <div class="math-keyboard" style="margin-bottom:25px;">
+            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
+            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('^{}', this)">^ puissance</button>
+            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('$\\frac{}{}$', this)">fraction</button>
+            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('*', this)">×</button>
         </div>
 
+
+        <!-- 6. MA RÉPONSE (Uniquement si mode ouvert) -->
+        <div id="zone-reponse-ouverte">
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
+            <!-- Aperçu Réponse -->
+            <div id="preview-a" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+            <!-- Champ Réponse -->
+            <input type="text" id="new-quiz-a" placeholder="tapez par exemple: 3,5 ou 7/2">
+            <!-- Clavier Réponse -->
+            <div class="math-keyboard" style="margin-bottom:25px;">
+                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
+                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('^{}', this)">^ puissance</button>
+                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('*', this)">×</button>
+            </div>
+        </div>
+
+        <!-- Zone QCM (Masquée si ouvert) -->
         <div id="zone-reponse-qcm" style="display:none;">
             <label style="display:block; font-weight:bold; margin-bottom:5px;">Réponse correcte</label>
             <input type="text" id="new-qcm-correct" placeholder="ex: 3/4">
-            
             <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:10px;">Options (séparées par un antislash "\" )</label>
-            <input type="text" id="new-qcm-options" placeholder="ex: 0,5 \ 1 \ 2 \ 0,75 \ 2/3">
+            <input type="text" id="new-qcm-options" placeholder="ex: 0,5 \ 1 \ 2">
         </div>
 
-        <!-- 5. Contenu de la leçon-->
-        <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:15px;">Contenu de la leçon (optionnel)</label>
+        <!-- 7. CONTENU DE LA LEÇON -->
+        <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:20px;">Contenu de la leçon (optionnel)</label>
+        <!-- Aperçu Leçon -->
+        <div id="preview-content" style="font-size:1rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+        <!-- Champ Leçon -->
         <textarea id="new-chap-content" style="width:100%; border-radius:10px; padding:10px; border:2px solid #e2e8f0; min-height:80px; margin-bottom:15px; font-family:inherit;" placeholder="Explique la règle ici..."></textarea>
-
+        <!-- Clavier virtuel Leçon -->
+        <div class="math-keyboard" style="margin-top:15px;">
+            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
+            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('^{}', this)">^ puissance</button>
+            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('$\\frac{}{}$', this)">fraction</button>
+            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('*', this)">×</button>
+        </div>
         <button class="action-btn" style="background: var(--secondary); margin-top:10px;" onclick="saveNewCard()">Enregistrer ma carte</button>
     </div>
 </section>
+
+
 
     </main>
 
@@ -384,7 +598,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
  // 1. BASE DE DONNÉES DU PROJET (Contenu pédagogique)
     // Cette variable contient tous les chapitres organisés par niveau et par thème.
     // 1. BASE DE DONNÉES DU PROJET (Contenu pédagogique officiel écrit en dur)
- const officialData = [
+const officialData = [
     {
         name: "6ème",
         themes: []
@@ -395,39 +609,39 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     },
     {
         name: "4ème",
-        themes: [   
-             {
+        themes: [
+            {
                 name: "NOMBRES ET CALCULS",
                 chapters: [
-                    { id: 1, title: "Les nombres relatifs", content: "Étude des nombres positifs et négatifs...", quiz: { q: "Calculer : -3 + (-5)", a: "-8" }, eleve: "non" },
-                    { id: 2, title: "Arithmétique", content: "Diviseurs, multiples...", quiz: { q: "Est-ce que 12 est un multiple de 4 ?", a: "oui" }, eleve: "non" },
-                    { id: 3, title: "Les fractions", content: "Addition, soustraction...", quiz: { q: "Calculer : 1/2 + 1/4", a: "3/4" }, eleve: "non" },
-                    { id: 4, title: "Puissances et racine carrée", content: "Utilisation des puissances...", quiz: { q: "Racine carrée de 16 ?", a: "4" }, eleve: "non" },
-                    { id: 5, title: "Calcul littéral", content: "Simplification d'expressions...", quiz: { q: "Développer : 3(x - 2)", a: "3x-6" }, eleve: "non" },
-                    { id: 6, title: "Équations", content: "Résolution d'équations...", quiz: { q: "Résoudre : 2x = 10", a: "5" }, eleve: "non" }
+                    { id: 1, title: "Les nombres relatifs", content: "Étude des nombres positifs et négatifs...", quiz: { q: "Calculer : $-3 + (-5)$", a: "-8" }, eleve: "non" },
+                    { id: 2, title: "Arithmétique", content: "Diviseurs, multiples...", quiz: { q: "Est-ce que $12$ est un multiple de $4$ ?", a: "oui" }, eleve: "non" },
+                    { id: 3, title: "Les fractions", content: "Addition, soustraction...", quiz: { q: "Calculer : $\\frac{1}{2} + \\frac{1}{4}$", a: "3/4" }, eleve: "non" },
+                    { id: 4, title: "Puissances et racine carrée", content: "Utilisation des puissances...", quiz: { q: "Racine carrée de $16$ ?", a: "4" }, eleve: "non" },
+                    { id: 5, title: "Calcul littéral", content: "Simplification d'expressions...", quiz: { q: "Développer : $3(x - 2)$", a: "3x-6" }, eleve: "non" },
+                    { id: 6, title: "Équations", content: "Résolution d'équations...", quiz: { q: "Résoudre : $2x = 10$", a: "5" }, eleve: "non" }
                 ]
             },
             {
                 name: "ORGANISATION ET GESTION DE DONNÉES",
                 chapters: [
-                    { id: 7, title: "Proportionnalité", content: "Calcul de coefficients...", quiz: { q: "Si 10% de 50, combien ça fait ?", a: "5" }, eleve: "non" },
-                    { id: 8, title: "Les statistiques", content: "Lecture de graphiques...", quiz: { q: "Moyenne de 5, 10 et 15 ?", a: "10" }, eleve: "non" },
-                    { id: 9, title: "Probabilités", content: "Calcul de chances...", quiz: { q: "Probabilité de tirer un As dans un jeu de 32 cartes ?", a: "4/32" }, eleve: "non" },
-                    { id: 10, title: "Fonctions", content: "Introduction à la notion de fonction...", quiz: { q: "Si f(x)=x+1, f(5) = ?", a: "6" }, eleve: "non" }
+                    { id: 7, title: "Proportionnalité", content: "Calcul de coefficients...", quiz: { q: "Si $10\\%$ de $50$, combien ça fait ?", a: "5" }, eleve: "non" },
+                    { id: 8, title: "Les statistiques", content: "Lecture de graphiques...", quiz: { q: "Moyenne de $5, 10$ et $15$ ?", a: "10" }, eleve: "non" },
+                    { id: 9, title: "Probabilités", content: "Calcul de chances...", quiz: { q: "Probabilité de tirer un As dans un jeu de $32$ cartes ?", a: "4/32" }, eleve: "non" },
+                    { id: 10, title: "Fonctions", content: "Introduction à la notion de fonction...", quiz: { q: "Si $f(x)=x+1$, $f(5) = ?$", a: "6" }, eleve: "non" }
                 ]
             },
             {
                 name: "GRANDEURS ET MESURES",
                 chapters: [
-                    { id: 11, title: "Grandeurs et mesures", content: "Calcul d'aires...", quiz: { q: "Périmètre d'un carré de côté 5 ?", a: "20" }, eleve: "non" }
+                    { id: 11, title: "Grandeurs et mesures", content: "Calcul d'aires...", quiz: { q: "Périmètre d'un carré de côté $5$ ?", a: "20" }, eleve: "non" }
                 ]
             },
             {
                 name: "ESPACE ET GÉOMÉTRIE",
                 chapters: [
-                    { id: 12, title: "Triangle rectangle", content: "Propriétés du triangle...", quiz: { q: "Un triangle rectangle a un angle de 90° ?", a: "oui" }, eleve: "non" },
+                    { id: 12, title: "Triangle rectangle", content: "Propriétés du triangle...", quiz: { q: "Un triangle rectangle a un angle de $90^\\circ$ ?", a: "oui" }, eleve: "non" },
                     { id: 13, title: "Triangles et parallèles", content: "Étude des propriétés...", quiz: { q: "Deux droites parallèles ont-elles le même sens ?", a: "oui" }, eleve: "non" },
-                    { id: 14, title: "Trigonométrie : cosinus", content: "Utilisation du cosinus...", quiz: { q: "Cos = Adjacent / ... ?", a: "hypoténuse" }, eleve: "non" },
+                    { id: 14, title: "Trigonométrie : cosinus", content: "Utilisation du cosinus...", quiz: { q: "$\\cos = \\frac{\\text{Adjacent}}{\\text{Hypoténuse}}$ ?", a: "hypoténuse" }, eleve: "non" },
                     { id: 15, title: "Transformations", content: "Symétries axiales...", quiz: { q: "Une symétrie centrale utilise un point ?", a: "oui" }, eleve: "non" },
                     { id: 16, title: "Espace (Repérage, pyramides et cônes)", content: "Étude des solides...", quiz: { q: "Combien de sommets a une pyramide à base carrée ?", a: "5" }, eleve: "non" }
                 ]
@@ -437,10 +651,124 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     {
         name: "3ème",
         themes: [
-           {
+            {
                 name: "NOMBRES ET CALCULS",
                 chapters: [
-                    { id: 1, title: "Nombres et calculs (Relatifs, fractions, racine carrée, puissances)", content: "Les nombres relatifs...", quiz: { q: "Calculer : -5 + 8", a: "3" }, eleve: "non" },
+                    {
+                        id: 1,
+                        title: "Nombres et calculs (Relatifs, fractions, racine carrée, puissances)",
+                        content: `
+                            <div class="course-container">
+                                <!-- SECTION I : NOMBRES RELATIFS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">I. Rappels : Nombres relatifs</h2>
+                                    <p>Les nombres relatifs incluent les entiers naturels (positifs) et les nombres négatifs.</p>
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary); font-size: 1.1rem;">📏 Les Règles de Signes</strong><br><br>
+                                        <div style="margin-bottom: 15px;">
+                                            <strong>1. Sommes et différences (Addition/Soustraction) :</strong><br>
+                                            • Deux nombres de même signe $\\rightarrow$ on additionne leurs valeurs et on garde le signe.<br>
+                                            • Deux nombres de signes différents $\\rightarrow$ on soustrait la plus petite valeur de la plus grande et on garde le signe du plus grand.
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <strong>2. Produits et quotients (Multiplication/Division) :</strong><br>
+                                            • Même signe $\\rightarrow$ Résultat POSITIF ($+$)<br>
+                                            • Signes différents $\\rightarrow$ Résultat NÉGATIF ($-$)
+                                        </div>
+                                    </div>
+                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                        <strong style="color: var(--secondary);">⚠️ Priorités Opératoires</strong><br>
+                                        Dans un calcul complexe, respecte toujours cet ordre :
+                                        <ol style="margin-top: 10px; margin-bottom: 10px;">
+                                            <li>Les parenthèses (les plus intérieures d'abord)</li>
+                                            <li>Les multiplications et divisions</li>
+                                            <li>Les additions et soustractions</li>
+                                        </ol>
+                                        <p><strong>Exemple :</strong><br>
+                                        $5 + (-3) \\times 8 = ?$<br>
+                                        $\\rightarrow 5 + (-24) = -19$ <span style="font-size:0.8rem; color:var(--text-muted);">(On fait la multiplication avant l'addition)</span>
+                                        </p>
+                                    </div>
+                                </section>
+
+                                <!-- BOUTON 1 -->
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-relatifs" onclick="startQuizFromButton('quiz-area-relatifs', 1)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-relatifs"></div>
+
+                                <!-- SECTION II : FRACTIONS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">II. Rappels : Fractions</h2>
+                                    <p><strong>1. Simplification :</strong> Pour rendre une fraction irréductible, décomposez le numérateur et le dénominateur en produits de facteurs premiers et barrez les facteurs communs.</p>
+                                                                        <p><strong>2. Addition/Soustraction :</strong> Il faut impérativement mettre les fractions au <strong>même dénominateur</strong> avant d'additionner ou soustraire uniquement les numérateurs.</p>
+                                    <div class="notion-box">
+                                        <strong>💡 Règle de la division :</strong> Diviser par une fraction revient à multiplier par son <strong>inverse</strong>.<br>
+                                        Exemple : $\\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\times \\frac{d}{c}$
+                                    </div>
+                                </section>
+
+                                <!-- BOUTON 2 -->
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-fractions" onclick="startQuizFromButton('quiz-area-fractions', 2)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-fractions"></div>
+
+                                <!-- SECTION III : RACINES CARRÉES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">III. Racines carrées</h2>
+                                    <p>La racine carrée d'un nombre positif « n », notée $\\sqrt{n}$, est le nombre dont le carré est égal à « n ».</p>
+                                    <div class="notion-box">
+                                        <strong>💡 Exemples :</strong> $\\sqrt{1}=1$ | $\\sqrt{4}=2$ | $\\sqrt{9}=3$ | $\\sqrt{16}=4$ | $\\sqrt{25}=5$ | $\\sqrt{36}=6$ | $\\sqrt{49}=7$ | $\\sqrt{64}=8$ | $\\sqrt{81}=9$ | $\\sqrt{100}=10$
+                                    </div>
+                                    <p><strong>À savoir :</strong></p>
+                                    <ul>
+                                        <li>Retrouver mentalement la racine carrée d'un carré parfait.</li>
+                                        <li>Encadrer une racine carrée : ex, pour $\\sqrt{61}$, on sait que $\\sqrt{49} < \\sqrt{61} < \\sqrt{64}$, donc $7 < \\sqrt{61} < 8$.</li>
+                                    </ul>
+                                </section>
+
+                                <!-- BOUTON 3 -->
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-racines" onclick="startQuizFromButton('quiz-area-racines', 3)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-racines"></div>
+
+                                <!-- SECTION IV : PUISSANCES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">IV. Puissances et écriture scientifique</h2>
+                                    <p><strong>Définition :</strong> Soit $a$ un nombre relatif non nul et $n$ un entier positif. Le produit de $n$ facteurs égaux à $a$ est noté $a^n$.</p>
+                                    <div class="notion-box">
+                                        <strong>📏 Formules clés :</strong><br>
+                                        • $a^n \\times a^m = a^{n+m}$ <br>
+                                        • $(a^n)^m = a^{n \\times m}$ <br>
+                                        • $a^n / a^m = a^{n-m}$ <br>
+                                        • $a^{-n} = \\frac{1}{a^n}$
+                                    </div>
+                                    <p><strong>Puissances de 10 :</strong></p>
+                                    <ul>
+                                        <li>$10^4 = 10\,000$ (4 zéros)</li>
+                                        <li>$10^{-2} = 0,01$ (2 chiffres après la virgule)</li>
+                                    </ul>
+                                </section>
+
+                                <!-- BOUTON 4 -->
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-puissances" onclick="startQuizFromButton('quiz-area-puissances', 4)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-puissances"></div>
+
+                                <!-- SECTION V : ÉCRITURE SCIENTIFIQUE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">V. Écriture scientifique</h2>
+                                    <p>Un nombre est en notation scientifique s'il est écrit sous la forme $a \\times 10^n$, où $a$ est un nombre décimal tel que $1 \\le a < 10$.</p>
+                                    <div class="notion-box">
+                                        <strong>📝 Exemples :</strong><br>
+                                        • $125\,000\,000 = 1,25 \\times 10^8$<br>
+                                        • $0,000\,000\,256 = 2,56 \\times 10^{-7}$
+                                    </div>
+                                </section>
+
+                                <!-- BOUTON 5 -->
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-scientifique" onclick="startQuizFromButton('quiz-area-scientifique', 5)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-scientifique"></div>
+                            </div>
+                        `,
+                         
+                    quiz: { q: "Calculer : $\\sqrt{64} + 10^2$", a: "108" },  eleve: "non"},
+
                     { id: 2, title: "Arithmétique", content: "L'arithmétique étudie...", quiz: { q: "Est-ce que 15 est divisible par 3 ?", a: "oui" }, eleve: "non" },
                     { id: 3, title: "Calcul littéral", content: "Le calcul littéral utilise...", quiz: { q: "Développer : 2(x + 4)", a: "2x+8" }, eleve: "non" },
                     { id: 4, title: "Équations", content: "Une équation est une égalité...", quiz: { q: "Résoudre : x + 5 = 12", a: "7" }, eleve: "non" }
@@ -497,12 +825,9 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     // 4. LOGIQUE DE DONNÉES (Le lien avec le serveur)
     
 async function loadDataFromSupabase() {
-    const container = document.getElementById('content-area');
-    if (!container) return;
-
-    initializeData(); 
-    studentCardsGlobal = []; 
-
+    // On ne met pas de message "Chargement" car le cours est déjà affiché
+    
+    let studentCards = [];
     try {
         const { data: remoteData, error } = await supabaseClient
             .from('chapters')
@@ -510,85 +835,93 @@ async function loadDataFromSupabase() {
             .eq('level', currentLevel);
 
         if (error) throw error;
-        studentCardsGlobal = remoteData || [];
+        studentCards = remoteData || [];
     } catch (e) {
         console.error("Erreur Supabase:", e);
+        return; 
     }
 
-    // --- NOUVELLE ÉTAPE : Calculer les compteurs pour chaque chapitre officiel ---
+    // 1. On stocke les cartes dans la variable globale pour le mode entraînement
+    studentCardsGlobal = studentCards;
+
+    // 2. On met à jour les compteurs de badges sur l'officiel (pour l'affichage visuel)
     const currentLevelData = data.find(item => item.name === currentLevel);
     if (currentLevelData && Array.isArray(currentLevelData.themes)) {
         currentLevelData.themes.forEach(theme => {
             theme.chapters.forEach(officialChap => {
-                // On compte combien de cartes d'élèves correspondent à ce titre
-                officialChap.studentCount = studentCardsGlobal.filter(card => 
+                // On compte combien de cartes élèves correspondent à ce titre
+                officialChap.studentCount = studentCards.filter(card => 
                     card.title && card.title.trim().toLowerCase() === officialChap.title.trim().toLowerCase()
                 ).length;
             });
         });
     }
 
+    // 3. On rafraîchit l'affichage pour que les badges ✨ apparaissent sur la grille
     renderContent(); 
 }
 
 
 
-   async function saveNewCard() {
-        const selectedId = document.getElementById('new-chap-select').value;
-        const type = document.getElementById('new-question-type').value;
-        const content = document.getElementById('new-chap-content').value;
-        const q = document.getElementById('new-quiz-q').value;
-    
-        let a = "";
-     let optionsStr = "";
 
-     if (type === 'ouverte') {
-         a = document.getElementById('new-quiz-a').value;
-     } else {
-         a = document.getElementById('new-qcm-correct').value;
-         optionsStr = document.getElementById('new-qcm-options').value; 
-     }
+  async function saveNewCard() {
+    const selectedId = document.getElementById('new-chap-select').value;
+    const type = document.getElementById('new-question-type').value;
+    const content = document.getElementById('new-chap-content').value;
+    const q = document.getElementById('new-quiz-q').value;
 
-      if(!selectedId || !q || !a) {
+    let a = "";
+    let optionsStr = ""; 
+
+    if (type === 'ouverte') {
+        a = document.getElementById('new-quiz-a').value.trim();
+    } else {
+        a = document.getElementById('new-qcm-correct').value.trim();
+        optionsStr = document.getElementById('new-qcm-options').value; 
+    }
+
+    if (!selectedId || !q || !a) {
         alert("Erreur : Veuillez remplir les champs obligatoires.");
         return;
-      }
+    }
 
-     const btn = document.querySelector('#view-creator .action-btn');
-     const originalBtnText = btn.innerText;
-     btn.innerText = "Envoi en cours...";
-     btn.disabled = true;
+    // 4. Préparation de l'interface utilisateur (bouton en chargement)
+    const btn = document.querySelector('#view-creator .action-btn');
+    const originalBtnText = btn.innerText;
+    btn.innerText = "Envoi en cours...";
+    btn.disabled = true;
 
-        // Recherche du titre et du thème officiel pour la cohérence
-        let targetThemeName = "";
-        let targetChapterTitle = "";
-        const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
-        const levelIndex = levelsOrder.indexOf(currentLevel);
-        const levelData = officialData[levelIndex];
+    // 5. Recherche du titre et du thème officiel pour la cohérence de la base
+    let targetThemeName = "";
+    let targetChapterTitle = "";
+    const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+    const levelIndex = levelsOrder.indexOf(currentLevel);
+    const levelData = officialData[levelIndex];
 
-     for (let theme of levelData.themes) {
+    for (let theme of levelData.themes) {
         const chap = theme.chapters.find(c => c.id == selectedId);
         if (chap) {
             targetThemeName = theme.name;
             targetChapterTitle = chap.title;
             break;
         }
-      }
+    }
 
-     // Construction de l'objet conforme à votre table Supabase
-      const newRow = {
+    // 6. Construction de l'objet conforme à la table Supabase
+    const newRow = {
         level: currentLevel,
         theme_name: targetThemeName,
         title: targetChapterTitle,
         content: content,
         question: q,
-        answer: a,
+        answer: a, // Contient soit le texte simple, soit le code LaTeX \frac{}{}
         type: type,
         options: optionsStr,
-        eleve: "oui" // <--- On remplit le nouveau champ demandé
-      };
+        eleve: "oui" 
+    };
 
-     try {
+    // 7. Envoi vers Supabase
+    try {
         const { error } = await supabaseClient
             .from('chapters')
             .insert([newRow]);
@@ -596,48 +929,99 @@ async function loadDataFromSupabase() {
         if (error) throw error;
 
         alert("Bravo ! Ta question a été publiée.");
+        
+        // Réinitialisation du formulaire
         document.getElementById('new-chap-content').value = "";
         document.getElementById('new-quiz-q').value = "";
-        document.getElementById('new-quiz-a').value = "";
+        document.getElementById('new-quiz-a').value = ""; // Champ texte classique
         document.getElementById('new-qcm-correct').value = "";
         document.getElementById('new-qcm-options').value = "";
+        // Réinitialisation de l'éditeur de fraction
+        if(document.getElementById('visual-fraction-container')) {
+            document.getElementById('visual-fraction-container').style.display = 'none';
+            document.getElementById('frac-num').value = "";
+            document.getElementById('frac-den').value = "";
+        }
 
-        // On recharge tout pour voir la nouvelle carte
+        // Rechargement des données et retour à l'application
         await loadDataFromSupabase(); 
         document.getElementById('view-creator').classList.remove('active');
         document.getElementById('view-app').classList.add('active');
         setMode('cours');
 
-      } catch (error) {
+    } catch (error) {
         console.error("Erreur Supabase:", error);
-        alert("Erreur : " + error.message);
-      } finally {
+        alert("Erreur lors de l'enregistrement : " + error.message);
+    } finally {
+        // Remise en état du bouton
         btn.innerText = originalBtnText;
         btn.disabled = false;
-      }
     }
+}
+
+
+// 1. Gère l'affichage/masquage de l'éditeur de fraction
+function toggleFractionEditor() {
+    const editor = document.getElementById('visual-fraction-container');
+    editor.style.display = (editor.style.display === 'none' || editor.style.display === '') ? 'flex' : 'none';
+}
+
+// 2. Synchronise les cases num/den avec l'input texte principal
+function syncFraction() {
+    const num = document.getElementById('frac-num').value.trim();
+    const den = document.getElementById('frac-den').value.trim();
+    
+    // On cherche quel input est actuellement utilisé par l'élève (Question ou Réponse)
+    let activeInput = document.activeElement;
+    let targetInput;
+
+    if (activeInput && activeInput.id.includes('new-quiz-q')) {
+        targetInput = document.getElementById('new-quiz-q');
+    } else {
+        targetInput = document.getElementById('new-quiz-a');
+    }
+
+    if (num !== "" && den !== "") {
+        targetInput.value = `\\frac{${num}}{${den}}`;
+    } else {
+        targetInput.value = "";
+    }
+    
+    updatePreview(); // Mise à jour de l'aperçu
+}
+
+
 
 
 
 
 
   // 4. FONCTIONS DE NAVIGATION et VUES(ce qui change l'écran)
-    async function selectLevel(index) {
-        const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
-        currentLevel = levelsOrder[index];
-        
-        document.getElementById('level-display').innerText = currentLevel;
-        document.getElementById('view-levels').classList.remove('active');
-        document.getElementById('view-app').classList.add('active');
+function selectLevel(index) {
+    const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+    currentLevel = levelsOrder[index];
+    
+    document.getElementById('level-display').innerText = currentLevel;
+    document.getElementById('view-levels').classList.remove('active');
+    document.getElementById('view-app').classList.add('active');
 
-        const container = document.getElementById('content-area');
-        if (container) {
-            container.innerHTML = "<p style='text-align:center; margin-top:50px;'>Chargement du programme...</p>";
-        }
-
-        await loadDataFromSupabase();
-        setMode('cours');
+    const container = document.getElementById('content-area');
+    if (container) {
+        container.innerHTML = "<p style='text-align:center; margin-top:50px;'>Chargement du programme...</p>";
     }
+
+    // 1. On prépare l'officiel immédiatement
+    initializeData(); 
+
+    // 2. On affiche le mode cours (l'élève voit les chapitres officiels instantanément)
+    setMode('cours'); 
+
+    // 3. On lance la récupération des cartes élèves en arrière-plan
+    // On ne met PAS 'await' pour ne pas bloquer l'affichage du cours
+    loadDataFromSupabase();
+}
+
+
 
 
     function resetApp() {                                                                   /** Revient à l'écran de sélection des niveaux et nettoie toutes les vues **/
@@ -662,11 +1046,21 @@ async function loadDataFromSupabase() {
 
 
     function setMode(mode) {
-        currentMode = mode;
-        document.getElementById('btn-cours').classList.toggle('active', mode === 'cours');
-        document.getElementById('btn-entrainement').classList.toggle('active', mode === 'entrainement');
-        renderContent();
+    currentMode = mode;
+    // Mise à jour visuelle des onglets
+    document.getElementById('btn-cours').classList.toggle('active', mode === 'cours');
+    document.getElementById('btn-entrainement').classList.toggle('active', mode === 'entrainement');
+    
+    // --- CORRECTION : Gestion de la visibilité du bouton Créer une carte ---
+    const btnCreate = document.getElementById('btn-create-card');
+    if (btnCreate) {
+        // Le bouton n'est visible que si le mode est 'entrainement'
+        btnCreate.style.display = (mode === 'entrainement') ? 'block' : 'none';
     }
+
+    renderContent();
+    }
+
 
     function openCreator() {
         // 1. On cache TOUTES les vues pour repartir de zéro
@@ -714,6 +1108,328 @@ async function loadDataFromSupabase() {
         }
     }
 
+    // Variable pour suivre si un quiz est actuellement ouvert
+    let activeInjectedQuizId = null;
+
+    function startQuizFromButton(containerId, quizNumber) {
+        const allLocalQuestions = {
+         1: [ // NOMBRES RELATIFS
+            { quiz: { q: '(-5) + (-3) = ?', a: '-8' }, explanation: 'On additionne deux nombres de même signe.' },
+            { quiz: { q: '(-7) + (+10) = ?', a: '3' }, explanation: 'Signes différents : on fait la différence (10-7) et on prend le signe du plus grand.' },
+            { quiz: { q: '(-4) x (-3) = ?', a: '12' }, explanation: 'Produit de deux nombres négatifs = résultat positif.' },
+            { quiz: { q: '(-12) / 3 = ?', a: '-4' }, explanation: 'Signes différents dans une division donnent un résultat négatif.' },
+            { quiz: { q: '(-2) x 5 = ?', a: '-10' }, explanation: 'Un nombre négatif multiplié par un positif donne un négatif.' },
+            { quiz: { q: '15 + (-5) = ?', a: '10' }, explanation: 'On soustrait les valeurs : 15 - 5 = 10.' },
+            { quiz: { q: '(-8) - (-2) = ?', a: '-6' }, explanation: 'Soustraire un négatif revient à ajouter son opposé : -8 + 2 = -6.' },
+            { quiz: { q: '(-1) x (-1) x (-1) = ?', a: '-1' }, explanation: 'Un nombre impair de facteurs négatifs donne un résultat négatif.' },
+            { quiz: { q: '(-20) / (-4) = ?', a: '5' }, explanation: 'Deux signes négatifs dans une division donnent un positif.' },
+            { quiz: { q: '10 + (-10) = ?', a: '0' }, explanation: 'La somme d\'un nombre et de son opposé est toujours nulle.' }
+         ],
+         2: [ // FRACTIONS
+            { quiz: { q: 'Simplifier 10/15', a: '2/3' }, explanation: 'On divise le numérateur et le dénominateur par 5.' },
+            { quiz: { q: 'Calculer 1/2 + 1/4', a: '3/4' }, explanation: 'Même dénominateur : 2/4 + 1/4 = 3/4.' },
+            { quiz: { q: 'Calculer 2/3 - 1/6', a: '1/2' }, explanation: 'Même dénominateur (6) : 4/6 - 1/6 = 3/6, soit 1/2.' },
+                    { quiz: { q: 'Calculer 3/4 x 5/7', a: '15/28' }, explanation: 'On multiplie les numérateurs entre eux (3x5) et les dénominateurs entre eux (4x7).' },
+                    { quiz: { q: 'Calculer 2 / (1/3)', a: '6' }, explanation: 'Diviser par une fraction revient à multiplier par son inverse : 2 x 3 = 6.' },
+                    { quiz: { q: 'Simplifier 12/18', a: '2/3' }, explanation: 'On divise par le plus grand diviseur commun, ici 6 (12÷6=2 et 18÷6=3).' },
+                    { quiz: { q: 'Calculer 1/5 + 2/5', a: '3/5' }, explanation: 'Même dénominateur, on additionne juste les numérateurs.' },
+                    { quiz: { q: 'Calculer 1/2 x 1/2', a: '1/4' }, explanation: 'On multiplie les numérateurs (1x1) et les dénominateurs (2x2).' },
+                    { quiz: { q: 'Calculer 3/5 ÷ 2', a: '3/10' }, explanation: 'Diviser par 2 revient à multiplier par l\'inverse, soit 1/2. Donc 3/5 x 1/2 = 3/10.' },
+                    { quiz: { q: 'Simplifier 20/100', a: '1/5' }, explanation: 'On peut diviser par 20 : 20÷20=1 et 100÷20=5.' },
+                    { quiz: { q: 'Calculer 1/3 + 1/3', a: '2/3' }, explanation: 'Même dénominateur, on additionne les numérateurs : 1+1=2.' }
+         ],
+                3: [ // RACINES CARRÉES
+                    { quiz: { q: 'Encadrer $\\sqrt{40}$ par deux entiers', a: '6 < \\sqrt{40} < 7' }, explanation: 'Car $6^2=36$ et $7^2=49$. $40$ est entre $36$ et $49$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{10}$ par deux entiers', a: '3 < \\sqrt{10} < 4' }, explanation: 'Car $3^2=9$ et $4^2=16$. $10$ est entre $9$ et $16$.' },
+                    { quiz: { q: '$\\sqrt{81} = ?$', a: '9' }, explanation: 'Car $9 \\times 9 = 81$.' },
+                    { quiz: { q: '$\\sqrt{0} = ?$', a: '0' }, explanation: 'Car $0 \\times 0 = 0$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{2}$ par deux entiers', a: '1 < \\sqrt{2} < 2' }, explanation: 'Car $1^2=1$ et $2^2=4$. $2$ est entre $1$ et $4$.' },
+                    { quiz: { q: '$\\sqrt{144} = ?$', a: '12' }, explanation: 'Car $12 \\times 12 = 144$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{50}$ par deux entiers', a: '7 < \\sqrt{50} < 8' }, explanation: 'Car $7^2=49$ et $8^2=64$. $50$ est entre $49$ et $64$.' },
+                    { quiz: { q: '$\\sqrt{25} + \\sqrt{16} = ?$', a: '9' }, explanation: '$\\sqrt{25}=5$ et $\\sqrt{16}=4$. Donc $5 + 4 = 9$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{30}$ par deux entiers', a: '5 < \\sqrt{30} < 6' }, explanation: 'Car $5^2=25$ et $6^2=36$. $30$ est entre $25$ et $36$.' },
+                    { quiz: { q: '$\\sqrt{100} = ?$', a: '10' }, explanation: 'Car $10 \\times 10 = 100$.' }
+                ],
+                4: [ // PUISSANCES
+                    { quiz: { q: '$10^2 = ?$', a: '100' }, explanation: '$10 \\times 10 = 100$.' },
+                    { quiz: { q: '$10^{-2} = ?$', a: '0,01' }, explanation: '$10^{-2}$ est l\'inverse de $10^2$, soit $1/100 = 0,01$.' },
+                    { quiz: { q: '$2^3 = ?$', a: '8' }, explanation: '$2 \\times 2 \\times 2 = 8$.' },
+                    { quiz: { q: '$a^0 = ?$ (avec $a$ non nul)', a: '1' }, explanation: 'Par convention mathématique, n\'importe quel nombre puissance 0 vaut 1.' },
+                    { quiz: { q: '$10^5 = ?$', a: '100000' }, explanation: 'Un 1 suivi de 5 zéros.' },
+                    { quiz: { q: '$(-2)^3 = ?$', a: '-8' }, explanation: ' $(-2) \\times (-2) \\times (-2) = -8$. Un nombre impair de facteurs négatifs donne un résultat négatif.' },
+                    { quiz: { q: '$10^{-3} = ?$', a: '0,001' }, explanation: 'Cela correspond à $1/1000$, soit $0,001$.' },
+                    { quiz: { q: '$2^4 = ?$', a: '16' }, explanation: '$2 \\times 2 \\times 2 \\times 2 = 16$.' },
+                    { quiz: { q: '$5^2 = ?$', a: '25' }, explanation: '$5 \\times 5 = 25$.' },
+                    { quiz: { q: '$10^1 = ?$', a: '10' }, explanation: 'N\'importe quel nombre puissance 1 est égal à lui-même.' }
+                ],
+                5: [ // ÉCRITURE SCIENTIFIQUE
+                    { quiz: { q: 'Écrire 125 000 en écriture scientifique', a: '1,25x10^2' }, explanation: 'On déplace la virgule de 5 rangs vers la gauche : $1,25 \\times 10^5$.' },
+                    { quiz: { q: 'Écrire 0,007 en écriture scientifique', a: '7x10^-3' }, explanation: 'On déplace la virgule de 3 rangs vers la droite : $7 \\times 10^{-3}$.' },
+                    { quiz: { q: 'Écrire 500 en écriture scientifique', a: '5x10^2' }, explanation: 'On déplace la virgule de 2 rangs vers la gauche : $5 \\times 10^2$.' },
+                    { quiz: { q: 'Écrire 0,045 en écriture scientifique', a: '4,5x10^-2' }, explanation: 'On déplace la virgule de 2 rangs vers la droite : $4,5 \\times 10^{-2}$.' },
+                    { quiz: { q: 'Écrire 1 000 000 en écriture scientifique', a: '1x10^6' }, explanation: 'On déplace la virgule de 6 rangs vers la gauche : $1 \\times 10^6$.' },
+                    { quiz: { q: 'Écrire 0,0001 en écriture scientifique', a: '1x10^-4' }, explanation: 'On déplace la virgule de 4 rangs vers la droite : $1 \\times 10^{-4}$.' },
+                    { quiz: { q: 'Écrire 32,5 en écriture scientifique', a: '3,25x10^1' }, explanation: 'On déplace la virgule d\'un rang vers la gauche : $3,25 \\times 10^1$.' },
+                    { quiz: { q: 'Écrire 0,8 en écriture scientifique', a: '8x10^-1' }, explanation: 'On déplace la virgule d\'un rang vers la droite : $8 \\times 10^{-1}$.' },
+                    { quiz: { q: 'Écrire 700 en écriture scientifique', a: '7x10^2' }, explanation: 'On déplace la virgule de 2 rangs vers la gauche : $7 \\times 10^2$.' }
+                ]
+            };
+
+        // On récupère les questions correspondant au numéro choisi
+        const selectedQuestions = allLocalQuestions[quizNumber];
+        if (selectedQuestions) {
+            launchLocalQuiz(containerId, selectedQuestions);
+        }
+    }
+
+
+           
+
+
+    function launchLocalQuiz(containerId, questions) {
+        const targetContainer = document.getElementById(containerId);
+        
+        // Si le quiz est déjà ouvert dans ce conteneur, on le masque
+        if (activeInjectedQuizId === containerId) {
+            targetContainer.innerHTML = "";
+            activeInjectedQuizId = null;
+            // On remet le texte du bouton original
+            const btn = document.querySelector(`[data-quiz-target="${containerId}"]`);
+            if(btn) btn.innerText = "Ai-je bien compris ?";
+            return;
+        }
+
+        // Si on ouvre un nouveau quiz, on marque l'ID actif
+        activeInjectedQuizId = containerId;
+        
+        // On prépare le bouton pour pouvoir le masquer plus tard
+        const btn = document.querySelector(`[data-quiz-target="${containerId}"]`);
+        if(btn) btn.innerText = "Masquer le quizz";
+
+        // Initialisation de la session locale
+        trainingSession.score = 0;
+        trainingSession.totalAnswered = 0;
+        trainingSession.currentCards = [...questions].sort(() => Math.random() - 0.5);
+        trainingSession.currentIndex = 0;
+        trainingSession.isReviewMode = false;
+
+        // On injecte le HTML du quiz
+        renderInjectedQuiz(targetContainer, questions, containerId);
+    }
+
+
+
+    function renderInjectedQuiz(container, questions, containerId) {
+        const currentCard = trainingSession.currentCards[trainingSession.currentIndex];
+        
+        if (!currentCard) {
+            // Fin du quiz local - On affiche juste le score final sans bouton fermer inutile
+            container.innerHTML = `
+                <div style="text-align:center; padding: 10px;">
+                    <p><strong style="font-size:1.2rem;">Quiz terminé !</strong></p>
+                    <p style="font-size:1.5rem; color:var(--primary);">Score : ${trainingSession.score}/${trainingSession.totalAnswered}</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="injected-quiz-container">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">
+                    <span>Score: ${trainingSession.score}/${trainingSession.totalAnswered}</span>
+                    <span>${trainingSession.currentIndex + 1}/${trainingSession.currentCards.length}</span>
+                </div>
+                <p style="font-size:1.1rem; margin-bottom:15px;">${currentCard.quiz.q}</p>
+                <div id="local-interaction-zone"></div>
+            </div>
+        `;
+
+        const zone = document.getElementById('local-interaction-zone');
+
+        if (trainingSession.isReviewMode) {
+            // MODE AIDE : On affiche la réponse ET l'explication
+            zone.innerHTML = `
+                <div class="feedback help-mode" style="display:block; margin-bottom:15px;">
+                    La réponse était : <strong>${currentCard.quiz.a}</strong>
+                </div>
+                <div class="notion-box" style="font-style: normal; font-size: 0.9rem; margin-bottom: 15px;">
+                    <strong style="color: var(--secondary);">💡 Explication :</strong><br>
+                    ${currentCard.explanation || "Consultez le cours pour comprendre la méthode."}
+                </div>
+                <button class="action-btn" onclick="nextLocalQuestion('${containerId}')">Question suivante ➔</button>
+            `;
+        } else {
+    zone.innerHTML = `
+            <input type="text" id="user-answer" placeholder="Votre réponse (ex: \\frac{1}{2})">
+            
+            <!-- CLAVIER MATHÉMATIQUE DU QUIZ -->
+            <div class="math-keyboard">
+                <button type="button" class="math-key" onclick="insertMathChar('\\sqrt{')">√</button>
+                <button type="button" class="math-key" onclick="insertMathChar('^{')">^</button>
+                <button type="button" class="math-key" onclick="insertMathChar('\\frac{ }{ }')">frac</button>
+                <button type="button" class="math-key" onclick="insertMathChar(')')">)</button>
+                <button type="button" class="math-key" onclick="insertMathChar('(')">(</button>
+                <button type="button" class="math-key" onclick="insertMathChar('*')">×</button>
+                <button type="button" class="math-key" onclick="insertMathChar('.')">.</button>
+                <button type="button" class="math-key" onclick="insertMathChar(')')">)</button>
+            </div>
+
+            <button class="action-btn" style="margin-top:15px;" onclick="checkLocalAnswer('${currentCard.quiz.a}', '${containerId}')">Valider</button>
+            <div id="local-feedback" class="feedback"></div>
+        `;
+
+            // On attache l'événement pour masquer le clavier quand on valide ou change de question
+            const input = document.getElementById('local-user-answer');
+            input.addEventListener('blur', () => {
+                // Optionnel : on peut laisser le clavier si l'élève veut corriger, 
+                // mais ici on va le laisser visible tant qu'il est dans le champ.
+            });
+        }
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([container]).catch((err) => console.log(err));
+        }
+}
+
+
+// --- 1. INSERTION ET MISE À JOUR DES APERÇUS ---
+
+        function insertMathChar(char, btn) {
+    const targetId = btn.getAttribute('data-target');
+    const activeInput = document.getElementById(targetId);
+
+    if (!activeInput) return;
+    activeInput.focus();
+
+    // Cas spécial de la fraction
+    if (char === '$\\frac{}{}$') {
+        const fractionEditor = document.getElementById('visual-fraction-container');
+        if (fractionEditor) {
+            fractionEditor.style.display = 'flex';
+            document.getElementById('frac-num').value = "";
+            document.getElementById('frac-den').value = "";
+            document.getElementById('frac-num').focus();
+        } else {
+            // Pour la Question ou la Leçon : on insère $\frac{}{}$ 
+            // et on place le curseur entre les accolades pour faciliter la saisie mobile
+            const start = activeInput.selectionStart;
+            const end = activeInput.selectionEnd;
+            const value = activeInput.value;
+            
+            // On insère avec un curseur positionné au milieu : \frac{ | }{ }
+            const insertion = '$\\frac{}{}$'; 
+            activeInput.value = value.substring(0, start) + insertion + value.substring(end);
+            
+            // Positionner le curseur à l'intérieur des premières accolades
+            // On cherche la position du premier "|" (ou on calcule mathématiquement)
+            const newPos = start + insertion.indexOf('{}') + 1; 
+            activeInput.setSelectionRange(newPos, newPos);
+        }
+        updateSpecificPreview(targetId);
+        return;
+    }
+
+    // Insertion standard (√, ^, ×)
+    const start = activeInput.selectionStart;
+    const end = activeInput.selectionEnd;
+    const value = activeInput.value;
+    activeInput.value = value.substring(0, start) + char + value.substring(end);
+
+    // Replacer le curseur après l'insertion
+    const newPos = start + char.length;
+    activeInput.setSelectionRange(newPos, newPos);
+
+    updateSpecificPreview(targetId);
+}
+
+
+
+    function updateSpecificPreview(inputId) {
+        let previewId = "";
+        if (inputId === 'new-quiz-q') previewId = "preview-q";
+        else if (inputId === 'new-quiz-a') previewId = "preview-a";
+        else if (inputId === 'new-chap-content') previewId = "preview-content";
+
+        const previewElement = document.getElementById(previewId);
+        if (!previewElement) return;
+
+        const inputElement = document.getElementById(inputId);
+        // On prend la valeur brute. Les $ sont déjà dedans grâce aux boutons.
+        const content = inputElement.value;
+
+        previewElement.innerHTML = content;
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([previewElement]).catch((err) => console.log(err));
+        }
+    }
+
+
+// --- 2. ÉCOUTEURS D'ÉVÉNEMENTS POUR LA MISE À JOUR EN TEMPS RÉEL ---
+// Cette partie permet de mettre à jour l'aperçu dès que l'élève tape au clavier (sans le clavier virtuel)
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'new-quiz-q') {
+        updateSpecificPreview('new-quiz-q');
+    } else if (e.target.id === 'new-quiz-a') {
+        updateSpecificPreview('new-quiz-a');
+    } else if (e.target.id === 'new-chap-content') {
+        updateSpecificPreview('new-chap-content');
+    }
+});
+
+function compareAnswers(userAnsRaw, targetAnsRaw) {
+    if (!userAnsRaw || !targetAnsRaw) return false;
+
+    /**
+     * LA MÉTHODE "EXTRACTION DE VALEURS"
+     * Au lieu de transformer le texte, on extrait uniquement ce qui compte :
+     * les chiffres, les points, les slashs et les signes.
+     */
+    const extractMathValues = (str) => {
+        return str.toString()
+            // 1. On transforme d'abord les fractions LaTeX en format simple pour faciliter l'extraction
+            // On remplace \frac{a}{b} par a/b
+            .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '$1/$2')
+            // 2. On transforme les racines \sqrt{x} en x
+            .replace(/\\sqrt\{([^}]*)\}/g, '$1')
+            // 3. On remplace la virgule par un point pour les décimaux
+            .replace(/,/g, '.')
+            // 4. ON GARDE UNIQUEMENT : les chiffres (0-9), le point (.), le slash (/), et le signe moins (-)
+            // Tout le reste (lettres comme 'rac', symboles $, parenthèses, etc.) est supprimé.
+            .replace(/[^0-9./-]/g, ''); 
+    };
+
+    const cleanUser = extractMathValues(userAnsRaw);
+    const cleanTarget = extractMathValues(targetAnsRaw);
+
+    // Debug pour vérifier ce qu'il reste après l'extraction
+    console.log("Comparaison finale :", cleanUser, "vs", cleanTarget);
+
+    return cleanUser === cleanTarget;
+}
+
+
+function checkLocalAnswer(correctAnswer, containerId) {
+    const input = document.getElementById('local-user-answer');
+    const feedback = document.getElementById('local-feedback');
+    
+    // On utilise la même fonction universelle
+    if (compareAnswers(input.value, correctAnswer)) {
+        trainingSession.score++;
+        nextLocalQuestion(containerId);
+    } else {
+        trainingSession.isReviewMode = true;
+        renderInjectedQuiz(document.getElementById(containerId), trainingSession.currentCards, containerId);
+    }
+}
+
+
+
+
+
+function nextLocalQuestion(containerId) {
+    trainingSession.currentIndex++;
+    trainingSession.isReviewMode = false;
+    renderInjectedQuiz(document.getElementById(containerId), trainingSession.currentCards, containerId);
+}
 
 // 5. MOTEUR D AFFICHAGE (le rendu HTML)
 
@@ -790,7 +1506,9 @@ function launchChapter(chapter) {
                 <div id="feedback" class="feedback"></div>
             </div>`;
         container.appendChild(card);
-
+        if (window.MathJax) {
+            MathJax.typesetPromise([container]);
+        }
     } else {
         // --- MODE ENTRAÎNEMENT ---
         
@@ -900,6 +1618,9 @@ function launchChapter(chapter) {
             `;
             }
         }
+        if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([container]).catch((err) => console.log(err));
+        }
     }
 
 function showFinalScore() {    // Affiche le score final proprement
@@ -931,10 +1652,11 @@ function showFinalScore() {    // Affiche le score final proprement
 
   // 6. LOGIQUE DES CHAPITRES ET QUIZ (Launch, Check, ShowCourse)
 
-      function checkMiniQuiz(correctAnswer) {
+    function checkMiniQuiz(correctAnswer) {
         const input = document.getElementById('user-answer');
         const feedback = document.getElementById('feedback');
-        if (input.value.trim().toLowerCase() === correctAnswer.toLowerCase()) {
+        
+        if (compareAnswers(input.value, correctAnswer)) {
             feedback.innerText = "Bravo ! ✅";
             feedback.className = "feedback success";
         } else {
@@ -944,23 +1666,31 @@ function showFinalScore() {    // Affiche le score final proprement
     }
 
     function checkFullQuiz(correctAnswer, chapterTitle, userAnsInput = null) {
-        const input = document.getElementById('user-answer');
-        const feedback = document.getElementById('feedback');
-        const userAns = userAnsInput !== null ? userAnsInput : input.value.trim().toLowerCase();
+        let userAns;
+
+        // SI c'est un QCM (on a cliqué sur un bouton), l'argument userAnsInput contient la valeur du bouton
+        if (userAnsInput !== null) {
+            userAns = userAnsInput;
+        } else {
+            // SINON, on cherche l'input texte dans le DOM
+            const inputEl = document.getElementById('user-answer');
+            userAns = inputEl ? inputEl.value : "";
+        }
 
         trainingSession.totalAnswered++;
 
-        if (userAns === correctAnswer.toLowerCase()) {
-        trainingSession.score++;
-        // On passe directement à la suivante en cas de succès
-        nextQuestion(chapterTitle);
+        // Utilisation de la comparaison universelle
+        if (compareAnswers(userAns, correctAnswer)) {
+            trainingSession.score++;
+            nextQuestion(chapterTitle);
         } else {
-        // En cas d'erreur, on active le mode aide
-        trainingSession.isReviewMode = true;
-        // On relance l'affichage pour montrer l'aide
-        displayTrainingQuestion(chapterTitle);
+            // En cas d'erreur, on active le mode aide
+            trainingSession.isReviewMode = true;
+            displayTrainingQuestion(chapterTitle);
         }
     }
+
+
 
 
     function nextQuestion(chapterTitle) {      // Passe à la question suivante ou finit la session
