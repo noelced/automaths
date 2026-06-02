@@ -519,35 +519,40 @@ sup {
             <option value="qcm">🔘 QCM (Choix multiples)</option>
         </select>
 
-        <!-- 4. MA QUESTION -->
-        <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Question</label>
-        <!-- Aperçu Question -->
-        <div id="preview-q" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
-        <!-- Champ Question -->
-        <input type="text" id="new-quiz-q" placeholder="$\frac{1}{2}$ écrit 1/2      $\sqrt2$ écrit √2  et  5^{2} écrit 5²" >
-        <!-- Clavier Question -->
-        <div class="math-keyboard" style="margin-bottom:25px;">
-            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
-            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('^{}', this)">^ puissance</button>
-            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('$\\frac{}{}$', this)">fraction</button>
-            <button type="button" class="math-key" data-target="new-quiz-q" onclick="insertMathChar('*', this)">×</button>
-        </div>
+        <!-- BLOC 1 : Clavier pour MA QUESTION -->
+<label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Question</label>
+<div id="preview-q" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+<input type="text" id="new-quiz-q" placeholder="...">
+<div class="math-keyboard" style="margin-bottom:25px;">
+    <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+    <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+    <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+    <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+    <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+    <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+    <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+    <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+</div>
+
+<!-- BLOC 2 : Clavier pour MA RÉPONSE (Zone ouverte) -->
+<div id="zone-reponse-ouverte">
+    <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
+    <div id="preview-a" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+    <input type="text" id="new-quiz-a" placeholder="...">
+    <div class="math-keyboard" style="margin-bottom:25px;">
+        <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+        <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+        <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+        <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+        <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+        <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+        <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+        <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+    </div>
+</div>
 
 
-        <!-- 6. MA RÉPONSE (Uniquement si mode ouvert) -->
-        <div id="zone-reponse-ouverte">
-            <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
-            <!-- Aperçu Réponse -->
-            <div id="preview-a" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
-            <!-- Champ Réponse -->
-            <input type="text" id="new-quiz-a" placeholder="tapez par exemple: 3,5 ou 7/2">
-            <!-- Clavier Réponse -->
-            <div class="math-keyboard" style="margin-bottom:25px;">
-                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
-                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('^{}', this)">^ puissance</button>
-                <button type="button" class="math-key" data-target="new-quiz-a" onclick="insertMathChar('*', this)">×</button>
-            </div>
-        </div>
+
 
         <!-- Zone QCM (Masquée si ouvert) -->
         <div id="zone-reponse-qcm" style="display:none;">
@@ -557,19 +562,20 @@ sup {
             <input type="text" id="new-qcm-options" placeholder="ex: 0,5 \ 1 \ 2">
         </div>
 
-        <!-- 7. CONTENU DE LA LEÇON -->
-        <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:20px;">Contenu de la leçon (optionnel)</label>
-        <!-- Aperçu Leçon -->
-        <div id="preview-content" style="font-size:1rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
-        <!-- Champ Leçon -->
-        <textarea id="new-chap-content" style="width:100%; border-radius:10px; padding:10px; border:2px solid #e2e8f0; min-height:80px; margin-bottom:15px; font-family:inherit;" placeholder="Explique la règle ici..."></textarea>
-        <!-- Clavier virtuel Leçon -->
-        <div class="math-keyboard" style="margin-top:15px;">
-            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('$\\sqrt{}$', this)">√ racine</button>
-            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('^{}', this)">^ puissance</button>
-            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('$\\frac{}{}$', this)">fraction</button>
-            <button type="button" class="math-key" data-target="new-chap-content" onclick="insertMathChar('*', this)">×</button>
-        </div>
+<!-- BLOC 3 : Clavier pour LE CONTENU DE LA LEÇON -->
+<label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:20px;">Contenu de la leçon (optionnel)</label>
+<div id="preview-content" style="font-size:1rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+<textarea id="new-chap-content" style="width:100%; border-radius:10px; padding:10px; border:2px solid #e2e8f0; min-height:80px; margin-bottom:15px; font-family:inherit;" placeholder="Explique la règle ici..."></textarea>
+<div class="math-keyboard" style="margin-top:15px;">
+    <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+    <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+    <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+    <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+    <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+    <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+    <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+    <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+</div>
         <button class="action-btn" style="background: var(--secondary); margin-top:10px;" onclick="saveNewCard()">Enregistrer ma carte</button>
     </div>
 </section>
@@ -1112,7 +1118,20 @@ function selectLevel(index) {
     let activeInjectedQuizId = null;
 
     function startQuizFromButton(containerId, quizNumber) {
-        const allLocalQuestions = {
+    // SI le quiz est déjà ouvert dans ce conteneur précis -> ON LE MASQUE (Toggle)
+    if (activeInjectedQuizId === containerId) {
+        const targetContainer = document.getElementById(containerId);
+        targetContainer.innerHTML = "";
+        activeInjectedQuizId = null;
+
+        // On remet le texte du bouton original
+        const btn = document.querySelector(`[data-quiz-target="${containerId}"]`);
+        if(btn) btn.innerText = "Ai-je bien compris ?";
+        return;
+    }
+
+    // SINON -> On lance le quiz normalement
+    const allLocalQuestions = {
          1: [ // NOMBRES RELATIFS
             { quiz: { q: '(-5) + (-3) = ?', a: '-8' }, explanation: 'On additionne deux nombres de même signe.' },
             { quiz: { q: '(-7) + (+10) = ?', a: '3' }, explanation: 'Signes différents : on fait la différence (10-7) et on prend le signe du plus grand.' },
@@ -1139,15 +1158,15 @@ function selectLevel(index) {
                     { quiz: { q: 'Calculer 1/3 + 1/3', a: '2/3' }, explanation: 'Même dénominateur, on additionne les numérateurs : 1+1=2.' }
          ],
                 3: [ // RACINES CARRÉES
-                    { quiz: { q: 'Encadrer $\\sqrt{40}$ par deux entiers', a: '6 < \\sqrt{40} < 7' }, explanation: 'Car $6^2=36$ et $7^2=49$. $40$ est entre $36$ et $49$.' },
-                    { quiz: { q: 'Encadrer $\\sqrt{10}$ par deux entiers', a: '3 < \\sqrt{10} < 4' }, explanation: 'Car $3^2=9$ et $4^2=16$. $10$ est entre $9$ et $16$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{40}$ par deux entiers', a: '6 < √40 < 7' }, explanation: 'Car $6^2=36$ et $7^2=49$. $40$ est entre $36$ et $49$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{10}$ par deux entiers', a: '3 < √10 < 4' }, explanation: 'Car $3^2=9$ et $4^2=16$. $10$ est entre $9$ et $16$.' },
                     { quiz: { q: '$\\sqrt{81} = ?$', a: '9' }, explanation: 'Car $9 \\times 9 = 81$.' },
                     { quiz: { q: '$\\sqrt{0} = ?$', a: '0' }, explanation: 'Car $0 \\times 0 = 0$.' },
-                    { quiz: { q: 'Encadrer $\\sqrt{2}$ par deux entiers', a: '1 < \\sqrt{2} < 2' }, explanation: 'Car $1^2=1$ et $2^2=4$. $2$ est entre $1$ et $4$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{2}$ par deux entiers', a: '1 < √2 < 2' }, explanation: 'Car $1^2=1$ et $2^2=4$. $2$ est entre $1$ et $4$.' },
                     { quiz: { q: '$\\sqrt{144} = ?$', a: '12' }, explanation: 'Car $12 \\times 12 = 144$.' },
-                    { quiz: { q: 'Encadrer $\\sqrt{50}$ par deux entiers', a: '7 < \\sqrt{50} < 8' }, explanation: 'Car $7^2=49$ et $8^2=64$. $50$ est entre $49$ et $64$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{50}$ par deux entiers', a: '7 < √50 < 8' }, explanation: 'Car $7^2=49$ et $8^2=64$. $50$ est entre $49$ et $64$.' },
                     { quiz: { q: '$\\sqrt{25} + \\sqrt{16} = ?$', a: '9' }, explanation: '$\\sqrt{25}=5$ et $\\sqrt{16}=4$. Donc $5 + 4 = 9$.' },
-                    { quiz: { q: 'Encadrer $\\sqrt{30}$ par deux entiers', a: '5 < \\sqrt{30} < 6' }, explanation: 'Car $5^2=25$ et $6^2=36$. $30$ est entre $25$ et $36$.' },
+                    { quiz: { q: 'Encadrer $\\sqrt{30}$ par deux entiers', a: '5 < √30 < 6' }, explanation: 'Car $5^2=25$ et $6^2=36$. $30$ est entre $25$ et $36$.' },
                     { quiz: { q: '$\\sqrt{100} = ?$', a: '10' }, explanation: 'Car $10 \\times 10 = 100$.' }
                 ],
                 4: [ // PUISSANCES
@@ -1187,180 +1206,256 @@ function selectLevel(index) {
 
 
     function launchLocalQuiz(containerId, questions) {
-        const targetContainer = document.getElementById(containerId);
-        
-        // Si le quiz est déjà ouvert dans ce conteneur, on le masque
-        if (activeInjectedQuizId === containerId) {
-            targetContainer.innerHTML = "";
-            activeInjectedQuizId = null;
-            // On remet le texte du bouton original
-            const btn = document.querySelector(`[data-quiz-target="${containerId}"]`);
-            if(btn) btn.innerText = "Ai-je bien compris ?";
-            return;
+        // 1. SI UN AUTRE QUIZ EST DÉJÀ OUVERT : On le ferme d'abord
+        if (activeInjectedQuizId && activeInjectedQuizId !== containerId) {
+            const oldContainer = document.getElementById(activeInjectedQuizId);
+            if (oldContainer) {
+                oldContainer.innerHTML = ""; // Vide l'ancien quiz
+                // On remet le texte du bouton original pour l'ancien quiz
+                const oldBtn = document.querySelector(`[data-quiz-target="${activeInjectedQuizId}"]`);
+                if(oldBtn) oldBtn.innerText = "Ai-je bien compris ?";
+            }
         }
 
-        // Si on ouvre un nouveau quiz, on marque l'ID actif
+        // 2. On définit le nouveau quiz comme étant l'ID actif
         activeInjectedQuizId = containerId;
-        
-        // On prépare le bouton pour pouvoir le masquer plus tard
+        const targetContainer = document.getElementById(containerId);
+        if (!targetContainer) return;
+
+        // 3. Initialisation de la session (Reset complet)
+        trainingSession.score = 0;
+        trainingSession.totalAnswered = 0;
+        trainingSession.currentIndex = 0;
+        trainingSession.isReviewMode = false;
+        trainingSession.currentCards = [...questions].sort(() => Math.random() - 0.5);
+
+        // 4. Mise à jour du bouton pour l'afficher en mode "Masquer"
         const btn = document.querySelector(`[data-quiz-target="${containerId}"]`);
         if(btn) btn.innerText = "Masquer le quizz";
 
-        // Initialisation de la session locale
-        trainingSession.score = 0;
-        trainingSession.totalAnswered = 0;
-        trainingSession.currentCards = [...questions].sort(() => Math.random() - 0.5);
-        trainingSession.currentIndex = 0;
-        trainingSession.isReviewMode = false;
-
-        // On injecte le HTML du quiz
+        // 5. Rendu initial
         renderInjectedQuiz(targetContainer, questions, containerId);
     }
 
 
 
+
+
     function renderInjectedQuiz(container, questions, containerId) {
-        const currentCard = trainingSession.currentCards[trainingSession.currentIndex];
-        
-        if (!currentCard) {
-            // Fin du quiz local - On affiche juste le score final sans bouton fermer inutile
-            container.innerHTML = `
-                <div style="text-align:center; padding: 10px;">
-                    <p><strong style="font-size:1.2rem;">Quiz terminé !</strong></p>
-                    <p style="font-size:1.5rem; color:var(--primary);">Score : ${trainingSession.score}/${trainingSession.totalAnswered}</p>
-                </div>`;
-            return;
-        }
-
+    // 1. Récupération de la question actuelle basée sur l'index de la session
+    const currentCard = trainingSession.currentCards[trainingSession.currentIndex];
+    
+    // 2. Cas où le quiz est terminé (on a parcouru toutes les questions)
+    if (!currentCard) {
         container.innerHTML = `
-            <div class="injected-quiz-container">
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">
-                    <span>Score: ${trainingSession.score}/${trainingSession.totalAnswered}</span>
-                    <span>${trainingSession.currentIndex + 1}/${trainingSession.currentCards.length}</span>
-                </div>
-                <p style="font-size:1.1rem; margin-bottom:15px;">${currentCard.quiz.q}</p>
-                <div id="local-interaction-zone"></div>
+            <div style="text-align:center; padding: 10px;">
+                <p><strong style="font-size:1.2rem;">Quiz terminé !</strong></p>
+                <p style="font-size:1.5rem; color:var(--primary);">Score : ${trainingSession.score}/${trainingSession.totalAnswered}</p>
+            </div>`;
+        return;
+    }
+
+    // 3. Construction de la structure de base du quiz (Score et Progression)
+    container.innerHTML = `
+        <div class="injected-quiz-container">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">
+                <span>Score: ${trainingSession.score}/${trainingSession.totalAnswered}</span>
+                <span>${trainingSession.currentIndex + 1}/${trainingSession.currentCards.length}</span>
             </div>
+            <p style="font-size:1.1rem; margin-bottom:15px;">${currentCard.quiz.q}</p>
+            <div id="local-interaction-zone"></div>
+        </div>
+    `;
+
+    // On récupère la zone où l'on va injecter soit le clavier, soit l'explication
+    const zone = document.getElementById('local-interaction-zone');
+
+    // 4. GESTION DES DEUX MODES (Aide ou Question)
+    if (trainingSession.isReviewMode) {
+        // --- MODE AIDE (Affiché après une erreur) ---
+        zone.innerHTML = `
+            <div class="feedback help-mode" style="display:block; margin-bottom:15px;">
+                La réponse était : <strong>${currentCard.quiz.a}</strong>
+            </div>
+            <div class="notion-box" style="font-style: normal; font-size: 0.9rem; margin-bottom: 15px;">
+                <strong style="color: var(--secondary);">💡 Explication :</strong><br>
+                ${currentCard.explanation || "Consultez votre cours pour comprendre la méthode."}
+            </div>
+            <button class="action-btn" onclick="nextLocalQuestion('${containerId}')">Question suivante ➔</button>
         `;
-
-        const zone = document.getElementById('local-interaction-zone');
-
-        if (trainingSession.isReviewMode) {
-            // MODE AIDE : On affiche la réponse ET l'explication
-            zone.innerHTML = `
-                <div class="feedback help-mode" style="display:block; margin-bottom:15px;">
-                    La réponse était : <strong>${currentCard.quiz.a}</strong>
-                </div>
-                <div class="notion-box" style="font-style: normal; font-size: 0.9rem; margin-bottom: 15px;">
-                    <strong style="color: var(--secondary);">💡 Explication :</strong><br>
-                    ${currentCard.explanation || "Consultez le cours pour comprendre la méthode."}
-                </div>
-                <button class="action-btn" onclick="nextLocalQuestion('${containerId}')">Question suivante ➔</button>
-            `;
-        } else {
-    zone.innerHTML = `
-            <input type="text" id="user-answer" placeholder="Votre réponse (ex: \\frac{1}{2})">
+    } else {
+        // --- MODE QUESTION (Affiché normalement) ---
+        zone.innerHTML = `
+            <input type="text" id="local-user-answer" placeholder="Votre réponse...">
             
-            <!-- CLAVIER MATHÉMATIQUE DU QUIZ -->
             <div class="math-keyboard">
-                <button type="button" class="math-key" onclick="insertMathChar('\\sqrt{')">√</button>
-                <button type="button" class="math-key" onclick="insertMathChar('^{')">^</button>
-                <button type="button" class="math-key" onclick="insertMathChar('\\frac{ }{ }')">frac</button>
-                <button type="button" class="math-key" onclick="insertMathChar(')')">)</button>
-                <button type="button" class="math-key" onclick="insertMathChar('(')">(</button>
-                <button type="button" class="math-key" onclick="insertMathChar('*')">×</button>
-                <button type="button" class="math-key" onclick="insertMathChar('.')">.</button>
-                <button type="button" class="math-key" onclick="insertMathChar(')')">)</button>
+                <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+                <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+                <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+                <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+                <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+                <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
             </div>
 
             <button class="action-btn" style="margin-top:15px;" onclick="checkLocalAnswer('${currentCard.quiz.a}', '${containerId}')">Valider</button>
             <div id="local-feedback" class="feedback"></div>
         `;
 
-            // On attache l'événement pour masquer le clavier quand on valide ou change de question
-            const input = document.getElementById('local-user-answer');
-            input.addEventListener('blur', () => {
-                // Optionnel : on peut laisser le clavier si l'élève veut corriger, 
-                // mais ici on va le laisser visible tant qu'il est dans le champ.
-            });
+        const input = document.getElementById('local-user-answer');
+        if (input) {
+            input.addEventListener('blur', () => {});
         }
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            window.MathJax.typesetPromise([container]).catch((err) => console.log(err));
-        }
+    }
+
+    // 5. RELANCER MATHJAX
+    // Indispensable pour que les symboles comme \frac ou \sqrt s'affichent correctement après l'injection
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([container]).catch((err) => console.log("MathJax error:", err));
+    }
 }
+
+
 
 
 // --- 1. INSERTION ET MISE À JOUR DES APERÇUS ---
 
-        function insertMathChar(char, btn) {
-    const targetId = btn.getAttribute('data-target');
-    const activeInput = document.getElementById(targetId);
+function insertMathChar(char, btn) {
+    // 1. On essaie d'abord de récupérer l'élément qui a le focus (le comportement normal)
+    let activeInput = document.activeElement;
 
-    if (!activeInput) return;
-    activeInput.focus();
+    // 2. SI LE FOCUS EST PERDU (cas où le clic sur le bouton a déplacé le focus)
+    if (!activeInput || (activeInput.tagName !== 'INPUT' && activeInput.tagName !== 'TEXTAREA')) {
+        
+        // On cherche le bloc parent (la carte ou la vue)
+        const parentBlock = btn.closest('.card') || btn.closest('.view');
+        
+        if (parentBlock) {
+            const inputsInBlock = Array.from(parentBlock.querySelectorAll('input[type="text"], textarea'));
+            
+            if (inputsInBlock.length > 0) {
+                // --- LA CORRECTION EST ICI ---
+                // Au lieu de prendre le dernier, on cherche l'input qui est le plus proche du bouton cliqué
+                let closestInput = inputsInBlock[0];
+                let minDistance = Infinity;
 
-    // Cas spécial de la fraction
-    if (char === '$\\frac{}{}$') {
-        const fractionEditor = document.getElementById('visual-fraction-container');
-        if (fractionEditor) {
-            fractionEditor.style.display = 'flex';
-            document.getElementById('frac-num').value = "";
-            document.getElementById('frac-den').value = "";
-            document.getElementById('frac-num').focus();
-        } else {
-            // Pour la Question ou la Leçon : on insère $\frac{}{}$ 
-            // et on place le curseur entre les accolades pour faciliter la saisie mobile
-            const start = activeInput.selectionStart;
-            const end = activeInput.selectionEnd;
-            const value = activeInput.value;
-            
-            // On insère avec un curseur positionné au milieu : \frac{ | }{ }
-            const insertion = '$\\frac{}{}$'; 
-            activeInput.value = value.substring(0, start) + insertion + value.substring(end);
-            
-            // Positionner le curseur à l'intérieur des premières accolades
-            // On cherche la position du premier "|" (ou on calcule mathématiquement)
-            const newPos = start + insertion.indexOf('{}') + 1; 
-            activeInput.setSelectionRange(newPos, newPos);
+                inputsInBlock.forEach(input => {
+                    // On calcule la distance entre le centre du bouton et le centre de l'input
+                    const btnRect = btn.getBoundingClientRect();
+                    const inputRect = input.getBoundingClientRect();
+                    
+                    const btnCenter = {
+                        x: btnRect.left + btnRect.width / 2,
+                        y: btnRect.top + btnRect.height / 2
+                    };
+                    const inputCenter = {
+                        x: inputRect.left + inputRect.width / 2,
+                        y: inputRect.top + inputRect.height / 2
+                    };
+
+                    const distance = Math.sqrt(Math.pow(btnCenter.x - inputCenter.x, 2) + Math.pow(btnCenter.y - inputCenter.y, 2));
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestInput = input;
+                    }
+                });
+                activeInput = closestInput;
+            }
         }
-        updateSpecificPreview(targetId);
+    }
+
+    // 3. Vérification finale de validité
+    if (!activeInput || typeof activeInput.setSelectionRange !== 'function') {
+        console.error("Erreur : Aucun champ de saisie valide trouvé.");
         return;
     }
 
-    // Insertion standard (√, ^, ×)
     const start = activeInput.selectionStart;
     const end = activeInput.selectionEnd;
     const value = activeInput.value;
-    activeInput.value = value.substring(0, start) + char + value.substring(end);
+    const id = activeInput.id;
 
-    // Replacer le curseur après l'insertion
-    const newPos = start + char.length;
+    // 4. DÉTERMINATION DU PROFIL (Identique)
+    const isCreationQuestion = id.includes('new-quiz-q') || id.includes('new-chap-content');
+    const isCreationAnswer  = id.includes('new-quiz-a') || id.includes('new-qcm-correct');
+    const isStudentAnswer   = id.includes('local-user-answer') || id.includes('mini-quiz-answer');
+
+    let insertion = char;
+
+    // 5. LOGIQUE DE CONVERSION (Identique)
+    if (isCreationQuestion) {
+        if (char === '√') insertion = '$\\sqrt{}$';
+        else if (char === '^') insertion = '$^{}$';
+        else if (char === '/') insertion = '$\\frac{}{}$';
+        else if (char === '×') insertion = '$\\times$';
+    } 
+    else if (isCreationAnswer || isStudentAnswer) {
+        if (char === '\\sqrt{}' || char === '√') insertion = '√';
+        else if (char === '^{}' || char === '^') insertion = '^';
+        else if (char === '\\frac{}{}' || char === '/') insertion = '/';
+        else if (char === '\\times') insertion = '×';
+    }
+
+    // 6. INSERTION ET GESTION DU CURSEUR
+    activeInput.value = value.substring(0, start) + insertion + value.substring(end);
+
+    let newPos = start + insertion.length;
+    if (isCreationQuestion && insertion.includes('{}')) {
+        newPos = start + insertion.indexOf('{}') + 1;
+    }
+
     activeInput.setSelectionRange(newPos, newPos);
 
-    updateSpecificPreview(targetId);
+    // 7. MISE À JOUR DE L'APERÇU
+    updateSpecificPreview(id);
 }
 
 
 
-    function updateSpecificPreview(inputId) {
-        let previewId = "";
-        if (inputId === 'new-quiz-q') previewId = "preview-q";
-        else if (inputId === 'new-quiz-a') previewId = "preview-a";
-        else if (inputId === 'new-chap-content') previewId = "preview-content";
 
-        const previewElement = document.getElementById(previewId);
-        if (!previewElement) return;
 
-        const inputElement = document.getElementById(inputId);
-        // On prend la valeur brute. Les $ sont déjà dedans grâce aux boutons.
-        const content = inputElement.value;
 
+   function updateSpecificPreview(inputId) {
+    let previewId = "";
+    
+    // 1. Identification du conteneur de prévisualisation correspondant à l'input
+    if (inputId === 'new-quiz-q') {
+        previewId = "preview-q";
+    } else if (inputId === 'new-quiz-a') {
+        previewId = "preview-a";
+    } else if (inputId === 'new-chap-content') {
+        previewId = "preview-content";
+    }
+
+    const previewElement = document.getElementById(previewId);
+    const inputElement = document.getElementById(inputId);
+
+    // Sécurité : si l'input ou le preview n'existe pas, on arrête
+    if (!previewElement || !inputElement) return;
+
+    const content = inputElement.value;
+
+    // 2. LOGIQUE D'AFFICHAGE DIFFÉRENCIÉE
+    if (inputId === 'new-quiz-a') {
+        // MODE RÉPONSE : On affiche le texte brut (ex: 1/2 ou √2)
+        // On ne passe PAS par MathJax pour éviter de transformer la saisie 
+        // et pour que l'élève voie exactement ce qu'il écrit.
+        previewElement.innerHTML = content;
+    } else {
+        // MODE QUESTION & COURS : On affiche le rendu LaTeX magnifique
+        // On utilise innerHTML car le contenu contient des symboles mathématiques
         previewElement.innerHTML = content;
 
+        // On demande à MathJax de traiter le nouveau contenu LaTeX
         if (window.MathJax && window.MathJax.typesetPromise) {
-            window.MathJax.typesetPromise([previewElement]).catch((err) => console.log(err));
+            window.MathJax.typesetPromise([previewElement]).catch((err) => {
+                console.error("Erreur MathJax lors de l'aperçu :", err);
+            });
         }
     }
+}
 
 
 // --- 2. ÉCOUTEURS D'ÉVÉNEMENTS POUR LA MISE À JOUR EN TEMPS RÉEL ---
@@ -1378,44 +1473,64 @@ document.addEventListener('input', (e) => {
 function compareAnswers(userAnsRaw, targetAnsRaw) {
     if (!userAnsRaw || !targetAnsRaw) return false;
 
-    /**
-     * LA MÉTHODE "EXTRACTION DE VALEURS"
-     * Au lieu de transformer le texte, on extrait uniquement ce qui compte :
-     * les chiffres, les points, les slashs et les signes.
-     */
-    const extractMathValues = (str) => {
+    const cleanMath = (str) => {
         return str.toString()
-            // 1. On transforme d'abord les fractions LaTeX en format simple pour faciliter l'extraction
-            // On remplace \frac{a}{b} par a/b
+            // 1. On transforme les fractions LaTeX \frac{a}{b} en a/b
             .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '$1/$2')
-            // 2. On transforme les racines \sqrt{x} en x
-            .replace(/\\sqrt\{([^}]*)\}/g, '$1')
+            // 2. On transforme les racines LaTeX \sqrt{x} en √x
+            .replace(/\\sqrt\{([^}]*)\}/g, '√$1')
             // 3. On remplace la virgule par un point pour les décimaux
             .replace(/,/g, '.')
-            // 4. ON GARDE UNIQUEMENT : les chiffres (0-9), le point (.), le slash (/), et le signe moins (-)
-            // Tout le reste (lettres comme 'rac', symboles $, parenthèses, etc.) est supprimé.
-            .replace(/[^0-9./-]/g, ''); 
+            // 4. On nettoie tout ce qui n'est pas un chiffre, un signe, un point, un slash ou un symbole de comparaison
+            // On garde : 0-9, . , / , - , + , < , > , √ , ^
+            .replace(/[^0-9./\-+<>√^]/g, '')
+            .trim();
     };
 
-    const cleanUser = extractMathValues(userAnsRaw);
-    const cleanTarget = extractMathValues(targetAnsRaw);
+    let cleanUser = cleanMath(userAnsRaw);
+    let cleanTarget = cleanMath(targetAnsRaw);
 
-    // Debug pour vérifier ce qu'il reste après l'extraction
-    console.log("Comparaison finale :", cleanUser, "vs", cleanTarget);
+    // Cas particulier : Si l'élève a écrit √16 et que la réponse est 4
+    // On essaie de résoudre les racines simples pour la comparaison
+    const solveSimpleRoots = (str) => {
+        if (str.includes('√')) {
+            // On extrait le nombre après le √
+            let num = str.replace('√', '');
+            let val = Math.sqrt(parseFloat(num));
+            return isNaN(val) ? str : val.toString();
+        }
+        return str;
+    };
+
+    // On applique la résolution des racines pour les deux côtés
+    cleanUser = solveSimpleRoots(cleanUser);
+    cleanTarget = solveSimpleRoots(cleanTarget);
+
+    console.log("Comparaison :", cleanUser, "vs", cleanTarget);
+    
+    // Comparaison finale (on convertit en nombre si possible pour éviter 0.5 vs .5)
+    if (!isNaN(parseFloat(cleanUser)) && !isNaN(parseFloat(cleanTarget))) {
+        return parseFloat(cleanUser) === parseFloat(cleanTarget);
+    }
 
     return cleanUser === cleanTarget;
 }
 
 
+
 function checkLocalAnswer(correctAnswer, containerId) {
     const input = document.getElementById('local-user-answer');
-    const feedback = document.getElementById('local-feedback');
-    
-    // On utilise la même fonction universelle
+    if (!input) return;
+
+    // On incrémente le total de questions tentées
+    trainingSession.totalAnswered++;
+
     if (compareAnswers(input.value, correctAnswer)) {
         trainingSession.score++;
+        // Succès : on passe à la suite en mode normal
         nextLocalQuestion(containerId);
     } else {
+        // Échec : on active le mode aide pour cette question précise
         trainingSession.isReviewMode = true;
         renderInjectedQuiz(document.getElementById(containerId), trainingSession.currentCards, containerId);
     }
@@ -1425,11 +1540,19 @@ function checkLocalAnswer(correctAnswer, containerId) {
 
 
 
+
 function nextLocalQuestion(containerId) {
+    // 1. On passe à la question suivante
     trainingSession.currentIndex++;
-    trainingSession.isReviewMode = false;
+    
+    // 2. TRÈS IMPORTANT : On sort du mode "Aide" pour que la 
+    // prochaine question soit affichée avec le champ de saisie
+    trainingSession.isReviewMode = false; 
+    
+    // 3. On relance le rendu
     renderInjectedQuiz(document.getElementById(containerId), trainingSession.currentCards, containerId);
 }
+
 
 // 5. MOTEUR D AFFICHAGE (le rendu HTML)
 
@@ -1490,24 +1613,44 @@ function nextLocalQuestion(containerId) {
 function launchChapter(chapter) {
     const container = document.getElementById('content-area');
     container.innerHTML = ""; 
-
-    if (currentMode === 'cours') {
-        // --- MODE COURS (Inchangé) ---
+ // --- MODE COURS
+if (currentMode === 'cours') {
         const card = document.createElement('div');
         card.className = 'card';
+        
+        let quizHTML = "";
+        if (chapter.quiz) {
+            quizHTML = `
+                <div class="quiz-container">
+                    <p style="font-weight:bold; margin-bottom:10px;">${chapter.quiz.q}</p>
+                    <input type="text" id="mini-quiz-answer" placeholder="Votre réponse...">
+                    <!-- Clavier harmonisé pour le mini-quiz de cours -->
+                    <div class="math-keyboard" style="margin-top:10px; margin-bottom:15px;">
+                        <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+                        <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+                    </div>
+                    <button class="action-btn" onclick="checkMiniQuiz('${chapter.quiz.a}')">Vérifier</button>
+                    <div id="mini-quiz-feedback" class="feedback"></div>
+                </div>`;
+        } else {
+            quizHTML = `<p>Pas de question disponible pour ce test rapide.</p>`;
+        }
+
         card.innerHTML = `
             <h2 style="margin-bottom:15px;">${chapter.title}</h2>
-            <p>${chapter.content || "Aucun contenu de cours disponible."}</p>
+            <div class="course-content">${chapter.content || "Aucun contenu de cours disponible."}</div>
             <div class="notion-box"><strong>💡 Petit test rapide :</strong></div>
-            <div class="quiz-container">
-                <p>${chapter.quiz ? chapter.quiz.q : "Pas de question disponible"}</p>
-                <input type="text" id="user-answer" placeholder="Votre réponse...">
-                <button class="action-btn" onclick="checkMiniQuiz('${chapter.quiz ? chapter.quiz.a : ""}')">Vérifier</button>
-                <div id="feedback" class="feedback"></div>
-            </div>`;
+            ${quizHTML}
+        `;
         container.appendChild(card);
         if (window.MathJax) {
-            MathJax.typesetPromise([container]);
+            MathJax.typesetPromise([container]).catch((err) => console.log(err));
         }
     } else {
         // --- MODE ENTRAÎNEMENT ---
@@ -1653,9 +1796,12 @@ function showFinalScore() {    // Affiche le score final proprement
   // 6. LOGIQUE DES CHAPITRES ET QUIZ (Launch, Check, ShowCourse)
 
     function checkMiniQuiz(correctAnswer) {
-        const input = document.getElementById('user-answer');
-        const feedback = document.getElementById('feedback');
+        const input = document.getElementById('mini-quiz-answer');
+        const feedback = document.getElementById('mini-quiz-feedback');
         
+        if (!input || !feedback) return;
+
+        // Utilisation de votre fonction de comparaison robuste qui gère le LaTeX et les décimaux
         if (compareAnswers(input.value, correctAnswer)) {
             feedback.innerText = "Bravo ! ✅";
             feedback.className = "feedback success";
@@ -1664,6 +1810,7 @@ function showFinalScore() {    // Affiche le score final proprement
             feedback.className = "feedback error";
         }
     }
+
 
     function checkFullQuiz(correctAnswer, chapterTitle, userAnsInput = null) {
         let userAns;
