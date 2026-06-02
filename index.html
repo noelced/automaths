@@ -1305,7 +1305,7 @@ function selectLevel(index) {
 
         const input = document.getElementById('local-user-answer');
         if (input) {
-            input.addEventListener('blur', () => {});
+            input.focus();     // selectionne automatiquement la zone de saisie.
         }
     }
 
@@ -1386,9 +1386,9 @@ function insertMathChar(char, btn) {
 
     // 5. LOGIQUE DE CONVERSION (Identique)
     if (isCreationQuestion) {
-        if (char === '√') insertion = '$\\sqrt{}$';
-        else if (char === '^') insertion = '$^{}$';
-        else if (char === '/') insertion = '$\\frac{}{}$';
+        if (char === '√') insertion = '$\\sqrt{ }$';
+        else if (char === '^') insertion = '$^{ }$';
+        else if (char === '/') insertion = '$\\frac{ }{ }$';
         else if (char === '×') insertion = '$\\times$';
     } 
     else if (isCreationAnswer || isStudentAnswer) {
@@ -1407,7 +1407,7 @@ function insertMathChar(char, btn) {
     }
 
     activeInput.setSelectionRange(newPos, newPos);
-
+    activeInput.focus();
     // 7. MISE À JOUR DE L'APERÇU
     updateSpecificPreview(id);
 }
@@ -1649,9 +1649,11 @@ if (currentMode === 'cours') {
             ${quizHTML}
         `;
         container.appendChild(card);
+
         if (window.MathJax) {
             MathJax.typesetPromise([container]).catch((err) => console.log(err));
         }
+
     } else {
         // --- MODE ENTRAÎNEMENT ---
         
