@@ -775,34 +775,2017 @@ const officialData = [
                          
                     quiz: { q: "Calculer : $\\sqrt{64} + 10^2$", a: "108" },  eleve: "non"},
 
-                    { id: 2, title: "Arithmétique", content: "L'arithmétique étudie...", quiz: { q: "Est-ce que 15 est divisible par 3 ?", a: "oui" }, eleve: "non" },
-                    { id: 3, title: "Calcul littéral", content: "Le calcul littéral utilise...", quiz: { q: "Développer : 2(x + 4)", a: "2x+8" }, eleve: "non" },
-                    { id: 4, title: "Équations", content: "Une équation est une égalité...", quiz: { q: "Résoudre : x + 5 = 12", a: "7" }, eleve: "non" }
+                    { id: 2,
+    title: "Arithmétique",
+    content: `
+        <div class="course-container">
+            <!-- SECTION : OBJECTIFS -->
+            <section class="course-section">
+                <p><strong>Objectifs :</strong></p>
+                <ul>
+                    <li>Je sais décomposer un nombre entier en produit de facteurs premiers</li>
+                    <li>Je sais simplifier une fraction pour la rendre irréductible</li>
+                    <li>Je sais modéliser et résoudre des problèmes mettant en jeu la divisibilité</li>
+                </ul>
+            </section>
+
+            <!-- SECTION : RAPPELS -->
+            <section class="course-section">
+                <h2 class="section-title">I. Rappels</h2>
+                <h3 class="section-title">I.1. Nombres</h3>
+                <p>Jusqu’à présent nous avons rencontré plusieurs types de nombres :</p>
+                <ul>
+                    <li>Les <strong style="color: var(--primary);">entiers naturels</strong> (toujours positifs ou nuls) ou <strong style="color: var(--primary);">relatifs</strong> (peuvent être négatifs) Ex : $2$ ; -$\\sqrt{9}$=-3 ; $\\frac{16}{4}$=4</li>
+                    <li>Les <strong style="color: var(--primary);">décimaux</strong> (nombre fini de chiffres après la virgule) Ex : $5$ ; $2,8$ ; $\\frac{154}{1000}$</li>
+                    <li>Les <strong style="color: var(--primary);">nombres rationnels</strong> (fractions) Ex : $3$ ; $7,5$ ; $\\frac{2}{3}$</li>
+                    <li>Les <strong style="color: var(--primary);">irrationnels</strong> (qui ne sont aucun des autres cas) Ex : $\\pi$</li>
+                </ul>
+            </section>
+
+            <!-- SECTION : DIVISION EUCLIDIENNE -->
+           <section class="course-section">
+                <h2 class="section-title">Division euclidienne</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <p><em>a, b, q et r</em> sont des entiers naturels où $b \\neq 0$, la division euclidienne de $a$ par $b$ est :
+                                <img src="images/3eme_ch02_division_euclidienne.webp" alt="Schéma d'une division euclidienne" style="display: inline-block; vertical-align: middle; max-height: 1.5em; margin-left: 10px;">
+                                </p>
+                                <p>On a : <strong>$a = b \\times q + r$</strong> ou <strong>$a - b \\times q = r$</strong> où $r$ positif strictement inférieur à $b$.</p>
+                                <p>« Dans <strong>$a$</strong>, il y a <strong>$q$</strong> fois le nombre <strong>$b$</strong>, et il reste <strong>$r$</strong> »</p>
+                            </th>
+                            <th>
+                                <img role="img" src="images/3eme_ch02_exemple_division.webp" alt="Schéma division" style="width:100%" />
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <p><u>Exemple :</u> $86 = 3 \\times 28 + 2$</p>
+                <p>Cette division se résume à l’égalité suivante : $86 - 3 \\times 28 = 2$</p>
+                <p>« Dans 86, il y a 3 fois le nombre 28, et il reste 2 »</p>
+                <p><u>Exemple (à la machine) :</u> Avec la touche : $\\text{\\textvisiblespace}$ on a directement $q = \\dots$ et $r = \\dots$</p>
+                <p>On calcule le <strong>quotient</strong> : $785 : 13 \\approx 60,3846\\dots$ Donc le quotient <strong>$q = 60$</strong>.</p>
+                <p>On calcule le <strong>reste</strong> : $785 - 13 \\times 60 = 5$. Donc le reste <strong>$r = 5$</strong></p>
+                
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">📝 Exercice :</strong><br>
+                    Je dispose de 233 billes à partager équitablement entre 3 enfants. Combien de billes obtiendra chaque enfant ? En restera-t-il à la fin ? si oui, combien ? Ecrire 233 sous la forme d’un produit et d’une somme.
+                </div>
+                <button class="btn-check-understanding" data_quiz_target="quiz-area-division" onclick="startQuizFromButton('quiz-area-division', 1)">Ai-je bien compris ?</button>
+                <div id="quiz-area-division"></div>
+            </section>
+
+            <!-- SECTION : MULTIPLES ET DIVISEURS -->
+            <section class="course-section">
+                <h2 class="section-title">Multiples et diviseurs</h2>
+                <p>Soient $a$ et $b$ deux nombres entiers non nuls et $b < a$ :</p>
+                <ul>
+                    <li>$a$ est <strong>divisible par</strong> $b$</li>
+                    <li>$a$ est un <strong>multiple de</strong> $b$</li>
+                    <li>$b$ est un <strong>diviseur de</strong> $a$</li>
+                    <li>$b$ <strong>divise</strong> $a$</li>
+                </ul>
+                <p>Signifient qu’il existe un nombre entier $q$ tel que : $a = b \times q$</p>
+                <p><u>Exemple :</u> $60 = 5 \times 12$. Je peux dire que : ...</p>
+                <p>Un <strong><u>diviseur commun</u></strong> à deux entiers, est un nombre entier non nul qui divise chacun d’eux. Exemple : 1, 2, 3 et 6 sont les diviseurs communs à 12 et 18.</p>
+            </section>
+
+            <!-- SECTION : CRITERES -->
+            <section class="course-section">
+                <h2 class="section-title">Critères de divisibilités</h2>
+                <ul>
+                    <li>Un nombre est <strong><u>divisible par 2</u></strong> si son chiffre des unités est pair (0, 2, 4, 6 ou 8).</li>
+                    <li>Un nombre est <strong><u>divisible par 5</u></strong> si son chiffre des unités est 0 ou 5.</li>
+                    <li>Un nombre est <strong><u>divisible par 10</u></strong> si son chiffre des unités est 0.</li>
+                    <li>Un nombre est <strong><u>divisible par 3</u></strong> si la somme de tous ses chiffres est divisible par 3.</li>
+                    <li>Un nombre est <strong><u>divisible par 9</u></strong> si la somme de tous ses chiffres est divisible par 9.</li>
+                </ul>
+                <p><u>Exemple :</u> 3 528 est divisible par ...</p>
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">✍️ Exercice :</strong> Montrer que la somme de trois entiers consécutifs est divisible par 3.
+                </div>
+            </section>
+
+            <!-- SECTION : DETERMINER LES DIVISEURS -->
+            <section class="course-section">
+                <h2 class="section-title">Déterminer tous les diviseurs d’un nombre entier</h2>
+                <p>Pour trouver tous les diviseurs d’un nombre entier $N$, on teste la divisibilité de $N$ par tous les nombres entiers inférieurs ou égaux à $\sqrt{N}$ (Penser à utiliser les critères de divisibilité !)</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <p><em><strong><u>Exemple :</u></strong></em> Déterminer tous les diviseurs de 45.</p>
+                                <p>$\sqrt{45} \approx 6,7$. Il faut tester la divisibilité par 1 ; 2 ; 3 ; 4 ; 5 et 6.</p>
+                                <p>On a : $45 = 1 \times 45$ | $= 3 \times 15$ | $= 5 \times 9$</p>
+                                <p>Les diviseurs de 45 sont 1 ; 3 ; 5 ; 9 ; 15 et 45.</p>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </section>
+
+            <!-- SECTION : NOMBRES PREMIERS -->
+            <section class="course-section">
+                <h2 class="section-title">Nombres premiers</h2>
+                <p><strong><u>Définition</u></strong> : Un <strong>nombre premier</strong> est un nombre entier qui admet exactement deux <strong>diviseurs 1 et lui-même</strong>.</p>
+                <p><em><strong><u>Exemple :</u></strong>
+                 <p>6 n’est pas un nombre premier : il admet aussi 2 et 3 comme diviseurs.</p>
+                <p>7 est un nombre premier : il n’est divisible que par 1 et par 7.</p>
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">⚠️ Remarques :</strong>
+                    <ul>
+                        <li>0 n’est pas un nombre premier, car il possède une infinité de diviseurs.</li>
+                        <li>1 n’est pas un nombre premier car il possède un seul diviseur : lui-même.</li>
+                        <li>2 est le seul nombre premier pair, car tous les nombres pairs sont divisibles par 2.</li>
+                    </ul>
+                </div>
+                <p>Liste des nombres premiers inférieurs à 30 : 2 ; 3 ; 5 ; 7 ; 11 ; 13 ; 17 ; 19 ; 23 ; 29.</p>
+                <p><strong class="section-title">Méthode :</strong> Soit $N$ un nombre entier supérieur ou égal à 2. Pour montrer qu’un nombre $N$ est premier, il suffit de montrer qu’il n’est divisible par aucun nombre premier inférieur ou égal à $\sqrt{N}$.</p>
+                <p><em><strong class="section-title">Exemple :</strong></em> On veut savoir si 157 est un nombre premier. On a : $\sqrt{157} = 12,5$. Il faut donc tester la divisibilité de 157 par 2, par 3, par 5, par 7 et par 11. 157 n’est divisible par aucun de ces 5 nombres, donc 157 est premier.</p>
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">📝 Exercice :</strong> Décomposer en produit de facteurs premiers les nombres suivants : 36 ; 54 ; 165 ; 33915.
+                </div>
+            </section>
+
+            <!-- SECTION : FRACTIONS IRREDUCTIBLES -->
+            <section class="course-section">
+                <h2 class="section-title">Fractions irréductibles</h2>
+                <p><strong><u class="section-title">Définition :</u></strong> Une fraction est dite <strong>irréductible</strong> si son numérateur et son dénominateur n’ont pas de diviseur commun autre que 1.</p>
+                <p><em><strong class="section-title">Exemple :</strong></em> $\frac{55}{65}$ n’est pas une fraction irréductible : on peut la simplifier par 5.</p>
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">💡 Méthodes :</strong>
+                    <ul>
+                        <li>Décomposer le numérateur et le dénominateur en produits de facteurs premiers, puis simplifier par les facteurs communs.</li>
+                        <li>Utiliser les critères de divisibilité pour simplifier une fraction.</li>
+                    </ul>
+                </div>
+                <p><em><strong class="section-title">Exercice :</strong></em> Simplifier les fractions suivantes pour les rendre irréductibles : $\frac{120}{84}$ et $\frac{5^{3} \times 7^{2} \times 11^{3}}{5^{2} \times 7^{3} \times 11^{4}}$</p>
+                <p>On a : $120 = 2^3 \times 3 \times 5$ et $84 = 2^2 \times 3 \times 7$, donc $\frac{120}{84} = \frac{2 \times 2 \times 2 \times 3 \times 5}{2 \times 2 \times 3 \times 7} = \frac{2 \times 5}{7} = \frac{10}{7}$</p>
+            </section>
+
+            <!-- SECTION : PROBLEMES DE DIVISIBILITE -->
+            <section class="course-section">
+                <h2 class="section-title">Problèmes de divisibilité</h2>
+                <p>Il existe deux grands types de problèmes mettant en jeu la divisibilité :</p>
+                <ul>
+                    <li><strong>Problèmes de diviseur commun</strong> (souvent le plus grand possible).</li>
+                    <li><strong>Problèmes de multiple commun</strong> (souvent le plus petit possible).</li>
+                </ul>
+
+                <h3 class="section-title">Exemple type (diviseur) :</h3>
+                <p><em>On souhaite partager 630 bonbons et 270 sucettes dans des petits sachets identiques... Quel est le nombre maximum de sachets possibles ?</em></p>
+                <div class="notion-box">
+                    <strong>Méthode :</strong> Nous recherchons un diviseur car le nombre de sachets sera forcément plus petit que 630 et 270. Il doit diviser 630 mais également 270.
+                </div>
+                <p>Décomposition en produit de facteurs premiers :</p>
+                <p>630 = $2 \times 3 \times 3 \times 5 \times 7$ | 270 = $2 \times 3 \times 3 \times 3 \times 5$</p>
+                <p>Les facteurs premiers communs sont : $2 \times 3 \times 3 \times 5 = 90$. Il y aura donc <strong>90 sachets</strong>.</p>
+
+                <h3 class="section-title">Exemple type (multiple) :</h3>
+                <p><em>Un cycliste met 24min pour faire le tour d'un circuit. Un autre met 36min... Au bout de combien de temps se retrouveront-ils ensemble ?</em></p>
+                <div class="notion-box">
+                    <strong>Méthode :</strong> Nous recherchons un multiple car le temps sera plus grand que 24 et 36.
+                </div>
+                <p>Décomposition : 24 = $2 \times 2 \times 2 \times 3$ | 36 = $2 \times 2 \times 3 \times 3$.</p>
+                <p>Le plus petit multiple commun est $2 \times 2 \times 2 \times 3 = 72$. Ils se retrouveront après <strong>72 min</strong>.</p>
+            </section>
+        </div>
+            `,
+                    quiz: { q: "Si un nombre est divisible par 9, est-il forcément divisible par 3 ?", a: "oui" }, eleve: "non"
+                                                          
+                    },
+                    { id: 3,
+                        title: "Calcul littéral",
+                        content: `
+                            <div class="course-container">
+                                <!-- SECTION : OBJECTIFS -->
+                                <section class="course-section">
+                                    <p><strong>Objectifs :</strong></p>
+                                    <ul>
+                                        <li>Je sais transformer un problème en expression littérale</li>
+                                        <li>Je connais la structure d’une expression littérale</li>
+                                        <li>Je sais déterminer l’opposé d’une expression littérale</li>
+                                        <li>Je sais réduire une expression littérale contenant des parenthèses</li>
+                                        <li>Je sais factoriser une expression littérale</li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION : INTRODUCTION -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Introduction - substituer</h2>
+                                    <p>Une expression algébrique (ou expression littérale) est une manière d’écrire un calcul où certains nombres sont représentés par des lettres.</p>
+                                    <p><strong class="section-title">Exemples :</strong> Le périmètre du carré = $4 \times c$ et l’aire du carré = $c \times c$. Ici la lettre « c » représente la longueur du côté du carré.</p>
+                                    <p>Pour calculer la valeur d’une expression littérale, il suffit de remplacer les lettres par leurs valeurs numériques. Si le côté du carré mesure 3cm alors il suffira de remplacer tous les «c» de l’expression par 3. Le périmètre vaudra $4 \times 3 = 12\text{cm}$ et l’aire vaudra $3 \times 3 = 9\text{ cm}^2$.</p>
+                                    <p>On dit que « $4 \times c$ » est l’<strong>expression littérale</strong> qui calcule le périmètre du carré <strong class="section-title">en fonction de</strong> la <strong class="section-title">variable</strong> $c$.</p>
+                                    <p>Faire du calcul littéral permet de résoudre des problèmes compliqués en créant des formules qui donneront les solutions du problème pour toutes les valeurs (<strong class="section-title">variables</strong>) que l’on souhaite.</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Remarques : dans une expression littérale :</strong>
+                                        <ul>
+                                            <li>Une même lettre représente le même nombre ;</li>
+                                            <li>On a le droit de ne pas écrire le symbole $\times$ entre deux lettres, entre un nombre et une lettre, ou avant une parenthèse ouvrante.</li>
+                                        </ul>
+                                    </div>
+                                    <p>Exemples : $a \times b = ab$ ; $3 \times r = 3r$ ; $3 \times (c+2) = 3(c+2)$;</p>
+                                    <p><strong class="section-title">Priorités de calculs :</strong></p>
+                                    <ol>
+                                        <li>Parenthèses en priorité en commençant par les plus intérieures</li>
+                                        <li>Puis les puissances</li>
+                                        <li>Puis les multiplications/divisions</li>
+                                        <li>Et enfin en dernier les additions/soustractions</li>
+                                    </ol>
+                                </section>
+
+                                <!-- SECTION : STRUCTURE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Structure d’une expression littérale</h2>
+                                    <p><strong>Pour connaître la structure d’une expression littérale</strong>, il faut identifier la dernière opération que l'on serait amené à faire en respectant les règles de priorité de calculs.</p>
+                                    <p>Si cette dernière opération est :</p>
+                                    <ul>
+                                        <li><u>une addition ou une soustraction</u>, alors l'expression est une <u>somme</u>.</li>
+                                        <li><u>une multiplication ou une division ou une élévation à la puissance</u>, alors l'expression est <u>un produit</u>.</li>
+                                    </ul>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">💡 MÉTHODE : À savoir utiliser en exercice</strong><br>
+                                        <strong>Exemples :</strong><br>
+                                        $3(10 - 5x) : (x + 3)(2 - 3x) - 4 :$ <br>
+                                        $3x^2 - 5x + 2 : (6 - 4x)(8 - 9x)$
+                                    </div>
+                                </section>
+
+                                <!-- SECTION : OPPOSÉ -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Opposé d’une expression algébrique</h2>
+                                    <p>Rappel : l’opposé de $-10$ est $+10$ car $-10 + 10 = 0$.</p>
+                                    <p>Pour connaître l’opposé d’une expression littérale il suffit de mettre toute l’expression entre parenthèses et de la faire précéder d’un signe « $-$ ».</p>
+                                    <p>Exemple : L’Opposé de $3x + 2$ est $-(3x + 2)$ en effet $3x + 2 - (3x + 2) = 0$.</p>
+                                    <p>Lorsqu’on cherche à enlever cette parenthèse, il faut bien penser à changer tous les signes à l’intérieur de la parenthèse. $-(3x + 2) = -3x - 2$.</p>
+
+                                    <table style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Expression littérale</th>
+                                                <th>Opposé</th>
+                                                <th>Opposé (Expression réduite)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>$5x - 4$</td><td></td><td></td></tr>
+                                            <tr><td>$3 - 2x$</td><td></td><td></td></tr>
+                                            <tr><td>$-5x - 7$</td><td></td><td></td></tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">✍️ Ai-je bien compris ?</strong>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-oppose" onclick="startQuizFromButton('quiz-area-oppose', 1)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-oppose"></div>
+                                </section>
+
+                                <!-- SECTION : RÉDUIRE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Réduire une expression algébrique</h2>
+                                    <p>Réduire une expression algébrique c’est l’écrire avec le moins de termes possibles.</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">🚀 MÉTHODE : Réduire une somme</strong><br>
+                                        <em>Attention lorsqu’on bouge un terme, on garde le signe avec le nombre qui suit (les règles de relatifs s’appliquent aussi en calcul littéral !!!!)</em>
+                                    </div>
+
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Calcul</th>
+                                                <th>Explication</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>$F = 5a^2 - 2a - 10 + 3a^2 - 2 - 4a + 8 + 10 + 8a$</td>
+                                                <td>On regroupe avant de factoriser (lettres identiques ensemble et aussi par signe).</td>
+                                            </tr>
+                                            <tr>
+                                                <td>$F = 5a^2 + 3a^2 + 8a - 4a - 2a + 10 + 8 - 10 - 2$</td>
+                                                <td>On regroupe les lettres et les nombres.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>$F = a^2 \times (5+3) + a \times (8-4-2) + 18 - 12$</td>
+                                                <td>On factorise les lettres attention un carré est considéré comme une lettre différente !</td>
+                                            </tr>
+                                            <tr>
+                                                <td>$F = 8a^2 + 2a + 6$</td>
+                                                <td>On arrive à une expression impossible à simplifier davantage : c'est la forme réduite.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <h3 class="section-title">Réduire un produit</h3>
+                                    <p>On peut se souvenir que dans une multiplication l’ordre des facteurs ne modifie pas le produit.</p>
+                                    <p>$3 \times 4 = 4 \times 3 = 12$</p>
+                                    <p>Donc on peut aussi modifier l’ordre d’un produit en calcul littéral :</p>
+                                    <blockquote>
+                                        <p>$A = 3 \times a \times 2 \times 5 \times a$</p>
+                                        <p>$A = 30a^2$</p>
+                                    </blockquote>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 MÉTHODE : Calculer un produit en une seule ligne</strong>
+                                        <ol>
+                                            <li>Quel sera le signe du résultat ? (Exemple : $-5x \times 7 \times (-x) = +35x^2$)</li>
+                                            <li>Quelle sera la valeur du nombre ?</li>
+                                            <li>Quelle sera la lettre associée ? (Signe, Nombre, Lettre)</li>
+                                        </ol>
+                                    </div>
+                                </section>
+
+                                <!-- SECTION : DÉVELOPPER -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Développer</h2>
+                                    <p><strong class="section-title">Définition :</strong> Développer c’est transformer un produit en somme.</p>
+                                    <p>$3x(2x + 4) = 3 \times 2x + 3 \times 4 = 6x + 12$</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong> On développe pour enlever des parenthèses uniquement lorsqu’elles sont précédées d’une multiplication (ou d'un signe caché).
+                                    </div>
+
+                                    <h3 class="section-title">Simple distributivité</h3>
+                                    <blockquote>$a \times (b + c) = ab + ac$ ou $a(b + c) = ab + ac$</blockquote>
+                                    <p><em>Attention : Il est préférable de garder les signes avec les nombres qui suivent pour faciliter la simplification.</em></p>
+
+                                    <h3 class="section-title">Double distributivité</h3>
+                                    <blockquote>$(a+b)(c+d) = ac + ad + bc + bd$</blockquote>
+                                </section>
+
+                                <!-- SECTION : IDENTITÉS REMARQUABLES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Développer une identité remarquable</h2>
+                                    <div class="notion-box" style="border: 2px solid var(--primary);">
+                                        <strong style="font-size: 1.2rem;">🚀 FORMULE À APPRENDRE PAR CŒUR :</strong><br>
+                                        $(a + b)(a - b) = a^2 - b^2$
+                                    </div>
+                                    <p><strong>Exemples :</strong></p>
+                                    <p>$(2x + 3)(2x - 3) = (2x)^2 - 3^2 = 4x^2 - 9$</p>
+                                    <p>$(5 - 3a)(5 + 3a) = 5^2 - (3a)^2 = 25 - 9a^2$</p>
+                                </section>
+
+                                <!-- SECTION : FACTORISER -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Factoriser</h2>
+                                    <p><strong class="section-title">Définition :</strong> Factoriser c’est transformer une somme en produit.</p>
+                                    <blockquote>
+                                        $6x + 12 = 3 \times 2x + 3 \times 4 = 3x(2x + 4)$
+                                    </blockquote>
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Méthode :</strong>
+                                        <ul>
+                                            <li>Repérer les additions/soustractions principales.</li>
+                                            <li>Chercher un facteur commun (utiliser la décomposition en facteurs premiers si besoin).</li>
+                                            <li>Mettre le facteur commun devant la parenthèse et recopier le reste.</li>
+                                        </ul>
+                                    </div>
+
+                                    <p><strong>Exemples de factorisation :</strong></p>
+                                    <p>$A = 7a + 7b - 7c \rightarrow A = 7(a + b - c)$</p>
+                                    <p>$B = 3y^2 + 2y \rightarrow B = y(3y + 2)$</p>
+                                    <p>$C = 4b - 16 \rightarrow C = 4(b - 4)$</p>
+                                    <p>$D = 3y^2 + 6y \rightarrow D = 3y(y + 2)$</p>
+                                    <p>$E = (2a - 1)(a + 3) - (4a - 5)(a + 3) \rightarrow E = (a+3)[(2a-1)-(4a-5)]$</p>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">✨ Identité remarquable :</strong><br>
+                                        $a^2 - b^2 = (a + b)(a - b)$
+                                    </div>
+                                </section>
+
+                                <button class="btn-check-understanding" data_quiz_target="quiz-area-calcul-litteral" onclick="startQuizFromButton('quiz-area-calcul-litteral', 3)">Ai-je bien compris ?</button>
+                                <div id="quiz-area-calcul-litteral"></div>
+                            </div>
+                        `,
+                        quiz: { q: "Développer : $3(x + 4)$", a: "3x+12" }, eleve: "non"
+                    },
+                    {   id: 4,
+    title: "Équations",
+    content: `
+        <div class="course-container">
+            <!-- SECTION : OBJECTIFS -->
+            <section class="course-section">
+                <p><strong>Objectifs :</strong></p>
+                <ul>
+                    <li>Je sais résoudre une équation de forme $ax + b = cx + d$</li>
+                    <li>Je sais résoudre une équation produit</li>
+                    <li>Je sais résoudre une équation de forme $x^2 = a$</li>
+                    <li>Je sais mettre un problème en équation et le résoudre</li>
+                </ul>
+            </section>
+
+            <!-- SECTION : VOCABULAIRE -->
+            <section class="course-section">
+                <h2 class="section-title">Vocabulaire</h2>
+                <p><strong class="section-title">Définition :</strong> Une équation est une égalité dans laquelle intervient un nombre inconnu, désigné par une lettre : $x, y, a, b, t \dots$</p>
+                <p><strong class="section-title">Exemples :</strong></p>
+                <ul>
+                    <li>$7 + x = 15$ ; $9,5y = 38$ ; $x^2 + 3x = 25$ sont des équations.</li>
+                    <li>$5x$ ; $5x + 4y$ ; $x^2 - 3$ ne sont pas des équations car il n'y a pas d'égalité !</li>
+                </ul>
+                <p><strong class="section-title">Résoudre une équation</strong>, c’est trouver toutes les valeurs possibles du nombre inconnu telles que l’égalité soit vraie.</p>
+                <p><em class="section-title">Exemples :</em></p>
+                <ul>
+                    <li>L’équation $x - 1 = 0$ admet une seule et unique solution évidente : $x = 1$.</li>
+                    <li>L’équation $m^2 = 4$ admet deux solutions : $m_1 = 2$ et $m_2 = -2$.</li>
+                    <li>L’équation $7 + y = 4$ admet une seule et unique solution $y = -3$.</li>
+                </ul>
+            </section>
+
+            <!-- SECTION : TESTER UNE SOLUTION -->
+            <section class="course-section">
+                <h2 class="section-title">Tester, vérifier une solution</h2>
+                <p>Pour tester si une valeur peut être solution d'une équation, il suffit de remplacer la lettre par la valeur souhaitée et de calculer les deux côtés de l'égalité séparément. C'est très utile pour vérifier ses résultats !</p>
+                
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">💡 MÉTHODE : Ce que je dois savoir faire en exercice</strong>
+                    <p><em class="section-title">Exemples :</em></p>
+                    <ul>
+                        <li>$-2$ est-il solution de l'équation $2x + 15 = 5$ ?</li>
+                    </ul>
+                    <blockquote>
+                        $2 \times (-2) + 15 = -4 + 15 = 11 \neq 5$. Donc $-2$ n'est pas solution de cette équation.
+                    </blockquote>
+                    <ul>
+                        <li>$-3$ est-il solution de l’équation $4y + 8 = 5y + 11$ ?</li>
+                    </ul>
+                    <blockquote>
+                        D'une part : $4 \times (-3) + 8 = -12 + 8 = -4$<br>
+                        D'autre part : $5 \times (-3) + 11 = -15 + 11 = -4$<br>
+                        Donc $-3$ est solution de l’équation $4y + 8 = 5y + 11$.
+                    </blockquote>
+                </div>
+            </section>
+
+            <!-- SECTION : MÉTHODE DE BASE -->
+            <section class="course-section">
+                <h2 class="section-title">Méthode de résolution d'une équation de base</h2>
+                <p><strong>a) Règle 1 :</strong> On peut ajouter (ou soustraire) un même nombre aux deux membres d'une équation. Soient $a, b$ et $c$ trois nombres réels quelconques :</p>
+                <blockquote>
+                    Si $a = b$, alors $a + c = b + c$<br>
+                    Si $a = b$, alors $a - c = b - c$
+                </blockquote>
+                <p><em class="section-title">Exemple :</em> $15 + y = 25 \implies 15 + y - 15 = 25 - 15 \implies y = 10$.</p>
+
+                <p><strong>b) Règle 2 :</strong> On peut multiplier ou diviser par un même nombre non nul les deux membres d'une équation. Soient $a, b$ et $c$ trois nombres réels :</p>
+                <blockquote>
+                    Si $a = b$, alors $a \times c = b \times c$<br>
+                    Si $a = b$, alors $a \div c = b \div c$ avec $c \neq 0$
+                </blockquote>
+                <p><em class="section-title">Exemple :</em> $5y = 100 \implies 5y \div 5 = 100 \div 5 \implies y = 20$.</p>
+
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">🚀 Application des règles :</strong>
+                    <ol>
+                        <li>On regroupe les termes avec l'inconnue dans un même membre (gauche ou droite) et on réduit.</li>
+                        <li>On regroupe les termes sans inconnue dans l’autre membre et on réduit.</li>
+                        <li>On résout avec une division ou une multiplication.</li>
+                    </ol>
+                </div>
+
+                <p><em class="section-title">Exemple :</em> $4y - 4 = 2y + 9$</p>
+                <blockquote>
+                    $4y - 2y - 4 = 9$<br>
+                    $2y - 4 = 9$<br>
+                    $2y = 13$<br>
+                    $y = 6,5$
+                </blockquote>
+
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">📝 Objectif 1 :</strong> Je sais résoudre une équation de forme $ax + b = cx + d$.
+                </div>
+            </section>
+
+            <!-- SECTION : ÉQUATION PRODUIT -->
+            <section class="course-section">
+                <h2 class="section-title">Résoudre une équation produit</h2>
+                <p>Les équations contenant un terme inconnu au carré sont appelées équations du second degré. Elles diffèrent des équations du premier degré car elles peuvent avoir deux solutions différentes.</p>
+                <p>Pour les résoudre, on utilise la forme factorisée des expressions littérales.</p>
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">💡 Propriété :</strong> Si $a \times b = 0$, alors soit $a = 0$, soit $b = 0$. Un produit est nul si l'un de ses facteurs est nul.
+                </div>
+                <p><em class="section-title">Exemple :</em> Résoudre $(x + 3)(x - 7) = 0$.</p>
+                <p>Le produit est nul si $(x + 3) = 0$ ou $(x - 7) = 0$.<br>
+                Soit $x = -3$ ou $x = 7$.</p>
+
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">📝 Objectif 2 :</strong> Je sais résoudre une équation produit.
+                </div>
+            </section>
+
+            <!-- SECTION : ÉQUATION X²=A -->
+            <section class="course-section">
+                <h2 class="section-title">Résoudre une équation du type $x^2 = a$</h2>
+                <p>Soit $a$ un nombre réel. En retranchant $a$ dans chaque membre, on obtient : $x^2 - a = 0$.</p>
+                <p>En utilisant l'identité remarquable $a^2 - b^2 = (a+b)(a-b)$, on transforme l'équation en équation produit : $(x + \sqrt{a})(x - \sqrt{a}) = 0$.</p>
+                                <div class="notion-box">
+                    <strong style="color: var(--secondary);">💡 Exemples :</strong>
+                    <ul class="mt-2">
+                        <li>$x^2 = 36 \implies x = 6$ ou $x = -6$</li>
+                        <li>$2x^2 + 3 = 131 \implies 2x^2 = 128 \implies x^2 = 64 \implies x = 8$ ou $x = -8$</li>
+                    </ul>
+                </div>
+
+                <p><em class="section-title">Exemple avec identité remarquable :</em></p>
+                <p>$(x - 2)^2 = 49 \implies (x - 2)^2 - 49 = 0$<br>
+                $\implies [(x - 2) + 7][(x - 2) - 7] = 0$<br>
+                $\implies (x + 5)(x - 9) = 0$<br>
+                Les solutions sont $x = -5$ ou $x = 9$.</p>
+
+                <div class="notion-box">
+                    <strong style="color: var(--primary);">📝 Objectif 3 :</strong> Je sais résoudre une équation $x^2 = a$.
+                </div>
+            </section>
+
+            <!-- BOUTON DE FIN DE CHAPITRE -->
+            <button class="btn-check-understanding" data-quiz-target="quiz-area-equations" onclick="startQuizFromButton('quiz-area-equations', 4)">Ai-je bien compris ?</button>
+            <div id="quiz-area-equations"></div>
+        </div>
+    `,
+    quiz: { q: "Résoudre l'équation : $x^2 = 49$", a: "7 et -7" }, eleve: "non"                
+                }              
                 ]
             },
             {
                 name: "ORGANISATION ET GESTION DE DONNÉES",
                 chapters: [
-                    { id: 5, title: "Les statistiques", content: "L'étude des données...", quiz: { q: "Quelle est la moyenne de 10 et 20 ?", a: "15" }, eleve: "non" },
-                    { id: 6, title: "Probabilités", content: "L'étude du hasard...", quiz: { q: "Probabilité d'obtenir pile sur une pièce ?", a: "1/2" }, eleve: "non" },
-                    { id: 7, title: "Proportionnalité", content: "Relation entre deux grandeurs...", quiz: { q: "Si 2 kg coûtent 4€, combien coûtent 5 kg ?", a: "10" }, eleve: "non" },
-                    { id: 8, title: "Fonctions", content: "Une fonction associe une seule valeur...", quiz: { q: "Si f(x) = 2x, que vaut f(3) ?", a: "6" }, eleve: "non" }
+                    { id: 5,
+                title: "Statistiques",
+                content: `
+                    <div class="course-container">
+                    <!-- SECTION : OBJECTIFS -->
+                    <section class="course-section">
+                        <p><strong>Objectifs :</strong></p>
+                        <ul>
+                            <li>Je sais calculer des effectifs et des fréquences</li>
+                            <li>Je sais calculer des moyennes et des médianes</li>
+                            <li>Je sais calculer une étendue</li>
+                            <li>Je sais lire et interpréter des données statiques présentées sous la forme de données brutes, d’un tableau, d’un diagramme en bâton, d’un diagramme circulaire ou d’un histogramme.</li>
+                            <li>Je sais représenter des données sous la forme d’histogrammes pour des classes de même amplitude.</li>
+                        </ul>
+                    </section>
+
+                    <!-- SECTION : DONNÉES BRUTES -->
+                    <section class="course-section">
+                        <h2 class="section-title">A quelle heure vous couchez-vous le soir ?</h2>
+                        <p>Série de données brutes :</p>
+                        <p>22h30 - 22h30 - 22h15 - 22h30 - 22h30 - 24h30 - 24h30 - 22h30 - 22h00 - 24h30 - 23h30 - 25h00 - 23h00 - 24h30 - 23h00 - 24h30 - 24h30 - 24h00 - 23h00 - 25h00 - 22h30 - 22h00 - 24h00 - 22h00</p>
+                    </section>
+
+                    <!-- SECTION : EFFECTIFS ET FRÉQUENCES -->
+                    <section class="course-section">
+                        <h2 class="section-title">Vocabulaire et Tableaux</h2>
+                        <p><strong class="section-title">Tableau d'effectifs :</strong></p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Valeurs du caractère</th>
+                                    <th>22h00</th>
+                                    <th>22h15</th>
+                                    <th>22h30</th>
+                                    <th>23h00</th>
+                                    <th>23h30</th>
+                                    <th>24h00</th>
+                                    <th>24h30</th>
+                                    <th>25h00</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Effectif</strong></td>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>6</td>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>5</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Effectifs cumulés croissants</strong></td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>10</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td>17</td>
+                                    <td>22</td>
+                                    <td>24</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="notion-box">
+                            <p>Vérification : total = $3+1+6+3+1+3+5+2 = 24$</p>
+                        </div>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-effectifs" onclick="startQuizFromButton('quiz-area-effectifs', 1)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-effectifs"></div>
+
+                        <h3 class="section-title">Fréquence</h3>
+                        <p>La fréquence correspond à la proportion de la valeur dans la série statistique. C’est un nombre entre 0 et 1.</p>
+                        <div class="notion-box">
+                            <strong style="color: var(--primary);">Formule :</strong> $\text{Fréquence} = \frac{\text{effectif}}{\text{effectif total}}$
+                        </div>
+                        <p>Exemple (pour 22h30) : $6 / 24 = 0,25$ soit $25\%$.</p>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-frequence" onclick="startQuizFromButton('quiz-area-frequence', 2)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-frequence"></div>
+                    </section>
+
+                    <!-- SECTION : MOYENNE -->
+                    <section class="course-section">
+                        <h2 class="section-title">Caractéristiques de position</h2>
+                        <h3 class="section-title">Moyenne</h3>
+                        
+                        <p><strong class="section-title">Simple (sans effectifs ou coefficients) :</strong></p>
+                        <div class="notion-box">
+                            On additionne toutes les valeurs et on divise par l’effectif total.
+                        </div>
+                        <p><em>Exemple :</em> Leny a eu 5 notes au deuxième trimestre : 11, 15, 14, 9, 12. <br>
+                        $(11+15+14+9+12) \div 5 = 12,2$. La moyenne est de $12,2$.</p>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-simple" onclick="startQuizFromButton('quiz-area-moyenne-simple', 3)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-moyenne-simple"></div>
+
+                        <p><strong class="section-title">Pondérée :</strong></p>
+                        <div class="notion-box">
+                            On multiplie chaque valeur par son effectif (pour tenir compte de TOUTES les valeurs de la liste) et on divise par l’effectif total.
+                        </div>
+                        <p><em>Exemple (Heure de coucher) :</em> <br>
+                        $(22 \times 3 + 22,25 \times 1 + 22,5 \times 6 + 23 \times 3 + 23,5 \times 1 + 24 \times 3 + 24,5 \times 5 + 25 \times 2) \div 24 = 23,34$.<br>
+                        Ce qui correspond à une heure de coucher de $23\text{h}$ et $0,34 \times 60 = 20\text{min}$, soit $23\text{h}20$.</p>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-ponderee" onclick="startQuizFromButton('quiz-area-moyenne-ponderee', 4)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-moyenne-ponderee"></div>
+                    </section>
+
+                    <!-- SECTION : MEDIANE -->
+                    <section class="course-section">
+                        <h3 class="section-title">Médiane</h3>
+                        <p>La médiane est la valeur qui partage la série statistique en deux séries de même effectif, de sorte que $50\%$ des unités ont une valeur inférieure ou égale à la médiane et $50\%$ des unités ont une valeur supérieure ou égale.</p>
+                        <div class="notion-box">
+                            <strong style="color: var(--secondary);">💡 Astuce :</strong> C'est la valeur « du milieu » lorsque les valeurs sont rangées dans l’ordre croissant.
+                        </div>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-mediane" onclick="startQuizFromButton('quiz-area-mediane', 5)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-mediane"></div>
+                    </section>
+
+                    <!-- SECTION : ETENDUE -->
+                    <section class="course-section">
+                        <h2 class="section-title">Caractéristiques de dispersion</h2>
+                        <h3 class="section-title">L'Étendue</h3>
+                        <p>L’étendue mesure l’écart entre les grandeurs d’une série statistiques.</p>
+                        <div class="notion-box">
+                            <strong style="color: var(--primary);">Formule :</strong> $\text{Étendue} = \text{Valeur Max} - \text{Valeur Min}$
+                        </div>
+                        <p><em>Exemple comparatif :</em> <br>
+                        <p>Élève A (notes régulières) : Étendue = $11 - 9 = 2$.<br>
+                        Élève B (notes dispersées) : Étendue = $20 - 0 = 20$.</p>
+                        <p>L'étendue permet de dire que l'élève A est plus régulier, tandis que l'élève B a des résultats très disparates.</p>
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-etendue" onclick="startQuizFromButton('quiz-area-etendue', 6)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-etendue"></div>
+                    </section>
+
+                    <!-- SECTION : HISTOGRAMME -->
+                    <section class="course-section">
+                        <h2 class="section-title">Classes d’amplitude et histogramme</h2>
+                        <p><strong class="section-title">Exemple :</strong> Le professeur de SVT a relevé la taille (en cm) de tous les élèves d’une classe de cinquième.</p>
+                        <p>Série : 150 – 165 – 169 – 155 – 164 – 149 – 150 – 162 – 160 – 164 – 164 – 170 – 172 – 164 – 135 – 165 – 163 – 160 – 161 - 158 – 155 – 142 – 158 – 150 – 140 – 147 – 175 – 138</p>
+                        <div class="notion-box">
+                            <strong style="color: var(--secondary);">📊 Construction de l'histogramme :</strong><br>
+                            Pour construire un histogramme, on porte les classes en abscisse. L'<strong>aire</strong> du rectangle est proportionnelle à l'effectif (et non la hauteur seule).
+                        </div>
+                    </section>
+                </div>
+            `,
+            quiz: { q: "Si une série a pour valeurs 10, 20 et 30, quelle est sa moyenne ?", a: "20" }, eleve: "non"   
+                    
+                    
+                    
+                    },
+                    {  id: 6,
+                        title: "Probabilités",
+                        content: `
+                            <div class="course-container">
+                                <!-- SECTION : OBJECTIFS -->
+                                <section class="course-section">
+                                    <p><strong class="section-title">Objectifs :</strong></p>
+                                    <ul>
+                                        <li>Je connais le vocabulaire des probabilités (Issues ; les différents types d’événements…)</li>
+                                        <li>Je sais calculer une probabilité (d’une issue, d’un événement, d’un événement contraire)</li>
+                                        <li>Je sais calculer la probabilité d’une expérience aléatoire à deux épreuves.</li>
+                                        <li>Je comprends la loi des grands nombres et le lien entre stabilisation des fréquences et probabilités</li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION : VOCABULAIRE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Vocabulaire</h2>
+                                    
+                                    <p><strong class="section-title">Expérience aléatoire :</strong> Une expérience aléatoire est une expérience dont on ne peut pas connaître le résultat d’une façon certaine (notion de hasard).</p>
+                                    <p><strong class="section-title">Issues :</strong> Les issues d’une expérience aléatoire sont les différents résultats possibles de l’expérience.</p>
+                                    <p><strong class="section-title">Probabilité :</strong> La probabilité est un nombre décimal compris entre 0 et 1 qui caractérise la possibilité que l’événement considéré se produise.</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">💡 Exemple :</strong><br>
+                                        Expérience aléatoire : je lance une pièce en l’air et je regarde le côté sur lequel la pièce retombe.<br>
+                                        Issues : Pile ou Face.<br>
+                                        Probabilité : $0,5$.
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-vocabulaire" onclick="startQuizFromButton('quiz-area-vocabulaire', 1)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-vocabulaire"></div>
+
+                                    <p><strong class="section-title">Événement :</strong> Un événement est constitué par certaines issues d’une expérience aléatoire. Chacune de ces issues réalise l’événement.</p>
+                                    <p><em class="section-title">Exemple :</em> Expérience aléatoire : je lance un dé de 6 et je regarde le numéro obtenu.<br>
+                                    Issues : $1 ; 2 ; 3 ; 4 ; 5 ; 6$.<br>
+                                    Événement A : obtenir un nombre pair.<br>
+                                    Événement B : obtenir un nombre supérieur ou égal à 5.<br>
+                                    L’événement A est réalisé si je tombe sur 2 ou 4 ou 6. L’événement B est réalisé si je tombe sur 5 ou 6. Donc $P(A) = \frac{3}{6} = 0,5$ et $P(B) = \frac{2}{6} = \frac{1}{3}$.</p>
+
+                                    <p><strong class="section-title">Événement contraire :</strong> L’événement contraire de A est noté $\overline{A}$. Il est constitué de toutes les issues qui ne sont pas dans l’événement A.</p>
+                                    <p>Dans notre exemple précédent, $\overline{A}$ serait obtenir un nombre impair et $\overline{B}$ serait obtenir un nombre strictement inférieur à 5 ($1 ; 2 ; 3$ ou $4$) car 5 et 6 sont dans l’événement B.</p>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Événement impossible :</strong> Un évènement est dit impossible s’il ne peut jamais se produire. Sa probabilité est égale à $0$. (Exemple : Obtenir un 7 avec le dé de 6).<br><br>
+                                        <strong style="color: var(--secondary);">✅ Événement certain :</strong> Un évènement est dit certain s’il se produit toujours. (Exemple : Obtenir un nombre inférieur à 10 avec le dé de 6).
+                                    </div>
+                                    <p><strong class="section-title">Événements incompatibles :</strong> Deux évènements sont dits incompatibles s’ils ne peuvent pas se produire en même temps.</p>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-evenements" onclick="startQuizFromButton('quiz-area-evenements', 2)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-evenements"></div>
+                                </section>
+
+                                <!-- SECTION : CALCUL DE PROBABILITÉ -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Calcul de probabilité</h2>
+                                    <p><strong class="section-title">Définition :</strong> La probabilité d’un événement est calculée en divisant le nombre d’issues favorables à un événement par le nombre d’issues possibles.</p>
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">Formule :</strong> $P(A) = \frac{\text{nombre d'issues favorables}}{\text{nombre d'issues possibles}}$
+                                    </div>
+                                    <p><em class="section-title">Exemple :</em> $P(\text{Pile}) = \frac{1}{2} = 0,5$. (1 issue favorable sur 2 issues possibles).</p>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-calcul" onclick="startQuizFromButton('quiz-area-calcul', 3)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-calcul"></div>
+
+                                    <h3 class="section-title">Propriétés</h3>
+                                    <ul>
+                                        <li>La somme de la probabilité de tous les événements est toujours égale à $1$.</li>
+                                        <li>Le pourcentage de chance qu’un événement se produise se calcule en multipliant la probabilité par $100$.</li>
+                                        <li>La probabilité d’un événement est la somme des probabilités des issues qui composent l’évènement.</li>
+                                        <li>La somme des probabilités d’un événement et de son événement contraire vaut $1$ : $P(A) + P(\overline{A}) = 1$, ou plus souvent $P(\overline{A}) = 1 - P(A)$.</li>
+                                    </ul>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Exemples :</strong><br>
+                                        $P(\text{pile}) + P(\text{face}) = 0,5 + 0,5 = 1$.<br>
+                                        J’ai $0,5 \times 100 = 50\%$ de chances de tomber sur pile.<br>
+                                        Événement B (obtenir 5 ou 6 avec le dé) : $P(B) = P(5) + P(6) = \frac{1}{6} + \frac{1}{6} = \frac{2}{6} = \frac{1}{3}$.<br>
+                                        Pour trouver $P(\overline{B})$, on peut faire : $P(\overline{B}) = P(1)+P(2)+P(3)+P(4)$ OU $P(\overline{B}) = 1 - P(B) = 1 - \frac{1}{3} = \frac{2}{3}$.
+                                    </div>
+                                    <button class0="btn-check-understanding" data-quiz-target="quiz-area-proprietes" onclick="startQuizFromButton('quiz-area-proprietes', 4)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-proprietes"></div>
+                                </section>
+
+                                <!-- SECTION : DEUX ÉPREUVES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Probabilité d’une expérience aléatoire à deux épreuves</h2>
+                                    <p>Lorsqu’on recherche une probabilité qui lie deux expériences on utilise <strong class="section-title">un arbre des possibles</strong>.</p>
+                                    <p>Chaque <strong class="section-title">branche</strong> de l’arbre correspond à une <strong class="section-title">issue</strong> possible. (Attention à ne pas confondre avec les expériences ou épreuves).</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">💡 Règle de calcul :</strong>
+                                        <p>Avec un arbre, la probabilité de l’issue auquel conduit un chemin est égale au <strong class="section-title">produit des probabilités</strong> rencontrées le long de ce chemin.</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">📝 Exemple :</strong><br>
+                                        Je pioche une boule dans une urne (3 jaunes, 2 rouges), puis je lance un dé coloré (2 faces jaunes, 1 bleue, 3 noires).<br>
+                                        Probabilité d'obtenir {une boule jaune ET une face jaune} :<br>
+                                        $P(A) = \frac{3}{5} \times \frac{2}{6} = \frac{3 \times 2}{5 \times 6} = \frac{6}{30} = \frac{1}{5}$.
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-arbre" onclick="startQuizFromButton('quiz-area-arbre', 5)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-arbre"></div>
+                                </section>
+
+                                <!-- SECTION : LOI DES GRANDS NOMBRES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Loi des grands nombres</h2>
+                                    <p>Lorsqu’on répète une expérience aléatoire un grand nombre de fois, la fréquence d’apparition d’un événement se rapproche de la probabilité théorique.</p>
+                                    
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Remarque :</strong> Pour trouver une probabilité qu'on ne peut pas calculer mathématiquement, on peut répéter l’expérience un grand nombre de fois et d’assimiler la fréquence d’apparition de chaque événement à sa probabilité.
+                                    </div>
+
+                                    <p><em class="section-title">Exemple :</em> Si je lance un dé truqué 1000 fois, je remarque que je tombe 350 fois sur le nombre 6. La probabilité d’obtenir un 6 se rapproche de $\frac{350}{1000} = 0,35$ (soit $35\%$).</p>
+                                    
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-loi-grands-nombres" onclick="startQuizFromButton('quiz-area-loi-grands-nombres', 6)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-loi-grands-nombres"></div>
+                                </section>
+                            </div>
+                        `,
+                        quiz: { q: "Si on lance une pièce 1000 fois, la fréquence de 'Pile' se rapproche de quelle probabilité ?", a: "0,5" }, eleve: "non"       
+                    },
+                    {
+                        id: 7,
+                        title: "Proportionnalité",
+                        content: `
+                            <div class="course-container">
+                                <!-- SECTION : OBJECTIFS -->
+                                <section class="course-section">
+                                    <p><strong class="section-title">Objectifs :</strong></p>
+                                    <ul>
+                                        <li>Reconnaître une situation de proportionnalité (tableau, graphique).</li>
+                                        <li>Calculer une quatrième proportionnelle.</li>
+                                        <li>Modéliser la proportionnalité par une fonction linéaire.</li>
+                                        <li>Utiliser les pourcentages et les fonctions linéaires pour les évolutions.</li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION : RECONNAITRE LA PROPORTIONALITE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Reconnaître la proportionnalité</h2>
+                                    
+                                    <p><strong class="section-title">À partir d'un tableau :</strong></p>
+                                    <p>Pour savoir si un tableau est proportionnel, on vérifie si les nombres de la deuxième ligne sont tous multipliés par le même nombre (le coefficient de proportionnalité).</p>
+                                    <div class="notion-box">
+                                        <p>Exemple : Si pour 2 stylos on paie 5€, pour 4 stylos on doit payer 10€. Le rapport est constant ($5/2 = 2,5$ et $10/4 = 2,5$).</p>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-tableau" onclick="startQuizFromButton('quiz-area-tableau', 1)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-tableau"></div>
+
+                                    <p><strong class="section-title">À partir d'un graphique :</strong></p>
+                                    <p>Une situation est proportionnelle si la représentation graphique est une <strong class="section-title">droite qui passe par l'origine du repère</strong>.</p>
+                                    <div class="notion-box">
+                                        <ul class="mt-2">
+                                            <li>Si la droite ne passe pas par l'origine $\rightarrow$ <strong>Non proportionnel</strong>.</li>
+                                            <li>Si ce n'est pas une droite (courbe) $\rightarrow$ <strong>Non proportionnel</strong>.</li>
+                                        </ul>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-graphique" onclick="startQuizFromButton('quiz-area-graphique', 2)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-graphique"></div>
+                                </section>
+
+                                <!-- SECTION : QUATRIEME PROPORTIONNELLE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Calcul de quatrième proportionnelle</h2>
+                                    <p>Dans une situation de proportionnalité, il est possible de résoudre des problèmes de plusieurs façons qui donneront le même résultat.</p>
+                                    <p><em class="section-title">Exemple :</em> J'ai acheté 4 stylos pour 5€, combien vais-je payer pour 7 stylos ?</p>
+
+                                    <h3 class="section-title">Méthode 1 : Passage par l'unité</h3>
+                                    <div class="notion-box">
+                                        <p>On cherche d'abord la valeur pour une seule unité.</p>
+                                        <p>Prix de 1 stylo : $4 \div 5 = 1,25$ €</p>
+                                        <p>Prix de 7 stylos : $7 \times 1,25 = 8,75$ €</p>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-unite" onclick="startQuizFromButton('quiz-area-unite', 3)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-unite"></div>
+
+                                    <h3 class="section-title">Méthode 2 : Le produit en croix</h3>
+                                    <p>On utilise un tableau de proportionnalité. Le signe $\times$ fait penser à la diagonale du tableau.</p>
+                                    <table style="width:50%">
+                                        <thead>
+                                            <tr>
+                                                <th>Quantité</th>
+                                                <th>Prix (€)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2</td><td>2,5</td></tr>
+                                            <tr><td>7</td><td>?</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="notion-box">
+                                        <p>Le nombre manquant est : $(2,5 \times 7) \div 2 = 8,75$ €</p>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-produit-croix" onclick="startQuizFromButton('quiz-area-produit-croix', 4)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-produit-croix"></div>
+                                </section>
+
+                                <!-- SECTION : FONCTION LINEAIRE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Modéliser par une fonction linéaire</h2>
+                                    <p>La représentation graphique d’une situation de proportionnalité est une droite qui passe par l’origine du repère : c'est une <strong class="section-title">fonction linéaire</strong>.</p>
+                                    <div class="notion-box">
+                                        <p>Si on a le tableau : 2 stylos $\rightarrow$ 5€ et 4 stylos $\rightarrow$ 10€, la fonction est $f(x) = 2,5x$.</p>
+                                    </div>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-fonction" onclick="startQuizFromButton('quiz-area-fonction', 5)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-fonction"></div>
+                                </section>
+
+                                <!-- SECTION : POURCENTAGES ET EVOLUTIONS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Pourcentages d'évolution et fonctions linéaires</h2>
+                                    <p>Un pourcentage est une proportion. Il peut donc être modélisé par une fonction linéaire.</p>
+                                    <p>Dans les problèmes d’évolution, il est plus rapide de calculer le coefficient de linéarité que de faire des calculs classiques.</p>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--primary);">💡 Exemple d'augmentation :</strong><br>
+                                        Un produit coûtant $x$ euros subit une augmentation de $10\%$.<br>
+                                        Calcul classique : $x + (\frac{10}{100} \times x)$<br>
+                                        En factorisant par $x$, on obtient : $x(1 + \frac{10}{100}) = 1,10x$
+                                    </div>
+                                    <p>Si on note $p(x)$ le prix payé après une augmentation de $10\%$, alors $p(x) = 1,10x$.</p>
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-evolution" onclick="startQuizFromButton('quiz-area-evolution', 6)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-evolution"></div>
+                                </section>
+                            </div>
+                        `,
+                        quiz: { q: "Si un produit coûte 100€ et augmente de 20%, quel est le nouveau prix ?", a: "120" }, eleve: "non"
+                    },
+                    {
+                        id: 8,
+                            title: "Fonctions",
+                            content: `
+                                <div class="course-container">
+                                    <!-- INTRODUCTION ET OBJECTIFS -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Chapitre 8 : Fonctions</h2>
+                                        <p><strong>Objectifs :</strong></p>
+                                        <ul>
+                                            <li>Je sais utiliser les notations et le vocabulaire fonctionnel</li>
+                                            <li>Je sais calculer image et antécédent à partir de la forme algébrique d’une fonction</li>
+                                            <li>Je sais déterminer une image et un antécédent à partir d’une <strong class="text-primary">représentation graphique</strong> ou <strong class="text-primary">tableau</strong> d’une fonction</li>
+                                            <li>Je sais modéliser une situation de proportionnalité</li>
+                                            <li>Je sais représenter graphiquement et interpréter les paramètres d’une <strong class="text-primary">fonction linéaire</strong></li>
+                                            <li>Je sais modéliser un pourcentage à l’aide d’une fonction linéaire</li>
+                                            <li>Je sais représenter graphiquement, interpréter les paramètres, d’une <strong class="text-primary">fonction affine</strong></li>
+                                        </ul>
+                                    </section>
+
+                                    <!-- NOTION DE FONCTION -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Notion de fonction</h2>
+                                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                                            <p>Remarque : on peut définir une fonction avec sa formule, son tableau ou son graphique, l’un des trois suffit.</p>
+                                            <p>Exemple sur géogébra : formule $\rightarrow$ graphique et les coordonnées des points pris sur la courbe sont les points du tableau.</p>
+                                        </div>
+
+                                        <div class="notion-box">
+                                            <p>Attention aux parenthèses lorsque tu calculeras avec ta calculatrice : $(-2)^2 \neq -2^2$</p>
+                                            <p>Remarque : choisis bien ton échelle sur chaque axe pour que la courbe ne soit pas trop petite !</p>
+                                        </div>
+
+                                        <p>Objectif 2 : Je sais déterminer une image et un antécédent à partir d’une <strong class="text-primary">représentation graphique</strong> ou <strong class="text-primary">tableau</strong> d’une fonction</p>
+                                    </section>
+
+                                    <!-- BOUTON 1 -->
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-notion" onclick="startQuizFromButton('quiz-area-notion', 8)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-notion"></div>
+
+                                    <!-- FONCTION LINÉAIRE -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Fonction linéaire</h2>
+                                        <h3>Définition</h3>
+                                        <p>$a$ désigne un nombre réel.</p>
+                                        <div class="notion-box">
+                                            <p>Une fonction linéaire de coefficient $a$ est la fonction qui à tout nombre $x$ associe le nombre $a \times x$</p>
+                                            <p>On note $f : x \rightarrow ax$ ou $f(x) = ax$</p>
+                                        </div>
+
+                                        <p>exemples : $g(x) = -3x$ sont des fonctions linéaires car elles sont bien $h(x) = 5x$ de la forme « un nombre multiplié par la variable »</p>
+                                        <div class="notion-box">
+                                            <p>$j(x) = \frac{3}{2} x$ on dit que -3 ; 5 et $\frac{3}{2}$ sont leurs coefficient de linéarité</p>
+                                        </div>
+
+                                        <p>Contre exemples :</p>
+                                        <ul>
+                                            <li>$k(x) = 3x + 2$ n’est pas une fonction linéaire car +2</li>
+                                            <li>$l(x) = 2x^2$ n’est pas une fonction linéaire car $x^2$</li>
+                                            <li>$m(x) = -3\sqrt{x}$ n’est pas une fonction linéaire car $\sqrt{x}$</li>
+                                        </ul>
+
+                                        <h3>Contexte</h3>
+                                        <p>A toute situation de proportionnalité, correspond une fonction linéaire. On dit qu’on peut modéliser le problème par une fonction linéaire.</p>
+                                        <p>Exemple : Je souhaite faire un gâteau. Pour 2 personnes il me faut...</p>
+
+                                        <p>Cette situation est modélisable par la fonction linéaire $f : x \rightarrow 50x$</p>
+                                        <p>Le coefficient de la fonction linéaire correspond au coefficient de proportionnalité.</p>
+                                        <p>L’image $f(x) = 50x$ donne la quantité de farine à utiliser en fonction du nombre de personnes</p>
+                                        <p>L’égalité $f(7) = 350$ signifie, pour cette situation, que pour 7 personnes j’aurai besoin de 350g de farine.</p>
+
+                                        <p>Objectif 3a - Je sais modéliser un problème sous forme d'une fonction linéaire (+images antécédents)</p>
+
+                                        <h3>Représentation graphique</h3>
+                                        <div class="notion-box">
+                                            <p>Comme elle représente une situation de proportionnalité, ce sera toujours une droite qui passe par l’origine du repère.</p>
+                                        </div>
+
+                                        <p>C’est <strong><u>la droite</u></strong> (OA) qui passe par :</p>
+                                        <ul>
+                                            <li>O l’origine du repère</li>
+                                            <li>et A le point de coordonnées $(1 ; a)$</li>
+                                        </ul>
+
+                                        <div class="notion-box">
+                                            <p>Vocabulaire :</p>
+                                            <p>On dit que (OA) est la <strong>droite d'équation</strong> $y = ax$</p>
+                                            <p>Dans laquelle $a$ est appelé <strong>coefficient directeur</strong> de la droite</p>
+                                        </div>
+                                        <p>Différents cas possibles selon la valeur de $a$</p>
+
+                                        <h3>Calculer un pourcentage d’augmentation ou de diminution avec les fonctions linéaires</h3>
+                                        <p>Une augmentation ou diminution de prix en pourcentage est une fonction linéaire, ce qui les rend plus simple à calculer.</p>
+                                        <div class="notion-box">
+                                            <p>En effet augmenter de 35% revient à utiliser la fonction $p(x) = 1,35x$</p>
+                                            <p>Diminuer de 20% revient à utiliser la fonction $p(x) = 0,8x$</p>
+                                            <p>Prendre 30% du prix revient à utiliser $0,30x$</p>
+                                        </div>
+
+                                        <p>Objectif 4 - Je sais modéliser un pourcentage à l’aide d’une fonction linéaire</p>
+
+                                        <!-- TABLEAU DE VALEURS -->
+                                        <p>Exemple pour compléter la courbe à ces endroits si tu le souhaites :</p>
+                                        <table style="width:100%; border-collapse: collapse; text-align: center;">
+                                            <thead>
+                                                <tr style="background-color: #f2f2f2;">
+                                                    <th>$x$</th>
+                                                    <th>-2</th>
+                                                    <th>-1.5</th>
+                                                    <th>-1</th>
+                                                    <th>-0.5</th>
+                                                    <th>0</th>
+                                                    <th>0.5</th>
+                                                    <th>1</th>
+                                                    <th>1.5</th>
+                                                    <th>2</th>
+                                                    <th>antécédents</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>$g(x) = x^2 + 2$</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>images</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </section>
+
+                                    <!-- BOUTON 2 -->
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-lineaire" onclick="startQuizFromButton('quiz-area-lineaire', 8)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-lineaire"></div>
+                                    <!-- FONCTION AFFINE -->
+                                                <section class="course-section">
+                                                    <h2 class="section-title">Fonction affine</h2>
+                                                    <h3 class="section-title" style="font-size: 1.2rem;">Définition – Notation :</h3>
+                                                    <p>Soit $a$ et $b$ deux nombres fixés.</p>
+                                                    <p>En associant à chaque nombre « $x$ » un nombre « $ax + b$ » appelé image de $x$, on définit <strong class="text-primary">une fonction affine</strong>.</p>
+                                                    <p>On notera cette fonction ainsi : $f : x \rightarrow ax + b$.</p>
+                                                    <p>L’image de $x$ sera notée : $f(x)$.</p>
+
+                                                    <div class="notion-box">
+                                                        <p><strong style="color: var(--primary);">Exemple :</strong> Soit $f$ est la fonction affine définie par : $f : x \rightarrow 2x – 3$.</p>
+                                                        <p>Alors :</p>
+                                                        <ul style="list-style-type: none; padding-left: 0;">
+                                                            <li>• L’image de $0$ est : $f(0) = 2 \times 0 – 3 = 0 – 3 = –3$. C’est « $b$ »</li>
+                                                            <li>• L’image de $5$ est : $f(5) = 2 \times 5 – 3 = 10 – 3 = 7$.</li>
+                                                            <li>• L’antécédent de $-5$ est : $f(x) = 2 \times x – 3 = – 5$ alors $2x – 3 = - 5$ soit $2x = - 5 + 3$ et $x = -1$</li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                                        <p><strong style="color: var(--secondary);">Remarques :</strong></p>
+                                                        <p>- Si $b = 0$, on a : $f : x \rightarrow ax$. On retrouve une fonction linéaire.</p>
+                                                        <p>- Si $a = 0$, on a : $f : x \rightarrow b$. On dit que c’est une fonction constante.</p>
+                                                    </div>
+
+                                                    <h3 class="section-title" style="font-size: 1.2rem;">Représentation graphique</h3>
+                                                    <p>Soit $g$ la fonction linéaire définie par : $f : x \rightarrow ax + b$.</p>
+                                                    <p>L’ensemble des points de coordonnées $(x ; ax + b)$ est appelé représentation graphique de la fonction affine.</p>
+                                                    
+                                                    <div class="notion-box">
+                                                        <p>Dans un repère, cette représentation est <strong class="text-primary">LA droite</strong> qui passant par le point de coordonnées $(0 ; b)$</p>
+                                                        <p>On dit que cette droite a pour <strong class="text-primary">équation</strong> : $y = ax + b$</p>
+                                                        <p>$a$ est le <strong class="text-primary">coefficient directeur</strong>.</p>
+                                                        <p>$b$ est l’<strong class="text-primary">ordonnée à l’origine</strong>. Il indique la « hauteur » à laquelle la droite coupe l’axe des ordonnées.</p>
+                                                    </div>
+
+                                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                                        <p><strong style="color: var(--secondary);">Remarques :</strong></p>
+                                                        <p>- Si $a = 0$, la droite d’équation $y = b$ est parallèle à l’axe des abscisses.</p>
+                                                        <p>- <strong class="text-primary">Toute droite non parallèle à l’axe des ordonnées admet une équation de la forme $y = ax + b$, et représente donc une fonction affine.</strong></p>
+                                                    </div>
+
+                                                    <p>Objectif 5 - Je sais représenter graphiquement et interpréter les paramètres d’une <strong class="text-primary">fonction affne</strong></p>
+                                                </section>
+
+                                                <!-- BOUTON 3 -->
+                                                <button class="btn-check-understanding" data-quiz-target="quiz-area-affine" onclick="startQuizFromButton('quiz-area-affine', 8)">Ai-je bien compris ?</button>
+                                                <div id="quiz-area-affine"></div>
+
+                                            </div>
+                                        `
+                                    }
+
                 ]
             },
             {
                 name: "GRANDEURS ET MESURES",
                 chapters: [
-                    { id: 9, title: "Grandeurs et mesures", content: "Calcul d'aires...", quiz: { q: "Aire d'un carré de côté 3 ?", a: "9" }, eleve: "non" }
+                    {
+                        id: 9,
+    title: "Grandeurs et mesures",
+    content: `
+        <div class="course-container">
+            <!-- SECTION : OBJECTIFS -->
+            <section class="course-section">
+                <h2 class="section-title">Objectifs</h2>
+                <ul>
+                    <li>Je sais convertir des grandeurs composées</li>
+                    <li>Je sais mener des calculs sur des grandeurs composées et exprimer les résultats dans les unités adaptées.</li>
+                    <li>Je sais calculer le volume d’une boule</li>
+                    <li>Je sais calculer le volume d’assemblages de solides</li>
+                    <li>Je connais l’effet des agrandissements et réductions sur les grandeurs (longueurs, aires, et volumes)</li>
+                </ul>
+            </section>
+
+            <!-- SECTION : GRANDEURS SIMPLES -->
+            <section class="course-section">
+                <h2 class="section-title">Grandeurs simples et conversion d’unités</h2>
+                <p><strong style="color: var(--primary);">💡 Méthode :</strong> On doit placer le chiffre unité du nombre dans la colonne de l’unité indiquée. Puis on place les autres chiffres (un par colonne).</p>
+                
+                <!-- IMAGE : Tableau de conversion des grandeurs simples -->
+                <div class="notion-box">
+                    <p>La démarche est la même pour la plupart des grandeurs simples que tu vas rencontrer à l’exception des durées.</p>
+                </div>
+
+                <!-- IMAGE : Exemple de conversion de durée -->
+                <p><strong>Exemples :</strong></p>
+                <ul>
+                    <li>13 heures représentent : $13 \\times 60 \\text{ (min)} \\times 60 \\text{ (s)} = 46800 \\text{ s}$</li>
+                    <li>$6890 \\text{ s}$ équivaut à $6890 = 144 \\times 60 + 50$ donc $144 \\text{ min}$ et $50 \\text{ sec}$</li>
+                </ul>
+                <p>$= 2 \\times 60 \\text{ min} + 24 \\text{ min} + 50 \\text{ sec} = 2\text{h } 24\text{min } 50\text{sec}$</p>
+
+                <!-- IMAGE : Tableau de conversion des unités de temps -->
+                <button class="btn-check-understanding" data-quiz-target="quiz-area-conversions" onclick="startQuizFromButton('quiz-area-conversions', 10)">Ai-je bien compris ?</button>
+                <div id="quiz-area-conversions"></div>
+            </section>
+
+            <!-- SECTION : PÉRIMÈTRE -->
+            <section class="course-section">
+                <h2 class="section-title">Le périmètre d’une figure</h2>
+                <p>Le périmètre représente la longueur du tour de la figure, c’est donc une grandeur « simple ».</p>
+                
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">📏 À connaître par cœur</strong><br>
+                    Pour la calculer on distingue deux cas :
+                    <ul>
+                        <li><strong>Périmètre d’un polygone :</strong> il suffit d’effectuer la somme de ses côtés.</li>
+                        <li><strong>Périmètre du cercle :</strong> on applique une formule $P = 2\\pi r$ ou $P = \\pi d$</li>
+                    </ul>
+                    <p><small>avec $r = \text{rayon}$ et $d = \text{diamètre}$</small></p>
+                </div>
+
+                <!-- IMAGE : Figure complexe avec périmètre -->
+                <p>Lorsque la figure est complexe on la découpe en morceaux plus simples et on additionne le tout !</p>
+                <p>Exemple de calcul pour une figure composée :</p>
+                <blockquote>
+                    Soit $P \\approx 6,28 + 10,5 + 4,72 \\approx 21,5 \\text{ cm}$
+                </blockquote>
+
+                <button class="btn-check-understanding" data-quiz-target="quiz-area-perimetre" onclick="startQuizFromButton('quiz-area-perimetre', 11)">Ai-je bien compris ?</button>
+                <div id="quiz-area-perimetre"></div>
+            </section>
+
+            <!-- SECTION : GRANDEUR PRODUIT -->
+            <section class="course-section">
+                <h2 class="section-title">Grandeur produit</h2>
+                <p>Une grandeur produit est obtenue en multipliant deux grandeurs.</p>
+                <div class="notion-box">
+                    <strong>Exemples :</strong>
+                    <ul>
+                        <li>Une aire : $1 \\text{ m}^2 = 1\\text{m} \\times 1\\text{m}$</li>
+                        <li>Une énergie électrique (kilowattheure) : $1 \\text{ kWh} = 1\\text{ kW} \\times 1\\text{ h}$</li>
+                        <li>Un temps de travail (Homme-jour) : $\\text{nombre d'hommes} \\times \\text{jours de travail}$</li>
+                    </ul>
+                </div>
+
+                <p><strong>Exemple de conversion :</strong> convertir $15 \\text{ kWh}$ en $\text{Ws}$</p>
+                <p>$15 \\text{ kW} = 15\\,000 \\text{ W}$ et $1 \\text{ h} = 3600 \\text{ s}$ <br> Donc $15 \\text{ kWh} = 15\\,000 \\times 3600 = 54\\,000\\,000 \\text{ Ws}$</p>
+
+                <div class="notion-box" style="border-left-color: var(--secondary);">
+                    <strong style="color: var(--secondary);">💡 MÉTHODE :</strong> Pour retrouver une grandeur simple connaissant une grandeur produit, il suffit de poser la multiplication à trou et de la transformer en division.
+                    <br><br>
+                    <em>Exemple :</em> Un foyer a consommé $34 \\text{ kWh}$ sur un total de $20 \\text{ heures}$. Quelle est la puissance en $\\text{kW}$ ? <br>
+                    $34 \\text{ kWh} = ?\\text{ kW} \\times 20 \\text{ h} \\implies 34 \\div 20 = 1,7 \\text{ kW}$
+                </div>
+
+                <h3 class="section-title">Cas particulier : Les Aires</h3>
+                <p>L’unité d’une aire est le $\\text{m}^2$, elle est donc formée par le produit de deux longueurs.</p>
+                <div class="notion-box">
+                    <strong>⚠️ Attention à la cohérence :</strong> On confond souvent les formules du périmètre et de l'aire.<br>
+                    • Périmètre (longueur) : $2\\pi r$ <br>
+                    • Aire (surface) : $\\pi r^2$
+                </div>
+
+                <h3 class="section-title">Cas particulier : Les Volumes</h3>
+                <!-- IMAGE : Schéma volume -->
+                <div class="notion-box">
+                    <strong>Chaque formule de volume (en $\\text{m}^3$) doit comporter trois longueurs qui se multiplient.</strong>
+                </div>
+
+                <button class="btn-check-understanding" data-quiz-target="quiz-area-produit" onclick="startQuizFromButton('quiz-area-produit', 12)">Ai-je bien compris ?</button>
+                <div id="quiz-area-produit"></div>
+            </section>
+
+            <!-- SECTION : GRANDEUR QUOTIENT -->
+            <section class="course-section">
+                <h2 class="section-title">Grandeur quotient</h2>
+                <p>Une grandeur quotient est obtenue en divisant deux grandeurs.</p>
+                <ul>
+                    <li>Vitesse moyenne : $\\text{v} = \\frac{\\text{distance}}{\\text{temps}}$</li>
+                    <li>Débit : $\\text{débit} = \\frac{\\text{volume}}{\\text{temps}}$</li>
+                    <li>Densité de population : $\\text{hab/km}^2$</li>
+                </ul>
+
+                <div class="notion-box">
+                    <strong>💡 MÉTHODE :</strong> Pour calculer une grandeur simple à partir d'un quotient, utilisez un tableau de proportionnalité en utilisant les unités les plus petites.
+                </div>
+
+                                <!-- TABLEAU DE PROPORTIONNALITÉ -->
+                <p>Exemple : si j’ai une fuite d’eau de $15\text{ L/s}$ pendant $20\text{ min}$, combien d'eau ai-je perdue (en $\text{m}^3$) ?</p>
+                <div class="notion-box">
+                    <p>Conversion préalable : <br>
+                    $1\text{ m}^3 = 1000\text{ L}$ <br>
+                    $1\text{ min} = 60\text{ s}$</p>
+                </div>
+
+                <table style="width:100%; border-collapse: collapse; margin: 1em 0;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ccc; padding: 8px;">L (Litres)</th>
+                            <th style="border: 1px solid #ccc; padding: 8px;">15</th>
+                            <th style="border: 1px solid #ccc; padding: 8px;">V (Volume)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #ccc; padding: 8px;">s (secondes)</td>
+                            <td style="border: 1px solid #ccc; padding: 8px;">1</td>
+                            <td style="border: 1px solid #ccc; padding: 8px;">$60 \times 20 = 120$</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Calcul du volume : $V = 120 \times 15 \div 1 = 1800\text{ L}$, soit $1,8\text{ m}^3$.</p>
+                <p><strong style="color: #d9534f;">⚠️ Attention :</strong> Il faut toujours convertir les unités pour qu'elles soient cohérentes avant de calculer.</p>
+
+                <button class="btn-check-understanding" data-quiz-target="quiz-area-quotient" onclick="startQuizFromButton('quiz-area-quotient', 13)">Ai-je bien compris ?</button>
+                <div id="quiz-area-quotient"></div>
+            </section>
+
+            <!-- SECTION : EFFET DES TRANSFORMATIONS -->
+            <section class="course-section">
+                <h2 class="section-title">Effet des transformations sur les grandeurs</h2>
+                <p><strong style="color: var(--primary);">Définition :</strong> Agrandir ou réduire une figure, c’est construire une figure de même forme en multipliant toutes les longueurs par un nombre $k$ strictement positif.</p>
+
+                <div class="notion-box">
+                    <strong style="color: var(--secondary);">📏 Propriété : Effet sur les grandeurs</strong>
+                    <p>Si le rapport d'agrandissement ou de réduction est $k$ :</p>
+                    <ul>
+                        <li>Les <strong>longueurs</strong> sont multipliées par $k$</li>
+                        <li>Les <strong>mesures des angles</strong> sont conservées</li>
+                        <li>Les <strong>aires</strong> sont multipliées par $k^2$</li>
+                        <li>Les <strong>volumes</strong> sont multipliés par $k^3$</li>
+                    </ul>
+                </div>
+
+                <button class="btn-check-understanding" data-quiz-target="quiz-area-transformations" onclick="startQuizFromButton('quiz-area-transformations', 14)">Ai-je bien compris ?</button>
+                <div id="quiz-area-transformations"></div>
+            </section>
+        </div>
+    `,
+    quiz: { q: "Convertir 2h 30min en secondes", a: "9000" }, eleve: "non"
+                    }
                 ]
             },
             {
                 name: "ESPACE ET GÉOMÉTRIE",
                 chapters: [
-                    { id: 10, title: "Théorème de Pythagore", content: "Dans un triangle rectangle...", quiz: { q: "Si a=3 et b=4, que vaut c² ?", a: "25" }, eleve: "non" },
-                    { id: 11, title: "Triangles et parallèles (Thalès ; semblables)", content: "Le théorème de Thalès...", quiz: { q: "Thalès sert à calculer des... ?", a: "longueurs" }, eleve: "non" },
-                    { id: 12, title: "Trigonométrie", content: "Relations entre les angles...", quiz: { q: "Cos = Adjacent / ... ?", a: "hypoténuse" }, eleve: "non" },
-                    { id: 13, title: "Transformations", content: "Symétries, translations, rotations et homothéties.", quiz: { q: "Une rotation change-t-elle la taille ?", a: "non" }, eleve: "non" },
-                    { id: 14, title: "Espace (Repérage, Sphère, sections)", content: "Étude des solides dans l'espace et de leurs projections.", quiz: { q: "Combien de faces a un cube ?", a: "6" }, eleve: "non" }
+                            {     id: 10,
+                                    title: "Triangle rectangle",
+                                    content: `
+                                        <div class="course-container">
+                                            <!-- SECTION I : VOCABULAIRE -->
+                                            <section class="course-section">
+                                                <h2 class="section-title">Rappel de vocabulaire</h2>
+                                                <div class="notion-box">
+                                                    <p>Dans un triangle rectangle, l’hypoténuse est le côté situé en face de l'angle droit. C’est aussi le plus grand des trois côtés.</p>
+                                                </div>
+                                                <p><strong><u>Hypoténuse</u></strong></p>
+                                                <p><strong><u>Côtés de l'angle droit</u></strong></p>
+                                                
+                                                <button class="btn-check-understanding" data-quiz-target="quiz-area-vocabulaire" onclick="startQuizFromButton('quiz-area-vocabulaire', 10)">Ai-je bien compris ?</button>
+                                                <div id="quiz-area-vocabulaire"></div>
+                                            </section>
+
+                                            <!-- SECTION II : THÉORÈME DE PYTHAGORE -->
+                                            <section class="course-section">
+                                                <h2 class="section-title">Calculer une longueur manquante : Le théorème de Pythagore</h2>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <p><strong>Si</strong> un triangle est rectangle</p>
+                                                                <p><strong>Alors</strong> la somme des carrés des côtés de l’angle droit est égale au carré de l’hypoténuse.</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <p><strong>Si</strong> ABC est un triangle rectangle en B</p>
+                                                <p><strong>Alors</strong> $$AB^2 + BC^2 = AC^2$$</p>
+                                                <p>(Rappel : $$AB^2 = AB \\times AB$$)</p>
+
+                                                <div class="notion-box">
+                                                    <p><strong><u>Exemple 1 :</u> On cherche la longueur de l’hypoténuse</strong></p>
+                                                    <p><strong>EFG triangle rectangle en F et EF = 3 cm, FG = 4 cm.</strong></p>
+                                                    <p><strong>Réponse :</strong></p>
+                                                    <p>on sait que : EFG triangle rectangle en F</p>
+                                                    <p>Son hypoténuse est [EG]</p>
+                                                    <p><strong>Donc,</strong> d’après le théorème de Pythagore,</p>
+                                                    <blockquote>
+                                                        <p>$$EF^2 + FG^2 = EG^2$$</p>
+                                                        <p>$$3^2 + 4^2 = EG^2$$</p>
+                                                        <p>$$9 + 16 = EG^2$$</p>
+                                                        <p>$$EG^2 = 25$$</p>
+                                                        <p><strong>EG =</strong> $$\sqrt{25}$$ <strong>= 5 cm</strong>. (car $$EG^2 = 5^2 = 5 \\times 5 = 25$$)</p>
+                                                    </blockquote>
+                                                </div>
+
+                                                <div class="notion-box" style="border-left-color: var(--secondary);">
+                                                    <p><strong><u>Exemple 2 :</u> On recherche la longueur d'un côté de l'angle droit.</strong></p>
+                                                    <p><strong>MNP triangle rectangle en M et MN = 5 cm, NP = 13 cm.</strong></p>
+                                                    <p><strong>Réponse :</strong></p>
+                                                    <p>on sait que : MNP triangle rectangle en M,</p>
+                                                    <p>Son hypoténuse est [NP]</p>
+                                                    <p>Donc, d’après le théorème de Pythagore,</p>
+                                                    <p>$$MN^2 + MP^2 = NP^2$$</p>
+                                                    <p>$$5^2 + MP^2 = 13^2$$</p>
+                                                    <p>$$25 + MP^2 = 169$$</p>
+                                                    <p>$$MP^2 = 169 - 25$$</p>
+                                                    <p>$$MP^2 = 144$$</p>
+                                                    <p>$$MP = \\sqrt{144} = 12 \text{ cm}.$$</p>
+                                                </div>
+
+                                                <button class="btn-check-understanding" data-quiz-target="quiz-area-pythagore" onclick="startQuizFromButton('quiz-area-pythagore', 11)">Ai-je bien compris ?</button>
+                                                <div id="quiz-area-pythagore"></div>
+                                            </section>
+
+                                            <!-- SECTION III : MONTRER QU'UN TRIANGLE EST RECTANGLE -->
+                                            <section class="course-section">
+                                                <h2 class="section-title">Montrer qu’un triangle est rectangle</h2>
+                                                
+                                                <h3>Avec les angles</h3>
+                                                <p>Propriété : Dans un triangle, la somme des angles mesure $180^\circ$.</p>
+                                                <p>Donc si on connaît deux des angles on peut savoir si le troisième mesure $90^\circ$ ou pas.</p>
+                                                <div class="notion-box">
+                                                    <p><u>Exemple 1 :</u> Sachant que $$\widehat{ABC}=32^\circ$$ et $$\widehat{ACB}=58^\circ$$ Le triangle ABC est-il rectangle ?</p>
+                                                    <p><u>Exemple 2 :</u> Sachant que $$\widehat{RST}=35^\circ$$ et $$\widehat{RTS}=58^\circ$$ Le triangle RST est-il rectangle ?</p>
+                                                </div>
+
+                                                <h3>Avec la réciproque du théorème de Pythagore</h3>
+                                                <div class="notion-box">
+                                                    <p>Dans un triangle,</p>
+                                                    <p>Si la longueur du plus grand côté au carré est égale à la somme des carrés des deux autres côtés</p>
+                                                    <p>Alors le triangle est rectangle et le plus grand côté est son hypoténuse.</p>
+                                                </div>
+
+                                                <div class="notion-box">
+                                                    <p><u>Exemple 1 :</u> Soit ABC un triangle tel que AB=6m BC=8m et AC=10m. Démontre que ce triangle est rectangle.</p>
+                                                    <p>Si le triangle était rectangle, son hypoténuse serait AC=10m (car c’est le plus grand côté)</p>
+                                                    <blockquote>
+                                                        <p>D’une part $$AC^2 = 10^2 = 100$$</p>
+                                                        <p>D’autre part $$AB^2 + BC^2 = 6^2 + 8^2 = 36 + 64 = 100$$</p>
+                                                        <p>Je vois que $$AC^2 = AB^2 + BC^2$$</p>
+                                                        <p>donc d’après la réciproque du théorème de Pythagore, ABC est un triangle rectangle en B</p>
+                                                    </blockquote>
+                                                </div>
+
+                                                <div class="notion-box" style="border-left-color: var(--secondary);">
+                                                    <p><u>Exemple 2 :</u> Soit RST un triangle tel que RS=15 ST=24 et RT=29cm. Ce triangle est-il rectangle ? Si oui, en quel sommet ?</p>
+                                                    <p>D’une part $$RS^2 + ST^2 = 15^2 + 24^2 = 801$$</p>
+                                                    <p>D’autre part $$RT^2 = 29^2 = 841$$</p>
+                                                    <p>Je vois que $$RT^2 \\neq RS^2 + ST^2$$</p>
+                                                    <p>L’égalité de Pythagore n’est pas vraie donc RST n’est pas un triangle rectangle.</p>
+                                                </div>
+
+                                                <button class="btn-check-understanding" data-quiz-target="quiz-area-reciproque" onclick="startQuizFromButton('quiz-area-reciproque', 12)">Ai-je bien compris ?</button>
+                                                <div id="quiz-area-reciproque"></div>
+                                            </section>
+                                        </div>
+                                    `,
+                                    quiz: { q: "Si un triangle a des côtés de 3cm, 4cm et 5cm, est-il rectangle ?", a: "oui" },
+                                    eleve: "non"
+                                },
+                            { 
+                                id: 11,
+            title: "Triangles et parallèles",
+            content: `
+                <div class="course-container">
+                    <!-- OBJECTIFS -->
+                    <section class="course-section">
+                        <h2 class="section-title">Objectifs</h2>
+                        <ul>
+                            <li>Je sais démontrer que deux triangles sont semblables et en déduire des valeurs de longueurs ou d’angles</li>
+                            <li>Je sais calculer une longueur dans une configuration de Thalès</li>
+                            <li>Je sais démontrer que deux droites sont parallèles en utilisant la réciproque du théorème de Thalès</li>
+                        </ul>
+                    </section>
+
+                    <!-- SECTION I : TRIANGLES SEMBLABLES -->
+                    <section class="course-section">
+                        <h2 class="section-title">Triangles semblables</h2>
+                        <p>Deux triangles sont semblables s’ils ont la même « forme » mais pas forcément la même « taille ».</p>
+                        
+                        <h3 class="section-title">Définition</h3>
+                        <p>On appelle triangles semblables des triangles qui ont des angles deux à deux de même mesure.</p>
+
+                        <div class="notion-box">
+                            <p><u style="color: var(--primary);">Exemple :</u> Les triangles ABC et DEF sont semblables, en effet :</p>
+                            <p>(image ici)</p>
+                            <p><strong>Sommets homologues</strong> (image ici)</p>
+                        </div>
+
+                        <p><u style="color: var(--secondary);">Vocabulaire :</u> Lorsque deux triangles sont semblables on dit que leurs angles de même mesure sont homologues. De même les sommets ou les côtés opposés aux sommets peuvent être qualifiés d’homologues.</p>
+                        
+                        <p><strong>Angles homologues</strong></p>
+                        <p>Dans notre exemple, on peut dire que :</p>
+                        <ul>
+                            <li>L’angle $$\widehat{BAC}$$ est homologue à l’angle $$\widehat{EDF}$$</li>
+                            <li>Le sommet B est homologue au sommet F</li>
+                            <li>Le côté [AC] est homologue au côté [DE]</li>
+                        </ul>
+
+                        <div class="notion-box">
+                            <p><strong>En pratique :</strong></p>
+                            <p>Pour montrer que deux triangles sont semblables, il suffit de vérifier que deux couples d’angles sont égaux deux à deux. En effet, d’après la règle de la somme des 3 angles égale à $180^\circ$, le dernier couple d’angles le sera aussi obligatoirement.</p>
+                        </div>
+
+                        <h3 class="section-title">Propriétés</h3>
+                        <p>Si deux triangles sont semblables, alors les longueurs de leurs côtés sont deux à deux proportionnelles.</p>
+                        <p><u style="color: var(--secondary);">Remarque :</u> les côtés proportionnels sont ceux qui sont opposés aux angles égaux.</p>
+                        
+                        <p>(image ici)</p>
+                        <p>Ici, ABC et DEF sont semblables. Les côtés [AB], [AC] et [BC] sont proportionnels respectivement aux côtés [DF], [DE] et [EF].</p>
+                        <p>On a : $$\frac{DF}{AB} = \frac{DE}{AC} = \frac{EF}{BC} = 1,5$$</p>
+                        <p>Ce qui revient à dire que $$EF = 1,5 \times BC$$, $$FD = 1,5 \times BA$$ et $$ED = 1,5 \times AC$$</p>
+                        <p>Le grand triangle DEF est alors un <u>agrandissement</u> du petit ABC, et le petit est une <u>réduction</u> du grand. Le coefficient de proportionnalité est le coefficient d’aggrandissement (si $>1$) ou de réduction (si $<1$).</p>
+
+                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                            <p><strong>METHODE : Ce que je dois savoir faire en exercice</strong></p>
+                            <p><u>Exemple :</u></p>
+                            <p>1. Prouver que les triangles ABC et DEF sont des triangles semblables.</p>
+                            <p><em>D’après les codages</em> $$\widehat{FDE} = \widehat{BAC}$$</p>
+                            <p><em>La somme des angles d’un triangle est égale à $180^\circ$</em></p>
+                            <p><em>Donc</em> $$\widehat{EFD} = 180 - 90 - \widehat{FDE}$$</p>
+                            <p><em>De même</em> $$\widehat{CBA} = 180 - 90 - \widehat{BAC} = \widehat{EFD}$$</p>
+                            <p><em>Les 3 angles des triangles sont de même mesure donc ABC et DEF sont semblables.</em></p>
+                            <br>
+                            <p>2. En déduire les longueurs CB et AB.</p>
+                            <p><em>Comme les deux triangles sont semblables, les longueurs de leurs côtés sont proportionnelles.</em></p>
+                            <p><em>On voit que ED est homologue à CA donc $$ED \times k = CA$$ or $$8 \times k = 1,6 \implies k = 1,6 \div 8 = 0,2$$</em></p>
+                            <p><em>BC est homologue à EF donc $$BC = EF \times k = 6 \times 0,2 = 1,2$$</em></p>
+                            <p><em>BA est homologue à FD donc $$BA = FD \times k = 10 \times 0,2 = 2$$</em></p>
+                        </div>
+
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-semblables" onclick="startQuizFromButton('quiz-area-semblables', 13)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-semblables"></div>
+                    </section>
+
+                    <!-- SECTION II : THÉORÈME DE THALÈS -->
+                    <section class="course-section">
+                        <h2 class="section-title">Cas particulier : Théorème de Thalès</h2>
+                        
+                        <h3 class="section-title">Utilité et domaine d’application</h3>
+                        <div class="notion-box">
+                            <p>Le théorème de Thalès sert à calculer des longueurs dans un triangle (ou une forme papillon) contenant deux droites parallèles (Configuration de triangles semblables).</p>
+                            <p>De plus on a besoin de connaître 3 longueurs minimum : deux qui nous donneront le rapport de Thalès (proportionnalité) et celle qui est liée à la longueur cherchée.</p>
+                        </div>
+
+                        <h3 class="section-title">Situations de Thalès</h3>
+                        <p>On peut distinguer deux cas qui se résolvent de la même manière : La configuration des triangles emboîtés et la configuration « papillon ».</p>
+                        <p>Dans les deux cas les triangles AMN et ABC sont semblables avec M homologue à B, et N homologue à C.</p>
+                        <p>(image ici)</p>
+
+                        <div class="notion-box">
+                            <p>Utilisant les propriétés des angles vues en 5ème :</p>
+                            <p>$$\widehat{ADE} = \widehat{GDB}$$ car ils sont opposés par le sommet.</p>
+                            <p>$$\widehat{GDB} = \widehat{ABC}$$ car ce sont des angles alternes internes.</p>
+                            <p>Donc $$\widehat{ADE} = \widehat{ABC}$$</p>
+                            <p>De même de l’autre côté de la figure $$\widehat{AED} = \widehat{HEC} = \widehat{ACB}$$ $\implies$ donc les triangles ADE et ABC ont leurs trois angles égaux, ils sont semblables.</p>
+                        </div>
+
+                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                            <p><strong>Dans la configuration papillon :</strong></p>
+                            <p>Comme (BC) // (NM), la droite (d) est sécante aux deux parallèles donc les angles $$\widehat{B}$$ et $$\widehat{M}$$ sont alternes internes. On a $$\widehat{B} = \widehat{M}$$. De même avec (d’) on aura $$\widehat{C} = \widehat{N}$$ car ils sont alternes internes.</p>
+                            <p><u>Remarque :</u> pour repérer les côtés homologues il faut regarder les angles égaux. [AM] est homologue à [AB] pas à [AC] !!!</p>
+                                                <p><u style="color: var(--secondary);">Remarque 2 :</u> On peut aussi se ramener à la configuration des triangles emboîtés en effectuant une symétrie centrale de centre A pour le triangle AMN, de cette manière on remarque que le côté [AM] se situe sur la droite (AB) et pas (AC).</p>
+                        </div>
+
+                        <h3 class="section-title">Théorème de Thalès</h3>
+                        <p><em style="color: var(--primary);">Ce qui signifie que les triangles ABC et AMN sont semblables.</em></p>
+                        <p>Si deux droites (CN) et (BM) sont sécantes en A et telles que les deux droites (BC) et (MN) sont parallèles,</p>
+                        <p><em style="color: var(--primary);">Ce qui signifie que les longueurs des deux triangles sont deux à deux proportionnelles.</em></p>
+                        
+                        <div class="notion-box">
+                            <p><strong>Alors :</strong> $$\frac{AM}{AB} = \frac{AN}{AC} = \frac{MN}{BC}$$</p>
+                            <p><u style="color: var(--secondary);">Remarque :</u> pour bien écrire la relation de proportionnalité il faut penser à vérifier les correspondances suivantes :</p>
+                            <ul style="display: flex; justify-content: space-around; list-style: none; padding: 0;">
+                                <li>Triangle AMN</li>
+                                <li>Triangle ABC</li>
+                            </ul>
+                            <p>Côtés homologues (opposés à A) | Côtés homologues (Opposés à N et C) | Côtés homologues (Opposés à M et B)</p>
+                        </div>
+
+                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                            <p><strong>METHODE : Ce que je dois savoir faire en exercice</strong></p>
+                            <p><u style="color: var(--primary);">Exemple :</u> Calculez AC sachant que (BC) // (MN) ; AB = 5m ; AN = 6 m ; AM = 15m.</p>
+                            <p><em style="font-size: 0.9rem;">Les droites (CN) et (BM) sont sécantes en A. (BC) et (MN) sont parallèles.</em></p>
+                            <blockquote>
+                                <p><em style="color: var(--primary);">D’après le Théorème de Thalès on a :</em> $$\frac{AM}{AB} = \frac{AN}{AC} = \frac{MN}{BC}$$</p>
+                            </blockquote>
+                            <p><em style="color: var(--primary);">Donc :</em> $$\frac{15}{5} = \frac{6}{AC}$$ <br>
+                            J’utilise le produit en croix : $$AC = \frac{6 \times 5}{15} = \frac{30}{15} = 2\text{m}$$</p>
+                        </div>
+
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-thalès" onclick="startQuizFromButton('quiz-area-thalès', 14)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-thalès"></div>
+                    </section>
+
+                    <!-- SECTION III : RÉCIPROQUE DU THÉORÈME DE THALÈS -->
+                    <section class="course-section">
+                        <h2 class="section-title">Réciproque du théorème de Thalès</h2>
+                        <div class="notion-box" style="background-color: rgba(0,0,0,0.05);">
+                            <p><strong>Utilité :</strong> Je connais les longueurs, je souhaite savoir si les droites sont parallèles ou non.</p>
+                        </div>
+
+                        <p>Si A, M, B et A, N, C sont alignés dans le même ordre et si $$\frac{AM}{AB} = \frac{AN}{AC}$$</p>
+                        <blockquote>
+                            <p>Alors les droites (MN) et (BC) sont parallèles.</p>
+                            <p>(image ici)</p>
+                        </blockquote>
+
+                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                            <p><strong style="color: var(--primary);">METHODE : Ce que je dois savoir faire en exercice</strong></p>
+                            <p><u style="color: var(--primary);">Exemple :</u> les droites (AB) et (DE) sont-elles parallèles ?</p>
+                            <p>(image ici)</p>
+                            <p>A ; C ; E et B ; C ; D sont alignés dans le même ordre.</p>
+                            <blockquote>
+                                <p>D’une part $$\frac{CE}{CA} = \frac{3,2}{2} = 1,6$$</p>
+                                <p>D’autre part $$\frac{CD}{CB} = \frac{2,4}{1,5} = 1,6$$</p>
+                                <p>On remarque que $$\frac{CE}{CA} = \frac{CD}{CB}$$ donc d’après la réciproque du théorème de Thalès, (AB) // (DE).</p>
+                            </blockquote>
+                        </div>
+
+                        <button class="btn-check-understanding" data-quiz-target="quiz-area-reciproque-thalès" onclick="startQuizFromButton('quiz-area-reciproque-thalès', 15)">Ai-je bien compris ?</button>
+                        <div id="quiz-area-reciproque-thalès"></div>
+                    </section>
+
+                    <!-- OBJECTIF FINAL -->
+                    <div style="margin-top: 20px; font-style: italic; color: var(--text-muted);">
+                        <p>✅ Objectif 3 : Je sais démontrer que deux droites sont parallèles en utilisant la réciproque du théorème de Thalès</p>
+                    </div>
+                </div>
+            `,
+            quiz: { q: "Si $\\frac{AM}{AB} = \\frac{AN}{AC}$, les droites (MN) et (BC) sont-elles parallèles ?", a: "oui" },
+            eleve: "non"
+                    },
+                    { 
+                            id: 12,
+                            title: "Trigonométrie",
+                            content: `
+                                <div class="course-container">
+                                    <!-- OBJECTIFS -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Objectifs</h2>
+                                        <ul>
+                                            <li>Je sais identifier le côté opposé et le côté adjacent à un angle dans un triangle rectangle</li>
+                                            <li>Je connais mes formules de trigonométrie</li>
+                                            <li>Je sais calculer une longueur dans un triangle rectangle connaissant un angle et une autre longueur</li>
+                                            <li>Je sais calculer les angles d’un triangle rectangle dont je connais deux longueurs</li>
+                                        </ul>
+                                        <p><em style="color: var(--text-muted);">Vidéo : Histoire de la trigonométrie</em></p>
+                                    </section>
+
+                                    <!-- SECTION I : VOCABULAIRE -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Vocabulaire</h2>
+                                        <p><strong style="color: var(--primary);">Adjacent</strong> signifie « à côté de ».</p>
+                                        <div class="notion-box">
+                                            <p>Le côté adjacent à un angle est donc le côté qui touche le sommet de l’angle mais qui n’est pas l’hypoténuse.</p>
+                                        </div>
+                                        <button class="btn-check-understanding" data-quiz-target="quiz-area-vocabulaire" onclick="startQuizFromButton('quiz-area-vocabulaire', 12)">Ai-je bien compris ?</button>
+                                        <div id="quiz-area-vocabulaire"></div>
+                                    </section>
+
+                                    <!-- SECTION II : DÉFINITION ET FORMULES -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Définition</h2>
+                                        <p><em style="font-size: 0.9rem;">(Activité géogébra)</em></p>
+                                        <ul>
+                                            <li><u style="color: var(--secondary);">Le rapport</u> des longueurs d’un triangle rectangle ne dépend que de la valeur de l’angle.</li>
+                                            <li>Nous avons donc pu créer des fonctions (cos ; sin ; tan), sous forme de tableau, reliant la valeur de l’angle et le rapport entre les longueurs.</li>
+                                        </ul>
+
+                                        <div class="notion-box" style="border-left-color: #e74c3c;">
+                                            <p><strong style="color: #e74c3c;">⚠️ Attention : ces formules ne sont vraies <u style="color: #e74c3c;">que dans un triangle rectangle.</u></strong></p>
+                                            <p>$$\\text{Cosinus}(\\text{angle}) = \\frac{\\text{côté Adjacent}}{\\text{Hypoténuse}}$$</p>
+                                            <p>$$\\text{Sinus}(\\text{angle}) = \\frac{\\text{côté Opposé}}{\\text{Hypoténuse}}$$</p>
+                                            <p>$$\\text{Tangente}(\\text{angle}) = \\frac{\\text{côté Opposé}}{\\text{côté Adjacent}}$$</p>
+                                            <p><strong style="text-align: center; display: block; margin-top: 10px;">(Astuce mnémotechnique : CAH SOH TOA)</strong></p>
+                                        </div>
+
+                                        <button class="btn-check-understanding" data-quiz-target="quiz-area-formules" onclick="startQuizFromButton('quiz-area-formules', 13)">Ai-je bien compris ?</button>
+                                        <div id="quiz-area-formules"></div>
+                                    </section>
+
+                                    <!-- SECTION III : CALCULER UNE LONGUEUR -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Application : calculer une longueur</h2>
+                                        <p><em style="font-size: 0.9rem;">(Connaissant un angle et une autre longueur du triangle rectangle)</em></p>
+                                        
+                                        <div class="notion-box">
+                                            <p><strong>Exemple : Calculer AB</strong></p>
+                                            <p>Le triangle ABC est rectangle en B. Donc :</p>
+                                            <blockquote>
+                                                <p>$$\\cos(\\widehat{ACB}) = \\frac{BC}{AC}$$</p>
+                                                <p>$$\\cos(60^\circ) = \\frac{BC}{8}$$</p>
+                                                <p>$$\\frac{\\cos(60^\circ)}{1} = \\frac{BC}{8}$$</p>
+                                                <p>Produit en croix (ou équation) : $$BC = 8 \\times \\cos(60^\circ) \\div 1 = 4\\text{ cm}$$</p>
+                                            </blockquote>
+                                        </div>
+
+                                        <button class="btn-check-understanding" data-quiz-target="quiz-area-longueur" onclick="startQuizFromButton('quiz-area-longueur', 14)">Ai-je bien compris ?</button>
+                                        <div id="quiz-area-longueur"></div>
+                                    </section>
+
+                                    <!-- SECTION IV : CALCULER UN ANGLE -->
+                                    <section class="course-section">
+                                        <h2 class="section-title">Application : calculer un angle</h2>
+                                        <p><em style="font-size: 0.9rem;">(Connaissant deux longueurs d’un triangle rectangle)</em></p>
+                                        <p>Pour calculer un angle, nous connaissons déjà les longueurs, nous allons donc dans le tableau des fonctions (cos ; sin ; tan) rechercher un antécédent du rapport de longueurs (qui est l’angle).</p>
+                                        <p>Sur la calculatrice on obtient l’angle en utilisant les fonctions réciproques : <strong>Arccos</strong> ; <strong>Arcsin</strong> et <strong>Arctan</strong> qui donnent directement les antécédents (angles) des rapports de longueurs.</p>
+
+                                        <div class="notion-box" style="border-left-color: var(--secondary);">
+                                            <p><strong>Exemple : Calculer l’angle $\\widehat{ACB}$</strong></p>
+                                            <p>On donne $BC = 2\text{ cm}$ et $AC = 6\text{ cm}$. Le triangle ABC est rectangle en B.</p>
+                                            <blockquote>
+                                                <p>$$\\cos(\\widehat{ACB}) = \\frac{BC}{AC}$$</p>
+                                                <p>$$\\cos(\\widehat{ACB}) = \\frac{2}{6}$$</p>
+                                                <p>$$\\widehat{ACB} = \\text{Arccos}\\left(\\frac{2}{6}\\right) \\approx 70,5^\circ$$</p>
+                                            </blockquote>
+                                        </div>
+
+                                        <button class="btn-check-understanding" data-quiz-target="quiz-area-angle" onclick="startQuizFromButton('quiz-area-angle', 15)">Ai-je bien compris ?</button>
+                                        <div id="quiz-area-angle"></div>
+                                    </section>
+                                </div>
+                            `,
+                            quiz: { q: "Dans un triangle rectangle, le rapport $\\frac{\\text{Opposé}}{\\text{Hypoténuse}}$ correspond à quelle fonction ?", a: "sinus" },
+                            eleve: "non"
+                     },
+                    { 
+                        id: 13,
+                        title: "Transformations",
+                        content: `
+                            <div class="course-container">
+                                <!-- OBJECTIFS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Objectifs</h2>
+                                    <ul>
+                                        <li>Je connais les 5 transformations vues au collège (symétrie axiale ; symétrie centrale ; translation ; rotation ; homothétie)</li>
+                                        <li>Je sais reconnaitre ces transformations à partir d’une figure et de son image.</li>
+                                        <li>Je suis capable de faire une phrase qui définit tous les paramètres d’une transformation.</li>
+                                        <li>A partir d’une transformation donnée, Je suis capable de tracer l’image d’une figure.</li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION I : RAPPELS (SYMÉTRIES) -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Rappels</h2>
+                                    
+                                    <h3 class="section-title">Symétrie axiale</h3>
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--primary);">Définition :</strong> Un point A’ est le symétrique d’un point A par rapport à une droite (d) lorsque (d) est la médiatrice du segment [AA']</p>
+                                    </div>
+                                    <img src="images/chap13_symetrie_axiale.png" alt="Schéma de la symétrie axiale montrant la médiatrice" style="max-width: 100%; margin: 10px 0;">
+                                    <p>Symétrique de cette figure <strong style="text-decoration: underline;">par la symétrie axiale d’axe (d)</strong></p>
+
+                                    <h3 class="section-title">Symétrie centrale</h3>
+                                    <img src="images/chap13_symetrie_centrale.png" alt="Schéma de la symétrie centrale montrant le milieu du segment" style="max-width: 100%; margin: 10px 0;">
+                                    <div class="notion-box">
+                                        <p>A’ est le symétrique d’un point A par rapport à un point O lorsque O est le milieu du segment [AA']</p>
+                                    </div>
+                                    <img src="images/chap13_symetrie_centrale_exemple.png" alt="Exemple de symétrie centrale" style="max-width: 100%; margin: 10px 0;">
+                                    <p>Symétrique de cette figure <strong style="text-decoration: underline;">par la symétrie centrale de centre O</strong></p>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-symetries" onclick="startQuizFromButton('quiz-area-symetries', 13)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-symetries"></div>
+                                </section>
+
+                                <!-- SECTION II : TRANSLATION ET ROTATION -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Translation et Rotation</h2>
+                                    
+                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                        <p><strong style="color: var(--secondary);">Définition (Translation) :</strong> Quand on fait glisser une figure d’un point A à un point A’ on dit qu’on effectue une <strong style="text-decoration: underline;">translation de A vers A’</strong>.</p>
+                                        <p>Pour cela on définit :</p>
+                                        <ul>
+                                            <li>Une direction : parallèle à la droite (AA')</li>
+                                            <li>Un sens : de A vers A’</li>
+                                            <li>Une longueur de déplacement : AA’</li>
+                                        </ul>
+                                    </div>
+                                    <img src="images/chap13_translation.png" alt="Schéma d'une translation avec vecteur" style="max-width: 100%; margin: 10px 0;">
+                                    <p>Ce déplacement par une flèche appelée <strong style="text-decoration: underline;">vecteur</strong></p>
+                                    <p><em style="font-size: 0.9rem;">Exemple : Tracer l’image de cette figure <strong style="text-decoration: underline;">par la translation qui transforme O en O’</strong></em></p>
+
+                                    <h3 class="section-title">Rotation</h3>
+                                    <img src="images/chap13_rotation_def.png" alt="Schéma d'une rotation autour d'un point" style="max-width: 100%; margin: 10px 0;">
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--secondary);">Définition (Rotation) :</strong> Quand on fait tourner une figure autour d’un point O, en restant toujours à la même distance de O, on dit qu’on effectue une <strong style="text-decoration: underline;">rotation de centre O</strong>.</p>
+                                    </div>
+                                    <img src="images/chap13_rotation_exemple.png" alt="Exemple de rotation avec angle et sens" style="max-width: 100%; margin: 10px 0;">
+                                    <ul>
+                                        <li>Un centre de rotation : O par exemple</li>
+                                        <li>Un angle de rotation : $120^\circ$ par exemple</li>
+                                        <li>Un sens de rotation : horaire ou anti-horaire</li>
+                                    </ul>
+                                    <p><em style="font-size: 0.9rem;">Exemple : Tracer l’image de cette figure <strong style="text-decoration: underline;">par la rotation de centre O, d’angle $120^\circ$, et de sens horaire</strong></em></p>
+
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--primary);">⚠️ Propriétés :</strong> Ces quatre transformations (symétries, translation, rotation) conservent : les longueurs, les angles, l’alignement des points, le parallélisme, les aires et périmètres.</p>
+                                        <p>En effet, une figure et son image sont superposables.</p>
+                                    </div>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-mouvements" onclick="startQuizFromButton('quiz-area-mouvements', 14)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-mouvements"></div>
+                                </section>
+
+                                <!-- SECTION III : HOMOTHÉTIE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Homothétie</h2>
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--secondary);">Définition :</strong> Une homothétie de rapport $k$ (avec $k$ nombre relatif non nul) permet d’agrandir ou réduire une figure à partir d’un point choisi comme centre.</p>
+                                    </div>
+
+                                    <h3 class="section-title">Homothétie de rapport positif</h3>
+                                    <p>M’ est l’image de M par l’homothétie de <strong style="text-decoration: underline;">centre O</strong> et de <strong style="text-decoration: underline;">rapport k</strong> $> 0$ signifie que :</p>
+                                    <img src="images/chap13_homo_positif.png" alt="Schéma homothétie rapport positif" style="max-width: 100%; margin: 10px 0;">
+                                    <ul>
+                                        <li>O, M et M’ sont alignés</li>
+                                        <li>M et M’ sont du même côté par rapport à O.</li>
+                                        <li>$OM' = k \\times OM$</li>
+                                    </ul>
+                                    <p><em style="font-size: 0.9rem;">Exemple : Homothétie de centre O et de rapport $0,5$$</em></p>
+
+                                    <h3 class="section-title">Homothétie de rapport négatif</h3>
+                                    <img src="images/chap13_homo_negatif.png" alt="Schéma homothétie rapport négatif" style="max-width: 100%; margin: 10px 0;">
+                                    <div class="notion-box">
+                                        <p>L’homothétie de <strong style="text-decoration: underline;">centre O</strong> et de <strong style="text-decoration: underline;">rapport  <p>$k < 0$ signifie que :</p>
+                                    <div class="notion-box">
+                                        <ul style="margin-bottom: 0;">
+                                            <li>O, M et M’ sont alignés</li>
+                                            <li>M et M’ ne sont pas du même côté par rapport à O</li>
+                                        </ul>
+                                        <p>On a : $$OM' = -k \\times OM$$ (car $k < 0$ alors $-k > 0$)</p>
+                                    </div>
+                                    <p><em style="font-size: 0.9rem;">Exemple : Homothétie de centre O et de rapport $-\\frac{3}{4}$$</em></p>
+
+                                    <h3 class="section-title">Propriétés de l'homothétie</h3>
+                                    <div class="notion-box">
+                                        <p>Dans une homothétie de rapport $k$ :</p>
+                                        <ul>
+                                            <li>Si $-1 < k < 1$, alors l’image de la figure est <strong style="color: var(--primary);">une réduction</strong> de la figure de départ.</li>
+                                            <li>Si $k > 1$ ou $k < -1$, l’image de la figure est <strong style="color: var(--primary);">un agrandissement</strong> de la figure de départ.</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="notion-box" style="border-left-color: #e74c3c;">
+                                        <p><strong style="color: #e74c3c;">⚠️ Attention :</strong> L’homothétie <strong style="text-decoration: underline;">conserve</strong> l’alignement des points et les angles (parallèles, perpendiculaires...), <strong style="text-decoration: underline;">MAIS</strong> elle <strong style="color: #e74c3c;">ne conserve PAS</strong> les longueurs et les aires.</p>
+                                        <p>Les longueurs sont multipliées par $|k|$, les aires par $k^2$ et les volumes par $|k|^3$.</p>
+                                    </div>
+
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--primary);">Exemple :</strong> Une figure a un périmètre de $5\text{ cm}$ et une aire de $2,5\text{ cm}^2$. Elle est transformée par une homothétie de rapport $4$. Quel sera l’aire et le périmètre de son image ?</p>
+                                        <p>• Périmètre = $5 \\times 4 = 20\text{ cm}$ <br>
+                                        • Aire = $2,5 \\times 4^2 = 2,5 \\times 16 = 40\text{ cm}^2$</p>
+                                    </div>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-homothety" onclick="startQuizFromButton('quiz-area-homothety', 15)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-homothety"></div>
+                                </section>
+
+                                <!-- SECTION IV : EFFET SUR LES MESURES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Effet d’un agrandissement ou d’une réduction sur une figure</h2>
+                                    <p>Comme toute homothétie, lorsqu’une figure est agrandie ou réduite d’un coefficient « $k$ » (k étant un nombre réel) :</p>
+                                    <div class="notion-box">
+                                        <ul style="margin-bottom: 0;">
+                                            <li>Les longueurs sont multipliées par $|k|$</li>
+                                            <li>Les aires par $k^2$</li>
+                                            <li>Les volumes par $|k|^3$</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                        <p><strong style="color: var(--primary);">Exemple concret :</strong> Si j’agrandis 3 fois la taille d’une pyramide.</p>
+                                        <ul>
+                                            <li>Les longueurs de la pyramide sont à multiplier par $3$.</li>
+                                            <li>L’aire des faces (quantité de peinture pour la peindre par exemple) sera multipliée par $9$ ! ($3^2$)</li>
+                                            <li>Son volume (quantité d’eau pouvant contenir la pyramide) sera multiplié par $27$ !!! ($3^3$)</li>
+                                        </ul>
+                                    </div>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-mesures" onclick="startQuizFromButton('quiz-area-mesures', 16)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-mesures"></div>
+                                </section>
+                            </div>
+                        `,
+                        quiz: { q: "Si une figure subit une homothétie de rapport $k=2$, par combien son aire est-elle multipliée ?", a: "4" },
+                        eleve: "non"
+                     },
+                    { 
+                        id: 14,
+                        title: "Espace",
+                        content: `
+                            <div class="course-container">
+                                <!-- OBJECTIFS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Objectifs</h2>
+                                    <ul>
+                                        <li>Je sais représenter des solides en perspective cavalière ; selon différentes vues (face, dessus...) et tracer leurs patrons</li>
+                                        <li>Je sais tracer et déterminer les longueurs des sections planes des solides.</li>
+                                        <li>Je sais me repérer sur une sphère</li>
+                                        <li>Je connais le vocabulaire relatif à la sphère</li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION I : VOCABULAIRE ET VISUALISATION -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Rappels : Vocabulaire et visualisation des solides</h2>
+                                    <div class="notion-box">
+                                        <p>À l’aide du module 3D de Géogébra, réaliser les figures suivantes :</p>
+                                        <img src="images/chap14_geogebra_solides.png" alt="Interface Géogébra 3D pour la création de solides" style="max-width: 100%; margin: 10px 0;">
+                                    </div>
+
+                                    <ul>
+                                        <li>Un <strong style="color: var(--primary);">cube</strong> de $4\text{ cm}$ d’arête.</li>
+                                    </ul>
+                                    <img src="images/chap14_cube.png" alt="Représentation d'un cube" style="max-width: 100%; margin: 10px 0;">
+
+                                    <ul>
+                                        <li>Un <strong style="color: var(--primary);">parallélépipède rectangle (pavé droit)</strong> de $5\text{ cm}$ de longueur, $3\text{ cm}$ de largeur et $4\text{ cm}$ de hauteur.</li>
+                                    </ul>
+                                    <img src="images/chap14_pave_droit.png" alt="Représentation d'un pavé droit" style="max-width: 100%; margin: 10px 0;">
+
+                                    <div class="notion-box">
+                                        <p>Un <strong style="color: var(--primary);">prisme droit</strong> ayant pour base un triangle équilatéral de $3\text{ cm}$ de côté et de hauteur $4\text{ cm}$.</p>
+                                    </div>
+                                    <img src="images/chap14_prisme_droit.png" alt="Représentation d'un prisme droit" style="max-width: 100%; margin: 10px 0;">
+
+                                    <ul>
+                                        <li>Un <strong style="color: var(--primary);">cylindre</strong> de rayon $2\text{ cm}$ et de hauteur $4\text{ cm}$.</li>
+                                    </ul>
+                                    <img src="images/chap14_cylindre.png" alt="Représentation d'un cylindre" style="max-width: 100%; margin: 10px 0;">
+
+                                    <ul>
+                                        <li>Une <strong style="color: var(--primary);">pyramide régulière</strong> à base triangulaire d’arête $3\text{ cm}$ et de hauteur $4\text{ cm}$.</li>
+                                    </ul>
+                                    <img src="images/chap14_pyramide.png" alt="Représentation d'une pyramide" style="max-width: 100%; margin: 10px 0;">
+
+                                    <ul>
+                                        <li>Un <strong style="color: var(--primary);">cône de révolution</strong> dont le rayon de base est égal à $1\text{ cm}$ et de hauteur $4\text{ cm}$.</li>
+                                    </ul>
+                                    <img src="images/chap14_cone.png" alt="Représentation d'un cône de révolution" style="max-width: 100%; margin: 10px 0;">
+
+                                    <ul>
+                                        <li>Une <strong style="color: var(--primary);">sphère</strong> de rayon $3\text{ cm}$.</li>
+                                    </ul>
+                                    <img src="images/chap14_sphere.png" alt="Représentation d'une sphère" style="max-width: 100%; margin: 10px 0;">
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-solides" onclick="startQuizFromButton('quiz-area-solides', 14)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-solides"></div>
+                                </section>
+
+                                <!-- SECTION II : PATRONS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Patrons</h2>
+                                    <ol type="a">
+                                        <li>Toujours à l’aide de Géogébra, utilisez la commande patron pour visualiser et reproduire le patron du pavé droit, de la pyramide à base triangulaire et du prisme droit. Dessinez les ci-dessous à main levée et codez les figures.</li>
+                                        <li>Dessinez à main levée le patron du cylindre que Géogébra ne parvient pas à tracer. Précisez les longueurs sur le schéma.</li>
+                                    </ol>
+                                </section>
+
+                                <!-- SECTION III : SECTIONS -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Sections</h2>
+                                    <div class="notion-box">
+                                        <p>À l’aide des fichiers dans votre espace classe (dossiers Chapitre 14 \ Géogébra), représentez :</p>
+                                    </div>
+                                    <ul>
+                                        <li>La section d’un pavé droit par un plan parallèle à une face <em style="font-size:0.9rem;">(qui reste identique à cette face)</em></li>
+                                        <li>La section d’un pavé droit par un plan parallèle à une arête <em style="font-size:0.9rem;">(qui est un rectangle)</em></li>
+                                        <li>La section d’un cylindre par un plan parallèle à la base <em style="font-size:0.9rem;">(qui est une réduction de la base)</em></li>
+                                        <li>La section d’un cylindre par un plan parallèle à l’axe de révolution <em style="font-size:0.9rem;">(qui est un rectangle)</em></li>
+                                        <li>La section d’une pyramide par un plan à la base <em style="font-size:0.9rem;">(qui est une réduction de la base)</em></li>
+                                        <li>La section d’un cône par un plan parallèle à la base <em style="font-size:0.9rem;">(qui est une réduction de la base)</em></li>
+                                    </ul>
+                                </section>
+
+                                <!-- SECTION IV : LA SPHÈRE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">La sphère : Vocabulaire</h2>
+                                    <img src="images/chap14_sphere_vocab.png" alt="Schéma de la sphère avec ses éléments" style="max-width: 100%; margin: 10px 0;">
+                                    
+                                    <div class="notion-box">
+                                        <p>Soit $O$ un point de l’espace.<br />
+                                        On appelle <strong>sphère</strong> de centre $O$ et de rayon $R$ l’ensemble de tous les points de l’espace qui sont situés à une distance $R$ du point $O$.</p>
+                                    </div>
+
+                                    <p><strong style="color: var(--secondary);">Remarques :</strong></p>
+                                    <ul>
+                                        <li>Les segments $[AB]$, $[CD]$ et $[EF]$ sont des diamètres de la sphère. On dit que les points $A$ et $B$ sont diamétralement opposés.</li>
+                                        <li>Un grand cercle d’une sphère de centre $O$ et de rayon $R$ est un cercle, également de centre $O$ et de rayon $R$.</li>
+                                    </ul>
+
+                                    <h3 class="section-title">Boule</h3>
+                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                        <p>Soit $O$ un point de l’espace.<br />
+                                        On appelle <strong>boule</strong> de centre $O$ et de rayon $R$ l’ensemble de tous les points de l’espace qui sont situés à une distance du point $O$ inférieure ou égale à $R$.</p>
+                                    </div>
+                                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-sphere" onclick="startQuizFromButton('quiz-area-sphere', 16)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-sphere"></div>
+                                </section>
+
+                                <!-- SECTION V : REPÉRAGE DANS L'ESPACE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Repérage dans l’espace</h2>
+                                    
+                                    <h3 class="section-title">Repérage dans un parallélépipède rectangle (Rappel de 4ème)</h3>
+                                    <img src="images/chap14_repere_3d.png" alt="Représentation d'un repère dans l'espace avec un pavé droit" style="max-width: 100%; margin: 10px 0;">
+                                    
+                                    <div class="notion-box">
+                                        <p><em style="font-size: 0.9rem;">Consigne Géogébra : Placer les points suivants :</em></p>
+                                        <p>$A(0 ; 0 ; 0)$ | $B(0 ; 10 ; 0)$ | $C(4 ; 10 ; 0)$ | $D(4 ; 0 ; 0)$</p>
+                                        <p>Formez un polygone avec ces quatre points. Allez sur la vue 3D et utilisez la commande extrusion prisme de hauteur $5$.</p>
+                                    </div>
+
+                                    <p>En manipulant le solide, notez les coordonnées des sommets :</p>
+                                    <div class="notion-box">
+                                        <p>$A( ; ; )$ | $B( ; ; )$ | $C( ; ; )$ | $D( ; ; )$</p>
+                                        <p>$E( ; ; )$ | $F( ; ; )$ | $G( ; ; )$ | $H( ; ; )$</p>
+                                    </div>
+
+                                    <p>Placez le point $M$ milieu de $[GH]$ et notez ses coordonnées : $M( ; ; )$</p>
+                                    <p><em style="font-size: 0.8rem; color: var(--text-muted);">Remarque : on peut imaginer une section bien choisie pour mieux voir la coordonnée recherchée.</em></p>
+                                    <p>Placez le point $S$ milieu de la face $BCHF$ et notez ses coordonnées : $S( ; ; )$</p>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-repere" onclick="startQuizFromButton('quiz-area-repere', 17)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-repere"></div>
+                                </section>
+
+                                <!-- SECTION VI : LA SPHÈRE ET LA TERRE -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Repérage sur une sphère</h2>
+                                    <img src="images/chap14_sphere_repere.png" alt="Schéma de la Terre montrant longitude et latitude" style="max-width: 100%; margin: 10px 0;">
+                                    
+                                    <p>Sur une sphère, il est plus simple de se repérer avec deux angles qu’avec trois coordonnées. Pour la Terre, ces angles sont appelés <strong style="color: var(--primary);">longitude</strong> et <strong style="color: var(--primary);">latitude</strong>.</p>
+
+                                    <div class="notion-box">
+                                        <p><strong style="color: var(--secondary);">Les cercles imaginaires :</strong></p>
+                                        <ul style="margin-bottom: 0;">
+                                            <li>Les <strong style="text-decoration: underline;">méridiens</strong> qui passent par les deux pôles. Tous les points d’un même méridien ont la même <strong style="text-decoration: underline;">longitude</strong>.</li>
+                                            <li>Les <strong style="text-decoration: underline;">parallèles</strong> qui sont tous parallèles à l’équateur. Tous les points d’un même parallèle ont la même <strong style="text-decoration: underline;">latitude</strong>.</li>
+                                        </ul>
+                                    </div>
+
+                                    <h3 class="section-title">Courbes de niveau</h3>
+                                    <p>Une <strong style="color: var(--primary);">courbe de niveau</strong> est en cartographie, une ligne formée par les points du relief situés à la même <a href="https://fr.wikipedia.org/wiki/Altitude" target="_blank" style="color: inherit;">altitude</a>.</p>
+                                    <img src="images/chap14_courbes_niveau.png" alt="Exemple de courbes de niveau sur une montagne" style="max-width: 100%; margin: 10px 0;">
+                                    
+                                    <div class="notion-box" style="border-left-color: var(--secondary);">
+                                        <p>En pratique, on réalise la section de la montagne par des plans horizontaux séparés par la même altitude (Equidistance).</p>
+                                    </div>
+
+                                    <button class="btn-check-understanding" data-quiz-target="quiz-area-sphere_repere" onclick="startQuizFromButton('quiz-area-sphere_repere', 18)">Ai-je bien compris ?</button>
+                                    <div id="quiz-area-sphere_repere"></div>
+                                </section>
+                            </div>
+                        `,
+                        quiz: { q: "Sur la Terre, comment appelle-t-on les cercles qui passent par les pôles ?", a: "méridiens" },
+                        eleve: "non"
+                     }
                 ]
             }
         ]
