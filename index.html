@@ -9,6 +9,8 @@
 
         :root {
             --primary: #2563eb;       /* Bleu principal */
+            --primary-medium: #3b82f6; /* Un bleu un peu plus clair/moyen pour les h3 */
+            --primary-dark: #1e40af;   /* Un bleu plus sombre et sérieux pour les h4 */
             --primary-light: #dbeafe; /* Bleu clair pour les accents */
             --secondary: #7c3aed;     /* Violet pour l'entraînement */
             --bg: #f8fafc;            /* Fond de page gris très léger */
@@ -121,7 +123,7 @@ h1 {
 
 /* --- TITRES DE SECTIONS (H2 à H4) --- */
 h2 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: var(--primary);
     border-bottom: 2px solid var(--primary-light);
     padding-bottom: 5px;
@@ -130,7 +132,7 @@ h2 {
 }
 
 h3 {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: var(--secondary);
     margin-top: 30px;
     margin-bottom: 15px;
@@ -146,15 +148,6 @@ h5 {
     display: flex;
     align-items: center;
 }
-
-
-/* Style pour les numéros automatiques */
-.auto-number {
-    margin-right: 10px;
-    font-weight: bold;
-    opacity: 0.7;
-}
-
         /* --- ÉCRAN 1 : GRILLE DES NIVEAUX (LES CARTES) --- */
         .level-grid {
             display: grid;
@@ -358,13 +351,61 @@ textarea {
     margin-bottom: 30px;
 }
 
-.section-title {
+/* .section-title {
     font-size: 1.5rem;
     color: var(--primary);
     border-bottom: 2px solid var(--primary-light);
     padding-bottom: 5px;
     margin-bottom: 15px;
+} */
+
+/* --- TITRES DE SECTIONS (H2 à H4) --- */
+
+/* Style de base commun pour tous les titres de section */
+h2.section-title, 
+h3.section-title, 
+h4.section-title {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    display: flex; /* Permet d'aligner le numéro auto et le texte proprement */
+    align-items: center;
 }
+
+/* Style spécifique pour H2 : On garde la bordure qui traverse la page */
+h2.section-title {
+    font-size: 1.8rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary-dark); /* La ligne sous le H2 */
+    padding-bottom: 5px;
+}
+
+/* Style spécifique pour H3 : Plus petit et SANS bordure traversante */
+h3.section-title {
+    font-size: 1.4rem; /* Taille réduite par rapport au H2 */
+    color: var(--primary-medium);
+    border-bottom: none; /* On supprime la ligne qui traverse la page */
+    padding-bottom: 0;
+}
+
+/* Style spécifique pour H4 : Encore plus petit et SANS bordure */
+h4.section-title {
+    font-size: 1.1rem; /* Taille réduite par rapport au H3 */
+    color: var(--text-main); /* Couleur plus neutre */
+    border-bottom: none; /* On supprime la ligne qui traverse la page */
+    padding-bottom: 0;
+}
+
+/* Style pour les numéros automatiques (pour qu'ils ne collent pas au texte) */
+.auto-number {
+    margin-right: 8px;
+    font-weight: bold;
+    opacity: 0.6;
+    font-size: 0.9em; /* Le numéro est légèrement plus petit que le titre */
+}
+
+
+
+
 
 .course-container ul {
     margin-left: 20px;
@@ -1931,7 +1972,7 @@ const officialData = [
                                     <!-- FONCTION LINÉAIRE -->
                                     <section class="course-section">
                                         <h2 class="section-title">Fonction linéaire</h2>
-                                        <h3>Définition</h3>
+                                        <h3 class="section-title">Définition</h3>
                                         <p>$a$ désigne un nombre réel.</p>
                                         <div class="notion-box">
                                             <p>Une fonction linéaire de coefficient $a$ est la fonction qui à tout nombre $x$ associe le nombre $a \\times x$</p>
@@ -1950,7 +1991,7 @@ const officialData = [
                                             <li>$m(x) = -3\\sqrt{x}$ n’est pas une fonction linéaire car $\\sqrt{x}$</li>
                                         </ul>
 
-                                        <h3>Contexte</h3>
+                                        <h3 class="section-title">Contexte</h3>
                                         <p>A toute situation de proportionnalité, correspond une fonction linéaire. On dit qu’on peut modéliser le problème par une fonction linéaire.</p>
                                         <p>Exemple : Je souhaite faire un gâteau. Pour 2 personnes il me faut...</p>
 
@@ -1961,7 +2002,7 @@ const officialData = [
 
                                         <p>Objectif 3a - Je sais modéliser un problème sous forme d'une fonction linéaire (+images antécédents)</p>
 
-                                        <h3>Représentation graphique</h3>
+                                        <h3 class="section-title">Représentation graphique</h3>
                                         <div class="notion-box">
                                             <p>Comme elle représente une situation de proportionnalité, ce sera toujours une droite qui passe par l’origine du repère.</p>
                                         </div>
@@ -1979,7 +2020,7 @@ const officialData = [
                                         </div>
                                         <p>Différents cas possibles selon la valeur de $a$</p>
 
-                                        <h3>Calculer un pourcentage d’augmentation ou de diminution avec les fonctions linéaires</h3>
+                                        <h3 class="section-title">Calculer un pourcentage d’augmentation ou de diminution avec les fonctions linéaires</h3>
                                         <p>Une augmentation ou diminution de prix en pourcentage est une fonction linéaire, ce qui les rend plus simple à calculer.</p>
                                         <div class="notion-box">
                                             <p>En effet augmenter de 35% revient à utiliser la fonction $p(x) = 1,35x$</p>
@@ -2340,7 +2381,7 @@ const officialData = [
                                             <section class="course-section">
                                                 <h2 class="section-title">Montrer qu’un triangle est rectangle</h2>
                                                 
-                                                <h3>Avec les angles</h3>
+                                                <h3 class="section-title">Avec les angles</h3>
                                                 <p>Propriété : Dans un triangle, la somme des angles mesure $180^\\circ$.</p>
                                                 <p>Donc si on connaît deux des angles on peut savoir si le troisième mesure $90^\\circ$ ou pas.</p>
                                                 <div class="notion-box">
@@ -2348,7 +2389,7 @@ const officialData = [
                                                     <p><u>Exemple 2 :</u> Sachant que $$\\widehat{RST}=35^\\circ$$ et $$\\widehat{RTS}=58^\\circ$$ Le triangle RST est-il rectangle ?</p>
                                                 </div>
 
-                                                <h3>Avec la réciproque du théorème de Pythagore</h3>
+                                                <h3 class="section-title">Avec la réciproque du théorème de Pythagore</h3>
                                                 <div class="notion-box">
                                                     <p>Dans un triangle,</p>
                                                     <p>Si la longueur du plus grand côté au carré est égale à la somme des carrés des deux autres côtés</p>
@@ -4039,36 +4080,63 @@ function showFinalScore() {    // Affiche le score final proprement
     }
 
     function applyAutomaticNumbering(container) {
-        // On cible uniquement les h2 pour commencer la numérotation (on ignore le h1)
-        const h2Elements = container.querySelectorAll('h2');
-        let h2Counter = 0;
+    // On définit les compteurs pour chaque niveau
+    let counters = {
+        h2: 0,
+        h3: 0,
+        h4: 0
+    };
 
-        h2Elements.forEach((h2) => {
-            h2Counter++;
-            // Création du numéro pour le H2
-            const h2Number = document.createElement('span');
-            h2Number.className = 'auto-number';
-            h2Number.innerText = h2Counter + ". ";
-            h2.prepend(h2Number);
+    /**
+     * Fonction récursive qui parcourt tous les éléments du conteneur
+     * @param {HTMLElement} element - L'élément actuel à analyser
+     */
+    function traverse(element) {
+        // On vérifie si l'élément est un titre que nous voulons numéroter
+        const tagName = element.tagName.toLowerCase();
 
-            // On cherche les H3 qui suivent ce H2 jusqu'au prochain H2
-            let h3Counter = 0;
-            let currentElement = h2.nextElementSibling;
+        if (tagName === 'h2' || tagName === 'h3' || tagName === 'h4') {
             
-            while (currentElement && currentElement.tagName !== 'H2') {
-                const h3s = currentElement.querySelectorAll('h3');
-                h3s.forEach((h3) => {
-                    h3Counter++;
-                    // Création du numéro pour le H3 (ex: 1.1.)
-                    const h3Number = document.createElement('span');
-                    h3Number.className = 'auto-number';
-                    h3Number.innerText = h2Counter + "." + h3Counter + ". ";
-                    h3.prepend(h3Number);
-                });
-                currentElement = currentElement.nextElementSibling;
+            if (tagName === 'h2') {
+                counters.h2++;      // Incrémente H2
+                counters.h3 = 0;    // Réinitialise H3
+                counters.h4 = 0;    // Réinitialise H4
+                
+                const span = document.createElement('span');
+                span.className = 'auto-number';
+                span.innerText = counters.h2 + ". ";
+                element.prepend(span);
+
+            } else if (tagName === 'h3') {
+                counters.h3++;      // Incrémente H3
+                counters.h4 = 0;    // Réinitialise H4
+                
+                const span = document.createElement('span');
+                span.className = 'auto-number';
+                span.innerText = counters.h2 + "." + counters.h3 + ". ";
+                element.prepend(span);
+
+            } else if (tagName === 'h4') {
+                counters.h4++;      // Incrémente H4
+                
+                const span = document.createElement('span');
+                span.className = 'auto-number';
+                span.innerText = counters.h2 + "." + counters.h3 + "." + counters.h4 + ". ";
+                element.prepend(span);
             }
-        });
+        }
+
+        // On parcourt ensuite tous les enfants de l'élément (récursion)
+        // Cela permet de trouver des titres même s'ils sont dans une <div> ou <section>
+        for (let i = 0; i < element.children.length; i++) {
+            traverse(element.children[i]);
+        }
     }
+
+    // On lance la traversée à partir du conteneur principal de la carte
+    traverse(container);
+}
+
 
 
 
