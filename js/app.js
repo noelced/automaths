@@ -815,36 +815,10 @@ if (currentMode === 'cours') {
         container.innerHTML = "";
         const card = document.createElement('div');
         card.className = 'card';
-        
-        let quizHTML = "";
-        if (fullChapter.quiz) {
-            quizHTML = `
-                <div class="quiz-container">
-                    <p style="font-weight:bold; margin-bottom:10px;">${fullChapter.quiz.q}</p>
-                    <input type="text" id="mini-quiz-answer" placeholder="Votre réponse...">
-                    <!-- Clavier harmonisé pour le mini-quiz de cours -->
-                    <div class="math-keyboard" style="margin-top:10px; margin-bottom:15px;">
-                        <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
-                        <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
-                    </div>
-                    <button class="action-btn" onclick="checkMiniQuiz('${fullChapter.quiz.a}')">Vérifier</button>
-                    <div id="mini-quiz-feedback" class="feedback"></div>
-                </div>`;
-        } else {
-            quizHTML = `<p>Pas de question disponible pour ce test rapide.</p>`;
-        }
 
         card.innerHTML = `
             <h1 style="margin-bottom:15px;">${fullChapter.title || chapter.title}</h1>
             <div class="course-content">${fullChapter.content || "Aucun contenu de cours disponible."}</div>
-            <div class="notion-box"><strong>💡 Petit test rapide :</strong></div>
-            ${quizHTML}
         `;
         container.appendChild(card);
         applyAutomaticNumbering(card);
@@ -1019,23 +993,10 @@ function showFinalScore() {    // Affiche le score final proprement
 
 
   // 6. LOGIQUE DES CHAPITRES ET QUIZ (Launch, Check, ShowCourse)
-
-    function checkMiniQuiz(correctAnswer) {
-        const input = document.getElementById('mini-quiz-answer');
-        const feedback = document.getElementById('mini-quiz-feedback');
-        
-        if (!input || !feedback) return;
-
-        // Utilisation de votre fonction de comparaison robuste qui gère le LaTeX et les décimaux
-        if (compareAnswers(input.value, correctAnswer)) {
-            feedback.innerText = "Bravo ! ✅";
-            feedback.className = "feedback success";
-        } else {
-            feedback.innerText = "Réessaie encore ! ❌";
-            feedback.className = "feedback error";
-        }
-    }
-
+    // NOTE : checkMiniQuiz() (le "petit test rapide" en fin de chapitre)
+    // a été retiré à la demande — il faisait doublon avec le QCM
+    // "Ai-je bien compris ?" intégré au cours et n'apportait pas de
+    // valeur pédagogique supplémentaire.
 
    function checkFullQuiz(correctAnswer, identifier, userAnsInput = null) {
     let userAns = "";

@@ -101,8 +101,12 @@ var chapterData_3eme_5 = {
                         <p>On peut vérifier cela en additionnant toute la ligne effectif du tableau : $3+1+6+3+1+3+5+2 = 24$</p> pour retrouver l'effectif total. </p>
                         <p>La ligne <strong>effectif cumulés croissant</strong> est utile pour trouver plus facilement la médiane de la série statistique. Elle n'est pas obligatoire mais permet de savoir en un coup d'oeil que, de la 11ème à la 13ème valeur, nous avons des 23h00 dans la série. On la construit en additionnant tous les effectifs des valeurs inférieures ou égales à la valeur regardée. Exemple pour 23h00 on a fait 3+1+6+3=13</p>
                         </div>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-effectifs" onclick="startQuizFromButton('quiz-area-effectifs', 1)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-effectifs"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statseffectifs"
+                        onclick="startQuizFromButton('quiz-area-statseffectifs', '35201')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statseffectifs"></div>
 
                         <h3 class="section-title">Fréquence</h3>
                         <p>La fréquence correspond à la proportion de la valeur dans la série statistique. Pour répondre à la question : Est-ce fréquent que les élèves se couchent à 22h30? On pourrait répondre par oui ou non, mais cette réponse manquerait de précision. Il est préférable de donner une valeur chiffrée. 22h30 apparait $6$ fois dans la liste. Mais 6 n'apporte pas assez d'informations, en effet 6 fois sur 10 serait très fréquent, mais 6 fois sur 1000 serait très rare. C'est pour cela qu'il faut préciser le nombre de valeurs totales. Ici on a $6$ fois 22h30 sur $24$ valeurs en tout. Donc la fréquence de 22h30 sera : $\\frac{6}{24}=6 \\div 24=0,25$.</p>
@@ -127,8 +131,12 @@ var chapterData_3eme_5 = {
                         <p>Fréquence de 24h = $\\frac{3}{24}=3 \\div 24=0,125$.</p>
                         <p>Soit $0,125 \\times 100 = 12,5$. Il y a $12,5$ % des élèves interrogés qui se couchent à minuit.</p>
                         </div>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-frequence" onclick="startQuizFromButton('quiz-area-frequence', 2)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-frequence"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statfrequence"
+                        onclick="startQuizFromButton('quiz-area-statfrequence', '35211')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statfrequence"></div>
                         
 
                     </section>
@@ -158,8 +166,12 @@ var chapterData_3eme_5 = {
                         </div>
                         <p><em>Exemple :</em> Leny a eu 5 notes au deuxième trimestre : 11, 15, 14, 9, 12. <br>
                         $(11+15+14+9+12) \\div 5 = 12,2$. La moyenne est de $12,2$.</p>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-simple" onclick="startQuizFromButton('quiz-area-moyenne-simple', 3)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-moyenne-simple"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmoyennesimple"
+                        onclick="startQuizFromButton('quiz-area-statmoyennesimple', '35311')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmoyennesimple"></div>
 
                         <p><strong class="section-title">Moyenne pondérée : c'est le même principe de calcul mais on l'utilise lorsque on a un tableau d'effectif ou des coefficients</strong></p>
                         <div class="notion-box">
@@ -168,8 +180,12 @@ var chapterData_3eme_5 = {
                         <p><em>Exemple (Heure de coucher) :</em> <br>
                         $(22 \\times 3 + 22,25 \\times 1 + 22,5 \\times 6 + 23 \\times 3 + 23,5 \\times 1 + 24 \\times 3 + 24,5 \\times 5 + 25 \\times 2) \\div 24 = 23,34$.<br>
                         Ce qui correspond à une heure de coucher de $23\\text{h}$ et $0,34 \\times 60 = 20\\text{min}$, soit $23\\text{h}20$.</p>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-ponderee" onclick="startQuizFromButton('quiz-area-moyenne-ponderee', 4)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-moyenne-ponderee"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmoyennepond"
+                        onclick="startQuizFromButton('quiz-area-statmoyennepond', '35312')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmoyennepond"></div>
                     </section>
 
                     <!-- SECTION : MEDIANE -->
@@ -192,6 +208,12 @@ var chapterData_3eme_5 = {
                                 <p> La médiane est <span class="text-blue">13</span> car c'est la valeur du milieu</p>
                             </div>
                         </div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-medianesimple"
+                        onclick="startQuizFromButton('quiz-area-medianesimple', '35321')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-medianesimple"></div>
                         <br>
 
                         <div>
@@ -204,7 +226,7 @@ var chapterData_3eme_5 = {
                                 <p> Médiane $= (11+14) \\div 2 =$ <span class="text-blue">$12,5$</span></p>
                             </div>
                         </div>                           
-                        
+                        <br>
                         <div>
                             <p><span><strong>Cas ou on a un tableau d'effectifs</strong></span></p>
                             <br>
@@ -260,8 +282,12 @@ var chapterData_3eme_5 = {
                     </div>    
                 </div>    
 
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-mediane" onclick="startQuizFromButton('quiz-area-mediane', 5)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-mediane"></div>
+                       <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmedianepond"
+                        onclick="startQuizFromButton('quiz-area-statmedianepond', '35322')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmedianepond"></div>
                     </section>
 
                     <!-- SECTION : ETENDUE -->
@@ -288,8 +314,12 @@ var chapterData_3eme_5 = {
                         <br>
                         <p>En résumé, l'étendue complète la moyenne ou la médiane en redonnant un peu d'information perdue avec un "résumé" de l'ensemble des valeurs trop agressif.</p>
 
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-etendue" onclick="startQuizFromButton('quiz-area-etendue', 6)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-etendue"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statetendue"
+                        onclick="startQuizFromButton('quiz-area-statetendue', '35411')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statetendue"></div>
                     </section>
 
                     <!-- SECTION : HISTOGRAMME -->
@@ -336,11 +366,11 @@ var chapterData_3eme_5 = {
                         <br>
                         <p>Un histogramme est une représentation graphique utilisée dans le cas d'une série regroupée en classe; <strong>La largeur de la barre</strong> dépend de la largeur de la classe. </p>
                         <p>Un histogramme ressemble à un diagramme en barres, mais il n'est pas construit de la même manière. Dans un digramme en barres (ou en bâton) l'effectif est représenté sur l'axe des ordonnées. La hauteur de la barre représente l'effectif.</p>
-                        <p>Dans un histogramme, c'est <strong>l'aire</strong> de la barre (pas la hauteur) qui représente l'effectif.</p>
+                        <p>Dans un histogramme, c'est <strong>l'aire</strong> de la barre (pas la hauteur) qui représente l'effectif. L'histogramme n'a pas d'axe des ordonnées.</p>
                         <p>L'histogramme est vraiement pertinent lorsque les classes n'ont pas toutes la même amplitude, ce qui n'est jamais le cas en troisième. D'ou ta difficulté à différencier les deux types de diagrammes.</p>
 
-                        <div class="chart-container" style="position: relative; width:100%; max-width:600px; margin: 20px auto;">
-                        <div id="histogrammeTailles"></div>
+                        <div class="chart-container" style="position: relative; height:40vh; width:100%; max-width:600px; margin: 20px auto;">
+                        <canvas id="histogrammeTailles"></canvas>
                         </div>
 
 
@@ -349,7 +379,7 @@ var chapterData_3eme_5 = {
 
                         <div class="notion-box">
                             <strong style="color: var(--secondary);">📊 Construction de l'histogramme :</strong><br>
-                            Pour construire un histogramme, on porte les classes en abscisse. L'<strong>aire</strong> du rectangle est proportionnelle à l'effectif (et non la hauteur seule).
+                            Pour construire un histogramme, on place les classes sur l'axe des abscisses. L'<strong>aire</strong> du rectangle est proportionnelle à l'effectif (et non la hauteur seule).
                         </div>
                     </section>
                 </div>
