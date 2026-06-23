@@ -101,8 +101,12 @@ var chapterData_3eme_5 = {
                         <p>On peut vérifier cela en additionnant toute la ligne effectif du tableau : $3+1+6+3+1+3+5+2 = 24$</p> pour retrouver l'effectif total. </p>
                         <p>La ligne <strong>effectif cumulés croissant</strong> est utile pour trouver plus facilement la médiane de la série statistique. Elle n'est pas obligatoire mais permet de savoir en un coup d'oeil que, de la 11ème à la 13ème valeur, nous avons des 23h00 dans la série. On la construit en additionnant tous les effectifs des valeurs inférieures ou égales à la valeur regardée. Exemple pour 23h00 on a fait 3+1+6+3=13</p>
                         </div>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-effectifs" onclick="startQuizFromButton('quiz-area-effectifs', 1)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-effectifs"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-stateffectif"
+                        onclick="startQuizFromButton('quiz-area-stateffectif', '35201')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-stateffectif"></div>
 
                         <h3 class="section-title">Fréquence</h3>
                         <p>La fréquence correspond à la proportion de la valeur dans la série statistique. Pour répondre à la question : Est-ce fréquent que les élèves se couchent à 22h30? On pourrait répondre par oui ou non, mais cette réponse manquerait de précision. Il est préférable de donner une valeur chiffrée. 22h30 apparait $6$ fois dans la liste. Mais 6 n'apporte pas assez d'informations, en effet 6 fois sur 10 serait très fréquent, mais 6 fois sur 1000 serait très rare. C'est pour cela qu'il faut préciser le nombre de valeurs totales. Ici on a $6$ fois 22h30 sur $24$ valeurs en tout. Donc la fréquence de 22h30 sera : $\\frac{6}{24}=6 \\div 24=0,25$.</p>
@@ -127,8 +131,12 @@ var chapterData_3eme_5 = {
                         <p>Fréquence de 24h = $\\frac{3}{24}=3 \\div 24=0,125$.</p>
                         <p>Soit $0,125 \\times 100 = 12,5$. Il y a $12,5$ % des élèves interrogés qui se couchent à minuit.</p>
                         </div>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-frequence" onclick="startQuizFromButton('quiz-area-frequence', 2)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-frequence"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statfrequence"
+                        onclick="startQuizFromButton('quiz-area-statfrequence', '35211')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statfrequence"></div>
                         
 
                     </section>
@@ -158,8 +166,16 @@ var chapterData_3eme_5 = {
                         </div>
                         <p><em>Exemple :</em> Leny a eu 5 notes au deuxième trimestre : 11, 15, 14, 9, 12. <br>
                         $(11+15+14+9+12) \\div 5 = 12,2$. La moyenne est de $12,2$.</p>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-simple" onclick="startQuizFromButton('quiz-area-moyenne-simple', 3)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-moyenne-simple"></div>
+                        
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmoysimpl"
+                        onclick="startQuizFromButton('quiz-area-statmoysimpl', '35311')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmoysimpl"></div>
+
+
+
 
                         <p><strong class="section-title">Moyenne pondérée : c'est le même principe de calcul mais on l'utilise lorsque on a un tableau d'effectif ou des coefficients</strong></p>
                         <div class="notion-box">
@@ -168,8 +184,12 @@ var chapterData_3eme_5 = {
                         <p><em>Exemple (Heure de coucher) :</em> <br>
                         $(22 \\times 3 + 22,25 \\times 1 + 22,5 \\times 6 + 23 \\times 3 + 23,5 \\times 1 + 24 \\times 3 + 24,5 \\times 5 + 25 \\times 2) \\div 24 = 23,34$.<br>
                         Ce qui correspond à une heure de coucher de $23\\text{h}$ et $0,34 \\times 60 = 20\\text{min}$, soit $23\\text{h}20$.</p>
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-moyenne-ponderee" onclick="startQuizFromButton('quiz-area-moyenne-ponderee', 4)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-moyenne-ponderee"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmoypond"
+                        onclick="startQuizFromButton('quiz-area-statmoypond', '35312')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmoypond"></div>
                     </section>
 
                     <!-- SECTION : MEDIANE -->
@@ -203,7 +223,13 @@ var chapterData_3eme_5 = {
                                 <p> Il y a deux valeurs au milieu <span class="text-blue">$11$ et $14$</span> donc on crée la médiane en calculant la <strong>demi-somme</strong> des deux valeurs</p>
                                 <p> Médiane $= (11+14) \\div 2 =$ <span class="text-blue">$12,5$</span></p>
                             </div>
-                        </div>                           
+                        </div>   
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmedsimple"
+                        onclick="startQuizFromButton('quiz-area-statmedsimple', '35321')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmedsimple"></div>                        
                         
                         <div>
                             <p><span><strong>Cas ou on a un tableau d'effectifs</strong></span></p>
@@ -260,8 +286,12 @@ var chapterData_3eme_5 = {
                     </div>    
                 </div>    
 
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-mediane" onclick="startQuizFromButton('quiz-area-mediane', 5)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-mediane"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statmedpond"
+                        onclick="startQuizFromButton('quiz-area-statmedpond', '35322')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statmedpond"></div>
                     </section>
 
                     <!-- SECTION : ETENDUE -->
@@ -288,8 +318,12 @@ var chapterData_3eme_5 = {
                         <br>
                         <p>En résumé, l'étendue complète la moyenne ou la médiane en redonnant un peu d'information perdue avec un "résumé" de l'ensemble des valeurs trop agressif.</p>
 
-                        <button class="btn-check-understanding" data-quiz-target="quiz-area-etendue" onclick="startQuizFromButton('quiz-area-etendue', 6)">Ai-je bien compris ?</button>
-                        <div id="quiz-area-etendue"></div>
+                        <button class="btn-check-understanding"
+                        data_quiz_target="quiz-area-statetend"
+                        onclick="startQuizFromButton('quiz-area-statetend', '35411')">
+                        Ai-je bien compris ?
+                        </button>
+                        <div id="quiz-area-statetend"></div>
                     </section>
 
                     <!-- SECTION : HISTOGRAMME -->
