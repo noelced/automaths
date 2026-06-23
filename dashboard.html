@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMaths — Tableau de bord professeur</title>
+
+    <!-- Supabase JS v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary:       #2563eb;
+            --primary-light: #dbeafe;
+            --primary-dark:  #1e40af;
+            --secondary:     #7c3aed;
+            --success:       #16a34a;
+            --success-light: #dcfce7;
+            --warning:       #d97706;
+            --warning-light: #fef3c7;
+            --danger:        #dc2626;
+            --danger-light:  #fee2e2;
+            --bg:            #f8fafc;
+            --card-bg:       #ffffff;
+            --text-main:     #1e293b;
+            --text-muted:    #64748b;
+            --border:        #e2e8f0;
+            --radius:        12px;
+            --shadow:        0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.06);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ─────────────────────────────────────────── */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-brand { display: flex; align-items: center; gap: 10px; }
+        .header-brand img { height: 32px; }
+        .header-brand span {
+            font-size: 1.2rem; font-weight: 800;
+            font-style: italic; color: var(--primary-dark);
+        }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .header-right .teacher-name { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* ── LAYOUT ──────────────────────────────────────────── */
+        .page { display: flex; min-height: calc(100vh - 60px); }
+
+        /* ── SIDEBAR FILTRES ─────────────────────────────────── */
+        aside {
+            width: 280px;
+            min-width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+        .filter-section { margin-bottom: 28px; }
+        .filter-section h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            transition: background 0.15s;
+        }
+        .filter-option:hover { background: var(--bg); }
+        .filter-option input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+        .filter-option label { cursor: pointer; flex: 1; }
+        .filter-count {
+            font-size: 0.75rem; color: var(--text-muted);
+            background: var(--bg); padding: 1px 6px; border-radius: 10px;
+        }
+        .btn-save-filters {
+            width: 100%; padding: 10px; border: none; border-radius: 8px;
+            background: var(--primary); color: white; font-weight: 600;
+            font-size: 0.9rem; cursor: pointer; margin-top: 8px;
+            transition: opacity .2s;
+        }
+        .btn-save-filters:hover { opacity: .9; }
+        .save-status {
+            text-align: center; font-size: 0.8rem; color: var(--success);
+            margin-top: 6px; min-height: 18px;
+        }
+
+        /* ── CONTENU PRINCIPAL ───────────────────────────────── */
+        main {
+            flex: 1;
+            padding: 24px;
+            overflow-x: auto;
+        }
+        .dashboard-title {
+            font-size: 1.6rem; font-weight: 800;
+            color: var(--primary-dark); margin-bottom: 6px;
+        }
+        .dashboard-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+
+        /* ── STATS CARDS ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+        }
+        .stat-card .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .stat-card .stat-sub   { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* ── TABLEAU ─────────────────────────────────────────── */
+        .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .table-toolbar {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .table-toolbar h2 { font-size: 1rem; font-weight: 700; }
+        .table-search {
+            padding: 7px 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.85rem; outline: none; width: 220px;
+        }
+        .table-search:focus { border-color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        thead th {
+            background: var(--bg); text-align: left;
+            padding: 10px 16px; font-size: 0.75rem;
+            font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .5px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer; user-select: none;
+            white-space: nowrap;
+        }
+        thead th:hover { color: var(--primary); }
+        thead th.sorted { color: var(--primary); }
+        thead th .sort-icon { margin-left: 4px; opacity: .5; }
+        thead th.sorted .sort-icon { opacity: 1; }
+        tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #f8faff; }
+        td { padding: 11px 16px; }
+        .td-name { font-weight: 600; }
+        .td-class { color: var(--text-muted); font-size: 0.82rem; }
+        .td-chapter { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .td-key { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); }
+        .td-duration { color: var(--text-muted); }
+        .td-date { color: var(--text-muted); font-size: 0.82rem; }
+
+        /* Badge score */
+        .score-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px;
+            font-weight: 700; font-size: 0.85rem;
+        }
+        .score-high   { background: var(--success-light); color: var(--success); }
+        .score-medium { background: var(--warning-light); color: var(--warning); }
+        .score-low    { background: var(--danger-light);  color: var(--danger);  }
+
+        /* ── EMPTY / LOADING STATES ──────────────────────────── */
+        .state-message {
+            text-align: center; padding: 60px 20px;
+            color: var(--text-muted); font-size: 0.95rem;
+        }
+        .state-message .icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+        /* ── BOUTON DÉCONNEXION ──────────────────────────────── */
+        .btn-logout {
+            padding: 6px 14px; border: 1px solid var(--border);
+            border-radius: 8px; background: none; font-size: 0.85rem;
+            cursor: pointer; color: var(--text-muted); transition: all .2s;
+        }
+        .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* ── RESPONSIVE ──────────────────────────────────────── */
+        @media (max-width: 768px) {
+            aside { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ── ÉCRAN DE CHARGEMENT ─────────────────────────────── */
+        #loading-screen {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 12px; font-size: 1rem;
+            color: var(--text-muted); z-index: 999;
+        }
+        .spinner {
+            width: 36px; height: 36px; border: 3px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CHARGEMENT -->
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <span>Chargement du tableau de bord…</span>
+</div>
+
+<!-- HEADER -->
+<header>
+    <div class="header-brand">
+        <img src="images/logo_robot.webp" alt="Logo AutoMaths">
+        <span>AutoMaths</span>
+        <span style="color:var(--text-muted); font-size:0.85rem; font-weight:400; font-style:normal;">
+            — Tableau de bord
+        </span>
+    </div>
+    <div class="header-right">
+        <a href="index.html?presenter=1" target="_blank" style="
+            padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+            background:none; font-size:0.85rem; color:var(--text-muted);
+            text-decoration:none; transition:all .2s;"
+            onmouseover="this.style.borderColor='var(--primary)'; this.style.color='var(--primary)';"
+            onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+            📖 Accès aux cours
+        </a>
+        <a href="classes-management.html" style="
+            padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+            background:none; font-size:0.85rem; color:var(--text-muted);
+            text-decoration:none; transition:all .2s;"
+            onmouseover="this.style.borderColor='var(--primary)'; this.style.color='var(--primary)';"
+            onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+            🏫 Gérer les classes
+        </a>
+        <span class="teacher-name" id="teacher-name-header"></span>
+        <button class="btn-logout" onclick="logoutTeacher()">Déconnexion</button>
+    </div>
+</header>
+
+<div class="page">
+
+    <!-- SIDEBAR FILTRES -->
+    <aside>
+        <!-- Niveaux -->
+        <div class="filter-section">
+            <h3>Niveaux</h3>
+            <div id="filter-levels">
+                <!-- Généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- QCM -->
+        <div class="filter-section">
+            <h3>QCM à surveiller</h3>
+            <div id="filter-quizzes">
+                <!-- Généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Période -->
+        <div class="filter-section">
+            <h3>Période</h3>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p7"  value="7"  checked>
+                <label for="p7">7 derniers jours</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p30" value="30">
+                <label for="p30">30 derniers jours</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p90" value="90">
+                <label for="p90">3 derniers mois</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p0"  value="0">
+                <label for="p0">Toute l'année</label>
+            </div>
+        </div>
+
+        <button class="btn-save-filters" onclick="saveFiltersAndRefresh()">
+            💾 Sauvegarder les filtres
+        </button>
+        <div class="save-status" id="save-status"></div>
+    </aside>
+
+    <!-- CONTENU PRINCIPAL -->
+    <main>
+        <div class="dashboard-title">📊 Suivi des élèves</div>
+        <div class="dashboard-subtitle" id="dashboard-subtitle">Chargement…</div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Sessions totales</div>
+                <div class="stat-value" id="stat-sessions">—</div>
+                <div class="stat-sub">QCM effectués (filtrés)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Élèves actifs</div>
+                <div class="stat-value" id="stat-students">—</div>
+                <div class="stat-sub">ayant fait au moins 1 QCM</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Score moyen</div>
+                <div class="stat-value" id="stat-avg">—</div>
+                <div class="stat-sub">sur les QCM filtrés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Temps moyen</div>
+                <div class="stat-value" id="stat-time">—</div>
+                <div class="stat-sub">par session</div>
+            </div>
+        </div>
+
+        <!-- TABLEAU -->
+        <div class="table-card">
+            <div class="table-toolbar">
+                <h2>Résultats détaillés</h2>
+                <input class="table-search" type="text" placeholder="🔍 Rechercher un élève…"
+                    oninput="filterTable(this.value)">
+            </div>
+            <div id="table-container">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement des données…
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+// ⚠️ Remplacez par vos valeurs (identiques à auth.js)
+const SUPABASE_URL     = 'https://ppedtegkqcklkleeghbc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── ÉTAT LOCAL ────────────────────────────────────────────────────────────
+let allResults       = [];   // données brutes de Supabase
+let filteredResults  = [];   // après application des filtres
+let searchQuery      = '';
+let sortColumn       = 'completed_at';
+let sortAsc          = false;
+
+// Filtres (chargés depuis Supabase, persistés)
+let selectedLevels   = new Set();
+let selectedKeys     = new Set();
+let selectedPeriod   = 7;
+
+// Index des QCM connus (clé → titre lisible)
+// Adaptez cette liste à vos chapitres existants
+const QUIZ_META = {
+    '31101': { title: 'Relatifs',              level: '3ème' },
+    '31201': { title: 'Fractions',             level: '3ème' },
+    '31301': { title: 'Racines carrées',       level: '3ème' },
+    '31401': { title: 'Puissances',            level: '3ème' },
+    '32231': { title: 'Diviseurs',             level: '3ème' },
+    '32301': { title: 'Nombres premiers',      level: '3ème' },
+    '32302': { title: 'Décomposition premiers',level: '3ème' },
+    '32401': { title: 'Fractions irréductibles',level: '3ème'},
+    '33101': { title: 'Expressions littérales',level: '3ème' },
+    '33102': { title: 'Programmes de calcul',  level: '3ème' },
+    '33601': { title: 'Développement',         level: '3ème' },
+    '33602': { title: 'Identités remarquables',level: '3ème' },
+    '33701': { title: 'Factorisation simple',  level: '3ème' },
+    '33702': { title: 'Identités remarquables factorisation', level: '3ème' },
+    // Ajoutez les vôtres ici…
+};
+const ALL_LEVELS = ['6ème', '5ème', '4ème', '3ème'];
+
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(async () => {
+    // Vérifie l'authentification
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+
+    // Vérifie le rôle
+    const { data: profile } = await sb.from('profiles')
+        .select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'teacher') {
+        window.location.href = 'index.html'; return;
+    }
+
+    document.getElementById('teacher-name-header').textContent =
+        '👋 Professeur' + (profile.full_name && profile.full_name !== 'Élève' ? ' · ' + profile.full_name : '');
+
+    // Charge les filtres sauvegardés
+    await loadSavedFilters(session.user.id);
+
+    // Génère les checkboxes des filtres
+    buildFilterUI();
+
+    // Charge les données
+    await loadData();
+
+    document.getElementById('loading-screen').style.display = 'none';
+})();
+
+
+// ── FILTRES SAUVEGARDÉS ───────────────────────────────────────────────────
+let teacherId = null;
+
+async function loadSavedFilters(userId) {
+    teacherId = userId;
+    const { data } = await sb.from('teacher_filters')
+        .select('*').eq('teacher_id', userId).single();
+
+    if (data) {
+        selectedLevels = new Set(data.selected_levels || []);
+        selectedKeys   = new Set(data.selected_keys   || []);
+    } else {
+        // Première connexion : sélectionne tout par défaut
+        selectedLevels = new Set(ALL_LEVELS);
+        selectedKeys   = new Set(Object.keys(QUIZ_META));
+    }
+}
+
+async function saveFiltersAndRefresh() {
+    // Lit l'état actuel des checkboxes
+    selectedLevels = new Set();
+    document.querySelectorAll('#filter-levels   input:checked').forEach(cb => selectedLevels.add(cb.value));
+
+    selectedKeys = new Set();
+    document.querySelectorAll('#filter-quizzes  input:checked').forEach(cb => selectedKeys.add(cb.value));
+
+    selectedPeriod = parseInt(document.querySelector('input[name="period"]:checked')?.value || '7');
+
+    // Sauvegarde dans Supabase (UPSERT)
+    const { error } = await sb.from('teacher_filters').upsert({
+        teacher_id:      teacherId,
+        selected_levels: [...selectedLevels],
+        selected_keys:   [...selectedKeys],
+        updated_at:      new Date().toISOString()
+    });
+
+    const statusEl = document.getElementById('save-status');
+    if (error) {
+        statusEl.style.color = '#dc2626';
+        statusEl.textContent = 'Erreur lors de la sauvegarde.';
+    } else {
+        statusEl.style.color = '#16a34a';
+        statusEl.textContent = '✓ Filtres sauvegardés !';
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    }
+
+    applyFiltersAndRender();
+}
+
+
+// ── CONSTRUCTION DU PANNEAU FILTRES ──────────────────────────────────────
+function buildFilterUI() {
+    // Niveaux
+    const levelsEl = document.getElementById('filter-levels');
+    levelsEl.innerHTML = ALL_LEVELS.map(lvl => `
+        <div class="filter-option">
+            <input type="checkbox" id="lvl-${lvl}" value="${lvl}"
+                ${selectedLevels.has(lvl) ? 'checked' : ''}>
+            <label for="lvl-${lvl}">${lvl}</label>
+        </div>
+    `).join('');
+
+    // QCM (groupés par niveau)
+    const quizzesEl = document.getElementById('filter-quizzes');
+    const grouped   = {};
+    Object.entries(QUIZ_META).forEach(([key, meta]) => {
+        if (!grouped[meta.level]) grouped[meta.level] = [];
+        grouped[meta.level].push({ key, ...meta });
+    });
+
+    quizzesEl.innerHTML = Object.entries(grouped).map(([lvl, quizzes]) => `
+        <div style="margin-bottom:10px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--primary);
+                        text-transform:uppercase; margin-bottom:4px;">${lvl}</div>
+            ${quizzes.map(q => `
+                <div class="filter-option">
+                    <input type="checkbox" id="qk-${q.key}" value="${q.key}"
+                        ${selectedKeys.has(q.key) ? 'checked' : ''}>
+                    <label for="qk-${q.key}" title="${q.key}">
+                        ${q.title}
+                    </label>
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+
+// ── CHARGEMENT DES DONNÉES ────────────────────────────────────────────────
+async function loadData() {
+    // Requête sur la vue dashboard_view (déjà jointe avec profiles)
+    let query = sb.from('dashboard_view').select('*').order('completed_at', { ascending: false });
+
+    // Filtre période
+    if (selectedPeriod > 0) {
+        const since = new Date();
+        since.setDate(since.getDate() - selectedPeriod);
+        query = query.gte('completed_at', since.toISOString());
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.error('Erreur chargement données :', error);
+        document.getElementById('table-container').innerHTML = `
+            <div class="state-message">
+                <div class="icon">⚠️</div>
+                Erreur lors du chargement. Vérifiez votre connexion.
+            </div>`;
+        return;
+    }
+
+    allResults = data || [];
+    applyFiltersAndRender();
+}
+
+
+// ── FILTRAGE & RENDU ──────────────────────────────────────────────────────
+function applyFiltersAndRender() {
+    filteredResults = allResults.filter(r =>
+        (selectedLevels.size === 0 || selectedLevels.has(r.level_name)) &&
+        (selectedKeys.size   === 0 || selectedKeys.has(r.quiz_key))
+    );
+
+    updateStats();
+    renderTable();
+}
+
+function updateStats() {
+    const sessions  = filteredResults.length;
+    const students  = new Set(filteredResults.map(r => r.user_id)).size;
+    const totalScore = filteredResults.reduce((s, r) => s + (r.total > 0 ? r.score / r.total : 0), 0);
+    const avgPct    = sessions > 0 ? Math.round((totalScore / sessions) * 100) : null;
+    const durations = filteredResults.filter(r => r.duration_seconds).map(r => r.duration_seconds);
+    const avgTime   = durations.length > 0
+        ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+        : null;
+
+    document.getElementById('stat-sessions').textContent  = sessions;
+    document.getElementById('stat-students').textContent  = students;
+    document.getElementById('stat-avg').textContent       = avgPct !== null ? avgPct + '%' : '—';
+    document.getElementById('stat-time').textContent      = avgTime !== null ? formatDuration(avgTime) : '—';
+
+    const period = selectedPeriod > 0 ? `${selectedPeriod} derniers jours` : "toute l'année";
+    document.getElementById('dashboard-subtitle').textContent =
+        `${sessions} session(s) sur ${students} élève(s) — ${period}`;
+}
+
+function renderTable() {
+    let rows = [...filteredResults];
+
+    // Filtre recherche
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        rows = rows.filter(r =>
+            (r.student_name  || '').toLowerCase().includes(q) ||
+            (r.student_class || '').toLowerCase().includes(q) ||
+            (r.chapter_title || '').toLowerCase().includes(q)
+        );
+    }
+
+    // Tri
+    rows.sort((a, b) => {
+        let va = a[sortColumn] ?? '';
+        let vb = b[sortColumn] ?? '';
+        if (typeof va === 'number') return sortAsc ? va - vb : vb - va;
+        return sortAsc
+            ? String(va).localeCompare(String(vb), 'fr')
+            : String(vb).localeCompare(String(va), 'fr');
+    });
+
+    if (rows.length === 0) {
+        document.getElementById('table-container').innerHTML = `
+            <div class="state-message">
+                <div class="icon">📭</div>
+                Aucun résultat pour les filtres sélectionnés.
+            </div>`;
+        return;
+    }
+
+    document.getElementById('table-container').innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th onclick="sortBy('student_name')"   class="${sortColumn==='student_name'?'sorted':''}">
+                        Élève <span class="sort-icon">${sortArrow('student_name')}</span>
+                    </th>
+                    <th onclick="sortBy('student_class')"  class="${sortColumn==='student_class'?'sorted':''}">
+                        Classe <span class="sort-icon">${sortArrow('student_class')}</span>
+                    </th>
+                    <th onclick="sortBy('chapter_title')"  class="${sortColumn==='chapter_title'?'sorted':''}">
+                        Chapitre <span class="sort-icon">${sortArrow('chapter_title')}</span>
+                    </th>
+                    <th onclick="sortBy('quiz_key')"       class="${sortColumn==='quiz_key'?'sorted':''}">
+                        Clé QCM <span class="sort-icon">${sortArrow('quiz_key')}</span>
+                    </th>
+                    <th onclick="sortBy('score')"          class="${sortColumn==='score'?'sorted':''}">
+                        Score <span class="sort-icon">${sortArrow('score')}</span>
+                    </th>
+                    <th onclick="sortBy('duration_seconds')" class="${sortColumn==='duration_seconds'?'sorted':''}">
+                        Durée <span class="sort-icon">${sortArrow('duration_seconds')}</span>
+                    </th>
+                    <th onclick="sortBy('completed_at')"   class="${sortColumn==='completed_at'?'sorted':''}">
+                        Date <span class="sort-icon">${sortArrow('completed_at')}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map(r => `
+                    <tr>
+                        <td class="td-name">${r.student_name || '—'}</td>
+                        <td class="td-class">${r.student_class || '—'}</td>
+                        <td class="td-chapter" title="${r.chapter_title}">${r.chapter_title}</td>
+                        <td class="td-key">${r.quiz_key}</td>
+                        <td>${scoreBadge(r.score, r.total)}</td>
+                        <td class="td-duration">${r.duration_seconds ? formatDuration(r.duration_seconds) : '—'}</td>
+                        <td class="td-date">${formatDate(r.completed_at)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+
+// ── UTILITAIRES UI ────────────────────────────────────────────────────────
+function scoreBadge(score, total) {
+    if (!total) return '—';
+    const pct = score / total;
+    const cls = pct >= .8 ? 'score-high' : pct >= .5 ? 'score-medium' : 'score-low';
+    return `<span class="score-badge ${cls}">${score}/${total} (${Math.round(pct*100)}%)</span>`;
+}
+
+function formatDuration(seconds) {
+    if (!seconds) return '—';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return m > 0 ? `${m}m ${s.toString().padStart(2,'0')}s` : `${s}s`;
+}
+
+function formatDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('fr-FR', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+function sortBy(col) {
+    if (sortColumn === col) sortAsc = !sortAsc;
+    else { sortColumn = col; sortAsc = false; }
+    renderTable();
+}
+function sortArrow(col) {
+    if (sortColumn !== col) return '↕';
+    return sortAsc ? '↑' : '↓';
+}
+function filterTable(val) {
+    searchQuery = val;
+    renderTable();
+}
+
+async function logoutTeacher() {
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>

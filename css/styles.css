@@ -1,0 +1,772 @@
+/* --- DESIGN SYSTEM & VARIABLES --- */
+
+        :root {
+            --primary: #2563eb;       /* Bleu principal */
+            --primary-medium: #3b82f6; /* Un bleu un peu plus clair/moyen pour les h3 */
+            --primary-dark: #1e40af;   /* Un bleu plus sombre et sérieux pour les h4 */
+            --primary-light: #dbeafe; /* Bleu clair pour les accents */
+            --secondary: #7c3aed;     /* Violet pour l'entraînement */
+            --bg: #f8fafc;            /* Fond de page gris très léger */
+            --card-bg: #ffffff;       /* Blanc pur pour les cartes */
+            --text-main: #1e293b;     /* Texte sombre */
+            --text-muted: #64748b;    /* Texte secondaire */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+        }
+
+       * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- LAYOUT --- */
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header { 
+            text-align: center; 
+            padding: 40px 0 20px; 
+        }
+
+
+        /* --- AMÉLIORATION DES TITRES --- */
+/* --- STYLE SPÉCIAL POUR LE TITRE DU SITE (H6) --- */
+/* --- TITRE PRINCIPAL (H1) - VERSION SÉCURISÉE --- */
+/* --- TITRE PRINCIPAL (H1) - VERSION STABLE & ÉLÉGANTE --- */
+h6 {
+    display: block;
+    width: fit-content;
+    margin: 30px auto;
+    padding: 15px 40px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    font-style: italic;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    color: #1e40af;
+}
+
+h6::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border: 2px solid #C0C0C0;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #dcdcdc, #ffffff, #dcdcdc, #ffffff, #dcdcdc);
+}
+
+@media (max-width: 480px) {
+    h6 {
+        font-size: 2rem;
+        padding: 10px 20px;
+    }
+}
+
+/* --- TITRE PRINCIPAL (H1) SPÉCIAL --- */
+h1 { 
+    font-size: 3rem; 
+    text-align: center; /* Centré */
+    margin: 20px auto;
+    padding: 20px;
+    background: white; /* Fond blanc pour le cadre */
+    border: 3px solid var(--primary); /* Le cadre autour */
+    border-radius: var(--radius); /* Bords arrondis */
+    color: var(--primary);
+    display: table; /* Permet au cadre de s'adapter à la largeur du texte et non toute la page */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- RESTAURATION DU MENU (Niveaux) --- */
+.level-card {
+    background: var(--card-bg); 
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow); 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* On garde la bordure pour l'effet hover */
+}
+
+/* Effet au survol (on le garde, c'est joli) */
+.level-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* --- TITRES DE SECTIONS (H2 à H4) --- */
+h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1rem;
+    color: var(--secondary);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+h5 {
+    font-size: 1.4rem;
+    color: var(--primary);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+/* Classe pour créer un retrait (effet tabulation) */
+.indent-text {
+    margin-left: 40px; /* Ajustez cette valeur pour augmenter ou réduire le décalage */
+    font-style: italic; /* Pour garder l'effet de votre balise <em> */
+    }
+
+        /* --- ÉCRAN 1 : GRILLE DES NIVEAUX (LES CARTES) --- */
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+/*        .level-card {
+            background: var(--card-bg);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .level-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }*/
+
+ /*       .level-card h5 { font-size: 1.5rem; color: var(--primary); margin-bottom: 8px }
+        .level-card p { color: var(--text-muted); font-size: 0.95rem; } */
+.level-card h5, 
+.level-card p {
+        text-align: center !important; 
+    display: block !important; /* Pour corriger l'alignement */
+                    /*S'assurer qu'ils se comportent bien en bloc */
+}
+        /* --- ÉCRAN 2 : MODE & CONTENU --- */
+        .view { display: none; animation: fadeIn 0.4s ease-out;position: relative;z-index: 1; }
+        .view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mode-selector {
+            display: flex;
+            background: #e2e8f0;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* --- CONTENU DES CHAPITRES (COURS/EXERCICES) --- */
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        
+
+        .theme-section { margin-bottom: 3rem; }
+        .theme-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .chapter-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: left;
+            justify-content: flex-start;  /* Centre horizontalement tout le contenu du bouton */
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chapter-item:hover { background: #eff6ff; border-color: var(--primary); }
+
+        .chapter-icon {
+            width: 35px; height: 35px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 12px; font-weight: bold; flex-shrink: 0;
+        }
+/* Nouveau style du badge : ultra-discret */
+.chapter-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.7rem;          /* Plus petit */
+    font-weight: 500;           /* Moins gras */
+    color: var(--text-muted);   /* Couleur grise pour se fondre dans le décor */
+    opacity: 0.6;               /* Légère transparence */
+    pointer-events: none;
+}
+
+input[type="text"], 
+input[type="number"], 
+textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem; /* Taille uniforme */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Police uniforme */
+    margin-bottom: 15px;
+    outline: none;
+    box-sizing: border-box; /* Très important pour le mobile */
+}
+
+
+/* Optionnel : On peut ajouter un petit indicateur visuel très fin 
+   sur la carte pour signaler qu'il y a du contenu sans être agressif */
+.chapter-item:has(.chapter-badge) {
+    border-bottom: 2px solid var(--primary-light); /* Une fine ligne en bas au lieu d'une bordure complète */
+}
+
+
+
+        .notion-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        /* --- NOUVELLE CLASSE : MÉTHODE / EXERCICE TYPE --- */
+.method-box {
+    background: #ffffff; /* Fond blanc pour bien trancher avec le reste */
+    border: 2px solid var(--primary); /* Bordure bleue */
+    border-radius: 12px; /* Bords arrondis comme votre cours papier */
+    padding: 15px;
+    margin: 20px 0;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Légère ombre pour le relief */
+}
+
+/* Le petit badge incrusté (le titre de la méthode) */
+.method-badge {
+    display: inline-block;
+    background: var(--primary); /* Fond bleu */
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px; /* Forme pilule très moderne */
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+/* Pour les méthodes de type "Piège" (pour varier) */
+.method-box.warning {
+    border-color: var(--secondary); /* Bordure violette */
+}
+.method-box.warning .method-badge {
+    background: var(--secondary); /* Badge violet */
+}
+/* --- STYLE PAR DÉFAUT (MOBILE : l'un sous l'autre) --- */
+.calculation-container {
+    display: flex;
+    flex-direction: column; /* Aligne les blocs verticalement sur mobile */
+    gap: 20px;              /* Espace entre le bloc A et le bloc B sur mobile */
+    width: 100%;
+}
+
+.calculation-block {
+    width: 100%;            /* Prend toute la largeur sur mobile */
+}
+
+/* --- STYLE POUR PC (Écrans larges) --- */
+@media (min-width: 768px) {
+    .calculation-container {
+        flex-direction: row;      /* Aligne les blocs horizontalement sur PC */
+        justify-content: space-between; /* Crée l'écart important entre A et B */
+        align-items: flex-start;  /* Aligne le haut des deux blocs */
+    }
+
+    .calculation-block {
+        width: 45%;               /* Chaque bloc prend presque la moitié de la largeur */
+    }
+}
+/* STYLE DU COURS */
+/* Styles spécifiques au contenu de leçon long */
+.course-container {
+    color: var(--text-main);
+}
+
+.course-section {
+    margin-bottom: 30px;
+}
+
+/* .section-title {
+    font-size: 1.5rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+} */
+
+/* --- TITRES DE SECTIONS (H2 à H4) --- */
+
+/* Style de base commun pour tous les titres de section */
+h2.section-title, 
+h3.section-title, 
+h4.section-title {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    display: flex; /* Permet d'aligner le numéro auto et le texte proprement */
+    align-items: center;
+}
+
+/* Style spécifique pour H2 : On garde la bordure qui traverse la page */
+h2.section-title {
+    font-size: 1.8rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary-dark); /* La ligne sous le H2 */
+    padding-bottom: 5px;
+}
+
+/* Style spécifique pour H3 : Plus petit et SANS bordure traversante */
+h3.section-title {
+    font-size: 1.4rem; /* Taille réduite par rapport au H2 */
+    color: var(--primary-medium);
+    border-bottom: none; /* On supprime la ligne qui traverse la page */
+    padding-bottom: 0;
+}
+
+/* Style spécifique pour H4 : Encore plus petit et SANS bordure */
+h4.section-title {
+    font-size: 1.1rem; /* Taille réduite par rapport au H3 */
+    color: var(--text-main); /* Couleur plus neutre */
+    border-bottom: none; /* On supprime la ligne qui traverse la page */
+    padding-bottom: 0;
+}
+
+/* Style pour les numéros automatiques (pour qu'ils ne collent pas au texte) */
+.auto-number {
+    margin-right: 8px;
+    font-weight: bold;
+    opacity: 0.6;
+    font-size: 0.9em; /* Le numéro est légèrement plus petit que le titre */
+}
+
+
+
+
+
+.course-container ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.course-container li {
+    margin-bottom: 8px;
+}
+
+/* Amélioration de la notion-box pour le cours */
+.course-container .notion-box {
+    background: #f0f7ff; /* Bleu très léger */
+    border-left: 4px solid var(--primary);
+    font-style: normal; /* On enlève l'italique pour plus de lisibilité */
+}
+
+/* Pour les exposants mathématiques */
+sup {
+    font-size: 0.8em;
+}
+
+/* Bouton "Ai-je bien compris" */
+.btn-check-understanding {
+    display: block;
+    margin-left: auto; /* Pousse vers la droite */
+    margin-right: 0;
+    width: auto;       /* Largeur adaptée au texte */
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-check-understanding:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+.quiz-header {
+    display: flex;          
+    align-items: center;    
+    gap: 15px;              
+    margin-bottom: 10px;   
+}
+.quiz-header span {
+    font-weight: bold; /* ou votre style habituel */
+}
+/* Conteneur du quiz injecté */
+.injected-quiz-container {
+    width: 100%;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8fafc; /* Fond très léger pour le distinguer du cours */
+    border: 2px dashed var(--primary-light);
+    border-radius: var(--radius);
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Pour que le quiz ne bloque pas le défilement, il est simplement inséré dans le DOM */
+
+/* Conteneur de la fraction visuelle */
+.fraction-editor {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    margin: 0 5px;
+}
+
+/* La ligne de fraction */
+.fraction-line {
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-main);
+    margin: 4px 0;
+}
+
+/* Les cases pour numérateur et dénominateur */
+.fraction-input {
+    width: 40px; /* Taille adaptée au mobile */
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+/* Police adaptée pour l'aperçu (plus lisible) */
+#preview-q, #preview-a, #preview-content {
+    font-family: 'Verdana', sans-serif; /* Verdana est excellente pour la dyslexie */
+    line-height: 1.4;
+}
+
+/* Conteneur du clavier mathématique */
+/* Pour que le clavier ne soit pas trop encombré */
+.math-keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+/* Style des touches du clavier */
+.math-key {
+    background: white;
+    border: 1px solid #cbd5e1;
+    padding: 10px 5px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s;
+    user-select: none; /* Empêche la sélection de texte lors du tapotement */
+    position: relative;
+    z-index: 100; /* On l'élève au premier plan */
+    pointer-events: auto !important; /* On force la capture du clic */
+}
+
+.math-key:active {
+    background: var(--primary-light);
+    transform: scale(0.95);
+}
+
+/* Pour les touches plus larges si besoin (ex: le symbole racine) */
+.math-key.wide {
+    grid-column: span 2;
+}
+#user-answer, #new-quiz-q, #new-quiz-a {
+    font-family: 'Courier New', Courier, monospace; /* Police mono pour mieux voir le LaTeX */
+    font-size: 1.1rem;
+}
+#view-creator {
+    z-index: 10;
+}
+     /* --- FORMULAIRE D'EXERCICE ---
+        */
+        .quiz-container { margin-top: 20px; }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover { opacity: 0.9; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none; /* Caché par défaut */
+        }
+
+/* Pour les erreurs de saisie (le petit feedback immédiat) */
+.feedback.error { 
+    display: block; 
+    background: #fee2e2; 
+    color: #991b1b; 
+}
+
+/* Pour le mode aide (quand on a répondu faux et qu'on montre la solution) */
+/* On utilise un rouge/rose très pâle pour ne pas stresser l'élève */
+.feedback.help-mode { 
+    display: block; 
+    background: #fff1f2; /* Rose très pâle */
+    color: #be123c;      /* Texte rouge foncé pour la lisibilité */
+    border: 1px solid #fecdd3;
+}
+
+.feedback.success { 
+    display: block; 
+    background: #dcfce7; 
+    color: #166534; 
+}
+       /* --- BOUTON RETOUR --- */
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 15px; }
+            .card { padding: 1.5rem; }
+        }
+
+/* ========================================= */
+/* STYLES POUR LE HEADER ET L'ALIGNEMENT GLOBAL */
+/* ========================================= */
+
+header {
+    display: flex; 
+    justify-content: space-between; /* Écarte le groupe de marque (gauche) du niveau (droite) */
+    align-items: center; /* Centre verticalement tout ce qui est dans le header */
+    padding: 10px 20px; 
+}
+
+/* Conteneur qui force l'intégration visuelle du logo et du titre */
+.brand-container {
+    display: flex;
+    align-items: center; /* Centre verticalement l'image et le texte entre eux */
+    gap: 8px; /* Réduit légèrement l'espace pour un effet plus collé */
+}
+
+/* Style pour l'image du logo */
+.site-logo {
+    max-height: 2em; 
+    width: auto; 
+    /* Optionnel : Si vous voulez que le logo soit très petit, ajustez cette valeur */
+    /* width: 30px; */ 
+}
+
+/* Style pour le titre (Le plus important !) */
+.site-title {
+    margin: 0; /* Supprime les marges par défaut du h1 qui créent de l'espace inutile */
+    font-size: 2em; /* Taille souhaitée pour le texte */
+    line-height: 1; /* Aide à coller le texte et l'image verticalement */
+}
+/* --- STYLES POUR LES TABLEAUX GÉNÉRIQUES --- */
+
+/* Conteneur pour rendre le tableau scrollable sur mobile sans casser le site */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Permet de scroller horizontalement sur smartphone */
+    margin: 20px 0;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse; /* Fusionne les bordures pour un aspect propre */
+    background-color: var(--card-bg);
+    font-size: 0.95rem;
+    min-width: 600px; /* Force une largeur minimale pour éviter que les colonnes ne s'écrasent trop */
+}
+
+.custom-table th, 
+.custom-table td {
+    padding: 12px 15px; /* Espace entre les valeurs */
+    text-align: center;  /* Centre les valeurs */
+    border: 1px solid #e2e8f0; /* Bordures visibles mais légères */
+}
+
+.custom-table thead tr {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.custom-table th {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* Style pour la première colonne (les titres de lignes) */
+.custom-table td:first-child {
+    text-align: left; /* Aligne à gauche les libellés pour une meilleure lecture */
+    font-weight: 600;
+    background-color: #f8fafc;
+    color: var(--text-main);
+}
+
+/* Effet de zébrure pour faciliter la lecture des lignes */
+.custom-table tbody tr:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+/* Hover sur les lignes */
+.custom-table tbody tr:hover {
+    background-color: #eff6ff;
+}
+/* Centre uniquement le bloc contenant la formule mathématique */
+.formula-container {
+    display: block;
+    text-align: center; /* Centre le contenu (la formule) */
+    margin: 15px 0;     /* Ajoute un peu d'espace au dessus et en dessous */
+    font-size: 1.2rem;  /* Optionnel : agrandit légèrement la formule pour la lisibilité */
+}
+/* Texte explicatif */
+.case-text {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* --- CLASSES DE COULEURS --- */
+
+.text-blue {
+    color: var(--primary); /* Utilise votre bleu existant */
+}
+
+.text-red {
+    color: #e11d48; /* Un rouge propre pour les valeurs importantes */
+}

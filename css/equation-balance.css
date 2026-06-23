@@ -1,0 +1,94 @@
+/* ============================================================
+   equation-balance.css — Styles du "Laboratoire d'Équations"
+   Module interactif déclenché par [[BALANCE:...]] dans le cours
+   ============================================================ */
+
+.eqbal-container {
+    font-family: 'Segoe UI', sans-serif;
+    background: white;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 950px;
+    margin: 24px auto;
+    text-align: center;
+    border: 1px solid #eee;
+}
+
+.eqbal-container h2 {
+    font-size: 1.3rem;
+    margin: 0 0 6px 0;
+}
+
+.eqbal-container > p.eqbal-intro {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 10px 0;
+}
+
+.eqbal-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border-left: 2px solid #ddd;
+    border-right: 2px solid #ddd;
+    margin: 20px 0;
+}
+.eqbal-row { display: contents; }
+.eqbal-row-base { color: #333; font-size: 1.2rem; }
+.eqbal-row-act { color: blue; font-style: italic; font-weight: bold; font-size: 1.2rem; border-top: 1px dashed #eee; }
+.eqbal-row-res { color: #000; font-weight: bold; font-size: 1.4rem; border-top: 2px solid #333; margin-top: 5px; }
+
+.eqbal-main-interaction { display: flex; align-items: center; justify-content: space-between; margin: 20px 0; gap: 15px; }
+.eqbal-control-panel { flex: 0 0 180px; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px solid #ddd; }
+.eqbal-control-panel h4 { margin: 0 0 10px 0; font-size: 0.75rem; color: #777; text-transform: uppercase; }
+.eqbal-input-group { display: flex; justify-content: center; margin-bottom: 10px; gap: 5px; }
+.eqbal-container input {
+    padding: 8px; border: 2px solid #ddd; border-radius: 5px; text-align: center;
+    font-size: 16px !important; width: 100px; height: 40px;
+}
+.eqbal-button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+.eqbal-container button {
+    padding: 8px 5px; border: none; border-radius: 5px; background: #007bff;
+    color: white; cursor: pointer; font-size: 0.85rem; font-weight: bold;
+}
+.eqbal-container button:hover { background: #0056b3; }
+.eqbal-container button:disabled { background: #ccc !important; cursor: not-allowed; opacity: 0.6; }
+
+.eqbal-btn-reset { width: 100%; margin-top: 20px; padding: 12px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.eqbal-warning { color: #dc3545; font-weight: bold; font-size: 0.9rem; }
+.eqbal-advice-msg { min-height: 24px; margin-top: 10px; font-style: italic; }
+.eqbal-success-feedback { min-height: 24px; margin-bottom: 5px; font-weight: bold; }
+.eqbal-nav-buttons { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+.eqbal-btn-nav { padding: 10px 20px; border-radius: 20px; font-size: 1.2rem; background: #f8f9fa; color: #333; border: 1px solid #ddd; cursor: pointer; }
+.eqbal-balance-svg { flex: 1; display: flex; flex-direction: column; align-items: center; }
+
+.eqbal-container, .eqbal-container * {
+    touch-action: manipulation;
+}
+
+@keyframes eqbalPopIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes eqbalPopOut {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+.eqbal-cube-flying { animation: eqbalPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.eqbal-cube-leaving { animation: eqbalPopOut 0.5s ease forwards; }
+.eqbal-cube { pointer-events: none; }
+.eqbal-container [id^="eqbal-container-left"],
+.eqbal-container [id^="eqbal-container-right"] { pointer-events: none; }
+.eqbal-container [id^="eqbal-plateau-left"],
+.eqbal-container [id^="eqbal-plateau-right"] { pointer-events: none; }
+
+@media (max-width: 600px) {
+    .eqbal-container { padding: 15px; width: 98%; }
+    .eqbal-grid { font-size: 1rem; }
+    .eqbal-container button { padding: 12px 5px; font-size: 1rem; }
+    .eqbal-main-interaction { flex-direction: column; gap: 20px; }
+    .eqbal-control-panel { width: 100%; flex: none; }
+    .eqbal-balance-svg { transform: scale(0.8); }
+}

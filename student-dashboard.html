@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Profil — AutoMaths</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+    --bg:#0b1120; --bg-card:#141d33; --bg-card-light:#1b2742;
+    --border:#243456; --text:#e8edf9; --text-dim:#8b9bc4;
+    --accent:#8b5cf6; --accent-glow:#a78bfa;
+    --success:#22c55e; --gold:#ffd23f;
+    --radius:18px; --radius-sm:12px;
+    --font-display:'Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+    font-family:var(--font-display);
+    background:
+        radial-gradient(circle at 15% 0%, #1a1040 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, #0a2440 0%, transparent 40%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:60px;
+}
+
+header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+    background:rgba(11,17,32,0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:50;
+}
+.header-brand{display:flex; align-items:center; gap:10px;}
+.header-brand img{height:30px;}
+.header-brand span{font-size:1.15rem; font-weight:800; font-style:italic; color:var(--accent-glow);}
+.header-actions{display:flex; align-items:center; gap:14px;}
+.btn-icon{
+    background:var(--bg-card); border:1px solid var(--border);
+    color:var(--text-dim); width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:1.1rem; transition:all .2s;
+}
+.btn-icon:hover{border-color:var(--accent); color:var(--accent-glow);}
+
+.player-hero{ max-width:1000px; margin:32px auto 0; padding:0 20px; }
+.player-card{
+    position:relative;
+    background:linear-gradient(160deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:32px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+.player-card::before{
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 80% -10%, var(--rank-glow, var(--accent)) 0%, transparent 55%);
+    opacity:0.25; pointer-events:none;
+}
+.player-top{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:20px; flex-wrap:wrap; position:relative; z-index:1;
+}
+.player-identity{display:flex; align-items:center; gap:18px;}
+.player-avatar{
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
+    display:flex; align-items:center; justify-content:center;
+    font-size:2.2rem;
+    box-shadow:0 0 0 4px var(--bg-card), 0 0 24px var(--rank-glow, var(--accent-glow));
+    flex-shrink:0;
+}
+.player-name-block .pseudo{
+    font-size:1.5rem; font-weight:800; color:var(--text);
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.player-name-block .class-tag{ font-size:0.8rem; color:var(--text-dim); margin-top:2px; }
+.streak-badge{
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,210,63,0.12); border:1px solid rgba(255,210,63,0.35);
+    padding:8px 16px; border-radius:30px;
+    font-weight:700; font-size:0.95rem; color:var(--gold);
+}
+
+.xp-progress-wrap{margin-top:26px; position:relative; z-index:1;}
+.xp-progress-labels{
+    display:flex; justify-content:space-between; align-items:baseline;
+    margin-bottom:8px; font-size:0.82rem; color:var(--text-dim);
+}
+.xp-progress-labels b{color:var(--text); font-size:0.95rem;}
+.xp-bar-track{
+    height:14px; border-radius:20px; background:#0a1020;
+    border:1px solid var(--border); overflow:hidden; position:relative;
+}
+.xp-bar-fill{
+    height:100%; border-radius:20px;
+    background:linear-gradient(90deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
+    box-shadow:0 0 14px var(--rank-glow, var(--accent-glow));
+    transition:width 1s cubic-bezier(.34,1.56,.64,1);
+    position:relative;
+}
+.xp-bar-fill::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    width:40%; animation:shimmer 2.2s infinite;
+}
+@keyframes shimmer{
+    0%{transform:translateX(-120%);}
+    100%{transform:translateX(280%);}
+}
+
+.global-stars-section{ max-width:1000px; margin:20px auto 0; padding:0 20px; }
+.stars-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:24px 28px; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:16px;
+}
+.stars-card .label{font-size:0.85rem; color:var(--text-dim); margin-bottom:6px;}
+.stars-card .pct{font-size:2.2rem; font-weight:800; color:var(--text);}
+.star{display:inline-block; transition:transform .2s;}
+.star-full{animation:starPop .5s ease-out;}
+@keyframes starPop{
+    0%{transform:scale(0.3) rotate(-20deg); opacity:0;}
+    60%{transform:scale(1.25) rotate(8deg);}
+    100%{transform:scale(1) rotate(0); opacity:1;}
+}
+
+.tabs-row{
+    max-width:1000px; margin:28px auto 0; padding:0 20px;
+    display:flex; gap:10px; flex-wrap:wrap;
+}
+.tab-btn{
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
+    padding:10px 20px; border-radius:30px; cursor:pointer;
+    font-weight:700; font-size:0.88rem; transition:all .2s;
+}
+.tab-btn.active{
+    background:linear-gradient(135deg, var(--accent), var(--accent-glow));
+    color:white; border-color:transparent;
+    box-shadow:0 4px 16px rgba(139,92,246,0.4);
+}
+.tab-btn:hover:not(.active){border-color:var(--accent); color:var(--text);}
+
+.tab-content{max-width:1000px; margin:20px auto 0; padding:0 20px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block; animation:fadeUp .35s ease-out;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+.chapter-row{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:16px 20px; margin-bottom:12px;
+    transition:border-color .2s;
+}
+.chapter-row:hover{border-color:var(--accent);}
+.chapter-row-top{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;
+}
+.chapter-title{font-weight:700; font-size:0.95rem;}
+.chapter-pct{font-weight:800; font-size:1rem; color:var(--accent-glow);}
+.chapter-bar-track{
+    height:10px; border-radius:10px; background:#0a1020; overflow:hidden; border:1px solid var(--border);
+}
+.chapter-bar-fill{
+    height:100%; border-radius:10px;
+    background:linear-gradient(90deg, #6366f1, var(--accent-glow));
+    transition:width 0.8s ease-out;
+}
+.chapter-bar-fill.maxed{background:linear-gradient(90deg, var(--success), #4ade80);}
+.chapter-meta{display:flex; justify-content:space-between; margin-top:6px; font-size:0.72rem; color:var(--text-dim);}
+
+.empty-state{ text-align:center; padding:50px 20px; color:var(--text-dim); }
+.empty-state .icon{font-size:2.6rem; margin-bottom:10px;}
+
+.badges-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;
+}
+.badge-tile{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:18px 12px; text-align:center; transition:all .25s;
+}
+.badge-tile.unlocked{ border-color:var(--gold); box-shadow:0 0 16px rgba(255,210,63,0.15); }
+.badge-tile.locked{opacity:0.35; filter:grayscale(1);}
+.badge-tile .icon{font-size:2.2rem; margin-bottom:8px;}
+.badge-tile .name{font-size:0.78rem; font-weight:700;}
+.badge-tile .desc{font-size:0.68rem; color:var(--text-dim); margin-top:4px;}
+
+.leaderboard-row{
+    display:flex; align-items:center; gap:14px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:14px 18px; margin-bottom:10px;
+}
+.leaderboard-row.me{border-color:var(--accent); box-shadow:0 0 16px rgba(139,92,246,0.2);}
+.lb-rank-num{
+    width:32px; height:32px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:0.9rem; background:#0a1020; color:var(--text-dim);
+}
+.lb-rank-num.top1{background:linear-gradient(135deg,#ffd23f,#ffb700); color:#1a1100;}
+.lb-rank-num.top2{background:linear-gradient(135deg,#cfd8e3,#9aa5b1); color:#1a1100;}
+.lb-rank-num.top3{background:linear-gradient(135deg,#d8a373,#a86a3d); color:#1a1100;}
+.lb-avatar{font-size:1.5rem;}
+.lb-name{font-weight:700; flex:1;}
+.lb-pct{font-weight:800; color:var(--accent-glow);}
+.leaderboard-disabled{
+    text-align:center; padding:50px 20px; color:var(--text-dim);
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+}
+
+#loading-screen{
+    position:fixed; inset:0; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px;
+    color:var(--text-dim); z-index:999;
+}
+.spinner{
+    width:38px; height:38px; border:3px solid var(--border); border-top-color:var(--accent);
+    border-radius:50%; animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:640px){
+    .player-card{padding:22px 18px;}
+    .player-avatar{width:56px; height:56px; font-size:1.7rem;}
+    .player-name-block .pseudo{font-size:1.2rem;}
+    .stars-card{flex-direction:column; align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <span>Chargement de ton profil…</span>
+</div>
+
+<header>
+    <div class="header-brand">
+        <img src="images/logo_robot.webp" alt="Logo" onerror="this.style.display='none'">
+        <span>AutoMaths</span>
+    </div>
+    <div class="header-actions">
+        <button class="btn-icon" onclick="window.location.href='index.html'" title="Retour aux cours">📚</button>
+        <button class="btn-icon" onclick="logoutStudent()" title="Déconnexion">🚪</button>
+    </div>
+</header>
+
+<div class="player-hero">
+    <div class="player-card" id="player-card">
+        <div class="player-top">
+            <div class="player-identity">
+                <div class="player-avatar" id="player-avatar">🦊</div>
+                <div class="player-name-block">
+                    <div class="pseudo">
+                        <span id="player-pseudo">…</span>
+                        <span id="rank-banner-slot"></span>
+                    </div>
+                    <div class="class-tag" id="player-class">—</div>
+                </div>
+            </div>
+            <div class="streak-badge">
+                🔥 <span id="streak-count">0</span> jour(s) de suite
+            </div>
+        </div>
+
+        <div class="xp-progress-wrap">
+            <div class="xp-progress-labels">
+                <span><b id="xp-current">0</b> XP</span>
+                <span id="xp-next-label">Rang suivant : —</span>
+            </div>
+            <div class="xp-bar-track">
+                <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="global-stars-section">
+    <div class="stars-card">
+        <div>
+            <div class="label">Progression globale du programme</div>
+            <div class="pct" id="global-pct">0%</div>
+        </div>
+        <div id="global-stars-slot"></div>
+    </div>
+</div>
+
+<div class="tabs-row">
+    <button class="tab-btn active" data-tab="chapters" onclick="switchTab('chapters')">📖 Mes chapitres</button>
+    <button class="tab-btn" data-tab="badges" onclick="switchTab('badges')">🏅 Mes badges</button>
+    <button class="tab-btn" data-tab="leaderboard" onclick="switchTab('leaderboard')">🏆 Classement</button>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="tab-chapters">
+        <div id="chapters-list"></div>
+    </div>
+
+    <div class="tab-pane" id="tab-badges">
+        <div class="badges-grid" id="badges-grid"></div>
+    </div>
+
+    <div class="tab-pane" id="tab-leaderboard">
+        <div id="leaderboard-content"></div>
+    </div>
+</div>
+
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const SUPABASE_URL     = 'https://ppedtegkqcklkleeghbc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── RANGS (identique à js/gamification.js, dupliqué ici pour autonomie de la page) ──
+const RANK_TIERS = [
+    { key:'bronze',  label:'Bronze',  color:'#a86a3d', glow:'#cd8a5e', icon:'🥉', minXp:0    },
+    { key:'argent',  label:'Argent',  color:'#9aa5b1', glow:'#c9d2db', icon:'🥈', minXp:150  },
+    { key:'or',      label:'Or',      color:'#d4af37', glow:'#f4d160', icon:'🥇', minXp:400  },
+    { key:'platine', label:'Platine', color:'#3fb8af', glow:'#7eded6', icon:'💎', minXp:800  },
+    { key:'diamant', label:'Diamant', color:'#5b8cff', glow:'#9bb8ff', icon:'💠', minXp:1400 },
+    { key:'master',  label:'Master',  color:'#b042ff', glow:'#e29bff', icon:'👑', minXp:2200 },
+];
+const SUB_TIERS = ['III','II','I'];
+
+function getRankFromXp(totalXp){
+    let current = RANK_TIERS[0], next = RANK_TIERS[1];
+    for (let i=0;i<RANK_TIERS.length;i++){
+        if (totalXp >= RANK_TIERS[i].minXp){ current = RANK_TIERS[i]; next = RANK_TIERS[i+1] || null; }
+    }
+    let subTier = '', progressToNext = 1, xpToNext = 0;
+    if (next){
+        const span = next.minXp - current.minXp;
+        const earned = totalXp - current.minXp;
+        progressToNext = Math.min(1, earned/span);
+        xpToNext = Math.max(0, next.minXp - totalXp);
+        subTier = SUB_TIERS[Math.min(2, Math.floor(progressToNext*3))];
+    }
+    return { ...current, subTier, progressToNext, xpToNext, nextRankLabel: next ? next.label : null, totalXp };
+}
+
+function renderStarsHTML(progressPct, size){
+    size = size || '1.6rem';
+    const totalStars = 5;
+    const starValue = progressPct/100*totalStars;
+    const fullStars = Math.floor(starValue);
+    const hasHalf = (starValue-fullStars) >= 0.5;
+    const empty = totalStars - fullStars - (hasHalf?1:0);
+    let html = '<span style="font-size:' + size + '; letter-spacing:3px;">';
+    for(let i=0;i<fullStars;i++) html += '<span class="star star-full">★</span>';
+    if(hasHalf) html += '<span class="star star-half">★</span>';
+    for(let i=0;i<empty;i++) html += '<span class="star star-empty">★</span>';
+    html += '</span>';
+    return html;
+}
+
+// ── ÉTAT ──────────────────────────────────────────────────────────────────
+let me = null;
+let myStats = null;
+let myChapterProgress = [];
+let myBadges = [];
+
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(async () => {
+    const { data:{ session } } = await sb.auth.getSession();
+    if (!session){ window.location.href = 'index.html'; return; }
+
+    const { data:profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'student'){ window.location.href = 'index.html'; return; }
+    me = profile;
+
+    const [statsRes, progressRes, badgesRes] = await Promise.all([
+        sb.from('student_stats').select('*').eq('user_id', me.id).single(),
+        sb.from('chapter_progress_view').select('*').eq('user_id', me.id),
+        sb.from('student_badges').select('*').eq('user_id', me.id)
+    ]);
+
+    myStats = statsRes.data || { total_xp:0, current_streak:0 };
+    myChapterProgress = progressRes.data || [];
+    myBadges = badgesRes.data || [];
+
+    renderPlayerCard();
+    renderGlobalStars();
+    renderChapters();
+    renderBadges();
+    await renderLeaderboard();
+
+    document.getElementById('loading-screen').style.display = 'none';
+})();
+
+
+// ── RENDU : CARTE JOUEUR ──────────────────────────────────────────────────
+function renderPlayerCard(){
+    const rank = getRankFromXp(myStats.total_xp || 0);
+
+    document.getElementById('player-card').style.setProperty('--rank-color', rank.color);
+    document.getElementById('player-card').style.setProperty('--rank-glow', rank.glow);
+
+    document.getElementById('player-avatar').textContent = me.avatar_emoji || '🦊';
+    document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
+    document.getElementById('player-class').textContent = me.class_name || '';
+    document.getElementById('streak-count').textContent = myStats.current_streak || 0;
+
+    document.getElementById('rank-banner-slot').innerHTML =
+        '<span style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:30px;' +
+        'background:linear-gradient(135deg, ' + rank.color + ', ' + rank.glow + ');' +
+        'box-shadow:0 0 14px ' + rank.glow + '77;' +
+        'font-size:0.78rem; font-weight:800; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.3);">' +
+        rank.icon + ' ' + rank.label + (rank.subTier ? ' ' + rank.subTier : '') + '</span>';
+
+    document.getElementById('xp-current').textContent = myStats.total_xp || 0;
+    document.getElementById('xp-next-label').textContent = rank.nextRankLabel
+        ? (rank.xpToNext + ' XP avant ' + rank.nextRankLabel)
+        : 'Rang maximum atteint !';
+
+    setTimeout(function(){
+        document.getElementById('xp-bar-fill').style.width = (rank.progressToNext*100) + '%';
+    }, 200);
+}
+
+
+// ── RENDU : ÉTOILES GLOBALES ──────────────────────────────────────────────
+function renderGlobalStars(){
+    const avg = myChapterProgress.length > 0
+        ? Math.round(myChapterProgress.reduce(function(s,c){ return s + (c.progress_pct||0); }, 0) / myChapterProgress.length)
+        : 0;
+    document.getElementById('global-pct').textContent = avg + '%';
+    document.getElementById('global-stars-slot').innerHTML = renderStarsHTML(avg, '2rem');
+}
+
+
+// ── RENDU : LISTE DES CHAPITRES ───────────────────────────────────────────
+function renderChapters(){
+    const container = document.getElementById('chapters-list');
+
+    if (myChapterProgress.length === 0){
+        container.innerHTML =
+            '<div class="empty-state">' +
+            '<div class="icon">📭</div>' +
+            '<p>Tu n\'as pas encore commencé de chapitre.</p>' +
+            '<p style="font-size:0.85rem; margin-top:6px;">Lance ton premier QCM pour voir ta progression ici !</p>' +
+            '</div>';
+        return;
+    }
+
+    const sorted = myChapterProgress.slice().sort(function(a,b){ return (b.progress_pct||0) - (a.progress_pct||0); });
+
+    container.innerHTML = sorted.map(function(c){
+        const pct = c.progress_pct || 0;
+        const maxed = pct >= 95;
+        return '' +
+            '<div class="chapter-row">' +
+                '<div class="chapter-row-top">' +
+                    '<span class="chapter-title">' + c.chapter_title + '</span>' +
+                    '<span class="chapter-pct">' + pct + '%</span>' +
+                '</div>' +
+                '<div class="chapter-bar-track">' +
+                    '<div class="chapter-bar-fill ' + (maxed ? 'maxed' : '') + '" style="width:' + pct + '%;"></div>' +
+                '</div>' +
+                '<div class="chapter-meta">' +
+                    '<span>' + c.level_name + '</span>' +
+                    '<span>' + c.distinct_quizzes_attempted + ' QCM tenté(s)</span>' +
+                '</div>' +
+            '</div>';
+    }).join('');
+}
+
+
+// ── RENDU : BADGES ─────────────────────────────────────────────────────────
+const BADGE_DEFINITIONS = {
+    first_quiz:      { icon:'🎯', label:'Premier pas',      desc:'Premier QCM terminé' },
+    streak_3:        { icon:'🔥', label:'En feu',            desc:'3 jours d\'affilée' },
+    streak_7:        { icon:'🌟', label:'Semaine parfaite', desc:'7 jours d\'affilée' },
+    streak_30:       { icon:'🏆', label:'Inarrêtable',      desc:'30 jours d\'affilée' },
+    perfect_chapter: { icon:'💯', label:'Sans faute',        desc:'100% sur un chapitre' },
+    night_owl:       { icon:'🦉', label:'Couche-tard',       desc:'QCM fait après 21h' },
+    early_bird:      { icon:'🐤', label:'Lève-tôt',          desc:'QCM fait avant 8h' },
+    speedrun:        { icon:'⚡', label:'Éclair',            desc:'QCM réussi en moins de 30s' },
+};
+
+function renderBadges(){
+    const earnedKeys = new Set(myBadges.map(function(b){ return b.badge_key; }));
+    const grid = document.getElementById('badges-grid');
+
+    grid.innerHTML = Object.entries(BADGE_DEFINITIONS).map(function(entry){
+        const key = entry[0], def = entry[1];
+        const unlocked = earnedKeys.has(key);
+        return '' +
+            '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '">' +
+                '<div class="icon">' + def.icon + '</div>' +
+                '<div class="name">' + def.label + '</div>' +
+                '<div class="desc">' + (unlocked ? def.desc : '???') + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+
+// ── RENDU : LEADERBOARD ───────────────────────────────────────────────────
+async function renderLeaderboard(){
+    const container = document.getElementById('leaderboard-content');
+
+    if (!me.class_id){
+        container.innerHTML =
+            '<div class="leaderboard-disabled">' +
+            '<div style="font-size:2rem; margin-bottom:8px;">👤</div>' +
+            'Tu n\'es assigné à aucune classe pour le moment.<br>' +
+            'Demande à ton professeur de t\'ajouter à une classe !' +
+            '</div>';
+        return;
+    }
+
+    const { data: classData } = await sb.from('classes').select('*').eq('id', me.class_id).single();
+
+    if (!classData || !classData.leaderboard_enabled){
+        container.innerHTML =
+            '<div class="leaderboard-disabled">' +
+            '<div style="font-size:2rem; margin-bottom:8px;">🔒</div>' +
+            'Le classement est désactivé pour ta classe.' +
+            '</div>';
+        return;
+    }
+
+    const { data: lb, error } = await sb
+        .from('leaderboard_view')
+        .select('*')
+        .eq('class_id', me.class_id)
+        .order('global_progress_pct', { ascending: false });
+
+    if (error || !lb || lb.length === 0){
+        container.innerHTML = '<div class="leaderboard-disabled">Pas encore de classement disponible.</div>';
+        return;
+    }
+
+    container.innerHTML = lb.map(function(row, i){
+        const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+        const isMe = row.user_id === me.id;
+        return '' +
+            '<div class="leaderboard-row ' + (isMe ? 'me' : '') + '">' +
+                '<div class="lb-rank-num ' + rankClass + '">' + (i+1) + '</div>' +
+                '<div class="lb-avatar">' + (row.avatar_emoji || '🦊') + '</div>' +
+                '<div class="lb-name">' + (row.pseudo || 'Élève') + (isMe ? ' (toi)' : '') + '</div>' +
+                '<div class="lb-pct">' + (row.global_progress_pct || 0) + '%</div>' +
+            '</div>';
+    }).join('');
+}
+
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+function switchTab(tab){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tab); });
+    document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+async function logoutStudent(){
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion des classes — AutoMaths</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+    --primary:#2563eb; --primary-light:#dbeafe; --primary-dark:#1e40af;
+    --success:#16a34a; --success-light:#dcfce7;
+    --danger:#dc2626; --danger-light:#fee2e2;
+    --bg:#f8fafc; --card-bg:#ffffff;
+    --text-main:#1e293b; --text-muted:#64748b;
+    --border:#e2e8f0; --radius:12px;
+    --shadow:0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text-main); min-height:100vh;
+}
+header{
+    background:var(--card-bg); border-bottom:1px solid var(--border);
+    padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+}
+.header-brand{display:flex; align-items:center; gap:10px;}
+.header-brand img{height:32px;}
+.header-brand span{font-size:1.2rem; font-weight:800; font-style:italic; color:var(--primary-dark);}
+.header-right{display:flex; align-items:center; gap:12px;}
+.btn-back-link{
+    padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+    background:none; font-size:0.85rem; color:var(--text-muted); text-decoration:none;
+}
+.btn-logout{
+    padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+    background:none; font-size:0.85rem; cursor:pointer; color:var(--text-muted);
+}
+.btn-logout:hover{border-color:var(--danger); color:var(--danger);}
+
+main{ max-width:1100px; margin:0 auto; padding:32px 24px; }
+.page-title{ font-size:1.6rem; font-weight:800; color:var(--primary-dark); margin-bottom:6px; }
+.page-subtitle{ font-size:0.9rem; color:var(--text-muted); margin-bottom:28px; }
+
+.layout{ display:grid; grid-template-columns:340px 1fr; gap:24px; align-items:start; }
+@media(max-width:900px){ .layout{ grid-template-columns:1fr; } }
+
+.card{
+    background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:20px;
+}
+.card h2{ font-size:1rem; font-weight:700; margin-bottom:16px; }
+
+/* Création de classe */
+.new-class-form{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.new-class-form input{
+    padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; outline:none;
+}
+.new-class-form input:focus{ border-color:var(--primary); }
+.btn-primary{
+    background:var(--primary); color:white; border:none; border-radius:8px;
+    padding:10px; font-weight:600; font-size:0.9rem; cursor:pointer;
+}
+.btn-primary:hover{ opacity:0.9; }
+
+/* Liste des classes */
+.class-list-item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border-radius:8px; cursor:pointer;
+    border:1px solid transparent; margin-bottom:6px; transition:all .15s;
+}
+.class-list-item:hover{ background:var(--bg); }
+.class-list-item.active{ background:var(--primary-light); border-color:var(--primary); }
+.class-list-item .name{ font-weight:600; font-size:0.92rem; }
+.class-list-item .count{
+    font-size:0.75rem; color:var(--text-muted); background:var(--bg);
+    padding:2px 8px; border-radius:10px;
+}
+.class-list-item.active .count{ background:white; }
+
+/* Toggle leaderboard */
+.toggle-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; background:var(--bg); border-radius:10px; margin-top:16px;
+}
+.toggle-row .label{ font-size:0.88rem; font-weight:600; }
+.toggle-row .sub{ font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
+.switch{ position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0; }
+.switch input{ opacity:0; width:0; height:0; }
+.slider{
+    position:absolute; cursor:pointer; inset:0; background:#cbd5e1;
+    border-radius:30px; transition:.25s;
+}
+.slider::before{
+    content:''; position:absolute; height:20px; width:20px; left:3px; bottom:3px;
+    background:white; border-radius:50%; transition:.25s; box-shadow:0 1px 3px rgba(0,0,0,0.3);
+}
+input:checked + .slider{ background:var(--success); }
+input:checked + .slider::before{ transform:translateX(20px); }
+
+/* Élèves */
+.student-row{
+    display:flex; align-items:center; gap:12px;
+    padding:10px 14px; border-bottom:1px solid var(--border);
+}
+.student-row:last-child{ border-bottom:none; }
+.student-row .avatar{ font-size:1.4rem; }
+.student-row .name{ font-weight:600; font-size:0.88rem; flex:1; }
+.student-row .email{ font-size:0.75rem; color:var(--text-muted); }
+.student-row select{
+    padding:6px 10px; border:1px solid var(--border); border-radius:6px;
+    font-size:0.82rem; outline:none; background:white; cursor:pointer;
+}
+.student-row select:focus{ border-color:var(--primary); }
+
+.unassigned-banner{
+    background:var(--danger-light); color:var(--danger); padding:10px 14px;
+    border-radius:8px; font-size:0.82rem; margin-bottom:14px;
+}
+
+.empty-state{ text-align:center; padding:50px 20px; color:var(--text-muted); }
+.empty-state .icon{ font-size:2.4rem; margin-bottom:10px; }
+
+.save-toast{
+    position:fixed; bottom:24px; right:24px; background:var(--success);
+    color:white; padding:12px 20px; border-radius:10px; font-size:0.88rem;
+    font-weight:600; box-shadow:var(--shadow); opacity:0; transform:translateY(10px);
+    transition:all .25s; pointer-events:none;
+}
+.save-toast.show{ opacity:1; transform:translateY(0); }
+
+#loading-screen{
+    position:fixed; inset:0; background:var(--bg); display:flex; align-items:center;
+    justify-content:center; flex-direction:column; gap:12px; color:var(--text-muted); z-index:999;
+}
+.spinner{
+    width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--primary);
+    border-radius:50%; animation:spin .7s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <span>Chargement…</span>
+</div>
+
+<header>
+    <div class="header-brand">
+        <img src="images/logo_robot.webp" alt="Logo AutoMaths" onerror="this.style.display='none'">
+        <span>AutoMaths</span>
+        <span style="color:var(--text-muted); font-size:0.85rem; font-weight:400; font-style:normal;">— Classes</span>
+    </div>
+    <div class="header-right">
+        <a class="btn-back-link" href="index.html?presenter=1" target="_blank">📖 Accès aux cours</a>
+        <a class="btn-back-link" href="dashboard.html">← Tableau de bord</a>
+        <button class="btn-logout" onclick="logoutTeacher()">Déconnexion</button>
+    </div>
+</header>
+
+<main>
+    <div class="page-title">🏫 Gestion des classes</div>
+    <div class="page-subtitle">Créez vos classes, assignez vos élèves, et contrôlez le classement.</div>
+
+    <div class="layout">
+        <!-- COLONNE GAUCHE : liste + création -->
+        <div class="card">
+            <h2>Mes classes</h2>
+
+            <div class="new-class-form">
+                <input type="text" id="new-class-name" placeholder="Nom de la classe (ex: 3ème A)">
+                <button class="btn-primary" onclick="createClass()">➕ Créer une classe</button>
+            </div>
+
+            <div id="class-list"></div>
+        </div>
+
+        <!-- COLONNE DROITE : détail classe sélectionnée -->
+        <div class="card" id="class-detail">
+            <div class="empty-state">
+                <div class="icon">👈</div>
+                Sélectionnez une classe pour voir ses élèves.
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="save-toast" id="save-toast">✓ Modifications enregistrées</div>
+
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const SUPABASE_URL     = 'https://ppedtegkqcklkleeghbc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── ÉTAT ──────────────────────────────────────────────────────────────────
+let teacherId = null;
+let myClasses = [];        // toutes les classes du prof
+let allStudents = [];      // tous les profils élèves (avec ou sans classe)
+let selectedClassId = null;
+
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(async () => {
+    const { data:{ session } } = await sb.auth.getSession();
+    if (!session){ window.location.href = 'index.html'; return; }
+
+    const { data:profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'teacher'){ window.location.href = 'index.html'; return; }
+    teacherId = session.user.id;
+
+    await loadAll();
+    document.getElementById('loading-screen').style.display = 'none';
+})();
+
+
+async function loadAll(){
+    const [classesRes, studentsRes] = await Promise.all([
+        sb.from('classes').select('*').eq('teacher_id', teacherId).order('created_at'),
+        sb.from('profiles').select('*').eq('role', 'student').order('full_name')
+    ]);
+
+    myClasses = classesRes.data || [];
+    allStudents = studentsRes.data || [];
+
+    renderClassList();
+    if (selectedClassId){
+        renderClassDetail(selectedClassId);
+    }
+}
+
+
+// ── CRÉATION DE CLASSE ────────────────────────────────────────────────────
+async function createClass(){
+    const input = document.getElementById('new-class-name');
+    const name = input.value.trim();
+    if (!name) return;
+
+    const { error } = await sb.from('classes').insert([{ teacher_id: teacherId, name, leaderboard_enabled: true }]);
+    if (error){
+        alert('Erreur lors de la création : ' + error.message);
+        return;
+    }
+
+    input.value = '';
+    await loadAll();
+    showToast('✓ Classe créée');
+}
+
+
+// ── LISTE DES CLASSES (colonne gauche) ────────────────────────────────────
+function renderClassList(){
+    const container = document.getElementById('class-list');
+
+    if (myClasses.length === 0){
+        container.innerHTML = '<div style="font-size:0.85rem; color:var(--text-muted); padding:10px 0;">Aucune classe pour le moment.</div>';
+        return;
+    }
+
+    container.innerHTML = myClasses.map(function(c){
+        const count = allStudents.filter(function(s){ return s.class_id === c.id; }).length;
+        const active = c.id === selectedClassId;
+        return '' +
+            '<div class="class-list-item ' + (active ? 'active' : '') + '" onclick="selectClass(\'' + c.id + '\')">' +
+                '<span class="name">' + escapeHtml(c.name) + '</span>' +
+                '<span class="count">' + count + ' élève(s)</span>' +
+            '</div>';
+    }).join('');
+}
+
+function selectClass(classId){
+    selectedClassId = classId;
+    renderClassList();
+    renderClassDetail(classId);
+}
+
+
+// ── DÉTAIL D'UNE CLASSE (colonne droite) ──────────────────────────────────
+function renderClassDetail(classId){
+    const container = document.getElementById('class-detail');
+    const classObj = myClasses.find(function(c){ return c.id === classId; });
+    if (!classObj){
+        container.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div>Classe introuvable.</div>';
+        return;
+    }
+
+    const studentsInClass = allStudents.filter(function(s){ return s.class_id === classId; });
+    const unassignedStudents = allStudents.filter(function(s){ return !s.class_id; });
+
+    let html = '<h2>' + escapeHtml(classObj.name) + '</h2>';
+
+    // Toggle leaderboard
+    html += '' +
+        '<div class="toggle-row">' +
+            '<div>' +
+                '<div class="label">🏆 Classement entre élèves</div>' +
+                '<div class="sub">Visible par les élèves de cette classe</div>' +
+            '</div>' +
+            '<label class="switch">' +
+                '<input type="checkbox" ' + (classObj.leaderboard_enabled ? 'checked' : '') +
+                ' onchange="toggleLeaderboard(\'' + classId + '\', this.checked)">' +
+                '<span class="slider"></span>' +
+            '</label>' +
+        '</div>';
+
+    // Liste des élèves déjà dans la classe
+    html += '<div style="margin-top:24px;"><h2>Élèves dans cette classe (' + studentsInClass.length + ')</h2>';
+    if (studentsInClass.length === 0){
+        html += '<div style="font-size:0.85rem; color:var(--text-muted); padding:14px 0;">Aucun élève assigné pour le moment.</div>';
+    } else {
+        html += '<div>' + studentsInClass.map(function(s){
+            return renderStudentRow(s, classId);
+        }).join('') + '</div>';
+    }
+    html += '</div>';
+
+    // Élèves non assignés (à ajouter à cette classe)
+    if (unassignedStudents.length > 0){
+        html += '<div style="margin-top:24px;">' +
+            '<h2>Élèves sans classe (' + unassignedStudents.length + ')</h2>' +
+            '<div class="unassigned-banner">Ces élèves ne sont assignés à aucune classe.</div>' +
+            '<div>' + unassignedStudents.map(function(s){ return renderStudentRow(s, classId); }).join('') + '</div>' +
+        '</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+function renderStudentRow(student, currentClassId){
+    const options = myClasses.map(function(c){
+        const selected = student.class_id === c.id ? 'selected' : '';
+        return '<option value="' + c.id + '" ' + selected + '>' + escapeHtml(c.name) + '</option>';
+    }).join('');
+
+    return '' +
+        '<div class="student-row">' +
+            '<span class="avatar">' + (student.avatar_emoji || '🦊') + '</span>' +
+            '<div>' +
+                '<div class="name">' + escapeHtml(student.pseudo || student.full_name) + '</div>' +
+                '<div class="email">' + escapeHtml(student.class_name || 'Aucune classe (ancien champ)') + '</div>' +
+            '</div>' +
+            '<select onchange="assignStudentToClass(\'' + student.id + '\', this.value)">' +
+                '<option value="">— Aucune classe —</option>' +
+                options +
+            '</select>' +
+        '</div>';
+}
+
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+async function assignStudentToClass(studentId, classId){
+    const { error } = await sb.from('profiles')
+        .update({ class_id: classId || null })
+        .eq('id', studentId);
+
+    if (error){
+        alert('Erreur : ' + error.message);
+        return;
+    }
+
+    await loadAll();
+    showToast('✓ Élève assigné');
+}
+
+async function toggleLeaderboard(classId, enabled){
+    const { error } = await sb.from('classes')
+        .update({ leaderboard_enabled: enabled })
+        .eq('id', classId);
+
+    if (error){
+        alert('Erreur : ' + error.message);
+        return;
+    }
+
+    await loadAll();
+    showToast(enabled ? '✓ Classement activé' : '✓ Classement désactivé');
+}
+
+
+// ── UTILS ──────────────────────────────────────────────────────────────────
+function escapeHtml(str){
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showToast(msg){
+    const toast = document.getElementById('save-toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+}
+
+async function logoutTeacher(){
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
