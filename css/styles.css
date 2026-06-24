@@ -733,7 +733,7 @@ header {
 
 /* Style pour la première colonne (les titres de lignes) */
 .custom-table td:first-child {
-    text-align: left; /* Aligne à gauche les libellés pour une meilleure lecture */
+    text-align: center; /* Aligne à gauche les libellés pour une meilleure lecture */
     font-weight: 600;
     background-color: #f8fafc;
     color: var(--text-main);
