@@ -56,7 +56,7 @@ var chapterData_3eme_1 = {
                                 <!-- SECTION II : FRACTIONS -->
                                 <section class="course-section">
                                     <h2 class="section-title">Rappels : Fractions</h2>
-                                    <p><strong>1. Simplification :</strong> Pour rendre une fraction irréductible, décomposez le numérateur et le dénominateur en produits de facteurs premiers et barrez les facteurs communs. Ex : $\\frac{15}{35}=\\frac{3\\times <s>5</s>}{7\\times <s>5</s>}=\\frac{3}{7}$</p>
+                                    <p><strong>1. Simplification :</strong> Pour rendre une fraction irréductible, décomposez le numérateur et le dénominateur en produits de facteurs premiers et barrez les facteurs communs. Ex : $\\frac{15}{35}=\\frac{3\\times \\cancel{5}}{7\\times \\cancel{5}}=\\frac{3}{7}$</p>
                                                                         <p><strong>2. Addition/Soustraction :</strong> Il faut impérativement mettre les fractions au <strong>même dénominateur</strong> avant d'additionner ou soustraire uniquement les numérateurs.</p>
                                     <div class="notion-box">
                                         <strong>💡 Règle de la division :</strong> Diviser par une fraction revient à multiplier par son <strong>inverse</strong>.<br>
