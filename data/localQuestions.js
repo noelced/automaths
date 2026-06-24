@@ -510,7 +510,7 @@ const allLocalQuestions = {
         explanation: '$\\sqrt{100} = 10$. On teste donc jusqu\'à $10$.' 
     },
     { 
-        quiz: { q: 'Parmi ces listes, laquelle contient uniquement des diviseurs de $24$ ?', a: '1, 2, 3, 4, 6, 8, 12, 24' }, 
+        quiz: { q: 'Parmi ces listes, laquelle contient tous et uniquement les diviseurs de $24$ ?', a: '1, 2, 3, 4, 6, 8, 12, 24' }, 
         options: '1, 2, 3, 4, 6, 8, 12, 24 \\ 1, 2, 4, 6, 8, 10, 12, 24 \\ 2, 3, 4, 6, 8, 12 \\ 1, 3, 4, 6, 8, 12, 24', 
         explanation: 'On vérifie : $24/1=24$, $24/2=12$, $24/3=8$, $24/4=6$, $24/6=4$, etc. Tous les nombres de la première liste divisent 24.' 
     },
@@ -2791,7 +2791,7 @@ explanation:'Pour vérifier si un tableau est un tableau de proportionnalité, o
 },
 {
 quiz:{
-q:'Quel est le coefficient de proportionnalité du tableau précédent ?',
+q:'Quel est le coefficient de proportionnalité du tableau ?<br><div class="table-container"><table class="custom-table"><tr><th>2</th><th>3</th><th>4</th><th>5</th></tr><tr><td>5</td><td>7,5</td><td>10</td><td>12,5</td></tr></table></div>',
 a:'2,5'
 },
 options:'5 \\ 2,5 \\ 0,4 \\ 7,5',
@@ -3201,7 +3201,7 @@ explanation:'On part de <strong>6 stylos</strong> sur l’axe horizontal. On mon
 },
 {
 quiz:{
-q:'<svg width="320" height="220" viewBox="0 0 320 220"><line x1="40" y1="180" x2="280" y2="180" stroke="black"/><line x1="40" y1="180" x2="40" y2="20" stroke="black"/><line x1="40" y1="180" x2="240" y2="55" stroke="red" stroke-width="3"/></svg><br>Pour quel nombre de stylos le prix est-il de 10 € ?',
+q:'<svg width="320" height="220" viewBox="0 0 320 220"><line x1="40" y1="180" x2="280" y2="180" stroke="black" stroke-width="2"/><line x1="40" y1="180" x2="40" y2="20" stroke="black" stroke-width="2"/><g font-size="12" text-anchor="middle"><line x1="65" y1="180" x2="65" y2="185" stroke="black"/><text x="65" y="200">1</text><line x1="90" y1="180" x2="90" y2="185" stroke="black"/><text x="90" y="200">2</text><line x1="115" y1="180" x2="115" y2="185" stroke="black"/><text x="115" y="200">3</text><line x1="140" y1="180" x2="140" y2="185" stroke="black"/><text x="140" y="200">4</text><line x1="165" y1="180" x2="165" y2="185" stroke="black"/><text x="165" y="200">5</text><line x1="190" y1="180" x2="190" y2="185" stroke="black"/><text x="190" y="200">6</text><line x1="215" y1="180" x2="215" y2="185" stroke="black"/><text x="215" y="200">7</text><line x1="240" y1="180" x2="240" y2="185" stroke="black"/><text x="240" y="200">8</text><line x1="265" y1="180" x2="265" y2="185" stroke="black"/><text x="265" y="200">9</text></g><g font-size="12" text-anchor="end"><line x1="35" y1="167.5" x2="40" y2="167.5" stroke="black"/><text x="30" y="171">1</text><line x1="35" y1="155" x2="40" y2="155" stroke="black"/><text x="30" y="159">2</text><line x1="35" y1="142.5" x2="40" y2="142.5" stroke="black"/><text x="30" y="146">3</text><line x1="35" y1="130" x2="40" y2="130" stroke="black"/><text x="30" y="134">4</text><line x1="35" y1="117.5" x2="40" y2="117.5" stroke="black"/><text x="30" y="121">5</text><line x1="35" y1="105" x2="40" y2="105" stroke="black"/><text x="30" y="109">6</text><line x1="35" y1="92.5" x2="40" y2="92.5" stroke="black"/><text x="30" y="96">7</text><line x1="35" y1="80" x2="40" y2="80" stroke="black"/><text x="30" y="84">8</text><line x1="35" y1="67.5" x2="40" y2="67.5" stroke="black"/><text x="30" y="71">9</text><line x1="35" y1="55" x2="40" y2="55" stroke="black"/><text x="30" y="59">10</text></g><text x="28" y="194" font-size="12">0</text><text x="160" y="215" font-size="13">Nombre de stylos</text><text x="10" y="20" font-size="13">Prix (€)</text><line x1="40" y1="180" x2="240" y2="55" stroke="red" stroke-width="3"/></svg><br>Pour quel nombre de stylos le prix est-il de 10 € ?',
 a:'8'
 },
 options:'6 \\ 7 \\ 8 \\ 10',
@@ -3209,7 +3209,7 @@ explanation:'Cette fois on connaît le prix. On part donc de <strong>10 €</str
 },
 {
 quiz:{
-q:'Sur un graphique de proportionnalité, pour connaître le prix correspondant à une quantité donnée, on commence par regarder :',
+q:'Sur un graphique de proportionnalité, pour connaître un prix inconnu correspondant à une quantité donnée, on commence par regarder :',
 a:'l’axe horizontal'
 },
 options:'l’axe horizontal \\ l’axe vertical \\ le titre \\ l’origine',
@@ -3262,14 +3262,6 @@ a:'18'
 },
 options:'12 \\ 15 \\ 18 \\ 24',
 explanation:'9 kg représentent trois fois 3 kg. Le prix est donc multiplié par 3 : 6 × 3 = 18 €. Cette propriété est visible graphiquement car les points sont alignés sur une droite passant par l’origine.'
-},
-{
-quiz:{
-q:'Pourquoi la lecture graphique fonctionne-t-elle dans une situation de proportionnalité ?',
-a:'la représentation est une droite'
-},
-options:'la représentation est une droite \\ le graphique est gradué \\ les nombres sont entiers \\ les axes sont perpendiculaires',
-explanation:'Dans une situation de proportionnalité, la représentation graphique est une <strong>droite passant par l’origine</strong>. Cette droite contient toutes les correspondances possibles entre les deux grandeurs. En lisant un point de la droite, on retrouve donc une relation correcte entre les deux grandeurs.'
 }
 ],
 "37251":[
