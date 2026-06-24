@@ -279,10 +279,53 @@
 <script src="data/chartsData.js"></script>
 <script src="js/charts.js"></script>
 
-<!-- 5. Initialisation -->
+<!-- 6. Initialisation + lancement automatique de quiz depuis le tableau de bord élève -->
 <script>
     window.addEventListener('DOMContentLoaded', initAuth);
-</script>
 
+    // Quand l'élève clique sur un quiz "à revalider" dans student-dashboard.html,
+    // il est redirigé vers index.html?quiz=31101. Ce code détecte ce paramètre
+    // et lance automatiquement le bon QCM dès que l'authentification est confirmée
+    // et que le contenu est chargé.
+    (function checkPendingQuiz() {
+        const params = new URLSearchParams(window.location.search);
+        const pendingKey = params.get('quiz');
+        if (!pendingKey) return;
+
+        // On observe quand #app-content devient visible (= élève connecté et app prête)
+        const observer = new MutationObserver(() => {
+            const appContent = document.getElementById('app-content');
+            if (!appContent || appContent.style.display === 'none') return;
+
+            // Attend que allLocalQuestions soit chargé
+            if (typeof allLocalQuestions === 'undefined' || !allLocalQuestions[pendingKey]) return;
+
+            observer.disconnect();
+
+            // Nettoie l'URL pour ne pas re-lancer le quiz si l'élève recharge
+            history.replaceState({}, '', 'index.html');
+
+            // Lance le quiz directement (simule un clic sur "Ai-je bien compris ?")
+            // On doit d'abord afficher la vue-app, puis lancer le quiz.
+            // On attend un tick pour laisser le DOM se stabiliser.
+            setTimeout(() => {
+                // Crée un conteneur flottant pour le quiz si pas de containerId existant
+                const containerId = 'quiz-area-auto-' + pendingKey;
+                let container = document.getElementById(containerId);
+                if (!container) {
+                    const wrap = document.getElementById('content-area');
+                    if (!wrap) return;
+                    wrap.innerHTML = '<div id="' + containerId + '"></div>';
+                    container = document.getElementById(containerId);
+                }
+                if (typeof startQuizFromButton === 'function') {
+                    startQuizFromButton(containerId, pendingKey);
+                }
+            }, 200);
+        });
+
+        observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+    })();
+</script>
 </body>
 </html>

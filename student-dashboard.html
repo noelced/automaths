@@ -12,230 +12,188 @@
     --accent:#8b5cf6; --accent-glow:#a78bfa;
     --success:#22c55e; --gold:#ffd23f;
     --radius:18px; --radius-sm:12px;
-    --font-display:'Segoe UI',system-ui,sans-serif;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
 body{
-    font-family:var(--font-display);
+    font-family:'Segoe UI',system-ui,sans-serif;
     background:
         radial-gradient(circle at 15% 0%, #1a1040 0%, transparent 45%),
         radial-gradient(circle at 85% 15%, #0a2440 0%, transparent 40%),
         var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    padding-bottom:60px;
+    color:var(--text); min-height:100vh; padding-bottom:60px;
 }
-
 header{
     display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px;
-    background:rgba(11,17,32,0.85);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    position:sticky; top:0; z-index:50;
+    padding:16px 28px; background:rgba(11,17,32,0.85); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;
 }
 .header-brand{display:flex; align-items:center; gap:10px;}
 .header-brand img{height:30px;}
 .header-brand span{font-size:1.15rem; font-weight:800; font-style:italic; color:var(--accent-glow);}
 .header-actions{display:flex; align-items:center; gap:14px;}
 .btn-icon{
-    background:var(--bg-card); border:1px solid var(--border);
-    color:var(--text-dim); width:38px; height:38px; border-radius:10px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; font-size:1.1rem; transition:all .2s;
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
+    width:38px; height:38px; border-radius:10px; display:flex; align-items:center;
+    justify-content:center; cursor:pointer; font-size:1.1rem; transition:all .2s;
 }
 .btn-icon:hover{border-color:var(--accent); color:var(--accent-glow);}
 
-.player-hero{ max-width:1000px; margin:32px auto 0; padding:0 20px; }
+/* ── CARTE JOUEUR ── */
+.player-hero{max-width:1000px; margin:32px auto 0; padding:0 20px;}
 .player-card{
     position:relative;
     background:linear-gradient(160deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:32px;
-    overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    border:1px solid var(--border); border-radius:24px; padding:32px;
+    overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
 .player-card::before{
-    content:'';
-    position:absolute; inset:0;
+    content:''; position:absolute; inset:0;
     background:radial-gradient(circle at 80% -10%, var(--rank-glow, var(--accent)) 0%, transparent 55%);
     opacity:0.25; pointer-events:none;
 }
-.player-top{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:20px; flex-wrap:wrap; position:relative; z-index:1;
-}
+.player-top{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; z-index:1;}
 .player-identity{display:flex; align-items:center; gap:18px;}
 .player-avatar{
     width:72px; height:72px; border-radius:50%;
     background:linear-gradient(135deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
-    display:flex; align-items:center; justify-content:center;
-    font-size:2.2rem;
-    box-shadow:0 0 0 4px var(--bg-card), 0 0 24px var(--rank-glow, var(--accent-glow));
-    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:2.2rem;
+    box-shadow:0 0 0 4px var(--bg-card), 0 0 24px var(--rank-glow, var(--accent-glow)); flex-shrink:0;
 }
-.player-name-block .pseudo{
-    font-size:1.5rem; font-weight:800; color:var(--text);
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-}
-.player-name-block .class-tag{ font-size:0.8rem; color:var(--text-dim); margin-top:2px; }
+.player-name-block .pseudo{font-size:1.5rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.player-name-block .class-tag{font-size:0.8rem; color:var(--text-dim); margin-top:2px;}
 .streak-badge{
     display:flex; align-items:center; gap:6px;
     background:rgba(255,210,63,0.12); border:1px solid rgba(255,210,63,0.35);
-    padding:8px 16px; border-radius:30px;
-    font-weight:700; font-size:0.95rem; color:var(--gold);
+    padding:8px 16px; border-radius:30px; font-weight:700; font-size:0.95rem; color:var(--gold);
 }
-
 .xp-progress-wrap{margin-top:26px; position:relative; z-index:1;}
-.xp-progress-labels{
-    display:flex; justify-content:space-between; align-items:baseline;
-    margin-bottom:8px; font-size:0.82rem; color:var(--text-dim);
-}
+.xp-progress-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; font-size:0.82rem; color:var(--text-dim);}
 .xp-progress-labels b{color:var(--text); font-size:0.95rem;}
-.xp-bar-track{
-    height:14px; border-radius:20px; background:#0a1020;
-    border:1px solid var(--border); overflow:hidden; position:relative;
-}
+.xp-bar-track{height:14px; border-radius:20px; background:#0a1020; border:1px solid var(--border); overflow:hidden;}
 .xp-bar-fill{
     height:100%; border-radius:20px;
     background:linear-gradient(90deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
     box-shadow:0 0 14px var(--rank-glow, var(--accent-glow));
-    transition:width 1s cubic-bezier(.34,1.56,.64,1);
-    position:relative;
+    transition:width 1s cubic-bezier(.34,1.56,.64,1); position:relative;
 }
 .xp-bar-fill::after{
     content:''; position:absolute; inset:0;
     background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
     width:40%; animation:shimmer 2.2s infinite;
 }
-@keyframes shimmer{
-    0%{transform:translateX(-120%);}
-    100%{transform:translateX(280%);}
-}
+@keyframes shimmer{0%{transform:translateX(-120%);}100%{transform:translateX(280%);}}
 
-.global-stars-section{ max-width:1000px; margin:20px auto 0; padding:0 20px; }
-.stars-card{
+/* ── DEUX BARRES DE PROGRESSION ── */
+.progress-section{max-width:1000px; margin:20px auto 0; padding:0 20px; display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:640px){.progress-section{grid-template-columns:1fr;}}
+.progress-card{
     background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-    padding:24px 28px; display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:16px;
+    padding:20px 22px; cursor:pointer; transition:border-color .2s;
 }
-.stars-card .label{font-size:0.85rem; color:var(--text-dim); margin-bottom:6px;}
-.stars-card .pct{font-size:2.2rem; font-weight:800; color:var(--text);}
-.star{display:inline-block; transition:transform .2s;}
-.star-full{animation:starPop .5s ease-out;}
-@keyframes starPop{
-    0%{transform:scale(0.3) rotate(-20deg); opacity:0;}
-    60%{transform:scale(1.25) rotate(8deg);}
-    100%{transform:scale(1) rotate(0); opacity:1;}
-}
+.progress-card:hover{border-color:var(--accent);}
+.progress-card .label{font-size:0.8rem; color:var(--text-dim); margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:.5px;}
+.progress-card .value{font-size:2rem; font-weight:800; color:var(--text); margin-bottom:10px;}
+.progress-bar-track{height:12px; border-radius:20px; background:#0a1020; border:1px solid var(--border); overflow:hidden;}
+.progress-bar-fill{height:100%; border-radius:20px; transition:width 0.8s ease-out;}
+.fill-green{background:linear-gradient(90deg, #16a34a, #4ade80); box-shadow:0 0 10px #22c55e55;}
+.fill-blue{background:linear-gradient(90deg, #2563eb, #60a5fa); box-shadow:0 0 10px #3b82f655;}
+.progress-card .sub{font-size:0.72rem; color:var(--text-dim); margin-top:6px;}
 
-.tabs-row{
-    max-width:1000px; margin:28px auto 0; padding:0 20px;
-    display:flex; gap:10px; flex-wrap:wrap;
+/* ── PANEL DÉTAIL QUIZZES À REVALIDER ── */
+.revalid-panel{
+    display:none; max-width:1000px; margin:16px auto 0; padding:0 20px;
 }
+.revalid-panel.open{display:block;}
+.revalid-inner{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+}
+.revalid-header{
+    padding:14px 20px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+}
+.revalid-header h3{font-size:0.95rem; font-weight:700;}
+.revalid-close{background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;}
+.revalid-row{
+    display:flex; align-items:center; gap:14px; padding:12px 20px;
+    border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s;
+}
+.revalid-row:last-child{border-bottom:none;}
+.revalid-row:hover{background:rgba(139,92,246,0.08);}
+.revalid-icon{font-size:1.4rem; flex-shrink:0;}
+.revalid-info{flex:1;}
+.revalid-title{font-weight:700; font-size:0.9rem;}
+.revalid-sub{font-size:0.75rem; color:var(--text-dim); margin-top:2px;}
+.revalid-badge{font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(220,38,38,0.15); color:#f87171; font-weight:700; flex-shrink:0;}
+.revalid-empty{padding:30px 20px; text-align:center; color:var(--text-dim); font-size:0.9rem;}
+
+/* ── TABS ── */
+.tabs-row{max-width:1000px; margin:28px auto 0; padding:0 20px; display:flex; gap:10px; flex-wrap:wrap;}
 .tab-btn{
     background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
-    padding:10px 20px; border-radius:30px; cursor:pointer;
-    font-weight:700; font-size:0.88rem; transition:all .2s;
+    padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:700; font-size:0.88rem; transition:all .2s;
 }
-.tab-btn.active{
-    background:linear-gradient(135deg, var(--accent), var(--accent-glow));
-    color:white; border-color:transparent;
-    box-shadow:0 4px 16px rgba(139,92,246,0.4);
-}
+.tab-btn.active{background:linear-gradient(135deg, var(--accent), var(--accent-glow)); color:white; border-color:transparent; box-shadow:0 4px 16px rgba(139,92,246,0.4);}
 .tab-btn:hover:not(.active){border-color:var(--accent); color:var(--text);}
-
 .tab-content{max-width:1000px; margin:20px auto 0; padding:0 20px;}
 .tab-pane{display:none;}
 .tab-pane.active{display:block; animation:fadeUp .35s ease-out;}
-@keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:translateY(0);}}
 
+/* ── CHAPITRES ── */
 .chapter-row{
     background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
-    padding:16px 20px; margin-bottom:12px;
-    transition:border-color .2s;
+    padding:16px 20px; margin-bottom:12px; transition:border-color .2s;
 }
 .chapter-row:hover{border-color:var(--accent);}
-.chapter-row-top{
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;
-}
-.chapter-title{font-weight:700; font-size:0.95rem;}
+.chapter-row-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;}
+.chapter-title-text{font-weight:700; font-size:0.95rem;}
 .chapter-pct{font-weight:800; font-size:1rem; color:var(--accent-glow);}
-.chapter-bar-track{
-    height:10px; border-radius:10px; background:#0a1020; overflow:hidden; border:1px solid var(--border);
-}
-.chapter-bar-fill{
-    height:100%; border-radius:10px;
-    background:linear-gradient(90deg, #6366f1, var(--accent-glow));
-    transition:width 0.8s ease-out;
-}
+.chapter-bar-track{height:10px; border-radius:10px; background:#0a1020; overflow:hidden; border:1px solid var(--border);}
+.chapter-bar-fill{height:100%; border-radius:10px; background:linear-gradient(90deg, #6366f1, var(--accent-glow)); transition:width 0.8s ease-out;}
 .chapter-bar-fill.maxed{background:linear-gradient(90deg, var(--success), #4ade80);}
 .chapter-meta{display:flex; justify-content:space-between; margin-top:6px; font-size:0.72rem; color:var(--text-dim);}
+.chapter-stale{font-size:0.7rem; color:#f87171; margin-top:4px; display:flex; align-items:center; gap:4px;}
 
-.empty-state{ text-align:center; padding:50px 20px; color:var(--text-dim); }
-.empty-state .icon{font-size:2.6rem; margin-bottom:10px;}
-
-.badges-grid{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;
-}
-.badge-tile{
-    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
-    padding:18px 12px; text-align:center; transition:all .25s;
-}
-.badge-tile.unlocked{ border-color:var(--gold); box-shadow:0 0 16px rgba(255,210,63,0.15); }
+/* ── BADGES ── */
+.badges-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;}
+.badge-tile{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px 12px; text-align:center; transition:all .25s;}
+.badge-tile.unlocked{border-color:var(--gold); box-shadow:0 0 16px rgba(255,210,63,0.15);}
 .badge-tile.locked{opacity:0.35; filter:grayscale(1);}
 .badge-tile .icon{font-size:2.2rem; margin-bottom:8px;}
 .badge-tile .name{font-size:0.78rem; font-weight:700;}
 .badge-tile .desc{font-size:0.68rem; color:var(--text-dim); margin-top:4px;}
 
+/* ── LEADERBOARD ── */
 .leaderboard-row{
     display:flex; align-items:center; gap:14px;
     background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
     padding:14px 18px; margin-bottom:10px;
 }
 .leaderboard-row.me{border-color:var(--accent); box-shadow:0 0 16px rgba(139,92,246,0.2);}
-.lb-rank-num{
-    width:32px; height:32px; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:0.9rem; background:#0a1020; color:var(--text-dim);
-}
+.lb-rank-num{width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9rem; background:#0a1020; color:var(--text-dim);}
 .lb-rank-num.top1{background:linear-gradient(135deg,#ffd23f,#ffb700); color:#1a1100;}
 .lb-rank-num.top2{background:linear-gradient(135deg,#cfd8e3,#9aa5b1); color:#1a1100;}
 .lb-rank-num.top3{background:linear-gradient(135deg,#d8a373,#a86a3d); color:#1a1100;}
 .lb-avatar{font-size:1.5rem;}
 .lb-name{font-weight:700; flex:1;}
-.lb-pct{font-weight:800; color:var(--accent-glow);}
-.leaderboard-disabled{
-    text-align:center; padding:50px 20px; color:var(--text-dim);
-    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-}
+.lb-score{font-weight:800; color:var(--gold); font-size:0.95rem;}
+.lb-class{font-size:0.72rem; color:var(--text-dim); margin-top:2px;}
+.leaderboard-disabled{text-align:center; padding:50px 20px; color:var(--text-dim); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);}
+.star-full{color:#ffd23f; text-shadow:0 0 6px #ffd23f88;}
+.star-half{color:#ffd23f; opacity:0.5;}
+.star-empty{color:#475569;}
 
-#loading-screen{
-    position:fixed; inset:0; background:var(--bg);
-    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px;
-    color:var(--text-dim); z-index:999;
-}
-.spinner{
-    width:38px; height:38px; border:3px solid var(--border); border-top-color:var(--accent);
-    border-radius:50%; animation:spin .7s linear infinite;
-}
+#loading-screen{position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:var(--text-dim); z-index:999;}
+.spinner{width:38px; height:38px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-@media(max-width:640px){
-    .player-card{padding:22px 18px;}
-    .player-avatar{width:56px; height:56px; font-size:1.7rem;}
-    .player-name-block .pseudo{font-size:1.2rem;}
-    .stars-card{flex-direction:column; align-items:flex-start;}
-}
+.empty-state{text-align:center; padding:50px 20px; color:var(--text-dim);}
+.empty-state .icon{font-size:2.6rem; margin-bottom:10px;}
+@media(max-width:640px){.player-card{padding:22px 18px;} .player-avatar{width:56px; height:56px; font-size:1.7rem;} .player-name-block .pseudo{font-size:1.2rem;}}
 </style>
 </head>
 <body>
 
-<div id="loading-screen">
-    <div class="spinner"></div>
-    <span>Chargement de ton profil…</span>
-</div>
+<div id="loading-screen"><div class="spinner"></div><span>Chargement de ton profil…</span></div>
 
 <header>
     <div class="header-brand">
@@ -248,6 +206,7 @@ header{
     </div>
 </header>
 
+<!-- CARTE JOUEUR -->
 <div class="player-hero">
     <div class="player-card" id="player-card">
         <div class="player-top">
@@ -255,39 +214,79 @@ header{
                 <div class="player-avatar" id="player-avatar">🦊</div>
                 <div class="player-name-block">
                     <div class="pseudo">
-                        <span id="player-pseudo">…</span>
+                        <!-- Cliquer sur le pseudo ou le crayon pour l'éditer -->
+                        <span id="player-pseudo" onclick="startEditPseudo()"
+                              style="cursor:pointer;" title="Cliquer pour modifier">…</span>
+                        <button id="btn-edit-pseudo" onclick="startEditPseudo()"
+                                style="background:none;border:none;cursor:pointer;color:var(--text-dim);font-size:0.9rem;padding:2px 4px;opacity:0.6;transition:opacity .2s;"
+                                onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6"
+                                title="Modifier le pseudo">✏️</button>
+                        <!-- Input d'édition (masqué par défaut) -->
+                        <form id="pseudo-edit-form" onsubmit="savePseudo(event)"
+                              style="display:none; align-items:center; gap:8px;">
+                            <input id="pseudo-input" type="text" maxlength="30"
+                                   style="background:#0a1020; border:2px solid var(--accent); border-radius:8px;
+                                          color:var(--text); font-size:1.3rem; font-weight:800; padding:4px 10px;
+                                          width:180px; outline:none;"
+                                   onblur="savePseudo(null)" onkeydown="if(event.key==='Escape') cancelEditPseudo()">
+                            <button type="submit"
+                                    style="background:var(--accent);border:none;color:white;border-radius:6px;
+                                           padding:4px 10px;cursor:pointer;font-size:0.8rem;font-weight:700;">OK</button>
+                            <button type="button" onclick="cancelEditPseudo()"
+                                    style="background:none;border:1px solid var(--border);color:var(--text-dim);
+                                           border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.8rem;">✕</button>
+                        </form>
                         <span id="rank-banner-slot"></span>
                     </div>
                     <div class="class-tag" id="player-class">—</div>
                 </div>
             </div>
-            <div class="streak-badge">
-                🔥 <span id="streak-count">0</span> jour(s) de suite
-            </div>
+            <div class="streak-badge">🔥 <span id="streak-count">0</span> jour(s) de suite</div>
         </div>
-
         <div class="xp-progress-wrap">
             <div class="xp-progress-labels">
                 <span><b id="xp-current">0</b> XP</span>
-                <span id="xp-next-label">Rang suivant : —</span>
+                <span id="xp-next-label">—</span>
             </div>
-            <div class="xp-bar-track">
-                <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%;"></div>
-            </div>
+            <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%;"></div></div>
         </div>
     </div>
 </div>
 
-<div class="global-stars-section">
-    <div class="stars-card">
-        <div>
-            <div class="label">Progression globale du programme</div>
-            <div class="pct" id="global-pct">0%</div>
+<!-- DEUX BARRES DE PROGRESSION -->
+<div class="progress-section">
+    <!-- Barre 1 : % de réussite aux questionnaires (30j glissants) -->
+    <div class="progress-card" id="card-reussite" onclick="toggleRevalidPanel()">
+        <div class="label">% de réussite aux questionnaires réalisés</div>
+        <div class="value" id="reussite-pct">—</div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill fill-green" id="reussite-bar" style="width:0%;"></div>
         </div>
-        <div id="global-stars-slot"></div>
+        <div class="sub" id="reussite-sub">Sur les 30 derniers jours · Cliquer pour voir le détail</div>
+    </div>
+    <!-- Barre 2 : Progression globale du programme -->
+    <div class="progress-card">
+        <div class="label">Progression globale du programme</div>
+        <div class="value" id="global-pct">—</div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill fill-blue" id="global-bar" style="width:0%;"></div>
+        </div>
+        <div class="sub" id="global-sub">Questions réussies / total du programme</div>
     </div>
 </div>
 
+<!-- PANEL DÉTAIL QUIZZES À REVALIDER -->
+<div class="revalid-panel" id="revalid-panel">
+    <div class="revalid-inner">
+        <div class="revalid-header">
+            <h3>📋 Questionnaires à revalider (non refaits depuis &gt;30 jours)</h3>
+            <button class="revalid-close" onclick="toggleRevalidPanel()">✕</button>
+        </div>
+        <div id="revalid-list"></div>
+    </div>
+</div>
+
+<!-- TABS -->
 <div class="tabs-row">
     <button class="tab-btn active" data-tab="chapters" onclick="switchTab('chapters')">📖 Mes chapitres</button>
     <button class="tab-btn" data-tab="badges" onclick="switchTab('badges')">🏅 Mes badges</button>
@@ -295,27 +294,18 @@ header{
 </div>
 
 <div class="tab-content">
-    <div class="tab-pane active" id="tab-chapters">
-        <div id="chapters-list"></div>
-    </div>
-
-    <div class="tab-pane" id="tab-badges">
-        <div class="badges-grid" id="badges-grid"></div>
-    </div>
-
-    <div class="tab-pane" id="tab-leaderboard">
-        <div id="leaderboard-content"></div>
-    </div>
+    <div class="tab-pane active" id="tab-chapters"><div id="chapters-list"></div></div>
+    <div class="tab-pane" id="tab-badges"><div class="badges-grid" id="badges-grid"></div></div>
+    <div class="tab-pane" id="tab-leaderboard"><div id="leaderboard-content"></div></div>
 </div>
 
-
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────
-const SUPABASE_URL     = 'https://ppedtegkqcklkleeghbc.supabase.co';
+// ── CONFIG ─────────────────────────────────────────────────────────────────
+const SUPABASE_URL      = 'https://ppedtegkqcklkleeghbc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ── RANGS (identique à js/gamification.js, dupliqué ici pour autonomie de la page) ──
+// ── RANGS ──────────────────────────────────────────────────────────────────
 const RANK_TIERS = [
     { key:'bronze',  label:'Bronze',  color:'#a86a3d', glow:'#cd8a5e', icon:'🥉', minXp:0    },
     { key:'argent',  label:'Argent',  color:'#9aa5b1', glow:'#c9d2db', icon:'🥈', minXp:150  },
@@ -326,65 +316,99 @@ const RANK_TIERS = [
 ];
 const SUB_TIERS = ['III','II','I'];
 
-function getRankFromXp(totalXp){
-    let current = RANK_TIERS[0], next = RANK_TIERS[1];
-    for (let i=0;i<RANK_TIERS.length;i++){
-        if (totalXp >= RANK_TIERS[i].minXp){ current = RANK_TIERS[i]; next = RANK_TIERS[i+1] || null; }
+function getRankFromXp(xp) {
+    let cur = RANK_TIERS[0], next = RANK_TIERS[1];
+    for (let i = 0; i < RANK_TIERS.length; i++) {
+        if (xp >= RANK_TIERS[i].minXp) { cur = RANK_TIERS[i]; next = RANK_TIERS[i+1] || null; }
     }
-    let subTier = '', progressToNext = 1, xpToNext = 0;
-    if (next){
-        const span = next.minXp - current.minXp;
-        const earned = totalXp - current.minXp;
-        progressToNext = Math.min(1, earned/span);
-        xpToNext = Math.max(0, next.minXp - totalXp);
-        subTier = SUB_TIERS[Math.min(2, Math.floor(progressToNext*3))];
+    let subTier = '', prog = 1, xpTo = 0;
+    if (next) {
+        const span = next.minXp - cur.minXp, earned = xp - cur.minXp;
+        prog = Math.min(1, earned / span);
+        xpTo = Math.max(0, next.minXp - xp);
+        subTier = SUB_TIERS[Math.min(2, Math.floor(prog * 3))];
     }
-    return { ...current, subTier, progressToNext, xpToNext, nextRankLabel: next ? next.label : null, totalXp };
+    return { ...cur, subTier, progressToNext: prog, xpToNext: xpTo, nextRankLabel: next ? next.label : null };
 }
 
-function renderStarsHTML(progressPct, size){
-    size = size || '1.6rem';
-    const totalStars = 5;
-    const starValue = progressPct/100*totalStars;
-    const fullStars = Math.floor(starValue);
-    const hasHalf = (starValue-fullStars) >= 0.5;
-    const empty = totalStars - fullStars - (hasHalf?1:0);
-    let html = '<span style="font-size:' + size + '; letter-spacing:3px;">';
-    for(let i=0;i<fullStars;i++) html += '<span class="star star-full">★</span>';
-    if(hasHalf) html += '<span class="star star-half">★</span>';
-    for(let i=0;i<empty;i++) html += '<span class="star star-empty">★</span>';
-    html += '</span>';
-    return html;
-}
+// ── MÉTADONNÉES DES QUIZZES ────────────────────────────────────────────────
+// quizMeta est chargé depuis data/quizMeta.js (via <script> dans index.html ou inline).
+// Ici on le définit inline pour que student-dashboard.html reste autonome.
+// IMPORTANT : ce bloc est généré automatiquement depuis localQuestions.js.
+// Si vous ajoutez des quizzes, régénérez data/quizMeta.js et copiez ici.
+// Structure : byKey[quiz_key] = { level, chapter }, totalByLevel[level] = total_questions
+let quizMeta = null;
+(async function loadQuizMeta() {
+    try {
+        const resp = await fetch('data/quizMeta.js');
+        const code = await resp.text();
+        // Évalue dans un contexte isolé pour extraire quizMeta
+        const fn = new Function(code + '\nreturn quizMeta;');
+        quizMeta = fn();
+    } catch(e) {
+        console.warn('[QuizMeta] Impossible de charger data/quizMeta.js :', e);
+        quizMeta = { byKey: {}, questionCount: {}, totalByLevel: {} };
+    }
+})();
 
-// ── ÉTAT ──────────────────────────────────────────────────────────────────
+// ── ÉTAT ───────────────────────────────────────────────────────────────────
 let me = null;
 let myStats = null;
-let myChapterProgress = [];
 let myBadges = [];
+let myBestScores30d = [];   // meilleur score par quiz sur 30 jours
+let myLastAttempts = [];    // dernière tentative par quiz (pour quizzes "à revalider")
+let myTotalResults = null;  // agrégats globaux (total bonnes réponses, etc.)
 
+// Chapitres officiels (structure légère chargée depuis officialStructure.js)
+let officialLevelChapters = []; // chapitres du niveau de l'élève (pour afficher à 0% dès le départ)
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// ── INIT ───────────────────────────────────────────────────────────────────
 (async () => {
     const { data:{ session } } = await sb.auth.getSession();
-    if (!session){ window.location.href = 'index.html'; return; }
+    if (!session) { window.location.href = 'index.html'; return; }
 
-    const { data:profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-    if (!profile || profile.role !== 'student'){ window.location.href = 'index.html'; return; }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'student') { window.location.href = 'index.html'; return; }
     me = profile;
 
-    const [statsRes, progressRes, badgesRes] = await Promise.all([
+    // Charge la structure officielle pour avoir la liste complète des chapitres
+    // (même ceux non encore tentés → barres à 0%)
+    try {
+        const resp = await fetch('data/officialStructure.js');
+        const code = await resp.text();
+        const fn = new Function(code + '\nreturn officialStructure;');
+        const structure = fn();
+        // Garde uniquement le niveau de l'élève (ou tout si pas de niveau assigné)
+        structure.forEach(lvl => {
+            lvl.themes.forEach(th => {
+                th.chapters.forEach(ch => {
+                    officialLevelChapters.push({ title: ch.title, level: lvl.name });
+                });
+            });
+        });
+    } catch(e) { console.warn('[Structure] Erreur chargement officialStructure :', e); }
+
+    // Attend que quizMeta soit chargé (fetch asynchrone)
+    await new Promise(r => setTimeout(r, 300));
+
+    // Requêtes Supabase parallèles
+    const [statsRes, badgesRes, best30dRes, lastAttemptRes, totalRes] = await Promise.all([
         sb.from('student_stats').select('*').eq('user_id', me.id).single(),
-        sb.from('chapter_progress_view').select('*').eq('user_id', me.id),
-        sb.from('student_badges').select('*').eq('user_id', me.id)
+        sb.from('student_badges').select('*').eq('user_id', me.id),
+        sb.from('best_scores_30d').select('*').eq('user_id', me.id),
+        sb.from('quiz_last_attempt').select('*').eq('user_id', me.id),
+        // Total des bonnes réponses (toutes dates) pour la progression globale
+        sb.from('quiz_results').select('score, total').eq('user_id', me.id)
     ]);
 
-    myStats = statsRes.data || { total_xp:0, current_streak:0 };
-    myChapterProgress = progressRes.data || [];
-    myBadges = badgesRes.data || [];
+    myStats      = statsRes.data      || { total_xp: 0, current_streak: 0 };
+    myBadges     = badgesRes.data     || [];
+    myBestScores30d = best30dRes.data || [];
+    myLastAttempts  = lastAttemptRes.data || [];
+    myTotalResults  = totalRes.data   || [];
 
     renderPlayerCard();
-    renderGlobalStars();
+    renderProgressBars();
     renderChapters();
     renderBadges();
     await renderLeaderboard();
@@ -393,23 +417,22 @@ let myBadges = [];
 })();
 
 
-// ── RENDU : CARTE JOUEUR ──────────────────────────────────────────────────
-function renderPlayerCard(){
+// ── RENDU : CARTE JOUEUR ───────────────────────────────────────────────────
+function renderPlayerCard() {
     const rank = getRankFromXp(myStats.total_xp || 0);
-
-    document.getElementById('player-card').style.setProperty('--rank-color', rank.color);
-    document.getElementById('player-card').style.setProperty('--rank-glow', rank.glow);
+    const card = document.getElementById('player-card');
+    card.style.setProperty('--rank-color', rank.color);
+    card.style.setProperty('--rank-glow', rank.glow);
 
     document.getElementById('player-avatar').textContent = me.avatar_emoji || '🦊';
     document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
-    document.getElementById('player-class').textContent = me.class_name || '';
-    document.getElementById('streak-count').textContent = myStats.current_streak || 0;
+    document.getElementById('player-class').textContent  = me.class_name || '';
+    document.getElementById('streak-count').textContent  = myStats.current_streak || 0;
 
     document.getElementById('rank-banner-slot').innerHTML =
-        '<span style="display:inline-flex; align-items:center; gap:6px; padding:4px 14px; border-radius:30px;' +
-        'background:linear-gradient(135deg, ' + rank.color + ', ' + rank.glow + ');' +
-        'box-shadow:0 0 14px ' + rank.glow + '77;' +
-        'font-size:0.78rem; font-weight:800; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.3);">' +
+        '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:30px;' +
+        'background:linear-gradient(135deg,' + rank.color + ',' + rank.glow + ');' +
+        'box-shadow:0 0 14px ' + rank.glow + '77;font-size:0.78rem;font-weight:800;color:white;text-shadow:0 1px 2px rgba(0,0,0,.3);">' +
         rank.icon + ' ' + rank.label + (rank.subTier ? ' ' + rank.subTier : '') + '</span>';
 
     document.getElementById('xp-current').textContent = myStats.total_xp || 0;
@@ -417,146 +440,340 @@ function renderPlayerCard(){
         ? (rank.xpToNext + ' XP avant ' + rank.nextRankLabel)
         : 'Rang maximum atteint !';
 
-    setTimeout(function(){
-        document.getElementById('xp-bar-fill').style.width = (rank.progressToNext*100) + '%';
+    setTimeout(() => {
+        document.getElementById('xp-bar-fill').style.width = (rank.progressToNext * 100) + '%';
     }, 200);
 }
 
 
-// ── RENDU : ÉTOILES GLOBALES ──────────────────────────────────────────────
-function renderGlobalStars(){
-    const avg = myChapterProgress.length > 0
-        ? Math.round(myChapterProgress.reduce(function(s,c){ return s + (c.progress_pct||0); }, 0) / myChapterProgress.length)
+// ── RENDU : DEUX BARRES DE PROGRESSION ────────────────────────────────────
+function renderProgressBars() {
+    // ── BARRE 1 : % de réussite sur 30 jours ────────────────────────────
+    // Calcul : pour chaque quiz tenté, on prend son MEILLEUR score sur 30j.
+    // Le % est la moyenne de ces meilleurs scores.
+    let reussitePct = 0;
+    if (myBestScores30d.length > 0) {
+        const sum = myBestScores30d.reduce((s, r) => s + (r.best_pct || 0), 0);
+        reussitePct = Math.round(sum / myBestScores30d.length * 100);
+    }
+    document.getElementById('reussite-pct').textContent = reussitePct + '%';
+    document.getElementById('reussite-sub').textContent =
+        myBestScores30d.length + ' questionnaire(s) tenté(s) sur 30 jours · Cliquer pour le détail';
+    setTimeout(() => {
+        document.getElementById('reussite-bar').style.width = reussitePct + '%';
+    }, 200);
+
+    // ── BARRE 2 : Progression globale du programme ───────────────────────
+    // Calcul : total de bonnes réponses (toutes dates) / total de questions
+    // du programme selon localQuestions.js (via quizMeta.totalByLevel).
+    // Si l'élève a un niveau assigné, on filtre sur ce niveau.
+    let levelFilter = null;
+    if (me.class_name) {
+        // Tente de déduire le niveau depuis le nom de classe ("3ème A" → "3ème")
+        const m = me.class_name.match(/(\d+ème)/i);
+        if (m) levelFilter = m[1];
+    }
+
+    const totalQuestionsInProgram = quizMeta && quizMeta.totalByLevel
+        ? (levelFilter && quizMeta.totalByLevel[levelFilter]
+            ? quizMeta.totalByLevel[levelFilter]
+            : Object.values(quizMeta.totalByLevel || {}).reduce((s, v) => s + v, 0))
         : 0;
-    document.getElementById('global-pct').textContent = avg + '%';
-    document.getElementById('global-stars-slot').innerHTML = renderStarsHTML(avg, '2rem');
+
+    // Total de bonnes réponses tous quiz confondus (meilleur score par quiz)
+    // On garde le meilleur score par quiz_key pour ne pas sur-compter les reattempts
+    const bestByKey = {};
+    myTotalResults.forEach(r => {
+        const key = r.quiz_key || r.quizKey;
+        if (!key) return;
+        if (!bestByKey[key] || r.score > bestByKey[key].score) {
+            bestByKey[key] = r;
+        }
+    });
+    const totalCorrect = Object.values(bestByKey).reduce((s, r) => s + (r.score || 0), 0);
+
+    let globalPct = totalQuestionsInProgram > 0
+        ? Math.min(100, Math.round(totalCorrect / totalQuestionsInProgram * 100))
+        : 0;
+
+    document.getElementById('global-pct').textContent = globalPct + '%';
+    document.getElementById('global-sub').textContent =
+        totalCorrect + ' bonne(s) réponse(s) / ' + (totalQuestionsInProgram || '?') + ' questions du programme';
+    setTimeout(() => {
+        document.getElementById('global-bar').style.width = globalPct + '%';
+    }, 300);
 }
 
 
-// ── RENDU : LISTE DES CHAPITRES ───────────────────────────────────────────
-function renderChapters(){
-    const container = document.getElementById('chapters-list');
+// ── PANEL QUIZZES À REVALIDER ─────────────────────────────────────────────
+function toggleRevalidPanel() {
+    const panel = document.getElementById('revalid-panel');
+    const isOpen = panel.classList.contains('open');
+    if (!isOpen) renderRevalidList();
+    panel.classList.toggle('open', !isOpen);
+}
 
-    if (myChapterProgress.length === 0){
-        container.innerHTML =
-            '<div class="empty-state">' +
-            '<div class="icon">📭</div>' +
-            '<p>Tu n\'as pas encore commencé de chapitre.</p>' +
-            '<p style="font-size:0.85rem; margin-top:6px;">Lance ton premier QCM pour voir ta progression ici !</p>' +
-            '</div>';
+function renderRevalidList() {
+    const list = document.getElementById('revalid-list');
+    const now = Date.now();
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+    // Quizzes "à revalider" = dernière tentative datant de plus de 30 jours
+    // (ou quizzes jamais tentés qui font partie du programme)
+    const staleAttempts = myLastAttempts
+        .filter(r => {
+            if (!r.last_attempt_at) return true;
+            return (now - new Date(r.last_attempt_at).getTime()) > THIRTY_DAYS_MS;
+        })
+        .sort((a, b) => new Date(a.last_attempt_at || 0) - new Date(b.last_attempt_at || 0));
+
+    if (staleAttempts.length === 0) {
+        list.innerHTML = '<div class="revalid-empty">✅ Tous tes questionnaires sont à jour ! Bravo.</div>';
         return;
     }
 
-    const sorted = myChapterProgress.slice().sort(function(a,b){ return (b.progress_pct||0) - (a.progress_pct||0); });
+    list.innerHTML = staleAttempts.map(r => {
+        const key = r.quiz_key;
+        const meta = quizMeta && quizMeta.byKey ? quizMeta.byKey[key] : null;
+        const chapterTitle = r.chapter_title || (meta ? meta.chapter : key);
+        const level = r.level_name || (meta ? meta.level : '');
+        const lastDate = r.last_attempt_at
+            ? new Date(r.last_attempt_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+            : 'jamais tenté';
+        const daysAgo = r.last_attempt_at
+            ? Math.floor((now - new Date(r.last_attempt_at).getTime()) / (24 * 60 * 60 * 1000))
+            : null;
+        const badge = daysAgo !== null ? (daysAgo + 'j') : 'jamais';
 
-    container.innerHTML = sorted.map(function(c){
-        const pct = c.progress_pct || 0;
+        return '' +
+            '<div class="revalid-row" onclick="launchQuizFromDashboard(\'' + esc(key) + '\', \'' + esc(chapterTitle) + '\')">' +
+                '<div class="revalid-icon">📝</div>' +
+                '<div class="revalid-info">' +
+                    '<div class="revalid-title">' + esc(chapterTitle) + '</div>' +
+                    '<div class="revalid-sub">' + esc(level) + ' · Dernier : ' + lastDate + '</div>' +
+                '</div>' +
+                '<div class="revalid-badge">' + badge + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+function launchQuizFromDashboard(quizKey, chapterTitle) {
+    // Stocke en sessionStorage le quiz à lancer, puis redirige vers le cours
+    sessionStorage.setItem('pendingQuizKey', quizKey);
+    sessionStorage.setItem('pendingQuizTitle', chapterTitle);
+    window.location.href = 'index.html?quiz=' + encodeURIComponent(quizKey);
+}
+
+function esc(str) {
+    return String(str || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+
+// ── RENDU : CHAPITRES ─────────────────────────────────────────────────────
+function renderChapters() {
+    const container = document.getElementById('chapters-list');
+    const now = Date.now();
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+    // Construit un index des résultats de l'élève par chapter_title
+    const progressByTitle = {};
+    myBestScores30d.forEach(r => {
+        const t = r.chapter_title;
+        if (!progressByTitle[t]) progressByTitle[t] = { pct: 0, attempts: 0, lastAt: null };
+        progressByTitle[t].pct = Math.max(progressByTitle[t].pct, Math.round((r.best_pct || 0) * 100));
+        progressByTitle[t].attempts += r.attempt_count || 1;
+        if (!progressByTitle[t].lastAt || r.last_attempt_at > progressByTitle[t].lastAt)
+            progressByTitle[t].lastAt = r.last_attempt_at;
+    });
+
+    // Chapitres officiels du niveau de l'élève (tous affichés, même à 0%)
+    const chaptersToShow = officialLevelChapters.length > 0
+        ? officialLevelChapters
+        : [...new Set([
+            ...myBestScores30d.map(r => ({ title: r.chapter_title, level: r.level_name })),
+          ])];
+
+    if (chaptersToShow.length === 0) {
+        container.innerHTML =
+            '<div class="empty-state"><div class="icon">📭</div>' +
+            '<p>Lance un questionnaire pour voir ta progression ici !</p></div>';
+        return;
+    }
+
+    // Filtre sur le niveau de l'élève si disponible
+    let levelFilter = null;
+    if (me.class_name) {
+        const m = me.class_name.match(/(\d+ème)/i);
+        if (m) levelFilter = m[1];
+    }
+    let displayed = levelFilter
+        ? chaptersToShow.filter(c => c.level === levelFilter)
+        : chaptersToShow;
+    if (displayed.length === 0) displayed = chaptersToShow; // fallback
+
+    // Trie : chapitres avec résultats en premier (du meilleur au moins bon),
+    // puis chapitres non commencés (à 0%)
+    displayed = displayed.slice().sort((a, b) => {
+        const pa = (progressByTitle[a.title] || {}).pct || 0;
+        const pb = (progressByTitle[b.title] || {}).pct || 0;
+        return pb - pa;
+    });
+
+    container.innerHTML = displayed.map(ch => {
+        const prog = progressByTitle[ch.title] || { pct: 0, attempts: 0, lastAt: null };
+        const pct = prog.pct;
         const maxed = pct >= 95;
+        const stale = prog.lastAt && (now - new Date(prog.lastAt).getTime()) > THIRTY_DAYS_MS;
+
         return '' +
             '<div class="chapter-row">' +
                 '<div class="chapter-row-top">' +
-                    '<span class="chapter-title">' + c.chapter_title + '</span>' +
+                    '<span class="chapter-title-text">' + esc(ch.title) + '</span>' +
                     '<span class="chapter-pct">' + pct + '%</span>' +
                 '</div>' +
                 '<div class="chapter-bar-track">' +
                     '<div class="chapter-bar-fill ' + (maxed ? 'maxed' : '') + '" style="width:' + pct + '%;"></div>' +
                 '</div>' +
                 '<div class="chapter-meta">' +
-                    '<span>' + c.level_name + '</span>' +
-                    '<span>' + c.distinct_quizzes_attempted + ' QCM tenté(s)</span>' +
+                    '<span>' + esc(ch.level || '') + '</span>' +
+                    '<span>' + (prog.attempts > 0 ? prog.attempts + ' tentative(s) ce mois' : 'Pas encore commencé') + '</span>' +
                 '</div>' +
+                (stale ? '<div class="chapter-stale">⚠️ Non revalidé depuis plus d\'un mois — clique pour refaire !</div>' : '') +
             '</div>';
     }).join('');
 }
 
 
-// ── RENDU : BADGES ─────────────────────────────────────────────────────────
+// ── RENDU : BADGES ────────────────────────────────────────────────────────
 const BADGE_DEFINITIONS = {
     first_quiz:      { icon:'🎯', label:'Premier pas',      desc:'Premier QCM terminé' },
     streak_3:        { icon:'🔥', label:'En feu',            desc:'3 jours d\'affilée' },
-    streak_7:        { icon:'🌟', label:'Semaine parfaite', desc:'7 jours d\'affilée' },
-    streak_30:       { icon:'🏆', label:'Inarrêtable',      desc:'30 jours d\'affilée' },
+    streak_7:        { icon:'🌟', label:'Semaine parfaite',  desc:'7 jours d\'affilée' },
+    streak_30:       { icon:'🏆', label:'Inarrêtable',       desc:'30 jours d\'affilée' },
     perfect_chapter: { icon:'💯', label:'Sans faute',        desc:'100% sur un chapitre' },
     night_owl:       { icon:'🦉', label:'Couche-tard',       desc:'QCM fait après 21h' },
     early_bird:      { icon:'🐤', label:'Lève-tôt',          desc:'QCM fait avant 8h' },
     speedrun:        { icon:'⚡', label:'Éclair',            desc:'QCM réussi en moins de 30s' },
 };
 
-function renderBadges(){
-    const earnedKeys = new Set(myBadges.map(function(b){ return b.badge_key; }));
-    const grid = document.getElementById('badges-grid');
-
-    grid.innerHTML = Object.entries(BADGE_DEFINITIONS).map(function(entry){
-        const key = entry[0], def = entry[1];
+function renderBadges() {
+    const earnedKeys = new Set(myBadges.map(b => b.badge_key));
+    document.getElementById('badges-grid').innerHTML = Object.entries(BADGE_DEFINITIONS).map(([key, def]) => {
         const unlocked = earnedKeys.has(key);
-        return '' +
-            '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '">' +
-                '<div class="icon">' + def.icon + '</div>' +
-                '<div class="name">' + def.label + '</div>' +
-                '<div class="desc">' + (unlocked ? def.desc : '???') + '</div>' +
+        return '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '">' +
+            '<div class="icon">' + def.icon + '</div>' +
+            '<div class="name">' + def.label + '</div>' +
+            '<div class="desc">' + (unlocked ? def.desc : '???') + '</div>' +
             '</div>';
     }).join('');
 }
 
 
-// ── RENDU : LEADERBOARD ───────────────────────────────────────────────────
-async function renderLeaderboard(){
+// ── RENDU : LEADERBOARD (global, toutes classes, points réels) ────────────
+async function renderLeaderboard() {
     const container = document.getElementById('leaderboard-content');
 
-    if (!me.class_id){
-        container.innerHTML =
-            '<div class="leaderboard-disabled">' +
-            '<div style="font-size:2rem; margin-bottom:8px;">👤</div>' +
-            'Tu n\'es assigné à aucune classe pour le moment.<br>' +
-            'Demande à ton professeur de t\'ajouter à une classe !' +
-            '</div>';
-        return;
-    }
-
-    const { data: classData } = await sb.from('classes').select('*').eq('id', me.class_id).single();
-
-    if (!classData || !classData.leaderboard_enabled){
-        container.innerHTML =
-            '<div class="leaderboard-disabled">' +
-            '<div style="font-size:2rem; margin-bottom:8px;">🔒</div>' +
-            'Le classement est désactivé pour ta classe.' +
-            '</div>';
-        return;
-    }
-
+    // Nouveau : classement GLOBAL, pas filtré par classe
     const { data: lb, error } = await sb
         .from('leaderboard_view')
         .select('*')
-        .eq('class_id', me.class_id)
-        .order('global_progress_pct', { ascending: false });
+        .order('ladder_score', { ascending: false })
+        .limit(50);
 
-    if (error || !lb || lb.length === 0){
+    if (error || !lb || lb.length === 0) {
         container.innerHTML = '<div class="leaderboard-disabled">Pas encore de classement disponible.</div>';
         return;
     }
 
-    container.innerHTML = lb.map(function(row, i){
-        const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
-        const isMe = row.user_id === me.id;
-        return '' +
-            '<div class="leaderboard-row ' + (isMe ? 'me' : '') + '">' +
+    container.innerHTML =
+        '<p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:14px;">' +
+        '1 pt par bonne réponse · −0,5 pt par mauvaise · Toutes classes confondues</p>' +
+        lb.map((row, i) => {
+            const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+            const isMe = row.user_id === me.id;
+            const score = row.ladder_score !== null ? row.ladder_score : '—';
+            return '<div class="leaderboard-row ' + (isMe ? 'me' : '') + '">' +
                 '<div class="lb-rank-num ' + rankClass + '">' + (i+1) + '</div>' +
                 '<div class="lb-avatar">' + (row.avatar_emoji || '🦊') + '</div>' +
-                '<div class="lb-name">' + (row.pseudo || 'Élève') + (isMe ? ' (toi)' : '') + '</div>' +
-                '<div class="lb-pct">' + (row.global_progress_pct || 0) + '%</div>' +
-            '</div>';
-    }).join('');
+                '<div style="flex:1;">' +
+                    '<div class="lb-name">' + esc(row.pseudo || 'Élève') + (isMe ? ' 👈' : '') + '</div>' +
+                    '<div class="lb-class">' + esc(row.class_name || '') + '</div>' +
+                '</div>' +
+                '<div class="lb-score">' + score + ' pts</div>' +
+                '</div>';
+        }).join('');
+}
+
+
+// ── ÉDITION DU PSEUDO EN LIGNE ────────────────────────────────────────────
+function startEditPseudo() {
+    const pseudoSpan  = document.getElementById('player-pseudo');
+    const editBtn     = document.getElementById('btn-edit-pseudo');
+    const editForm    = document.getElementById('pseudo-edit-form');
+    const input       = document.getElementById('pseudo-input');
+
+    input.value = me.pseudo || me.full_name || '';
+    pseudoSpan.style.display  = 'none';
+    editBtn.style.display     = 'none';
+    editForm.style.display    = 'flex';
+    // Sélectionne tout le texte pour faciliter le remplacement
+    setTimeout(() => { input.focus(); input.select(); }, 0);
+}
+
+async function savePseudo(event) {
+    if (event) event.preventDefault();
+
+    const input    = document.getElementById('pseudo-input');
+    const newPseudo = input.value.trim();
+
+    // Annule si vide ou inchangé
+    if (!newPseudo || newPseudo === (me.pseudo || me.full_name)) {
+        cancelEditPseudo();
+        return;
+    }
+
+    // Sauvegarde dans Supabase
+    const { error } = await sb.from('profiles')
+        .update({ pseudo: newPseudo })
+        .eq('id', me.id);
+
+    if (error) {
+        console.error('[Pseudo] Erreur sauvegarde :', error.message);
+        // Affiche un message d'erreur discret dans l'input
+        input.style.borderColor = '#ef4444';
+        input.placeholder = 'Erreur — réessaie';
+        return;
+    }
+
+    // Met à jour l'état local et l'affichage
+    me.pseudo = newPseudo;
+    document.getElementById('player-pseudo').textContent = newPseudo;
+    cancelEditPseudo();
+}
+
+function cancelEditPseudo() {
+    const pseudoSpan = document.getElementById('player-pseudo');
+    const editBtn    = document.getElementById('btn-edit-pseudo');
+    const editForm   = document.getElementById('pseudo-edit-form');
+    const input      = document.getElementById('pseudo-input');
+
+    pseudoSpan.style.display = '';
+    editBtn.style.display    = '';
+    editForm.style.display   = 'none';
+    // Remet le style par défaut de l'input pour la prochaine fois
+    input.style.borderColor  = 'var(--accent)';
+    input.placeholder        = '';
 }
 
 
 // ── TABS ──────────────────────────────────────────────────────────────────
-function switchTab(tab){
-    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tab); });
-    document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
 }
 
-async function logoutStudent(){
+async function logoutStudent() {
     await sb.auth.signOut();
     window.location.href = 'index.html';
 }
