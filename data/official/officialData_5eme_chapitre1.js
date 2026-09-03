@@ -19,7 +19,8 @@ var chapterData_5eme_1 = {
         eleve: "non",
         content: `
                             <div class="course-container">
-                                <!-- SECTION : OBJECTIFS -->
+                                <!-- SECTION : OBJECTIFS (désactivée, ne doit plus apparaître sur le site) -->
+                                <!--
                                 <section class="course-section">
                                     <p><strong>Objectifs :</strong></p>
                                     <ul>
@@ -35,20 +36,22 @@ var chapterData_5eme_1 = {
                                         <li>Je connais les critères de divisibilité par 2, 3, 5, 9 et 10</li>
                                     </ul>
                                 </section>
+                                -->
 
                                 <!-- SECTION : VOCABULAIRE ET SENS DES OPÉRATIONS -->
                                 <section class="course-section">
                                     <h2 class="section-title">Vocabulaire et sens des 4 opérations</h2>
+                                    <h3 class="section-title">Vocabulaire</h3>
                                     <div class="notion-box">
                                         <p>Chaque opération a un <strong>nom</strong>, un <strong>résultat</strong> qui porte un nom particulier, et sert à <strong>résoudre un type de situation</strong> bien précis.</p>
                                     </div>
                                     <table style="width:100%; border-collapse: collapse; text-align: center;">
                                         <thead>
-                                            <tr>
-                                                <th style="border-right: 1px solid black; padding: 10px;">Opération</th>
-                                                <th style="border-right: 1px solid black; padding: 10px;">Éléments</th>
-                                                <th style="border-right: 1px solid black; padding: 10px;">Résultat</th>
-                                                <th style="padding: 10px;">On l'utilise pour...</th>
+                                            <tr style="background-color: var(--primary-light, #e8f0fe);">
+                                                <th style="border-right: 1px solid black; border-bottom: 2px solid black; padding: 10px;">Opération</th>
+                                                <th style="border-right: 1px solid black; border-bottom: 2px solid black; padding: 10px;">Éléments</th>
+                                                <th style="border-right: 1px solid black; border-bottom: 2px solid black; padding: 10px;">Résultat</th>
+                                                <th style="border-bottom: 2px solid black; padding: 10px;">On l'utilise pour...</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -71,7 +74,7 @@ var chapterData_5eme_1 = {
                                                 <td style="padding: 10px;">répéter un même ajout, agrandir</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 10px;">Division $7 \\div 2$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">Division $7 \\div 2$</td>
                                                 <td style="border-right: 1px solid black; padding: 10px;">dividende / diviseur</td>
                                                 <td style="border-right: 1px solid black; padding: 10px;">un <strong>quotient</strong></td>
                                                 <td style="padding: 10px;">partager équitablement, chercher combien de fois</td>
@@ -93,6 +96,16 @@ var chapterData_5eme_1 = {
                                     </div>
                                     <div id="quiz-area-OPsens"></div>
 
+                                    <div class="quiz-header">
+                                        <span>Utiliser les bons mots de vocabulaire</span>
+                                        <button class="btn-check-understanding"
+                                                data_quiz_target="quiz-area-OPvocabulaire"
+                                                onclick="startQuizFromButton('quiz-area-OPvocabulaire', '51102')">
+                                            Ai-je bien compris ?
+                                        </button>
+                                    </div>
+                                    <div id="quiz-area-OPvocabulaire"></div>
+
                                     <h3 class="section-title">Contrôler la vraisemblance d'un résultat</h3>
                                     <div class="notion-box">
                                         <p>Avant (ou après) de poser un calcul, on peut estimer un <strong>ordre de grandeur</strong> du résultat en arrondissant les nombres. Cela permet de repérer une erreur de calcul ou de virgule.</p>
@@ -102,7 +115,7 @@ var chapterData_5eme_1 = {
 
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPvraisemblance"
-                                        onclick="startQuizFromButton('quiz-area-OPvraisemblance', '51102')">
+                                        onclick="startQuizFromButton('quiz-area-OPvraisemblance', '51103')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPvraisemblance"></div>
