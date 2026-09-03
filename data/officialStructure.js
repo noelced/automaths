@@ -30,7 +30,133 @@ const officialStructure = [
     },
     {
         "name": "5ème",
-        "themes": []
+        "themes": [
+            {
+                "name": "NOMBRES ET CALCULS",
+                "chapters": [
+                    {
+                        "id": 1,
+                        "title": "Opérations",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre1.js",
+                        "_varName": "chapterData_5eme_1"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Nombres relatifs",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre2.js",
+                        "_varName": "chapterData_5eme_2"
+                    },
+                    {
+                        "id": 3,
+                        "title": "Nombres rationnels",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre3.js",
+                        "_varName": "chapterData_5eme_3"
+                    },
+                    {
+                        "id": 4,
+                        "title": "Puissances",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre4.js",
+                        "_varName": "chapterData_5eme_4"
+                    },
+                    {
+                        "id": 5,
+                        "title": "Calcul littéral",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre5.js",
+                        "_varName": "chapterData_5eme_5"
+                    }
+                ]
+            },
+            {
+                "name": "ESPACE ET GÉOMÉTRIE",
+                "chapters": [
+                    {
+                        "id": 6,
+                        "title": "Repérage",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre6.js",
+                        "_varName": "chapterData_5eme_6"
+                    },
+                    {
+                        "id": 7,
+                        "title": "Espace et grandeurs",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre7.js",
+                        "_varName": "chapterData_5eme_7"
+                    },
+                    {
+                        "id": 8,
+                        "title": "Transformations",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre8.js",
+                        "_varName": "chapterData_5eme_8"
+                    },
+                    {
+                        "id": 9,
+                        "title": "Angles",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre9.js",
+                        "_varName": "chapterData_5eme_9"
+                    },
+                    {
+                        "id": 10,
+                        "title": "Triangle",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre10.js",
+                        "_varName": "chapterData_5eme_10"
+                    },
+                    {
+                        "id": 11,
+                        "title": "Parallélogramme",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre11.js",
+                        "_varName": "chapterData_5eme_11"
+                    }
+                ]
+            },
+            {
+                "name": "ORGANISATION ET GESTION DE DONNÉES",
+                "chapters": [
+                    {
+                        "id": 12,
+                        "title": "Statistiques",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre12.js",
+                        "_varName": "chapterData_5eme_12"
+                    },
+                    {
+                        "id": 13,
+                        "title": "Probabilités",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre13.js",
+                        "_varName": "chapterData_5eme_13"
+                    }
+                ]
+            },
+            {
+                "name": "PROPORTIONNALITÉ, FONCTIONS",
+                "chapters": [
+                    {
+                        "id": 14,
+                        "title": "Proportionnalité",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre14.js",
+                        "_varName": "chapterData_5eme_14"
+                    },
+                    {
+                        "id": 15,
+                        "title": "Fonctions",
+                        "eleve": "non",
+                        "_file": "data/official/officialData_5eme_chapitre15.js",
+                        "_varName": "chapterData_5eme_15"
+                    }
+                ]
+            }
+        ]
     },
     {
         "name": "4ème",
