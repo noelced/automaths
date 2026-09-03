@@ -244,35 +244,37 @@ var chapterData_5eme_1 = {
                                 <section class="course-section">
                                     <h2 class="section-title">Division euclidienne, multiples et diviseurs</h2>
                                     <h3 class="section-title">Division euclidienne</h3>
+                                    <p>Pour faire une division tu peux :</p>
 
                                     <div class="method-box">
-                                        <span class="method-badge">🚀 Exemple</span>
-                                        <div style="display:grid; grid-template-columns: auto 34px 34px 2px 55px auto; grid-template-rows: repeat(5, 36px); align-items:center; font-family:'Courier New', monospace; font-size:1.3em; row-gap:2px; margin:14px 0;">
-                                            <div style="grid-column:1; grid-row:1; color:blue; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le dividende &rarr;</div>
-                                            <div style="grid-column:2; grid-row:1; color:blue; text-align:center;">8</div>
-                                            <div style="grid-column:3; grid-row:1; color:blue; text-align:center;">6</div>
-                                            <div style="grid-column:4; grid-row:1 / 6; border-left:2px solid black;"></div>
-                                            <div style="grid-column:5; grid-row:1; color:red; text-align:center; font-weight:bold; border-bottom:1px solid black;">3</div>
-                                            <div style="grid-column:6; grid-row:1; color:red; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le diviseur</div>
+                                        <ul style="margin-left: 20px; padding-left: 10px;">
+                                            <li style="margin-bottom: 24px;">
+                                                <strong>Poser l'opération comme en 6<sup>e</sup> :</strong>
+                                                <div style="display:grid; grid-template-columns: auto 34px 34px 4px 55px auto; grid-template-rows: repeat(3, 38px); align-items:center; font-family:'Courier New', monospace; font-size:1.3em; row-gap:2px; margin:14px 0;">
+                                                    <div style="grid-column:1; grid-row:1; color:blue; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le dividende &rarr;</div>
+                                                    <div style="grid-column:2; grid-row:1; color:blue; text-align:center;">2</div>
+                                                    <div style="grid-column:3; grid-row:1; color:blue; text-align:center;">9</div>
+                                                    <div style="grid-column:4; grid-row:1 / 4; background-color:black; width:2px; height:100%; justify-self:center;"></div>
+                                                    <div style="grid-column:5; grid-row:1; color:red; text-align:center; font-weight:bold; border-bottom:1px solid black;">3</div>
+                                                    <div style="grid-column:6; grid-row:1; color:red; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le diviseur</div>
 
-                                            <div style="grid-column:2; grid-row:2; color:black; text-align:center; border-top:1px solid black;">&minus;6</div>
-                                            <div style="grid-column:5; grid-row:2; color:green; text-align:center; font-weight:bold;">28</div>
-                                            <div style="grid-column:6; grid-row:2; color:green; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le quotient</div>
+                                                    <div style="grid-column:2 / 4; grid-row:2; color:black; text-align:center; border-top:1px solid black;">&minus; 27</div>
+                                                    <div style="grid-column:5; grid-row:2; color:green; text-align:center; font-weight:bold;">9</div>
+                                                    <div style="grid-column:6; grid-row:2; color:green; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le quotient</div>
 
-                                            <div style="grid-column:2; grid-row:3; color:black; text-align:center;">2</div>
-                                            <div style="grid-column:3; grid-row:3; color:black; text-align:center;">6</div>
-
-                                            <div style="grid-column:2 / 4; grid-row:4; color:black; text-align:center; border-top:1px solid black;">&minus; 24</div>
-
-                                            <div style="grid-column:1; grid-row:5; color:orange; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le reste &rarr;</div>
-                                            <div style="grid-column:3; grid-row:5; color:orange; text-align:center; font-weight:bold;">2</div>
-                                        </div>
-
-                                        <p><strong>Égalité euclidienne :</strong></p>
-                                        <p style="text-align:center; font-size:1.15em;">
-                                            <span style="color:blue; font-weight:bold;">86</span> = <span style="color:red; font-weight:bold;">3</span> &times; <span style="color:green; font-weight:bold;">28</span> + <span style="color:orange; font-weight:bold;">2</span><br>
-                                            <span style="color:blue; font-weight:bold;">DIVIDENDE</span> = <span style="color:red; font-weight:bold;">DIVISEUR</span> &times; <span style="color:green; font-weight:bold;">QUOTIENT</span> + <span style="color:orange; font-weight:bold;">RESTE</span>
-                                        </p>
+                                                    <div style="grid-column:1; grid-row:3; color:orange; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le reste &rarr;</div>
+                                                    <div style="grid-column:3; grid-row:3; color:orange; text-align:center; font-weight:bold;">2</div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <strong>Chercher mentalement</strong> combien de fois $3$ je peux mettre dans $29$ et trouver que le nombre $3$ rentre $9$ fois, et que cela ne fait que $27$, donc il faut rajouter $2$ pour aller jusqu'à $29$.
+                                                <p style="margin-top: 10px;"><strong>Égalité euclidienne :</strong></p>
+                                                <p style="text-align:center; font-size:1.15em;">
+                                                    <span style="color:blue; font-weight:bold;">29</span> = <span style="color:red; font-weight:bold;">3</span> &times; <span style="color:green; font-weight:bold;">9</span> + <span style="color:orange; font-weight:bold;">2</span><br>
+                                                    <span style="color:blue; font-weight:bold;">DIVIDENDE</span> = <span style="color:red; font-weight:bold;">DIVISEUR</span> &times; <span style="color:green; font-weight:bold;">QUOTIENT</span> + <span style="color:orange; font-weight:bold;">RESTE</span>
+                                                </p>
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="notion-box">
