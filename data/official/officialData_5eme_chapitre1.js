@@ -190,8 +190,8 @@ var chapterData_5eme_1 = {
                                 <section class="course-section">
                                     <h2 class="section-title">Distributivité simple sur des exemples numériques</h2>
                                     <div class="notion-box">
-                                        <blockquote>$\\color{blue}{k} \\times (a + b) = \\color{blue}{k} \\times a + \\color{blue}{k} \\times b$</blockquote>
-                                        <blockquote>$\\color{blue}{k} \\times (a - b) = \\color{blue}{k} \\times a - \\color{blue}{k} \\times b$</blockquote>
+                                        <blockquote>$\\color{blue}{k \\times} (a + b) = \\color{blue}{k \\times} a + \\color{blue}{k \\times} b$</blockquote>
+                                        <blockquote>$\\color{blue}{k \\times} (a - b) = \\color{blue}{k \\times} a - \\color{blue}{k \\times} b$</blockquote>
                                     </div>
                                     <p>Cette propriété permet parfois de <strong>calculer plus rapidement, mentalement</strong>, en remplaçant un nombre par une somme ou une différence bien choisie.</p>
                                     <p><strong>Exemples :</strong></p>
@@ -217,65 +217,40 @@ var chapterData_5eme_1 = {
                                     <div id="quiz-area-OPdistributivite"></div>
                                 </section>
 
-                                <!-- SECTION : DIVISER PAR UN NOMBRE DÉCIMAL -->
-                                <section class="course-section">
-                                    <h2 class="section-title">Diviser par un nombre décimal</h2>
-                                    <div class="notion-box">
-                                        <p>On ne sait poser une division que par un <strong>nombre entier</strong>. Pour diviser par un nombre décimal, on utilise la propriété suivante : le quotient de deux nombres <strong>ne change pas</strong> si on multiplie le dividende ET le diviseur par un même nombre.</p>
-                                    </div>
-                                    <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Calculer $15,6 \\div 1,2$
-                                        <ul>
-                                            <li>Le diviseur $1,2$ a un chiffre après la virgule &rarr; on multiplie le dividende et le diviseur par $10$.</li>
-                                            <li>$15,6 \\div 1,2 = (15,6 \\times 10) \\div (1,2 \\times 10) = 156 \\div 12$</li>
-                                            <li>On pose alors la division de deux nombres entiers : $156 \\div 12 = 13$.</li>
-                                        </ul>
-                                    </div>
-                                    <p>Exemple : $4,25 \\div 0,05 = (4,25 \\times 100) \\div (0,05 \\times 100) = 425 \\div 5 = 85$.</p>
-                                    <button class="btn-check-understanding"
-                                        data_quiz_target="quiz-area-OPdiviserdecimal"
-                                        onclick="startQuizFromButton('quiz-area-OPdiviserdecimal', '51401')">
-                                        Ai-je bien compris ?
-                                    </button>
-                                    <div id="quiz-area-OPdiviserdecimal"></div>
-                                </section>
-
                                 <!-- SECTION : DIVISION EUCLIDIENNE, MULTIPLES ET DIVISEURS -->
                                 <section class="course-section">
                                     <h2 class="section-title">Division euclidienne, multiples et diviseurs</h2>
                                     <h3 class="section-title">Division euclidienne</h3>
                                     <p>Pour faire une division tu peux :</p>
 
-                                    <div class="method-box">
-                                        <ul style="margin-left: 20px; padding-left: 10px;">
-                                            <li style="margin-bottom: 24px;">
-                                                <strong>Poser l'opération comme en 6<sup>e</sup> :</strong>
-                                                <div style="display:grid; grid-template-columns: auto 34px 34px 4px 55px auto; grid-template-rows: repeat(3, 38px); align-items:center; font-family:'Courier New', monospace; font-size:1.3em; row-gap:2px; margin:14px 0;">
-                                                    <div style="grid-column:1; grid-row:1; color:blue; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le dividende &rarr;</div>
-                                                    <div style="grid-column:2; grid-row:1; color:blue; text-align:center;">2</div>
-                                                    <div style="grid-column:3; grid-row:1; color:blue; text-align:center;">9</div>
-                                                    <div style="grid-column:4; grid-row:1 / 4; background-color:black; width:2px; height:100%; justify-self:center;"></div>
-                                                    <div style="grid-column:5; grid-row:1; color:red; text-align:center; font-weight:bold; border-bottom:1px solid black;">3</div>
-                                                    <div style="grid-column:6; grid-row:1; color:red; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le diviseur</div>
+                                    <ul style="margin-left: 20px; padding-left: 10px;">
+                                        <li style="margin-bottom: 24px;">
+                                            <strong>Poser l'opération comme en 6<sup>e</sup> :</strong>
+                                            <div style="display:grid; grid-template-columns: auto 34px 34px 4px 55px auto; grid-template-rows: repeat(3, 38px); align-items:center; font-family:'Courier New', monospace; font-size:1.3em; row-gap:2px; margin:14px 0;">
+                                                <div style="grid-column:1; grid-row:1; color:blue; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le dividende &rarr;</div>
+                                                <div style="grid-column:2; grid-row:1; color:blue; text-align:center;">2</div>
+                                                <div style="grid-column:3; grid-row:1; color:blue; text-align:center;">9</div>
+                                                <div style="grid-column:4; grid-row:1 / 4; background-color:black; width:2px; height:100%; justify-self:center;"></div>
+                                                <div style="grid-column:5; grid-row:1; color:red; text-align:center; font-weight:bold; border-bottom:1px solid black;">3</div>
+                                                <div style="grid-column:6; grid-row:1; color:red; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le diviseur</div>
 
-                                                    <div style="grid-column:2 / 4; grid-row:2; color:black; text-align:center; border-top:1px solid black;">&minus; 27</div>
-                                                    <div style="grid-column:5; grid-row:2; color:green; text-align:center; font-weight:bold;">9</div>
-                                                    <div style="grid-column:6; grid-row:2; color:green; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le quotient</div>
+                                                <div style="grid-column:2 / 4; grid-row:2; color:black; text-align:center; border-top:1px solid black;">&minus; 27</div>
+                                                <div style="grid-column:5; grid-row:2; color:green; text-align:center; font-weight:bold;">9</div>
+                                                <div style="grid-column:6; grid-row:2; color:green; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le quotient</div>
 
-                                                    <div style="grid-column:1; grid-row:3; color:orange; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le reste &rarr;</div>
-                                                    <div style="grid-column:3; grid-row:3; color:orange; text-align:center; font-weight:bold;">2</div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <strong>Chercher mentalement</strong> combien de fois $3$ je peux mettre dans $29$ et trouver que le nombre $3$ rentre $9$ fois, et que cela ne fait que $27$, donc il faut rajouter $2$ pour aller jusqu'à $29$.
-                                                <p style="margin-top: 10px;"><strong>Égalité euclidienne :</strong></p>
-                                                <p style="text-align:center; font-size:1.15em;">
-                                                    <span style="color:blue; font-weight:bold;">29</span> = <span style="color:red; font-weight:bold;">3</span> &times; <span style="color:green; font-weight:bold;">9</span> + <span style="color:orange; font-weight:bold;">2</span><br>
-                                                    <span style="color:blue; font-weight:bold;">DIVIDENDE</span> = <span style="color:red; font-weight:bold;">DIVISEUR</span> &times; <span style="color:green; font-weight:bold;">QUOTIENT</span> + <span style="color:orange; font-weight:bold;">RESTE</span>
-                                                </p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                                <div style="grid-column:1; grid-row:3; color:orange; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le reste &rarr;</div>
+                                                <div style="grid-column:3; grid-row:3; color:orange; text-align:center; font-weight:bold;">2</div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <strong>Chercher mentalement</strong> combien de fois $3$ je peux mettre dans $29$ et trouver que le nombre $3$ rentre $9$ fois, et que cela ne fait que $27$, donc il faut rajouter $2$ pour aller jusqu'à $29$.
+                                            <p style="margin-top: 10px;"><strong>Égalité euclidienne :</strong></p>
+                                            <p style="text-align:center; font-size:1.15em;">
+                                                <span style="color:blue; font-weight:bold;">29</span> = <span style="color:red; font-weight:bold;">3</span> &times; <span style="color:green; font-weight:bold;">9</span> + <span style="color:orange; font-weight:bold;">2</span><br>
+                                                <span style="color:blue; font-weight:bold;">DIVIDENDE</span> = <span style="color:red; font-weight:bold;">DIVISEUR</span> &times; <span style="color:green; font-weight:bold;">QUOTIENT</span> + <span style="color:orange; font-weight:bold;">RESTE</span>
+                                            </p>
+                                        </li>
+                                    </ul>
 
                                     <div class="notion-box">
                                         <p>Effectuer la <strong>division euclidienne</strong> d'un nombre entier $a$ (le <strong>dividende</strong>) par un nombre entier $b$ (le <strong>diviseur</strong>), c'est trouver un <strong>quotient</strong> $q$ et un <strong>reste</strong> $r$ tels que :</p>
@@ -297,6 +272,26 @@ var chapterData_5eme_1 = {
                                     </button>
                                     <div id="quiz-area-OPdivisioneuclid"></div>
 
+                                    <h3 class="section-title">Diviser par un nombre décimal</h3>
+                                    <div class="notion-box">
+                                        <p>On ne sait poser une division que par un <strong>nombre entier</strong>. Pour diviser par un nombre décimal, on utilise la propriété suivante : le quotient de deux nombres <strong>ne change pas</strong> si on multiplie le dividende ET le diviseur par un même nombre.</p>
+                                    </div>
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Calculer $15,6 \\div 1,2$
+                                        <ul>
+                                            <li>Le diviseur $1,2$ a un chiffre après la virgule &rarr; on multiplie le dividende et le diviseur par $10$.</li>
+                                            <li>$15,6 \\div 1,2 = (15,6 \\times 10) \\div (1,2 \\times 10) = 156 \\div 12$</li>
+                                            <li>On pose alors la division de deux nombres entiers : $156 \\div 12 = 13$.</li>
+                                        </ul>
+                                    </div>
+                                    <p>Exemple : $4,25 \\div 0,05 = (4,25 \\times 100) \\div (0,05 \\times 100) = 425 \\div 5 = 85$.</p>
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-OPdiviserdecimal"
+                                        onclick="startQuizFromButton('quiz-area-OPdiviserdecimal', '51401')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-OPdiviserdecimal"></div>
+
                                     <h3 class="section-title">Multiples et diviseurs</h3>
                                     <div class="notion-box">
                                         <p>Quand le <strong>reste</strong> d'une division euclidienne est <strong>nul</strong> ($r = 0$), on dit que :</p>
@@ -310,7 +305,7 @@ var chapterData_5eme_1 = {
                                     <p>Les multiples de $14$ sont : $14$ ; $28$ ; $42$ ; $56$... Parmi $56$ ; $141$ ; $280$, seuls $56$ et $280$ sont des multiples de $14$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPmultdiv"
-                                        onclick="startQuizFromButton('quiz-area-OPmultdiv', '51502')">
+                                        onclick="startQuizFromButton('quiz-area-OPmultdiv', '51511')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPmultdiv"></div>
