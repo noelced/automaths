@@ -271,6 +271,19 @@
 <!-- 4. Données pédagogiques -->
 <script src="data/officialStructure.js"></script>
 <script src="data/localQuestions.js"></script>
+<script src="data/localQuestions5eme.js"></script>
+<script>
+    // Fusionne les questions de 5ème (allLocalQuestions5eme, défini dans
+    // localQuestions5eme.js) dans l'objet principal allLocalQuestions utilisé
+    // par app.js (startQuizFromButton). On garde deux fichiers séparés pour
+    // ne pas alourdir le chargement avec un seul gros fichier, mais tout le
+    // reste du code continue de lire un unique objet allLocalQuestions.
+    if (typeof allLocalQuestions5eme !== 'undefined') {
+        Object.assign(allLocalQuestions, allLocalQuestions5eme);
+    } else {
+        console.error('[AutoMaths] data/localQuestions5eme.js introuvable ou allLocalQuestions5eme non défini.');
+    }
+</script>
 
 <!-- 5. Graphiques -->
 <!--    chart.min.js : librairie Chart.js, conservée pour de FUTURS graphiques -->
