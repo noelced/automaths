@@ -124,6 +124,7 @@ var chapterData_5eme_1 = {
                                 <!-- SECTION : PRIORITÉS OPÉRATOIRES -->
                                 <section class="course-section">
                                     <h2 class="section-title">Enchaîner des opérations : les priorités opératoires</h2>
+                                    <h3 class="section-title">Priorités</h3>
                                     <div class="notion-box">
                                         <p>Quand une expression contient plusieurs opérations, on ne calcule pas forcément dans l'ordre où elles sont écrites. Il faut respecter les <strong>priorités opératoires</strong> :</p>
                                     </div>
@@ -179,7 +180,7 @@ var chapterData_5eme_1 = {
                                     <p>Si on effectue ce programme sur le nombre $7$ : $(7 + 3) \\times 9 - 5 =$<font color="blue">$ 10$</font>$\\times 9 - 5 =$<font color="blue">$ 90$</font>$- 5 = 85$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPprogramme"
-                                        onclick="startQuizFromButton('quiz-area-OPprogramme', '51202')">
+                                        onclick="startQuizFromButton('quiz-area-OPprogramme', '51211')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPprogramme"></div>
@@ -189,8 +190,8 @@ var chapterData_5eme_1 = {
                                 <section class="course-section">
                                     <h2 class="section-title">Distributivité simple sur des exemples numériques</h2>
                                     <div class="notion-box">
-                                        <blockquote>$k \\times (a + b) = k \\times a + k \\times b$</blockquote>
-                                        <blockquote>$k \\times (a - b) = k \\times a - k \\times b$</blockquote>
+                                        <blockquote>$\\color{blue}{k} \\times (a + b) = \\color{blue}{k} \\times a + \\color{blue}{k} \\times b$</blockquote>
+                                        <blockquote>$\\color{blue}{k} \\times (a - b) = \\color{blue}{k} \\times a - \\color{blue}{k} \\times b$</blockquote>
                                     </div>
                                     <p>Cette propriété permet parfois de <strong>calculer plus rapidement, mentalement</strong>, en remplaçant un nombre par une somme ou une différence bien choisie.</p>
                                     <p><strong>Exemples :</strong></p>
@@ -242,6 +243,38 @@ var chapterData_5eme_1 = {
                                 <!-- SECTION : DIVISION EUCLIDIENNE, MULTIPLES ET DIVISEURS -->
                                 <section class="course-section">
                                     <h2 class="section-title">Division euclidienne, multiples et diviseurs</h2>
+                                    <h3 class="section-title">Division euclidienne</h3>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Exemple</span>
+                                        <div style="display:grid; grid-template-columns: auto 34px 34px 2px 55px auto; grid-template-rows: repeat(5, 36px); align-items:center; font-family:'Courier New', monospace; font-size:1.3em; row-gap:2px; margin:14px 0;">
+                                            <div style="grid-column:1; grid-row:1; color:blue; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le dividende &rarr;</div>
+                                            <div style="grid-column:2; grid-row:1; color:blue; text-align:center;">8</div>
+                                            <div style="grid-column:3; grid-row:1; color:blue; text-align:center;">6</div>
+                                            <div style="grid-column:4; grid-row:1 / 6; border-left:2px solid black;"></div>
+                                            <div style="grid-column:5; grid-row:1; color:red; text-align:center; font-weight:bold; border-bottom:1px solid black;">3</div>
+                                            <div style="grid-column:6; grid-row:1; color:red; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le diviseur</div>
+
+                                            <div style="grid-column:2; grid-row:2; color:black; text-align:center; border-top:1px solid black;">&minus;6</div>
+                                            <div style="grid-column:5; grid-row:2; color:green; text-align:center; font-weight:bold;">28</div>
+                                            <div style="grid-column:6; grid-row:2; color:green; font-weight:bold; font-size:0.5em; padding-left:6px; white-space:nowrap;">&larr; Le quotient</div>
+
+                                            <div style="grid-column:2; grid-row:3; color:black; text-align:center;">2</div>
+                                            <div style="grid-column:3; grid-row:3; color:black; text-align:center;">6</div>
+
+                                            <div style="grid-column:2 / 4; grid-row:4; color:black; text-align:center; border-top:1px solid black;">&minus; 24</div>
+
+                                            <div style="grid-column:1; grid-row:5; color:orange; font-weight:bold; font-size:0.5em; text-align:right; padding-right:6px; white-space:nowrap;">Le reste &rarr;</div>
+                                            <div style="grid-column:3; grid-row:5; color:orange; text-align:center; font-weight:bold;">2</div>
+                                        </div>
+
+                                        <p><strong>Égalité euclidienne :</strong></p>
+                                        <p style="text-align:center; font-size:1.15em;">
+                                            <span style="color:blue; font-weight:bold;">86</span> = <span style="color:red; font-weight:bold;">3</span> &times; <span style="color:green; font-weight:bold;">28</span> + <span style="color:orange; font-weight:bold;">2</span><br>
+                                            <span style="color:blue; font-weight:bold;">DIVIDENDE</span> = <span style="color:red; font-weight:bold;">DIVISEUR</span> &times; <span style="color:green; font-weight:bold;">QUOTIENT</span> + <span style="color:orange; font-weight:bold;">RESTE</span>
+                                        </p>
+                                    </div>
+
                                     <div class="notion-box">
                                         <p>Effectuer la <strong>division euclidienne</strong> d'un nombre entier $a$ (le <strong>dividende</strong>) par un nombre entier $b$ (le <strong>diviseur</strong>), c'est trouver un <strong>quotient</strong> $q$ et un <strong>reste</strong> $r$ tels que :</p>
                                         <blockquote>$a = b \\times q + r$ avec $r < b$</blockquote>
