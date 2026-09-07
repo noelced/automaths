@@ -132,18 +132,41 @@ function renderInjectedQuiz(container, questions, containerId) {
         // MODE QUESTION (QCM ou Texte)
         let optionsArray = [];
         if (currentCard.options) {
-            optionsArray = Array.isArray(currentCard.options) ? currentCard.options : currentCard.options.split('\\').map(opt => opt.trim());
+            optionsArray = Array.isArray(currentCard.options)
+                ? currentCard.options
+                : currentCard.options.split('\\').map(opt => opt.trim());
         }
         if (optionsArray.length > 0) optionsArray = shuffleArray(optionsArray);
         if (optionsArray.length > 0) {
             // Affichage QCM
-            let qcmHTML = `<div style="display:grid; gap:10px; margin-bottom:20px;">`;
-            optionsArray.forEach(opt => {
-                qcmHTML += `<button class="action-btn" style="background:white; color:var(--primary); border:2px solid var(--primary);" 
-                            onclick="checkFullQuiz('${currentCard.quiz.a}', '${containerId}', '${opt}')">${opt}</button>`;
+            // IMPORTANT : on n'utilise PAS onclick="checkFullQuiz(..., '${opt}')"
+            // car opt peut contenir du LaTeX ($, {, }, \, ') qui casserait l'attribut
+            // HTML inline. On passe par data-* + addEventListener en JS pur.
+            let qcmHTML = `<div id="qcm-options-${containerId}" style="display:grid; gap:10px; margin-bottom:20px;">`;
+            optionsArray.forEach((opt, idx) => {
+                // data-opt stocke l'option brute (encodée en base64 pour éviter
+                // tout problème d'apostrophes/guillemets dans l'attribut HTML)
+                const encoded = btoa(unescape(encodeURIComponent(opt)));
+                qcmHTML += `<button class="action-btn qcm-option-btn"
+                    data-opt-b64="${encoded}"
+                    data-ans-b64="${btoa(unescape(encodeURIComponent(currentCard.quiz.a)))}"
+                    data-container="${containerId}"
+                    style="background:white; color:var(--primary); border:2px solid var(--primary);">
+                    ${opt}
+                </button>`;
             });
             qcmHTML += `</div>`;
             zone.innerHTML = qcmHTML;
+
+            // Attache les événements APRÈS injection dans le DOM
+            zone.querySelectorAll('.qcm-option-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const optValue = decodeURIComponent(escape(atob(this.dataset.optB64)));
+                    const ansValue = decodeURIComponent(escape(atob(this.dataset.ansB64)));
+                    const cId = this.dataset.container;
+                    checkFullQuiz(ansValue, cId, optValue);
+                });
+            });
         } else {
             // Affichage Texte
             zone.innerHTML = `

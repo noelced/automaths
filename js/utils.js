@@ -8,77 +8,62 @@ function compareAnswers(userAnsRaw, targetAnsRaw) {
 
     const cleanMath = (str) => {
         return str.toString()
-            // 1. Conversion LaTeX vers texte simple
+            // ── Étape 1 : débaliser le LaTeX ──────────────────────────────
+            .replace(/\$([^$]*)\$/g, '$1')
+            .replace(/\\\(([^)]*)\\\)/g, '$1')
+            // ── Étape 2 : commandes LaTeX → notation lisible ───────────────
             .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1)/($2)')
-            .replace(/\\sqrt\{([^}]*)\}/g, '√$1')
-            // 2. Normalisation des décimaux (virgule -> point)
-            .replace(/,/g, '.')
-            // 3. Suppression de TOUS les espaces pour éviter "5 x 2" vs "5x2"
-            .replace(/\s+/g, '')
-            // 4. NETTOYAGE SÉCURISÉ :
-            // J'ai ajouté "(" et ")" dans la liste des caractères autorisés
-            // On garde : chiffres, lettres (a-z), opérateurs (+, -, *, /, ^), 
-            // symboles de comparaison (<, >), racine (√), point (.) et PARENTHÈSES ()
-            .replace(/[^0-9a-z./\-+<>√^()]/gi, ''); 
+            // Simplification : (\frac{3}{4} → (3)/(4) → 3/4 si num/den sont des entiers
+            .replace(/\((-?[0-9]+)\)\/\((-?[0-9]+)\)/g, '$1/$2')
+            .replace(/\\sqrt\{([^}]*)\}/g, '√($1)')
+            .replace(/\\sqrt/g, '√')
+            .replace(/\\times/g, '*')
+            .replace(/\\cdot/g, '*')
+            .replace(/\\div/g, '/')
+            .replace(/\\left\(/g, '(').replace(/\\right\)/g, ')')
+            .replace(/\\left\[/g, '[').replace(/\\right\]/g, ']')
+            .replace(/\\infty/g, 'infini')
+            .replace(/[{}]/g, '')           // accolades LaTeX résiduelles
+            .replace(/\\[a-zA-Z]+/g, '')    // commandes LaTeX résiduelles
+            // ── Étape 3 : normalisation ────────────────────────────────────
+            .replace(/,/g, '.')             // virgule décimale → point
+            .replace(/[×x·]/g, '*')         // ×, x, · → * (AVANT le filtre)
+            .replace(/\s+/g, '')            // supprime les espaces
+            // ── Étape 4 : filtre de sécurité ──────────────────────────────
+            // Garde : chiffres, lettres (variables/infini), opérateurs, √, ^
+            .replace(/[^0-9a-z./\-+<>√^()*/]/gi, '');
     };
 
-    let cleanUser = cleanMath(userAnsRaw);
+    let cleanUser   = cleanMath(userAnsRaw);
     let cleanTarget = cleanMath(targetAnsRaw);
 
-    // --- ÉTAPE DE RÉSOLUTION DES RACINES ---
-    const solveSimpleRoots = (str) => {
-        if (str.includes('√')) {
-            // On essaie d'extraire le nombre après la racine pour un calcul simple
-            let numPart = str.replace('√', '');
-            let val = parseFloat(numPart);
-            if (!isNaN(val)) return Math.sqrt(val).toString();
-        }
-        return str;
-    };
+    // --- Résolution des racines simples (√(49) → 7) ───────────────────────
+    const solveRoots = (s) => s.replace(/√\(([0-9.]+)\)/g, (_, n) => Math.sqrt(parseFloat(n)).toString())
+                                .replace(/√([0-9.]+)/g,    (_, n) => Math.sqrt(parseFloat(n)).toString());
+    cleanUser   = solveRoots(cleanUser);
+    cleanTarget = solveRoots(cleanTarget);
 
-    cleanUser = solveSimpleRoots(cleanUser);
-    cleanTarget = solveSimpleRoots(cleanTarget);
+    // --- LOGIQUE DE COMPARAISON ────────────────────────────────────────────
 
-    console.log("DEBUG COMPARISON:", { user: cleanUser, target: cleanTarget });
-
-    // --- LOGIQUE DE DÉCISION ---
-
-    // CAS 1A : Fraction simple "a/b" (UN SEUL "/", pas d'autre opérateur,
-    // pas de parenthèses) → comparaison TEXTUELLE stricte, pas numérique.
-    // Raison : quand une question demande de simplifier une fraction
-    // (ex: "simplifier 12/18"), la forme exacte compte pédagogiquement.
-    // "6/9" est numériquement égal à "2/3" mais n'est PAS la bonne réponse
-    // si la consigne demande la forme irréductible — accepter toute
-    // fraction équivalente rendrait ce type de question toujours juste,
-    // quelle que soit l'option choisie par l'élève.
+    // CAS 1A : Fraction simple a/b → textuelle (forme irréductible requise)
     const isSimpleFraction = (s) => /^-?[0-9]+\/[0-9]+$/.test(s);
-
     if (isSimpleFraction(cleanUser) || isSimpleFraction(cleanTarget)) {
         return cleanUser === cleanTarget;
     }
 
-    // CAS 1B : Comparaison de nombres ou d'expressions numériques pures
-    // avec opérateurs combinés ou parenthèses (ex: "7" vs "7",
-    // "(1+2)/4" vs "0.75") → comparaison NUMÉRIQUE tolérante, pour
-    // accepter différentes écritures d'un même résultat de calcul.
-    const isPureNumber = (s) => /^[0-9./\-+()]+$/.test(s);
-
+    // CAS 1B : Expression numérique pure → numérique tolérante
+    // isPureNumber accepte *, ^ pour évaluer des expressions comme 1.25*10^5
+    const isPureNumber = (s) => /^[0-9./\-+()*/^]+$/.test(s);
     if (isPureNumber(cleanUser) && isPureNumber(cleanTarget)) {
-        const userVal = evalNumericExpression(cleanUser);
+        const userVal   = evalNumericExpression(cleanUser);
         const targetVal = evalNumericExpression(cleanTarget);
-        // Si l'une des deux expressions ne s'évalue pas en nombre valide
-        // (ex: chaîne vide, expression malformée), on ne peut pas conclure
-        // à une égalité — on retombe sur la comparaison textuelle stricte.
-        if (isNaN(userVal) || isNaN(targetVal)) {
-            return cleanUser === cleanTarget;
+        if (!isNaN(userVal) && !isNaN(targetVal)) {
+            return Math.abs(userVal - targetVal) < 1e-9;
         }
-        // Tolérance epsilon pour les imprécisions de calcul flottant
-        // (ex: 1/3 + 1/3 + 1/3 peut donner 0.9999999999999999 en JS)
-        return Math.abs(userVal - targetVal) < 1e-9;
+        return cleanUser === cleanTarget;
     }
 
-    // CAS 2 : Comparaison d'expressions littérales
-    // Note : Cette comparaison reste stricte. "2(n+1)" sera différent de "2n+2"
+    // CAS 2 : Expression littérale → textuelle stricte
     return cleanUser === cleanTarget;
 }
 
@@ -96,12 +81,15 @@ function compareAnswers(userAnsRaw, targetAnsRaw) {
  * de numérateur 1 comme bonne réponse.
  */
 function evalNumericExpression(str) {
-    if (str === '' || !/^[0-9+\-*/.()]+$/.test(str)) return NaN;
-    // Évite les expressions vides ou des opérateurs seuls qui passeraient
-    // la regex mais planteraient ou donneraient un résultat absurde
+    if (str === '' || !/^[0-9+\-*/.()^]+$/.test(str)) return NaN;
     if (!/[0-9]/.test(str)) return NaN;
     try {
-        const result = Function('"use strict"; return (' + str + ')')();
+        // ^ en mathématique = puissance, mais en JS ^ = XOR.
+        // On convertit a^b → (a)**(b) avant d'évaluer.
+        // Regex : remplace X^Y par X**Y (gère les cas avec parenthèses et nombres).
+        const jsExpr = str.replace(/(\d+(?:\.\d+)?)\^(-?\d+(?:\.\d+)?)/g, '($1)**($2)')
+                          .replace(/\)\^(\d+)/g, ')**($1)');
+        const result = Function('"use strict"; return (' + jsExpr + ')')();
         return (typeof result === 'number' && isFinite(result)) ? result : NaN;
     } catch (e) {
         return NaN;
