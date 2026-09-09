@@ -134,7 +134,7 @@ function renderInjectedQuiz(container, questions, containerId) {
         if (currentCard.options) {
             optionsArray = Array.isArray(currentCard.options)
                 ? currentCard.options
-                : currentCard.options.split('\\').map(opt => opt.trim());
+                : currentCard.options.split('¤').map(opt => opt.trim());
         }
         if (optionsArray.length > 0) optionsArray = shuffleArray(optionsArray);
         if (optionsArray.length > 0) {
