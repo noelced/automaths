@@ -90,7 +90,7 @@ var chapterData_5eme_1 = {
                                         <span>Identifier l'opération à utiliser dans un problème</span>
                                         <button class="btn-check-understanding"
                                                 data_quiz_target="quiz-area-OPsens"
-                                                onclick="startQuizFromButton('quiz-area-OPsens', '51101')">
+                                                onclick="startQuizFromButton('quiz-area-OPsens', '51111')">
                                             Ai-je bien compris ?
                                         </button>
                                     </div>
@@ -100,7 +100,7 @@ var chapterData_5eme_1 = {
                                         <span>Utiliser les bons mots de vocabulaire</span>
                                         <button class="btn-check-understanding"
                                                 data_quiz_target="quiz-area-OPvocabulaire"
-                                                onclick="startQuizFromButton('quiz-area-OPvocabulaire', '51102')">
+                                                onclick="startQuizFromButton('quiz-area-OPvocabulaire', '51112')">
                                             Ai-je bien compris ?
                                         </button>
                                     </div>
@@ -115,7 +115,7 @@ var chapterData_5eme_1 = {
 
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPvraisemblance"
-                                        onclick="startQuizFromButton('quiz-area-OPvraisemblance', '51103')">
+                                        onclick="startQuizFromButton('quiz-area-OPvraisemblance', '51121')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPvraisemblance"></div>
@@ -159,7 +159,7 @@ var chapterData_5eme_1 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPpriorites"
-                                        onclick="startQuizFromButton('quiz-area-OPpriorites', '51201')">
+                                        onclick="startQuizFromButton('quiz-area-OPpriorites', '51211')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPpriorites"></div>
@@ -180,7 +180,7 @@ var chapterData_5eme_1 = {
                                     <p>Si on effectue ce programme sur le nombre $7$ : $(7 + 3) \\times 9 - 5 =$<font color="blue">$ 10$</font>$\\times 9 - 5 =$<font color="blue">$ 90$</font>$- 5 = 85$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPprogramme"
-                                        onclick="startQuizFromButton('quiz-area-OPprogramme', '51211')">
+                                        onclick="startQuizFromButton('quiz-area-OPprogramme', '51221')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPprogramme"></div>
@@ -189,10 +189,17 @@ var chapterData_5eme_1 = {
                                 <!-- SECTION : DISTRIBUTIVITÉ SIMPLE -->
                                 <section class="course-section">
                                     <h2 class="section-title">Distributivité simple sur des exemples numériques</h2>
-                                    <div class="notion-box">
-                                        <blockquote>$\\color{blue}{k \\times} (a + b) = \\color{blue}{k \\times} a + \\color{blue}{k \\times} b$</blockquote>
-                                        <blockquote>$\\color{blue}{k \\times} (a - b) = \\color{blue}{k \\times} a - \\color{blue}{k \\times} b$</blockquote>
-                                    </div>
+                                    
+<div class="notion-box">
+    <blockquote>
+        $ \\textcolor{blue}{k \\times} (a + b) = \\textcolor{blue}{k \\times} a + \\textcolor{blue}{k \\times} b $
+    </blockquote>
+    <blockquote>
+        $ \\textcolor{blue}{k \\times} (a - b) = \\textcolor{blue}{k \\times} a - \\textcolor{blue}{k \\times} b $
+    </blockquote>
+</div>
+
+
                                     <p>Cette propriété permet parfois de <strong>calculer plus rapidement, mentalement</strong>, en remplaçant un nombre par une somme ou une différence bien choisie.</p>
                                     <p><strong>Exemples :</strong></p>
                                     <div class="calculation-container">
@@ -267,7 +274,7 @@ var chapterData_5eme_1 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPdivisioneuclid"
-                                        onclick="startQuizFromButton('quiz-area-OPdivisioneuclid', '51501')">
+                                        onclick="startQuizFromButton('quiz-area-OPdivisioneuclid', '51411')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPdivisioneuclid"></div>
@@ -287,7 +294,7 @@ var chapterData_5eme_1 = {
                                     <p>Exemple : $4,25 \\div 0,05 = (4,25 \\times 100) \\div (0,05 \\times 100) = 425 \\div 5 = 85$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPdiviserdecimal"
-                                        onclick="startQuizFromButton('quiz-area-OPdiviserdecimal', '51401')">
+                                        onclick="startQuizFromButton('quiz-area-OPdiviserdecimal', '51421')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPdiviserdecimal"></div>
@@ -301,14 +308,36 @@ var chapterData_5eme_1 = {
                                         </ul>
                                     </div>
                                     <p>Exemple : $28 = 7 \\times 4$, donc $28$ est un multiple de $7$ (et de $4$), et $7$ (comme $4$) est un diviseur de $28$.</p>
-                                    <p>Les diviseurs de $28$ sont : $1$ ; $2$ ; $4$ ; $7$ ; $14$ ; $28$.</p>
-                                    <p>Les multiples de $14$ sont : $14$ ; $28$ ; $42$ ; $56$... Parmi $56$ ; $141$ ; $280$, seuls $56$ et $280$ sont des multiples de $14$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPmultdiv"
-                                        onclick="startQuizFromButton('quiz-area-OPmultdiv', '51511')">
+                                        onclick="startQuizFromButton('quiz-area-OPmultdiv', '51431')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPmultdiv"></div>
+                                    <div class="notion-box">
+                                    <p> Pour trouver la liste des diviseurs d'un nombre il suffit d'essayer de diviser le nombre par, 2,3,4,... etc et vérifier que la division tombe bien juste.</p>
+                                    </div>
+                                    <div>
+                                    <p> <strong>Exemple : Je cherche les diviseurs de $28$ :</strong></p>
+                                    <ul>
+                                    <li>j'essaye 28 : 1 = 28 donc 1 et 28 sont des diviseurs de 28.</li>
+                                    <li>j'essaye 28 : 2 = 14 donc 2 et 14 sont des diviseurs de 28.</li>
+                                    <li>j'essaye 28 : 3 = 9,33 donc 3 n'est pas un diviseur car la division ne tombe pas juste.</li>
+                                    <li>j'essaye 28 : 4 = 7 donc 4 et 7 sont des diviseurs de 28.</li>
+                                    <li>j'essaye 28 : 5 = 5,6 donc 5 n'est pas un diviseur.</li>
+                                    <li>j'essaye 28 : 6 = 4,6... donc 6 n'est pas un diviseur, et je peux m'arrêter la car le quotient est plus petit que le diviseur ce qui signifie que j'ai tout trouvé.</li>
+                                    </ul>
+                                    <p>Les diviseurs de $28$ sont : $1$ ; $2$ ; $4$ ; $7$ ; $14$ ; $28$.</p>
+                                    </div>
+                                    <p> Pour trouver des multiples c'est plus simple il suffit de calculer : le nombre $\\times 1$, puis $\\times 2$ $\\times 3$ ...etc</p>
+                                    <p>Les multiples de $14$ sont : $14$ ; $28$ ; $42$ ; $56$ ; $14 \\times 5$ ;  $14 \\times 6$ ; ...</p>
+                                    Parmi $56$ ; $141$ ; $280$, seuls $56$ et $280$ sont des multiples de $14$.</p>
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-OPlistmultdiv"
+                                        onclick="startQuizFromButton('quiz-area-OPlistmultdiv', '51432')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-OPlistmultdiv"></div>
                                 </section>
 
                                 <!-- SECTION : CRITÈRES DE DIVISIBILITÉ -->
@@ -359,11 +388,13 @@ var chapterData_5eme_1 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPcriteres"
-                                        onclick="startQuizFromButton('quiz-area-OPcriteres', '51601')">
+                                        onclick="startQuizFromButton('quiz-area-OPcriteres', '51501')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-OPcriteres"></div>
                                 </section>
+
+
 
                                 <!-- SECTION : POUR ALLER PLUS LOIN -->
                                 <section class="course-section">
@@ -371,7 +402,16 @@ var chapterData_5eme_1 = {
                                     <div class="notion-box">
                                         <p>La notion de <strong>nombre premier</strong> (un nombre qui n'a que $1$ et lui-même comme diviseurs) sera étudiée plus en détail au collège. On sait depuis l'Antiquité, grâce à <strong>Euclide</strong>, qu'il existe une <strong>infinité</strong> de nombres premiers. Le mathématicien grec <strong>Ératosthène</strong> a inventé une méthode, le <em>crible d'Ératosthène</em>, pour les retrouver facilement parmi une liste de nombres.</p>
                                     </div>
+                                    
+                                    Amuse toi à écrire la liste des diviseurs des deux nombres de l\'énnoncé pour résoudre ces problèmes compliqués ! 
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-OPDivcommun"
+                                        onclick="startQuizFromButton('quiz-area-OPDivcommun', '51502')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-OPDivcommun"></div>
                                 </section>
+
                             </div>
                         `
     }
