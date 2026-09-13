@@ -20,8 +20,8 @@ var chapterData_5eme_2 = {
         content: `
                             <div class="course-container">
                                 <!-- SECTION : OBJECTIFS -->
-                                <section class="course-section">
-                                    <p><strong>Objectifs :</strong></p>
+ <!--                                  <section class="course-section">
+                                     <p><strong>Objectifs :</strong></p>
                                     <ul>
                                         <li>Je sais définir un nombre relatif, positif, strictement positif, négatif, strictement négatif</li>
                                         <li>J'utilise les nombres relatifs pour représenter des grandeurs pouvant être inférieures à zéro</li>
@@ -34,7 +34,7 @@ var chapterData_5eme_2 = {
                                         <li>Je sais enchaîner additions et soustractions de nombres décimaux relatifs</li>
                                     </ul>
                                 </section>
-
+-->
                                 <!-- SECTION : DÉCOUVRIR LES NOMBRES RELATIFS -->
                                 <section class="course-section">
                                     <h2 class="section-title">Découvrir les nombres relatifs</h2>
@@ -43,12 +43,20 @@ var chapterData_5eme_2 = {
                                         <ul>
                                             <li>S'il est précédé du signe « $+$ », on dit qu'il est <strong>positif</strong> (on peut ne pas écrire le « $+$ »).</li>
                                             <li>S'il est précédé du signe « $-$ », on dit qu'il est <strong>négatif</strong> (on doit toujours écrire le « $-$ »).</li>
+                                            <li>Le nombre $0$ est le seul nombre à la fois positif <strong>et</strong> négatif. Tu peux mettre le signe que tu veux devant, cela ne change rien.</li>
                                         </ul>
                                     </div>
                                     <p>Exemples : $+5$ (ou $5$) est un nombre <strong>positif</strong> ; $-5$ est un nombre <strong>négatif</strong>.</p>
+                                    
                                     <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong> le nombre $0$ est le seul nombre à la fois positif <strong>et</strong> négatif. On dit qu'un nombre est <strong>strictement positif</strong> (resp. <strong>strictement négatif</strong>) lorsqu'il est positif (resp. négatif) et différent de $0$.
-                                    </div>
+                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong>
+                                        <ul>
+                                            <li> Lorsqu'on dit qu'un nombre "a" est positif, il peut être égal à +0,1 ou +5 ou +1000 <strong>mais aussi il peut être a=0 !!!</strong> On utilisera le symbole $a \\geq 0$ ce qui signifie que le nombre $a$ est <strong>supérieur ou égal</strong> à zéro.</li>
+                                            <li> Lorsqu'on veut qu'un nombre soit positif mais qu'il ne puisse pas être égal à zéro, on dira qu'il est <strong>strictement positif</strong>. Le symbole pour dire qu'un nombre a est <strong>strictement positif</strong> est celui que tu connais déjà $a > 0$. (Le symbole > signifie strictement supérieur à)</li>
+                                            <li> De la même façon si je veux une liste de nombres négatifs il y aura 0; -5 ;-10 j'écrirai $a \\leq 0$. (Le symbole $\\leq$ signifie inférieur ou égal)</li>
+                                            <li> Lorsqu'on veut qu'un nombre soit négatif mais qu'il ne puisse pas être égal à zéro, on utilisera le mot de vocabulaire <strong> strictement négatif </strong>. Le sybmbole pour dire strictement négatif est $a < 0$. (Le symbole < signifie strictement inférieur à)</li>
+                                        </ul>
+                                        </div>
                                     <p>Les nombres relatifs permettent de représenter des grandeurs qui peuvent prendre des valeurs <strong>inférieures à zéro</strong> :</p>
                                     <ul>
                                         <li>une <strong>température</strong> : $-4°C$ signifie 4 degrés en dessous de zéro ;</li>
@@ -67,6 +75,7 @@ var chapterData_5eme_2 = {
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Méthode</span> À 6h du matin, il faisait $-3°C$ à Grenoble. À 14h, la température a augmenté de $8°C$. Quelle température fait-il à 14h ?
                                         <ul>
+                                            <li>Pour comprendre ce genre de problèmes il faut s'imaginer dans sa têtre un axe gradué (comme un thérmomètre)
                                             <li>On part de $-3$ et on ajoute $8$ (une augmentation).</li>
                                             <li>La température à 14h est donc de $-3 + 8 = 5°C$.</li>
                                         </ul>
