@@ -308,7 +308,10 @@ textarea {
             margin: 1.5rem 0;
             font-style: italic;
         }
-
+.notion-box ol {
+    padding-left: 2.2em; /* pousse numéros + texte vers l'intérieur du cadre */
+    margin: 10px 0 0 0;  /* petit espace après le texte d'intro, sans décalage supplémentaire */
+}
         /* --- NOUVELLE CLASSE : MÉTHODE / EXERCICE TYPE --- */
 .method-box {
     background: #ffffff; /* Fond blanc pour bien trancher avec le reste */
@@ -340,6 +343,10 @@ textarea {
 }
 .method-box.warning .method-badge {
     background: var(--secondary); /* Badge violet */
+}
+.method-box ol {
+    padding-left: 2.2em; /* pousse numéros + texte vers l'intérieur du cadre */
+    margin: 10px 0 0 0;  /* petit espace après le texte d'intro, sans décalage supplémentaire */
 }
 /* --- STYLE PAR DÉFAUT (MOBILE : l'un sous l'autre) --- */
 .calculation-container {
