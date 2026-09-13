@@ -340,7 +340,7 @@ function renderStudentRow(student, currentClassId){
         '<div class="student-row">' +
             '<span class="avatar">' + (student.avatar_emoji || '🦊') + '</span>' +
             '<div>' +
-                '<div class="name">' + escapeHtml(student.pseudo || student.full_name) + '</div>' +
+                '<div class="name">' + escapeHtml(student.full_name || student.pseudo) + '</div>' +
                 '<div class="email">' + escapeHtml(student.class_name || 'Aucune classe (ancien champ)') + '</div>' +
             '</div>' +
             '<select onchange="assignStudentToClass(\'' + student.id + '\', this.value)">' +
