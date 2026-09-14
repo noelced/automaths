@@ -20,6 +20,55 @@ const RANK_TIERS = [
 const SUB_TIERS = ['III', 'II', 'I'];
 
 
+// ── AVATARS DÉBLOQUABLES PAR PALIER ────────────────────────────────────────
+// À chaque rang atteint (Bronze, Argent, Or, Platine, Diamant, Master),
+// l'élève débloque 2 nouvelles icônes (une pensée plutôt "fille", une plutôt
+// "garçon" — mais chacun peut choisir librement n'importe laquelle des icônes
+// déjà débloquées, sans distinction). Le renard 🦊 reste offert dès le départ.
+const AVATAR_TIERS = [
+    { rankKey: 'bronze',  icons: ['🦊'] },
+    { rankKey: 'argent',  icons: ['🐱', '🐺'] },
+    { rankKey: 'or',      icons: ['🦄', '🐉'] },
+    { rankKey: 'platine', icons: ['🦋', '🦁'] },
+    { rankKey: 'diamant', icons: ['🧚', '🐯'] },
+    { rankKey: 'master',  icons: ['🦢', '🦅'] },
+];
+
+/**
+ * Renvoie la liste (à plat) des icônes déjà débloquées pour un total d'XP donné.
+ */
+function getUnlockedAvatars(totalXp) {
+    const rank = getRankFromXp(totalXp);
+    const rankIndex = RANK_TIERS.findIndex(r => r.key === rank.key);
+    let unlocked = [];
+    for (let i = 0; i <= rankIndex; i++) {
+        const tier = AVATAR_TIERS.find(t => t.rankKey === RANK_TIERS[i].key);
+        if (tier) unlocked = unlocked.concat(tier.icons);
+    }
+    return unlocked;
+}
+
+/**
+ * Renvoie TOUTES les icônes (débloquées + à venir) avec leur statut, pour
+ * affichage dans le sélecteur d'avatar (icônes verrouillées visibles mais
+ * grisées, avec le rang nécessaire pour les débloquer — effet motivant).
+ * Retourne : [{ icon, unlocked, rankKey, rankLabel }, ...]
+ */
+function getAllAvatarsWithStatus(totalXp) {
+    const rank = getRankFromXp(totalXp);
+    const rankIndex = RANK_TIERS.findIndex(r => r.key === rank.key);
+    const result = [];
+    AVATAR_TIERS.forEach((tier, i) => {
+        const tierRank = RANK_TIERS.find(r => r.key === tier.rankKey);
+        const unlocked = i <= rankIndex;
+        tier.icons.forEach(icon => {
+            result.push({ icon, unlocked, rankKey: tier.rankKey, rankLabel: tierRank.label });
+        });
+    });
+    return result;
+}
+
+
 /**
  * Détermine le rang complet d'un élève à partir de son XP total.
  * Retourne { key, label, color, glow, icon, subTier, progressToNext, xpToNext }
@@ -267,8 +316,10 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
         if (!result) return null;
 
         const oldRank = window._lastKnownRank;
+        const oldMainRankKey = window._lastKnownMainRankKey;
         const newRank = getRankFromXp(result.new_total_xp);
         window._lastKnownRank = newRank.key + (newRank.subTier || '');
+        window._lastKnownMainRankKey = newRank.key;
 
         // Toast : XP gagné
         showGameToast({
@@ -278,7 +329,7 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
             color: '#ffd23f'
         });
 
-        // Toast : montée de rang (si changement détecté)
+        // Toast : montée de rang (si changement détecté, palier I/II/III inclus)
         if (oldRank && oldRank !== (newRank.key + (newRank.subTier || ''))) {
             setTimeout(() => {
                 showGameToast({
@@ -290,8 +341,28 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
             }, 600);
         }
 
-        // Badges
+        // Toast : nouveaux avatars débloqués (uniquement lors d'un changement
+        // de RANG PRINCIPAL — Bronze→Argent, Argent→Or, etc. — pas à chaque
+        // sous-palier I/II/III, puisque les avatars se débloquent par rang).
+        let avatarToastShown = false;
+        if (oldMainRankKey && oldMainRankKey !== newRank.key && typeof AVATAR_TIERS !== 'undefined') {
+            const tier = AVATAR_TIERS.find(t => t.rankKey === newRank.key);
+            if (tier && tier.icons.length) {
+                avatarToastShown = true;
+                setTimeout(() => {
+                    showGameToast({
+                        icon: tier.icons.join(' '),
+                        title: 'Nouveaux avatars débloqués !',
+                        subtitle: 'Va les choisir dans ton profil 🎨',
+                        color: newRank.color
+                    });
+                }, 1200);
+            }
+        }
+
+        // Badges (décalés pour laisser la place au toast d'avatars ci-dessus)
         const badges = await checkAndUnlockBadges(score, total, durationSeconds, result.new_streak);
+        const badgesBaseDelay = avatarToastShown ? 2100 : 1200;
         badges.forEach((badge, i) => {
             setTimeout(() => {
                 showGameToast({
@@ -300,7 +371,7 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
                     subtitle: badge.desc,
                     color: '#b042ff'
                 });
-            }, 1200 + i * 900);
+            }, badgesBaseDelay + i * 900);
         });
 
         return result;
