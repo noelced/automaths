@@ -122,6 +122,53 @@ input:checked + .slider::before{ transform:translateX(20px); }
 .empty-state{ text-align:center; padding:50px 20px; color:var(--text-muted); }
 .empty-state .icon{ font-size:2.4rem; margin-bottom:10px; }
 
+/* En-tête de la classe sélectionnée (nom + bouton supprimer) */
+.class-detail-header{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px;
+}
+.btn-danger-outline{
+    padding:7px 12px; border:1px solid var(--danger); border-radius:8px;
+    background:var(--danger-light); color:var(--danger); font-size:0.82rem;
+    font-weight:600; cursor:pointer; white-space:nowrap;
+}
+.btn-danger-outline:hover{ background:var(--danger); color:white; }
+
+/* Bouton "Ajouter un élève" (en haut de page) */
+.page-actions{ display:flex; justify-content:flex-end; margin-bottom:16px; }
+.btn-secondary{
+    padding:10px 16px; border:1px solid var(--border); border-radius:8px;
+    background:var(--card-bg); color:var(--text-main); font-weight:600;
+    font-size:0.88rem; cursor:pointer;
+}
+.btn-secondary:hover{ border-color:var(--primary); color:var(--primary-dark); }
+
+/* ── FENÊTRES MODALES ─────────────────────────────────────────────────── */
+.modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(15,23,42,0.5);
+    align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.modal-overlay.show{ display:flex; }
+.modal-box{
+    background:var(--card-bg); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:26px; width:100%; max-width:380px;
+}
+.modal-box h3{ font-size:1.05rem; margin-bottom:14px; }
+.modal-box p{ font-size:0.9rem; color:var(--text-muted); margin-bottom:20px; line-height:1.5; }
+.modal-box .modal-field{ margin-bottom:14px; display:flex; flex-direction:column; gap:5px; }
+.modal-box .modal-field label{ font-size:0.8rem; font-weight:600; color:var(--text-main); }
+.modal-box .modal-field input{
+    padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; outline:none;
+}
+.modal-box .modal-field input:focus{ border-color:var(--primary); }
+.modal-box .modal-hint{ font-size:0.75rem; color:var(--text-muted); margin-top:-8px; margin-bottom:14px; }
+.modal-actions{ display:flex; gap:10px; margin-top:6px; }
+.modal-actions button{ flex:1; padding:10px; border-radius:8px; font-weight:600; font-size:0.9rem; cursor:pointer; border:none; }
+.modal-btn-yes{ background:var(--danger); color:white; }
+.modal-btn-yes:hover{ opacity:0.9; }
+.modal-btn-no{ background:var(--bg); color:var(--text-main); border:1px solid var(--border) !important; }
+.modal-btn-no:hover{ background:var(--border); }
+.modal-error{ font-size:0.82rem; color:var(--danger); margin-top:-6px; margin-bottom:12px; min-height:16px; }
+
 .save-toast{
     position:fixed; bottom:24px; right:24px; background:var(--success);
     color:white; padding:12px 20px; border-radius:10px; font-size:0.88rem;
@@ -165,6 +212,10 @@ input:checked + .slider::before{ transform:translateX(20px); }
     <div class="page-title">🏫 Gestion des classes</div>
     <div class="page-subtitle">Créez vos classes, assignez vos élèves, et contrôlez le classement.</div>
 
+    <div class="page-actions">
+        <button class="btn-secondary" onclick="openAddStudentModal()">👤➕ Ajouter un élève</button>
+    </div>
+
     <div class="layout">
         <!-- COLONNE GAUCHE : liste + création -->
         <div class="card">
@@ -189,6 +240,43 @@ input:checked + .slider::before{ transform:translateX(20px); }
 </main>
 
 <div class="save-toast" id="save-toast">✓ Modifications enregistrées</div>
+
+<!-- MODALE : confirmation de suppression de classe -->
+<div class="modal-overlay" id="modal-confirm-delete">
+    <div class="modal-box">
+        <h3>🗑️ Supprimer la classe ?</h3>
+        <p>Voulez-vous vraiment supprimer cette classe ? Ses élèves ne seront pas supprimés, mais ils n'appartiendront plus à aucune classe.</p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmDeleteClass()">Oui</button>
+            <button class="modal-btn-no" onclick="closeDeleteModal()">Non</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE : ajout d'un élève -->
+<div class="modal-overlay" id="modal-add-student">
+    <div class="modal-box">
+        <h3>👤➕ Ajouter un élève</h3>
+        <div class="modal-field">
+            <label for="new-student-email">Identifiant (email)</label>
+            <input type="text" id="new-student-email" placeholder="ex: prenom.nom@college.fr">
+        </div>
+        <div class="modal-hint">Si vous saisissez un simple identifiant sans "@", "@college.fr" sera ajouté automatiquement.</div>
+        <div class="modal-field">
+            <label for="new-student-password">Mot de passe</label>
+            <input type="text" id="new-student-password" placeholder="Au moins 6 caractères">
+        </div>
+        <div class="modal-field">
+            <label for="new-student-fullname">Nom complet (full_name)</label>
+            <input type="text" id="new-student-fullname" placeholder="ex: Alice Dupont">
+        </div>
+        <div class="modal-error" id="add-student-error"></div>
+        <div class="modal-actions">
+            <button class="modal-btn-no" onclick="closeAddStudentModal()">Annuler</button>
+            <button class="btn-primary" style="flex:1;" onclick="submitAddStudent()" id="add-student-submit-btn">Créer l'élève</button>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -291,7 +379,10 @@ function renderClassDetail(classId){
     const studentsInClass = allStudents.filter(function(s){ return s.class_id === classId; });
     const unassignedStudents = allStudents.filter(function(s){ return !s.class_id; });
 
-    let html = '<h2>' + escapeHtml(classObj.name) + '</h2>';
+    let html = '<div class="class-detail-header">' +
+        '<h2 style="margin-bottom:0;">' + escapeHtml(classObj.name) + '</h2>' +
+        '<button class="btn-danger-outline" onclick="openDeleteModal(\'' + classId + '\')">🗑️ Supprimer la classe</button>' +
+    '</div>';
 
     // Toggle leaderboard
     html += '' +
@@ -378,6 +469,112 @@ async function toggleLeaderboard(classId, enabled){
 
     await loadAll();
     showToast(enabled ? '✓ Classement activé' : '✓ Classement désactivé');
+}
+
+
+// ── SUPPRESSION DE CLASSE ──────────────────────────────────────────────────
+let pendingDeleteClassId = null;
+
+function openDeleteModal(classId){
+    pendingDeleteClassId = classId;
+    document.getElementById('modal-confirm-delete').classList.add('show');
+}
+
+function closeDeleteModal(){
+    pendingDeleteClassId = null;
+    document.getElementById('modal-confirm-delete').classList.remove('show');
+}
+
+async function confirmDeleteClass(){
+    if (!pendingDeleteClassId) return;
+    const classId = pendingDeleteClassId;
+
+    // La contrainte class_id REFERENCES classes(id) ON DELETE SET NULL fait
+    // automatiquement repasser les élèves de cette classe à "sans classe".
+    const { error } = await sb.from('classes').delete().eq('id', classId);
+
+    closeDeleteModal();
+
+    if (error){
+        alert('Erreur lors de la suppression : ' + error.message);
+        return;
+    }
+
+    if (selectedClassId === classId){
+        selectedClassId = null;
+        document.getElementById('class-detail').innerHTML =
+            '<div class="empty-state"><div class="icon">👈</div>Sélectionnez une classe pour voir ses élèves.</div>';
+    }
+
+    await loadAll();
+    showToast('✓ Classe supprimée');
+}
+
+
+// ── AJOUT D'UN ÉLÈVE (compte Supabase Auth + profil) ──────────────────────
+function openAddStudentModal(){
+    document.getElementById('new-student-email').value = '';
+    document.getElementById('new-student-password').value = '';
+    document.getElementById('new-student-fullname').value = '';
+    document.getElementById('add-student-error').textContent = '';
+    document.getElementById('modal-add-student').classList.add('show');
+}
+
+function closeAddStudentModal(){
+    document.getElementById('modal-add-student').classList.remove('show');
+}
+
+async function submitAddStudent(){
+    const errorEl = document.getElementById('add-student-error');
+    errorEl.textContent = '';
+
+    let identifiant = document.getElementById('new-student-email').value.trim();
+    const password = document.getElementById('new-student-password').value;
+    const fullName = document.getElementById('new-student-fullname').value.trim();
+
+    if (!identifiant || !password || !fullName){
+        errorEl.textContent = 'Merci de remplir les trois champs.';
+        return;
+    }
+    if (password.length < 6){
+        errorEl.textContent = 'Le mot de passe doit faire au moins 6 caractères.';
+        return;
+    }
+
+    // Si l'identifiant saisi n'est pas une adresse email, on complète avec
+    // un domaine technique (Supabase Auth exige un format email valide).
+    const email = identifiant.includes('@') ? identifiant : identifiant + '@college.fr';
+
+    const submitBtn = document.getElementById('add-student-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Création…';
+
+    // IMPORTANT : on utilise un client Supabase TEMPORAIRE et non persistant
+    // pour cet appel signUp(). Le client principal "sb" gère la session du
+    // professeur connecté ; appeler auth.signUp() dessus remplacerait sa
+    // session par celle du nouvel élève et le déconnecterait de son propre
+    // tableau de bord. Ce client jetable évite totalement ce problème.
+    const tempClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false }
+    });
+
+    const { error } = await tempClient.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName, role: 'student' } }
+    });
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Créer l'élève";
+
+    if (error){
+        errorEl.textContent = 'Erreur : ' + error.message;
+        return;
+    }
+
+    closeAddStudentModal();
+    await loadAll();
+    showToast('✓ Élève créé : ' + fullName);
 }
 
 
