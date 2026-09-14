@@ -58,7 +58,52 @@ header{
     background:linear-gradient(135deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
     display:flex; align-items:center; justify-content:center; font-size:2.2rem;
     box-shadow:0 0 0 4px var(--bg-card), 0 0 24px var(--rank-glow, var(--accent-glow)); flex-shrink:0;
+    position:relative; cursor:pointer;
 }
+.player-avatar .avatar-edit-badge{
+    position:absolute; bottom:-2px; right:-2px;
+    width:24px; height:24px; border-radius:50%;
+    background:var(--bg-card); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:0.75rem;
+    opacity:0; transition:opacity .2s;
+}
+.player-avatar:hover .avatar-edit-badge{ opacity:1; }
+
+/* ── FENÊTRE DE SÉLECTION D'AVATAR ──────────────────────────────────────── */
+.avatar-modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(5,8,16,0.7);
+    align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.avatar-modal-overlay.show{ display:flex; }
+.avatar-modal-box{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:26px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.avatar-modal-box h3{ font-size:1.1rem; margin-bottom:6px; color:var(--text); }
+.avatar-modal-box .avatar-modal-sub{ font-size:0.82rem; color:var(--text-dim); margin-bottom:18px; }
+.avatar-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px;
+}
+.avatar-choice{
+    position:relative; aspect-ratio:1; border-radius:14px;
+    background:var(--bg-card-light); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:1.9rem;
+    cursor:pointer; transition:all .15s;
+}
+.avatar-choice:hover{ border-color:var(--accent-glow); transform:translateY(-2px); }
+.avatar-choice.selected{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow)55; }
+.avatar-choice.locked{ opacity:0.35; cursor:not-allowed; filter:grayscale(1); }
+.avatar-choice.locked:hover{ transform:none; border-color:var(--border); }
+.avatar-choice .lock-icon{
+    position:absolute; top:-6px; right:-6px; font-size:0.85rem;
+    background:var(--bg-card); border-radius:50%; padding:2px;
+}
+.avatar-tier-label{ font-size:0.7rem; color:var(--text-dim); margin:14px 0 6px; text-transform:uppercase; letter-spacing:.04em; }
+.avatar-modal-close{
+    width:100%; padding:11px; border:1px solid var(--border); border-radius:10px;
+    background:none; color:var(--text-dim); font-weight:700; cursor:pointer;
+}
+.avatar-modal-close:hover{ border-color:var(--accent); color:var(--text); }
 .player-name-block .pseudo{font-size:1.5rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .player-name-block .class-tag{font-size:0.8rem; color:var(--text-dim); margin-top:2px;}
 .streak-badge{
@@ -158,7 +203,7 @@ header{
 .badges-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;}
 .badge-tile{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px 12px; text-align:center; transition:all .25s;}
 .badge-tile.unlocked{border-color:var(--gold); box-shadow:0 0 16px rgba(255,210,63,0.15);}
-.badge-tile.locked{opacity:0.35; filter:grayscale(1);}
+.badge-tile.locked{opacity:0.35; filter:grayscale(1); cursor:help;}
 .badge-tile .icon{font-size:2.2rem; margin-bottom:8px;}
 .badge-tile .name{font-size:0.78rem; font-weight:700;}
 .badge-tile .desc{font-size:0.68rem; color:var(--text-dim); margin-top:4px;}
@@ -211,7 +256,10 @@ header{
     <div class="player-card" id="player-card">
         <div class="player-top">
             <div class="player-identity">
-                <div class="player-avatar" id="player-avatar">🦊</div>
+                <div class="player-avatar" id="player-avatar" onclick="openAvatarPicker()" title="Cliquer pour changer d'avatar">
+                    <span id="player-avatar-emoji">🦊</span>
+                    <span class="avatar-edit-badge">✏️</span>
+                </div>
                 <div class="player-name-block">
                     <div class="pseudo">
                         <!-- Cliquer sur le pseudo ou le crayon pour l'éditer -->
@@ -331,6 +379,32 @@ function getRankFromXp(xp) {
     return { ...cur, subTier, progressToNext: prog, xpToNext: xpTo, nextRankLabel: next ? next.label : null };
 }
 
+// ── AVATARS DÉBLOQUABLES PAR PALIER ────────────────────────────────────────
+// (copie locale, en miroir de js/gamification.js — voir la remarque sur
+// quizMeta juste au-dessus : ce fichier reste volontairement autonome)
+const AVATAR_TIERS = [
+    { rankKey: 'bronze',  icons: ['🦊'] },
+    { rankKey: 'argent',  icons: ['🐱', '🐺'] },
+    { rankKey: 'or',      icons: ['🦄', '🐉'] },
+    { rankKey: 'platine', icons: ['🦋', '🦁'] },
+    { rankKey: 'diamant', icons: ['🧚', '🐯'] },
+    { rankKey: 'master',  icons: ['🦢', '🦅'] },
+];
+
+function getAllAvatarsWithStatus(totalXp) {
+    const rank = getRankFromXp(totalXp);
+    const rankIndex = RANK_TIERS.findIndex(r => r.key === rank.key);
+    const result = [];
+    AVATAR_TIERS.forEach((tier, i) => {
+        const tierRank = RANK_TIERS.find(r => r.key === tier.rankKey);
+        const unlocked = i <= rankIndex;
+        tier.icons.forEach(icon => {
+            result.push({ icon, unlocked, rankKey: tier.rankKey, rankLabel: tierRank.label });
+        });
+    });
+    return result;
+}
+
 // ── MÉTADONNÉES DES QUIZZES ────────────────────────────────────────────────
 // quizMeta est chargé depuis data/quizMeta.js (via <script> dans index.html ou inline).
 // Ici on le définit inline pour que student-dashboard.html reste autonome.
@@ -424,7 +498,7 @@ function renderPlayerCard() {
     card.style.setProperty('--rank-color', rank.color);
     card.style.setProperty('--rank-glow', rank.glow);
 
-    document.getElementById('player-avatar').textContent = me.avatar_emoji || '🦊';
+    document.getElementById('player-avatar-emoji').textContent = me.avatar_emoji || '🦊';
     document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
     document.getElementById('player-class').textContent  = me.class_name || '';
     document.getElementById('streak-count').textContent  = myStats.current_streak || 0;
@@ -660,7 +734,8 @@ function renderBadges() {
     const earnedKeys = new Set(myBadges.map(b => b.badge_key));
     document.getElementById('badges-grid').innerHTML = Object.entries(BADGE_DEFINITIONS).map(([key, def]) => {
         const unlocked = earnedKeys.has(key);
-        return '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '">' +
+        const titleAttr = unlocked ? '' : ' title="🔒 Condition : ' + def.desc.replace(/"/g, '&quot;') + '"';
+        return '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '"' + titleAttr + '>' +
             '<div class="icon">' + def.icon + '</div>' +
             '<div class="name">' + def.label + '</div>' +
             '<div class="desc">' + (unlocked ? def.desc : '???') + '</div>' +
@@ -766,6 +841,68 @@ function cancelEditPseudo() {
 }
 
 
+// ── SÉLECTION DE L'AVATAR ──────────────────────────────────────────────────
+function openAvatarPicker() {
+    renderAvatarGrid();
+    document.getElementById('avatar-modal-overlay').classList.add('show');
+}
+
+function closeAvatarPicker() {
+    document.getElementById('avatar-modal-overlay').classList.remove('show');
+}
+
+function renderAvatarGrid() {
+    const container = document.getElementById('avatar-grid-container');
+    const avatars = getAllAvatarsWithStatus(myStats.total_xp || 0);
+
+    // Regroupe les icônes par palier pour afficher un libellé de rang
+    // au-dessus de chaque ligne (débloqué / à débloquer).
+    const byTier = {};
+    const tierOrder = [];
+    avatars.forEach(a => {
+        if (!byTier[a.rankLabel]) { byTier[a.rankLabel] = []; tierOrder.push(a.rankLabel); }
+        byTier[a.rankLabel].push(a);
+    });
+
+    let html = '';
+    tierOrder.forEach(rankLabel => {
+        const group = byTier[rankLabel];
+        const groupUnlocked = group[0].unlocked;
+        html += `<div class="avatar-tier-label">${groupUnlocked ? '✅ Débloqué — Rang ' + rankLabel : '🔒 À débloquer — Rang ' + rankLabel}</div>`;
+        html += '<div class="avatar-grid">';
+        group.forEach(a => {
+            const isSelected = (me.avatar_emoji || '🦊') === a.icon;
+            const classes = ['avatar-choice'];
+            if (isSelected) classes.push('selected');
+            if (!a.unlocked) classes.push('locked');
+            const clickAttr = a.unlocked ? `onclick="selectAvatar('${a.icon}')"` : '';
+            const lock = a.unlocked ? '' : '<span class="lock-icon">🔒</span>';
+            html += `<div class="${classes.join(' ')}" ${clickAttr} title="${a.unlocked ? '' : 'Débloqué au rang ' + rankLabel}">${a.icon}${lock}</div>`;
+        });
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+async function selectAvatar(icon) {
+    if (icon === me.avatar_emoji) { closeAvatarPicker(); return; }
+
+    const { error } = await sb.from('profiles')
+        .update({ avatar_emoji: icon })
+        .eq('id', me.id);
+
+    if (error) {
+        console.error('[Avatar] Erreur sauvegarde :', error.message);
+        return;
+    }
+
+    me.avatar_emoji = icon;
+    document.getElementById('player-avatar-emoji').textContent = icon;
+    closeAvatarPicker();
+}
+
+
 // ── TABS ──────────────────────────────────────────────────────────────────
 function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
@@ -778,5 +915,15 @@ async function logoutStudent() {
     window.location.href = 'index.html';
 }
 </script>
+<!-- FENÊTRE DE SÉLECTION D'AVATAR -->
+<div class="avatar-modal-overlay" id="avatar-modal-overlay">
+    <div class="avatar-modal-box">
+        <h3>🎨 Choisis ton avatar</h3>
+        <div class="avatar-modal-sub">Débloque de nouvelles icônes en montant de rang !</div>
+        <div id="avatar-grid-container"></div>
+        <button class="avatar-modal-close" onclick="closeAvatarPicker()">Fermer</button>
+    </div>
+</div>
+
 </body>
 </html>
