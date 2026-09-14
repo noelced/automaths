@@ -101,18 +101,26 @@ input:checked + .slider::before{ transform:translateX(20px); }
 
 /* Élèves */
 .student-row{
-    display:flex; align-items:center; gap:12px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
     padding:10px 14px; border-bottom:1px solid var(--border);
 }
 .student-row:last-child{ border-bottom:none; }
 .student-row .avatar{ font-size:1.4rem; }
-.student-row .name{ font-weight:600; font-size:0.88rem; flex:1; }
+.student-row .name{ font-weight:600; font-size:0.88rem; }
 .student-row .email{ font-size:0.75rem; color:var(--text-muted); }
+.student-row .info{ flex:1; min-width:140px; }
+.student-row .row-actions{ display:flex; align-items:center; gap:6px; margin-left:auto; }
 .student-row select{
     padding:6px 10px; border:1px solid var(--border); border-radius:6px;
     font-size:0.82rem; outline:none; background:white; cursor:pointer;
 }
 .student-row select:focus{ border-color:var(--primary); }
+.btn-icon-sm{
+    padding:6px 10px; border:1px solid var(--border); border-radius:6px;
+    background:white; font-size:0.8rem; cursor:pointer; white-space:nowrap;
+}
+.btn-icon-sm:hover{ border-color:var(--primary); color:var(--primary-dark); }
+.btn-icon-sm.danger:hover{ border-color:var(--danger); background:var(--danger-light); color:var(--danger); }
 
 .unassigned-banner{
     background:var(--danger-light); color:var(--danger); padding:10px 14px;
@@ -259,7 +267,7 @@ input:checked + .slider::before{ transform:translateX(20px); }
         <h3>👤➕ Ajouter un élève</h3>
         <div class="modal-field">
             <label for="new-student-email">Identifiant (email)</label>
-            <input type="text" id="new-student-email" placeholder="ex: 3_premieres_lettres_nom.prenom@college.fr">
+            <input type="text" id="new-student-email" placeholder="ex: 3LettresNom.prenom@college.fr">
         </div>
         <div class="modal-hint">Si vous saisissez un simple identifiant sans "@", "@college.fr" sera ajouté automatiquement.</div>
         <div class="modal-field">
@@ -274,6 +282,35 @@ input:checked + .slider::before{ transform:translateX(20px); }
         <div class="modal-actions">
             <button class="modal-btn-no" onclick="closeAddStudentModal()">Annuler</button>
             <button class="btn-primary" style="flex:1;" onclick="submitAddStudent()" id="add-student-submit-btn">Créer l'élève</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE : suppression d'un élève -->
+<div class="modal-overlay" id="modal-confirm-delete-student">
+    <div class="modal-box">
+        <h3>🗑️ Supprimer cet élève ?</h3>
+        <p id="delete-student-message">Voulez-vous vraiment supprimer cet élève ?</p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmDeleteStudent()">Oui</button>
+            <button class="modal-btn-no" onclick="closeDeleteStudentModal()">Non</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE : changement de mot de passe d'un élève -->
+<div class="modal-overlay" id="modal-change-password">
+    <div class="modal-box">
+        <h3>🔑 Changer le mot de passe</h3>
+        <p id="change-password-message">Nouveau mot de passe pour cet élève :</p>
+        <div class="modal-field">
+            <label for="new-password-input">Nouveau mot de passe</label>
+            <input type="text" id="new-password-input" placeholder="Au moins 6 caractères">
+        </div>
+        <div class="modal-error" id="change-password-error"></div>
+        <div class="modal-actions">
+            <button class="modal-btn-no" onclick="closeChangePasswordModal()">Annuler</button>
+            <button class="btn-primary" style="flex:1;" onclick="submitChangePassword()" id="change-password-submit-btn">Valider</button>
         </div>
     </div>
 </div>
@@ -427,17 +464,23 @@ function renderStudentRow(student, currentClassId){
         return '<option value="' + c.id + '" ' + selected + '>' + escapeHtml(c.name) + '</option>';
     }).join('');
 
+    const studentName = student.full_name || student.pseudo || 'cet élève';
+
     return '' +
         '<div class="student-row">' +
             '<span class="avatar">' + (student.avatar_emoji || '🦊') + '</span>' +
-            '<div>' +
-                '<div class="name">' + escapeHtml(student.full_name || student.pseudo) + '</div>' +
+            '<div class="info">' +
+                '<div class="name">' + escapeHtml(studentName) + '</div>' +
                 '<div class="email">' + escapeHtml(student.class_name || 'Aucune classe (ancien champ)') + '</div>' +
             '</div>' +
-            '<select onchange="assignStudentToClass(\'' + student.id + '\', this.value)">' +
-                '<option value="">— Aucune classe —</option>' +
-                options +
-            '</select>' +
+            '<div class="row-actions">' +
+                '<select onchange="assignStudentToClass(\'' + student.id + '\', this.value)">' +
+                    '<option value="">— Aucune classe —</option>' +
+                    options +
+                '</select>' +
+                '<button class="btn-icon-sm" onclick="openChangePasswordModal(\'' + student.id + '\', ' + jsStr(studentName) + ')">🔑 Mot de passe</button>' +
+                '<button class="btn-icon-sm danger" onclick="openDeleteStudentModal(\'' + student.id + '\', ' + jsStr(studentName) + ')">🗑️ Supprimer</button>' +
+            '</div>' +
         '</div>';
 }
 
@@ -578,12 +621,103 @@ async function submitAddStudent(){
 }
 
 
+// ── SUPPRESSION D'UN ÉLÈVE ─────────────────────────────────────────────────
+let pendingDeleteStudentId = null;
+
+function openDeleteStudentModal(studentId, studentName){
+    pendingDeleteStudentId = studentId;
+    document.getElementById('delete-student-message').innerHTML =
+        'Voulez-vous vraiment supprimer l\'élève <strong>' + escapeHtml(studentName) + '</strong> ? ' +
+        'Cette action est irréversible : son compte de connexion ainsi que tous ses résultats, ' +
+        'badges et statistiques seront définitivement supprimés.';
+    document.getElementById('modal-confirm-delete-student').classList.add('show');
+}
+
+function closeDeleteStudentModal(){
+    pendingDeleteStudentId = null;
+    document.getElementById('modal-confirm-delete-student').classList.remove('show');
+}
+
+async function confirmDeleteStudent(){
+    if (!pendingDeleteStudentId) return;
+    const studentId = pendingDeleteStudentId;
+
+    const { data, error } = await sb.functions.invoke('manage-student', {
+        body: { action: 'delete_student', studentId }
+    });
+
+    closeDeleteStudentModal();
+
+    if (error || (data && data.error)){
+        alert('Erreur lors de la suppression : ' + (error ? error.message : data.error));
+        return;
+    }
+
+    await loadAll();
+    showToast('✓ Élève supprimé');
+}
+
+
+// ── CHANGEMENT DE MOT DE PASSE D'UN ÉLÈVE ─────────────────────────────────
+let pendingPasswordStudentId = null;
+
+function openChangePasswordModal(studentId, studentName){
+    pendingPasswordStudentId = studentId;
+    document.getElementById('change-password-message').innerHTML =
+        'Nouveau mot de passe pour <strong>' + escapeHtml(studentName) + '</strong> :';
+    document.getElementById('new-password-input').value = '';
+    document.getElementById('change-password-error').textContent = '';
+    document.getElementById('modal-change-password').classList.add('show');
+}
+
+function closeChangePasswordModal(){
+    pendingPasswordStudentId = null;
+    document.getElementById('modal-change-password').classList.remove('show');
+}
+
+async function submitChangePassword(){
+    const errorEl = document.getElementById('change-password-error');
+    errorEl.textContent = '';
+
+    const newPassword = document.getElementById('new-password-input').value;
+    if (!newPassword || newPassword.length < 6){
+        errorEl.textContent = 'Le mot de passe doit faire au moins 6 caractères.';
+        return;
+    }
+
+    const submitBtn = document.getElementById('change-password-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Validation…';
+
+    const { data, error } = await sb.functions.invoke('manage-student', {
+        body: { action: 'set_password', studentId: pendingPasswordStudentId, newPassword }
+    });
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Valider';
+
+    if (error || (data && data.error)){
+        errorEl.textContent = 'Erreur : ' + (error ? error.message : data.error);
+        return;
+    }
+
+    closeChangePasswordModal();
+    showToast('✓ Mot de passe modifié');
+}
+
+
 // ── UTILS ──────────────────────────────────────────────────────────────────
 function escapeHtml(str){
     if (!str) return '';
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+// Retourne une chaîne JS entre apostrophes, sûre à insérer dans un attribut
+// onclick="..." (attribut HTML entre guillemets doubles).
+function jsStr(str){
+    return "'" + String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
 }
 
 function showToast(msg){
