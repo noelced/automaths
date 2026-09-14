@@ -43,39 +43,111 @@ var chapterData_5eme_9 = {
                                         <thead>
                                             <tr>
                                                 <th style="border-right: 1px solid black; padding: 10px;">Angle</th>
-                                                <th style="padding: 10px;">Mesure</th>
+                                                <th style="border-right: 1px solid black; padding: 10px;">Mesure</th>
+                                                <th style="padding: 10px;">Schéma</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">nul</td>
-                                                <td style="padding: 10px;">$0°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">$0°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="30" y1="90" x2="100.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="30" y1="90" x2="92.0" y2="90.0" stroke="#2E5C8A" stroke-width="2" stroke-dasharray="5,4"/>
+<circle cx="30" cy="90" r="3" fill="#1A1A1A"/>
+<text x="30" y="65" font-size="15" fill="#2E5C8A" text-anchor="middle" font-weight="bold">0°</text>
+</svg>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">aigu</td>
-                                                <td style="padding: 10px;">entre $0°$ et $90°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">entre $0°$ et $90°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="30" y1="90" x2="100.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="30" y1="90" x2="79.5" y2="40.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 54,90 A 24,24 0 0,0 46.97,73.03" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<circle cx="30" cy="90" r="3" fill="#1A1A1A"/>
+<text x="66.96" y="74.69" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">45°</text>
+</svg>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">droit</td>
-                                                <td style="padding: 10px;">$90°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">$90°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="30" y1="90" x2="100.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="30" y1="90" x2="30.0" y2="20.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 46,90 L 46,74 L 30,74" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<circle cx="30" cy="90" r="3" fill="#1A1A1A"/>
+<text x="48" y="64" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">90°</text>
+</svg>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">obtus</td>
-                                                <td style="padding: 10px;">entre $90°$ et $180°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">entre $90°$ et $180°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="70" y1="90" x2="140.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="70" y1="90" x2="20.5" y2="40.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 94,90 A 24,24 0 0,0 53.03,73.03" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<circle cx="70" cy="90" r="3" fill="#1A1A1A"/>
+<text x="86.07" y="51.2" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">135°</text>
+</svg>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">plat</td>
-                                                <td style="padding: 10px;">$180°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">$180°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="25.0" y1="90.0" x2="135.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 104,90 A 24,24 0 0,0 56.0,90.0" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<circle cx="80" cy="90" r="3" fill="#1A1A1A"/>
+<text x="80" y="58" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">180°</text>
+</svg>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="border-right: 1px solid black; padding: 10px;">plein</td>
-                                                <td style="padding: 10px;">$360°$</td>
+                                                <td style="border-right: 1px solid black; padding: 10px;">$360°$</td>
+                                                <td style="padding: 10px;">
+                                                    <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="80" y1="60" x2="135.0" y2="60.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="80" cy="60" r="24" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<circle cx="80" cy="60" r="3" fill="#1A1A1A"/>
+<text x="80" y="102" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">360°</text>
+</svg>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                     <br>
                                     <div class="notion-box">
                                         <strong style="color: var(--secondary);">⚠️ Remarque :</strong> les équerres utilisées en classe ont pour mesures d'angles $30°$-$60°$-$90°$ ou bien $45°$-$45°$-$90°$.
+                                    </div>
+                                    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px; margin: 15px 0;">
+                                        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" style="max-width:220px; display:block; font-family:sans-serif;">
+<polygon points="40,150 170,150 40,75" fill="#2E5C8A" fill-opacity="0.15" stroke="#1A1A1A" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 56.00,150.00 L 56.00,134.00 L 40.00,134.00" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<path d="M 144.00,150.00 A 26,26 0 0,1 147.48,137.01" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<path d="M 62.52,87.99 A 26,26 0 0,1 40.00,101.00" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<text x="129.4" y="139.1" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">30°</text>
+<text x="61.0" y="111.4" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">60°</text>
+<circle cx="40" cy="150" r="2.5" fill="#1A1A1A"/><circle cx="170" cy="150" r="2.5" fill="#1A1A1A"/><circle cx="40" cy="75" r="2.5" fill="#1A1A1A"/>
+</svg>
+                                        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg" style="max-width:220px; display:block; font-family:sans-serif;">
+<polygon points="40,150 160,150 40,30" fill="#2E5C8A" fill-opacity="0.15" stroke="#1A1A1A" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M 56.00,150.00 L 56.00,134.00 L 40.00,134.00" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<path d="M 134.00,150.00 A 26,26 0 0,1 141.62,131.62" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<path d="M 58.38,48.38 A 26,26 0 0,1 40.00,56.00" fill="none" stroke="#2E5C8A" stroke-width="2"/>
+<text x="121.2" y="133.9" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">45°</text>
+<text x="56.1" y="68.8" font-size="13" fill="#2E5C8A" text-anchor="middle" font-weight="bold">45°</text>
+<circle cx="40" cy="150" r="2.5" fill="#1A1A1A"/><circle cx="160" cy="150" r="2.5" fill="#1A1A1A"/><circle cx="40" cy="30" r="2.5" fill="#1A1A1A"/>
+</svg>
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGvocabulaire"
@@ -133,6 +205,51 @@ var chapterData_5eme_9 = {
 </svg>
                                     </div>
                                     <p class="indent-text">Sur la figure ci-dessus, $[OC)$ est la bissectrice de l'angle $\\widehat{AOB}$ : on a donc $\\widehat{AOC} = \\widehat{COB}$.</p>
+                                    <p class="indent-text">Il existe deux méthodes courantes pour <strong>tracer la bissectrice</strong> d'un angle $\\widehat{AOB}$ :</p>
+                                    <div class="method-box">
+                                        <span class="method-badge">📐 Méthode 1 : au rapporteur</span>
+                                        <ul>
+                                            <li>Mesurer l'angle $\\widehat{AOB}$ avec le rapporteur : on obtient une mesure, par exemple $\\widehat{AOB} = 70°$.</li>
+                                            <li>Diviser cette mesure par $2$ : $70° \\div 2 = 35°$.</li>
+                                            <li>Placer le rapporteur sur le sommet $O$, aligné avec le côté $[OA)$, puis marquer un point $C$ tel que $\\widehat{AOC} = 35°$.</li>
+                                            <li>Tracer la demi-droite $[OC)$ : c'est la bissectrice de l'angle $\\widehat{AOB}$.</li>
+                                        </ul>
+                                    </div>
+                                    <div class="method-box">
+                                        <span class="method-badge">🧭 Méthode 2 : au compas</span>
+                                        <ul>
+                                            <li>Piquer le compas en $O$ et tracer un arc de cercle qui coupe $[OA)$ en un point $M$ et $[OB)$ en un point $N$.</li>
+                                            <li>Sans changer l'écartement du compas, piquer en $M$ et tracer un arc à l'intérieur de l'angle.</li>
+                                            <li>Avec le même écartement, piquer en $N$ et tracer un second arc qui coupe le précédent en un point $P$.</li>
+                                            <li>Tracer la demi-droite $[OP)$ : c'est la bissectrice de l'angle, car $OM = ON$ et $PM = PN$, donc $P$ est équidistant des deux côtés $[OA)$ et $[OB)$.</li>
+                                        </ul>
+                                        <div style="text-align:center; margin: 15px 0;">
+                                            <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="max-width:300px; display:block; margin:0 auto; font-family:sans-serif;">
+<line x1="150.0" y1="250.0" x2="42.3" y2="112.1" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="150.0" y1="250.0" x2="257.7" y2="112.1" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 208.5,175.1 L 203.4,171.4 L 198.1,168.1 L 192.5,165.1 L 186.8,162.4 L 180.9,160.2 L 174.9,158.3 L 168.8,156.9 L 162.6,155.8 L 156.3,155.2 L 150.0,155.0 L 143.7,155.2 L 137.4,155.8 L 131.2,156.9 L 125.1,158.3 L 119.1,160.2 L 113.2,162.4 L 107.5,165.1 L 101.9,168.1 L 96.6,171.4 L 91.5,175.1" fill="none" stroke="#2E5C8A" stroke-width="1.8"/>
+<path d="M 184.1,102.0 L 178.3,95.1 L 171.9,88.7 L 165.0,82.8 L 157.7,77.4 L 150.0,72.7 L 142.0,68.5 L 133.6,64.9 L 125.1,62.0 L 116.3,59.8 L 107.3,58.2" fill="none" stroke="#2E5C8A" stroke-width="1.8"/>
+<path d="M 192.7,58.2 L 183.7,59.8 L 174.9,62.0 L 166.4,64.9 L 158.0,68.5 L 150.0,72.7 L 142.3,77.4 L 135.0,82.8 L 128.1,88.7 L 121.7,95.1 L 115.9,102.0" fill="none" stroke="#2E5C8A" stroke-width="1.8"/>
+<line x1="125.5" y1="208.9" x2="116.0" y2="216.3" stroke="#2E5C8A" stroke-width="2"/>
+<line x1="184.0" y1="216.3" x2="174.5" y2="208.9" stroke="#2E5C8A" stroke-width="2"/>
+<line x1="126.0" y1="126.9" x2="115.5" y2="120.9" stroke="#2E5C8A" stroke-width="2"/>
+<line x1="184.5" y1="120.9" x2="174.0" y2="126.9" stroke="#2E5C8A" stroke-width="2"/>
+<line x1="150.0" y1="250.0" x2="150.0" y2="57.7" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="7,5"/>
+<circle cx="150.0" cy="250.0" r="3" fill="#1A1A1A"/>
+<text x="132.0" y="256.0" font-size="14" fill="#1A1A1A" font-weight="bold">O</text>
+<circle cx="42.3" cy="112.1" r="3" fill="#1A1A1A"/>
+<text x="50.3" y="110.1" font-size="14" fill="#1A1A1A" font-weight="bold">A</text>
+<circle cx="257.7" cy="112.1" r="3" fill="#1A1A1A"/>
+<text x="265.7" y="122.1" font-size="14" fill="#1A1A1A" font-weight="bold">B</text>
+<circle cx="91.5" cy="175.1" r="3" fill="#1A1A1A"/>
+<text x="87.5" y="165.1" font-size="14" fill="#1A1A1A" font-weight="bold">M</text>
+<circle cx="208.5" cy="175.1" r="3" fill="#1A1A1A"/>
+<text x="218.5" y="179.1" font-size="14" fill="#1A1A1A" font-weight="bold">N</text>
+<circle cx="150.0" cy="72.7" r="3" fill="#1A1A1A"/>
+<text x="158.0" y="64.7" font-size="14" fill="#1A1A1A" font-weight="bold">P</text>
+</svg>
+                                        </div>
+                                    </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGbissectrice"
                                         onclick="startQuizFromButton('quiz-area-ANGbissectrice', '59103')">
@@ -157,6 +274,8 @@ var chapterData_5eme_9 = {
 <line x1="94.7" y1="35.9" x2="305.3" y2="264.1" stroke="#1A1A1A" stroke-width="2.5"/>
 <polygon points="135.4,80.0 161.4,80.0 161.4,80.9 161.3,81.8 161.3,82.7 161.2,83.6 161.0,84.4 160.8,85.3 160.7,86.2 160.4,87.1 160.2,87.9 159.9,88.8 159.6,89.6 159.2,90.4 158.8,91.2 158.4,92.0 158.0,92.8 157.6,93.6 157.1,94.4 156.6,95.1 156.0,95.8 155.5,96.5 154.9,97.2 154.3,97.8 153.7,98.5 153.0,99.1" fill="#2E5C8A" fill-opacity="0.45"/>
 <polygon points="264.6,220.0 238.6,220.0 238.6,219.1 238.7,218.2 238.7,217.3 238.8,216.4 239.0,215.6 239.2,214.7 239.3,213.8 239.6,212.9 239.8,212.1 240.1,211.2 240.4,210.4 240.8,209.6 241.2,208.8 241.6,208.0 242.0,207.2 242.4,206.4 242.9,205.6 243.4,204.9 244.0,204.2 244.5,203.5 245.1,202.8 245.7,202.2 246.3,201.5 247.0,200.9" fill="#2E5C8A" fill-opacity="0.45"/>
+<polygon points="135.4,80.0 153.0,99.1 151.3,100.6 149.4,101.9 147.4,103.1 145.3,104.1 143.1,104.8 140.8,105.4 138.6,105.8 136.2,106.0 133.9,106.0 131.6,105.7 129.4,105.3 127.1,104.6 125.0,103.8 122.9,102.8 120.9,101.6 119.1,100.2 117.3,98.7 115.7,97.0 114.3,95.2 113.0,93.2 111.9,91.2 111.0,89.1 110.3,86.9 109.8,84.6 109.5,82.3 109.4,80.0" fill="#1E88E5" fill-opacity="0.45"/>
+<polygon points="264.6,220.0 247.0,200.9 248.7,199.4 250.6,198.1 252.6,196.9 254.7,195.9 256.9,195.2 259.2,194.6 261.4,194.2 263.8,194.0 266.1,194.0 268.4,194.3 270.6,194.7 272.9,195.4 275.0,196.2 277.1,197.2 279.1,198.4 280.9,199.8 282.7,201.3 284.3,203.0 285.7,204.8 287.0,206.8 288.1,208.8 289.0,210.9 289.7,213.1 290.2,215.4 290.5,217.7 290.6,220.0" fill="#1E88E5" fill-opacity="0.45"/>
 <circle cx="135.4" cy="80" r="3" fill="#1A1A1A"/>
 <circle cx="264.6" cy="220" r="3" fill="#1A1A1A"/>
 <text x="113.4" y="70" font-size="15" fill="#1A1A1A" font-weight="bold">A</text>
@@ -166,6 +285,7 @@ var chapterData_5eme_9 = {
 <text x="275.3" y="280.1" font-size="14" fill="#1A1A1A">(Δ)</text>
 </svg>
                                     </div>
+                                    <p class="indent-text">Il y a donc <strong>deux paires</strong> d'angles alternes-internes possibles pour ce couple de droites : la paire en <span style="color:#2E5C8A; font-weight:bold;">bleu foncé</span> ci-dessus, et la paire en <span style="color:#1E88E5; font-weight:bold;">bleu clair</span>, adjacente à la première de chaque côté.</p>
                                     <p><strong>Les angles correspondants</strong> sont situés <strong>du même côté</strong> de la sécante, et à la <strong>même position</strong> par rapport à chacune des deux droites :</p>
                                     <div style="text-align:center; margin: 15px 0;">
                                         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="max-width:420px; display:block; margin:0 auto; font-family:sans-serif;">
