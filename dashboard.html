@@ -197,6 +197,59 @@
         .student-score-row .name { font-weight: 600; flex: 1; }
         .student-score-row .class-tag { color: var(--text-muted); font-size: 0.8rem; }
         .student-score-row .score-val { font-weight: 700; font-size: 0.9rem; min-width: 64px; text-align: right; }
+
+        /* ── ONGLET "SAISON EN COURS" ──────────────────────────────────── */
+        .season-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+        }
+        .season-since {
+            font-size: 0.8rem; color: var(--text-muted); margin-bottom: 18px;
+        }
+        .btn-danger-outline {
+            padding: 9px 16px; border: 1px solid var(--danger); border-radius: 8px;
+            background: var(--danger-light); color: var(--danger); font-size: 0.85rem;
+            font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .btn-danger-outline:hover { background: var(--danger); color: white; }
+
+        .season-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--card-bg); margin-bottom: 8px;
+        }
+        .season-rank {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.9rem; background: var(--bg); color: var(--text-muted);
+        }
+        .season-rank.top1 { background: #fde68a; color: #92400e; }
+        .season-rank.top2 { background: #e5e7eb; color: #374151; }
+        .season-rank.top3 { background: #fbd38d; color: #7c2d12; }
+        .season-avatar { font-size: 1.6rem; flex-shrink: 0; }
+        .season-info { flex: 1; min-width: 100px; }
+        .season-name { font-weight: 700; font-size: 0.9rem; }
+        .season-class { font-size: 0.78rem; color: var(--text-muted); }
+        .season-score { font-weight: 800; font-size: 1rem; color: var(--primary-dark); white-space: nowrap; }
+
+        /* ── FENÊTRE MODALE (confirmation reset saison) ───────────────── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+            align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+            padding: 26px; width: 100%; max-width: 380px;
+        }
+        .modal-box h3 { font-size: 1.05rem; margin-bottom: 14px; }
+        .modal-box p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+        .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; }
+        .modal-btn-yes { background: var(--danger); color: white; }
+        .modal-btn-yes:hover { opacity: 0.9; }
+        .modal-btn-no { background: var(--bg); color: var(--text-main); border: 1px solid var(--border) !important; }
+        .modal-btn-no:hover { background: var(--border); }
         .dashboard-title {
             font-size: 1.6rem; font-weight: 800;
             color: var(--primary-dark); margin-bottom: 6px;
@@ -406,6 +459,7 @@
             <button class="tab-btn active" id="tabbtn-stats" onclick="switchTab('stats')">📊 Suivi statistique</button>
             <button class="tab-btn" id="tabbtn-qcm" onclick="switchTab('qcm')">🗂️ Suivi des QCM</button>
             <button class="tab-btn" id="tabbtn-particular" onclick="switchTab('particular')">🎯 Suivi particulier</button>
+            <button class="tab-btn" id="tabbtn-season" onclick="switchTab('season')">🏆 Saison en cours</button>
         </div>
 
         <!-- ONGLET 1 : SUIVI STATISTIQUE -->
@@ -484,8 +538,46 @@
                 </div>
             </div>
         </div>
+
+        <!-- ONGLET 4 : SAISON EN COURS -->
+        <div class="tab-panel" id="tabpanel-season">
+            <div class="season-header">
+                <div>
+                    <div class="dashboard-title" style="margin-bottom:4px;">🏆 Saison en cours</div>
+                    <div class="dashboard-subtitle" style="margin-bottom:0;">
+                        Le même classement que celui affiché dans le profil des élèves.
+                    </div>
+                </div>
+                <button class="btn-danger-outline" onclick="openResetSeasonModal()">🔄 Réinitialiser la saison</button>
+            </div>
+            <div class="season-since" id="season-since"></div>
+
+            <div id="season-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+
+<!-- MODALE : confirmation de réinitialisation de saison -->
+<div class="modal-overlay" id="modal-confirm-reset-season">
+    <div class="modal-box">
+        <h3>🔄 Réinitialiser la saison ?</h3>
+        <p>
+            Le classement général va repartir de zéro pour tous les élèves à partir de maintenant.
+            L'XP, les rangs, les badges et l'historique des QCM ne sont pas affectés — seul le classement
+            de cet onglet (et celui visible par les élèves) est remis à zéro.
+        </p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmResetSeason()">Oui</button>
+            <button class="modal-btn-no" onclick="closeResetSeasonModal()">Non</button>
+        </div>
+    </div>
+</div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -593,6 +685,9 @@ function switchTab(tab) {
 
     // La sidebar de filtres ne concerne que l'onglet "Suivi statistique"
     document.body.classList.toggle('qcm-mode', tab !== 'stats');
+
+    // Le classement de saison change souvent : on le recharge à chaque ouverture
+    if (tab === 'season') loadSeasonTab();
 }
 
 
@@ -1186,6 +1281,84 @@ function escapeHtmlDb(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "SAISON EN COURS"
+// ══════════════════════════════════════════════════════════════════════════
+
+async function loadSeasonTab() {
+    const bodyEl = document.getElementById('season-body');
+    const sinceEl = document.getElementById('season-since');
+    bodyEl.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const [{ data: lb, error: lbError }, { data: settings }] = await Promise.all([
+        sb.from('leaderboard_view').select('*').order('ladder_score', { ascending: false }),
+        sb.from('app_settings').select('value').eq('key', 'season_start_at').maybeSingle(),
+    ]);
+
+    if (settings && settings.value) {
+        const d = new Date(settings.value);
+        sinceEl.textContent = 'Saison en cours depuis le ' +
+            d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    } else {
+        sinceEl.textContent = '';
+    }
+
+    if (lbError) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur de chargement : ${escapeHtmlDb(lbError.message)}</div>`;
+        return;
+    }
+
+    if (!lb || lb.length === 0) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">📭</div>Pas encore de classement pour cette saison.</div>`;
+        return;
+    }
+
+    bodyEl.innerHTML =
+        `<p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">
+            1 pt par bonne réponse · −0,5 pt par mauvaise · toutes classes confondues
+        </p>` +
+        lb.map((row, i) => {
+            const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+            const score = row.ladder_score !== null ? row.ladder_score : '—';
+            return `
+                <div class="season-row">
+                    <div class="season-rank ${rankClass}">${i + 1}</div>
+                    <div class="season-avatar">${row.avatar_emoji || '🦊'}</div>
+                    <div class="season-info">
+                        <div class="season-name">${escapeHtmlDb(row.pseudo || 'Élève')}</div>
+                        <div class="season-class">${escapeHtmlDb(row.class_name || 'Aucune classe')}</div>
+                    </div>
+                    <div class="season-score">${score} pts</div>
+                </div>
+            `;
+        }).join('');
+}
+
+function openResetSeasonModal() {
+    document.getElementById('modal-confirm-reset-season').classList.add('show');
+}
+
+function closeResetSeasonModal() {
+    document.getElementById('modal-confirm-reset-season').classList.remove('show');
+}
+
+async function confirmResetSeason() {
+    closeResetSeasonModal();
+
+    const bodyEl = document.getElementById('season-body');
+    bodyEl.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Réinitialisation…</div>`;
+
+    const { error } = await sb.rpc('reset_season');
+
+    if (error) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    await loadSeasonTab();
 }
 
 
