@@ -192,7 +192,7 @@ const BADGE_DEFINITIONS = {
  * Vérifie et débloque les badges mérités après un résultat de QCM.
  * Insère dans student_badges via Supabase (idempotent grâce à la contrainte UNIQUE).
  */
-async function checkAndUnlockBadges(score, total, durationSeconds, currentStreak) {
+async function checkAndUnlockBadges(quizKey, score, total, durationSeconds, currentStreak) {
     if (!currentUser) return [];
     const unlocked = [];
     const pct = total > 0 ? score / total : 0;
@@ -207,6 +207,22 @@ async function checkAndUnlockBadges(score, total, durationSeconds, currentStreak
     if (currentStreak === 3) toCheck.push('streak_3');
     if (currentStreak === 7) toCheck.push('streak_7');
     if (currentStreak === 30) toCheck.push('streak_30');
+
+    // "comeback" : score de 100% sur ce QCM après avoir déjà échoué dessus
+    // (une tentative précédente à moins de 50%). Nécessite de regarder
+    // l'historique des tentatives sur CE quiz_key précis.
+    if (pct === 1 && quizKey) {
+        const { data: attempts } = await supabaseClient
+            .from('quiz_results')
+            .select('score, total')
+            .eq('user_id', currentUser.id)
+            .eq('quiz_key', String(quizKey));
+
+        const hadFailure = (attempts || []).some(a => a.total > 0 && (a.score / a.total) < 0.5);
+        if (hadFailure && attempts && attempts.length > 1) {
+            toCheck.push('comeback');
+        }
+    }
 
     for (const badgeKey of toCheck) {
         const { error } = await supabaseClient
@@ -361,7 +377,7 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
         }
 
         // Badges (décalés pour laisser la place au toast d'avatars ci-dessus)
-        const badges = await checkAndUnlockBadges(score, total, durationSeconds, result.new_streak);
+        const badges = await checkAndUnlockBadges(quizKey, score, total, durationSeconds, result.new_streak);
         const badgesBaseDelay = avatarToastShown ? 2100 : 1200;
         badges.forEach((badge, i) => {
             setTimeout(() => {
