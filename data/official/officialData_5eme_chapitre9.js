@@ -39,6 +39,7 @@ var chapterData_5eme_9 = {
                                 <!-- SECTION : RAPPELS VOCABULAIRE DES ANGLES -->
                                 <section class="course-section">
                                     <h2 class="section-title">Rappels : le vocabulaire des angles</h2>
+                                    <h3 class="section-title">Nature d'un angle</h3>
                                     <table style="width:100%; border-collapse: collapse; text-align: center;">
                                         <thead>
                                             <tr>
@@ -151,10 +152,53 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGvocabulaire"
-                                        onclick="startQuizFromButton('quiz-area-ANGvocabulaire', '59101')">
+                                        onclick="startQuizFromButton('quiz-area-ANGvocabulaire', '59111')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGvocabulaire"></div>
+
+                                    <h3 class="section-title">Nommer un angle</h3>
+                                    <div class="notion-box">
+                                        <p>Lorsque la figure comporte des points marqués sur les côtés de l'angle, on peut nommer cet angle à l'aide de <strong>trois lettres</strong>, surmontées d'un « chapeau » : par exemple $\\widehat{BAC}$.</p>
+                                        <p>La <strong>lettre du milieu</strong> correspond toujours au <strong>sommet</strong> de l'angle : dans $\\widehat{BAC}$, c'est donc un angle de sommet $A$. Les deux autres lettres désignent chacune un point pris sur l'un des côtés de l'angle (un point sur chaque côté).</p>
+                                        <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:20px; margin: 15px 0;">
+<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:300px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="261.7" y2="49.2" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="261.7" y2="250.8" stroke="#1A1A1A" stroke-width="2.5"/>
+<path d="M 85.6,164.9 L 86.1,163.7 L 86.6,162.6 L 87.0,161.3 L 87.5,160.1 L 87.8,158.9 L 88.1,157.7 L 88.4,156.4 L 88.6,155.1 L 88.8,153.8 L 88.9,152.6 L 89.0,151.3 L 89.0,150.0 L 89.0,148.7 L 88.9,147.4 L 88.8,146.2 L 88.6,144.9 L 88.4,143.6 L 88.1,142.3 L 87.8,141.1 L 87.5,139.9 L 87.0,138.7 L 86.6,137.4 L 86.1,136.3 L 85.6,135.1" fill="none" stroke="#8FAFC7" stroke-width="1.8"/>
+<line x1="172.2" y1="101.7" x2="165.2" y2="87.4" stroke="#2F7D3C" stroke-width="2.2"/>
+<text x="174.7" y="82.5" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">B</text>
+<line x1="179.7" y1="219.7" x2="186.7" y2="205.3" stroke="#6C5B9E" stroke-width="2.2"/>
+<text x="197.2" y="220.5" font-size="17" fill="#6C5B9E" text-anchor="middle" font-weight="bold">C</text>
+<circle cx="55.0" cy="150.0" r="3.5" fill="#C0392B"/>
+<text x="39.0" y="156.0" font-size="17" fill="#C0392B" text-anchor="middle" font-weight="bold">A</text>
+</svg>
+<svg viewBox="0 0 380 270" xmlns="http://www.w3.org/2000/svg" style="max-width:320px; display:block; margin:8px auto; font-family:sans-serif;">
+<text x="190.0" y="26.0" font-size="17" fill="#1A1A1A" text-anchor="middle">Trois lettres</text>
+<polyline points="155,88 193,66 231,88" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+<line x1="151" y1="116" x2="235" y2="116" stroke="#1A1A1A" stroke-width="1.4" stroke-dasharray="2,3"/>
+<text x="165.0" y="110.0" font-size="26" fill="#2F7D3C" text-anchor="middle" font-weight="bold">B</text>
+<text x="193.0" y="110.0" font-size="26" fill="#C0392B" text-anchor="middle" font-weight="bold">A</text>
+<text x="221.0" y="110.0" font-size="26" fill="#6C5B9E" text-anchor="middle" font-weight="bold">C</text>
+<line x1="125.0" y1="195.0" x2="157.0" y2="126.0" stroke="#2F7D3C" stroke-width="3"/><polygon points="157.0,126.0 149.6,131.2 157.8,135.0" fill="#2F7D3C"/>
+<line x1="193.0" y1="222.0" x2="193.0" y2="126.0" stroke="#C0392B" stroke-width="3"/><polygon points="193.0,126.0 188.5,133.8 197.5,133.8" fill="#C0392B"/>
+<line x1="261.0" y1="195.0" x2="229.0" y2="126.0" stroke="#6C5B9E" stroke-width="3"/><polygon points="229.0,126.0 228.2,135.0 236.4,131.2" fill="#6C5B9E"/>
+<text x="125" y="213" font-size="12.5" fill="#2F7D3C" text-anchor="middle" font-weight="bold">Un point sur</text>
+<text x="125" y="227" font-size="12.5" fill="#2F7D3C" text-anchor="middle" font-weight="bold">un côté</text>
+<text x="193" y="242" font-size="12.5" fill="#C0392B" text-anchor="middle" font-weight="bold">Sommet</text>
+<text x="193" y="256" font-size="12.5" fill="#C0392B" text-anchor="middle" font-weight="bold">de l&#39;angle</text>
+<text x="261" y="213" font-size="12.5" fill="#6C5B9E" text-anchor="middle" font-weight="bold">Un point sur</text>
+<text x="261" y="227" font-size="12.5" fill="#6C5B9E" text-anchor="middle" font-weight="bold">l&#39;autre côté</text>
+</svg>
+                                        </div>
+                                        <p class="indent-text">Sur la figure ci-dessus, on peut donc noter cet angle $\\widehat{BAC}$ (ou $\\widehat{CAB}$, l'ordre des deux points sur les côtés n'a pas d'importance : seule la lettre du sommet doit rester au milieu).</p>
+                                    </div>
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-ANGnommer"
+                                        onclick="startQuizFromButton('quiz-area-ANGnommer', '59121')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-ANGnommer"></div>
 
                                     <h3 class="section-title">Angles opposés par le sommet, adjacents, supplémentaires</h3>
                                     <div style="text-align:center; margin: 15px 0;">
@@ -181,7 +225,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGopposesadjacents"
-                                        onclick="startQuizFromButton('quiz-area-ANGopposesadjacents', '59102')">
+                                        onclick="startQuizFromButton('quiz-area-ANGopposesadjacents', '59131')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGopposesadjacents"></div>
@@ -252,7 +296,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGbissectrice"
-                                        onclick="startQuizFromButton('quiz-area-ANGbissectrice', '59103')">
+                                        onclick="startQuizFromButton('quiz-area-ANGbissectrice', '59141')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGbissectrice"></div>

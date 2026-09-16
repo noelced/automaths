@@ -7048,9 +7048,9 @@ const allLocalQuestions5eme = {
         // ============================================================
 
         // ------------------------------------------------------------
-        // 59101 : Vocabulaire des angles (nul, aigu, droit, obtus, plat, plein)
+        // 59111 : Vocabulaire des angles (nul, aigu, droit, obtus, plat, plein)
         // ------------------------------------------------------------
-        "59101": [
+        "59111": [
             {
                 quiz: { q: `<svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" style="max-width:150px; display:block; margin:8px auto; font-family:sans-serif;">
 <line x1="30.0" y1="90.0" x2="100.0" y2="90.0" stroke="#1A1A1A" stroke-width="2.5"/>
@@ -7208,9 +7208,159 @@ const allLocalQuestions5eme = {
         ],
 
         // ------------------------------------------------------------
-        // 59102 : Angles opposes par le sommet, adjacents, supplementaires
+        // 59121 : Nommer un angle (notation a trois lettres)
         // ------------------------------------------------------------
-        "59102": [
+        "59121": [
+            {
+                quiz: { q: `Dans la notation d'un angle à trois lettres, comme $\\widehat{BAC}$, à quoi correspond la lettre du milieu (ici $A$) ?`, a: `Au sommet de l'angle` },
+                options: `Au sommet de l'angle ¤ À un point sur un côté ¤ Cela n'a pas d'importance ¤ À la mesure de l'angle`,
+                explanation: `Dans la notation à trois lettres, la lettre placée au <strong>milieu</strong> désigne toujours le <strong>sommet</strong> de l'angle. Les deux autres lettres désignent chacune un point pris sur l'un des deux côtés.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="60.0" y1="150.0" x2="251.8" y2="64.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="60.0" y1="150.0" x2="241.9" y2="255.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="168.8" y1="110.3" x2="162.3" y2="95.7" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="178.9" y="91.0" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Q</text>
+<line x1="165.1" y1="219.9" x2="173.1" y2="206.1" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="181.2" y="226.4" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">R</text>
+<circle cx="60.0" cy="150.0" r="3.5" fill="#1A1A1A"/>
+<text x="40.0" y="148.9" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">P</text>
+</svg><p style="margin-top:8px;">Sur la figure, quel est le sommet de l'angle ?</p>`, a: `Le point P` },
+                options: `Le point P ¤ Le point Q ¤ Le point R ¤ Aucun de ces points`,
+                explanation: `Le sommet d'un angle est le point où se rejoignent ses deux côtés : c'est ici le point <strong>P</strong>. On peut donc noter cet angle $\\widehat{QPR}$ (la lettre du sommet, P, restant au milieu).<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="60.0" y1="150.0" x2="251.8" y2="64.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="60.0" y1="150.0" x2="241.9" y2="255.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="168.8" y1="110.3" x2="162.3" y2="95.7" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="178.9" y="91.0" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Q</text>
+<line x1="165.1" y1="219.9" x2="173.1" y2="206.1" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="181.2" y="226.4" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">R</text>
+<circle cx="60.0" cy="150.0" r="4.5" fill="#2F7D3C"/>
+<text x="40.0" y="148.9" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">P</text>
+</svg>`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="253.7" y2="44.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="263.6" y2="234.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="158.1" y1="104.2" x2="150.6" y2="90.1" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="166.8" y="84.2" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">N</text>
+<line x1="181.3" y1="209.7" x2="187.3" y2="194.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="198.1" y="213.8" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">P</text>
+<circle cx="55.0" cy="150.0" r="3.5" fill="#1A1A1A"/>
+<text x="35.0" y="151.1" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">M</text>
+</svg><p style="margin-top:8px;">Sur la figure, comment peut-on nommer correctement cet angle ?</p>`, a: `$\\widehat{NMP}$` },
+                options: `$\\widehat{NMP}$ ¤ $\\widehat{MNP}$ ¤ $\\widehat{PNM}$ ¤ $\\widehat{NPM}$`,
+                explanation: `Le sommet de l'angle est le point $M$ : il doit donc être placé au <strong>milieu</strong> de la notation. On écrit donc $\\widehat{NMP}$ (ou de façon équivalente $\\widehat{PMN}$).<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="253.7" y2="44.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="263.6" y2="234.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="158.1" y1="104.2" x2="150.6" y2="90.1" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="166.8" y="84.2" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">N</text>
+<line x1="181.3" y1="209.7" x2="187.3" y2="194.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="198.1" y="213.8" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">P</text>
+<circle cx="55.0" cy="150.0" r="4.5" fill="#2F7D3C"/>
+<text x="35.0" y="151.1" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">M</text>
+</svg>`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="249.9" y2="37.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="269.0" y2="219.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="156.4" y1="100.7" x2="148.4" y2="86.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="164.5" y="80.4" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">S</text>
+<line x1="191.6" y1="202.8" x2="196.6" y2="187.6" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="208.7" y="205.8" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">T</text>
+<circle cx="55.0" cy="150.0" r="3.5" fill="#1A1A1A"/>
+<text x="35.1" y="152.1" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">R</text>
+</svg><p style="margin-top:8px;">Sur la figure, l'écriture $\\widehat{SRT}$ désigne-t-elle correctement cet angle ?</p>`, a: `Oui, R est bien au milieu, donc c'est le sommet` },
+                options: `Oui, R est bien au milieu, donc c'est le sommet ¤ Non, il faudrait écrire $\\widehat{RST}$ ¤ Non, il faudrait écrire $\\widehat{TSR}$ ¤ Non, cette notation n'existe pas`,
+                explanation: `Le sommet de l'angle sur la figure est bien le point $R$. Comme $R$ est placé au milieu dans l'écriture $\\widehat{SRT}$, cette notation est correcte.<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="249.9" y2="37.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="269.0" y2="219.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="156.4" y1="100.7" x2="148.4" y2="86.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="164.5" y="80.4" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">S</text>
+<line x1="191.6" y1="202.8" x2="196.6" y2="187.6" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="208.7" y="205.8" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">T</text>
+<circle cx="55.0" cy="150.0" r="4.5" fill="#2F7D3C"/>
+<text x="35.1" y="152.1" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">R</text>
+</svg>`
+            },
+            {
+                quiz: { q: `Peut-on nommer un angle $\\widehat{ACB}$ si son sommet est le point $A$ ?`, a: `Non, car la lettre du sommet doit être au milieu` },
+                options: `Non, car la lettre du sommet doit être au milieu ¤ Oui, l'ordre des lettres n'a pas d'importance ¤ Oui, mais seulement si l'angle est droit ¤ Non, un angle ne peut jamais être nommé avec la lettre B`,
+                explanation: `La lettre du sommet doit toujours être placée <strong>au milieu</strong> de la notation. Si le sommet est $A$, il faut écrire $\\widehat{BAC}$ ou $\\widehat{CAB}$, mais pas $\\widehat{ACB}$ (qui désignerait en réalité un angle de sommet $C$).`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="120.0" y1="190.0" x2="205.0" y2="42.8" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="120.0" y1="190.0" x2="217.5" y2="329.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="173.7" y1="113.0" x2="159.8" y2="105.0" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="170.5" y="91.4" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Y</text>
+<line x1="172.0" y1="278.1" x2="185.1" y2="269.0" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="183.8" y="290.8" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Z</text>
+<circle cx="120.0" cy="190.0" r="3.5" fill="#1A1A1A"/>
+<text x="100.0" y="190.9" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">X</text>
+</svg><p style="margin-top:8px;">Parmi ces écritures, laquelle désigne correctement l'angle de sommet $X$ ?</p>`, a: `$\\widehat{YXZ}$` },
+                options: `$\\widehat{YXZ}$ ¤ $\\widehat{XYZ}$ ¤ $\\widehat{YZX}$ ¤ $\\widehat{ZYX}$`,
+                explanation: `Le sommet de l'angle est le point $X$ : il doit donc apparaître au <strong>milieu</strong> de la notation. C'est le cas uniquement dans $\\widehat{YXZ}$ (l'orientation de la figure ne change rien à la règle).<svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="140.0" y1="160.0" x2="216.8" y2="37.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="140.0" y1="160.0" x2="233.2" y2="271.1" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="189.0" y1="96.6" x2="175.5" y2="88.1" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="186.6" y="74.9" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Y</text>
+<line x1="189.8" y1="231.8" x2="202.0" y2="221.5" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="202.7" y="243.3" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">Z</text>
+<circle cx="140.0" cy="160.0" r="4.5" fill="#2F7D3C"/>
+<text x="120.0" y="161.4" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">X</text>
+</svg>`
+            },
+            {
+                quiz: { q: `Un angle noté $\\widehat{EFG}$ a pour sommet le point...`, a: `F` },
+                options: `F ¤ E ¤ G ¤ On ne peut pas savoir`,
+                explanation: `La lettre du milieu correspond toujours au sommet : dans $\\widehat{EFG}$, c'est la lettre $F$ qui est au milieu, donc le sommet de l'angle est le point <strong>F</strong>.`
+            },
+            {
+                quiz: { q: `Les écritures $\\widehat{BAC}$ et $\\widehat{CAB}$ désignent-elles le même angle ?`, a: `Oui, car A reste au milieu dans les deux cas` },
+                options: `Oui, car A reste au milieu dans les deux cas ¤ Non, ce sont deux angles différents ¤ Oui, mais seulement si l'angle est aigu ¤ Non, il faudrait que B et C soient confondus`,
+                explanation: `Dans les deux écritures, la lettre du sommet ($A$) reste au milieu : seul l'ordre des deux points sur les côtés change, ce qui n'a pas d'importance. $\\widehat{BAC}$ et $\\widehat{CAB}$ désignent donc <strong>le même angle</strong>.`
+            },
+            {
+                quiz: { q: `Pourquoi utilise-t-on parfois trois lettres (plutôt qu'une seule, comme $\\widehat{A}$) pour nommer un angle ?`, a: `Pour éviter toute confusion quand plusieurs angles partagent le même sommet` },
+                options: `Pour éviter toute confusion quand plusieurs angles partagent le même sommet ¤ Parce qu'un angle a toujours trois côtés ¤ Parce que la loi mathématique l'impose systématiquement ¤ Pour indiquer la mesure de l'angle`,
+                explanation: `Si plusieurs angles ont le même sommet, écrire seulement $\\widehat{A}$ ne permettrait pas de savoir duquel on parle. La notation à trois lettres précise, grâce aux deux points supplémentaires, <strong>de quel angle précis il s'agit</strong>.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="257.2" y2="51.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="253.7" y2="255.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="129.3" y1="122.7" x2="122.3" y2="108.3" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="138.7" y="103.0" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">U</text>
+<line x1="210.2" y1="83.2" x2="203.2" y2="68.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="219.6" y="63.5" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">V</text>
+<line x1="170.4" y1="220.4" x2="178.0" y2="206.3" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="186.7" y="226.3" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">W</text>
+<circle cx="55.0" cy="150.0" r="3.5" fill="#1A1A1A"/>
+<text x="35.0" y="149.7" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">T</text>
+</svg><p style="margin-top:8px;">Sur la figure, $T$ est le sommet. Quel point se trouve sur le <strong>même côté</strong> (la même demi-droite) que le point $U$ ?</p>`, a: `Le point V` },
+                options: `Le point V ¤ Le point W ¤ Les points V et W ¤ Aucun autre point`,
+                explanation: `Les points $U$ et $V$ sont tous les deux marqués sur la <strong>même demi-droite</strong> issue de $T$ : ils sont donc sur le même côté de l'angle. On pourrait nommer cet angle indifféremment $\\widehat{UTW}$ ou $\\widehat{VTW}$, car $U$ et $V$ sont sur le même côté. Le point $W$, lui, est sur l'autre côté.<svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" style="max-width:280px; display:block; margin:8px auto; font-family:sans-serif;">
+<line x1="55.0" y1="150.0" x2="257.2" y2="51.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55.0" y1="150.0" x2="253.7" y2="255.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="129.3" y1="122.7" x2="122.3" y2="108.3" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="138.7" y="103.0" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">U</text>
+<line x1="210.2" y1="83.2" x2="203.2" y2="68.8" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="219.6" y="63.5" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">V</text>
+<line x1="170.4" y1="220.4" x2="178.0" y2="206.3" stroke="#1A1A1A" stroke-width="2.2"/>
+<text x="186.7" y="226.3" font-size="16" fill="#1A1A1A" text-anchor="middle" font-weight="bold">W</text>
+<circle cx="55.0" cy="150.0" r="4.5" fill="#2F7D3C"/>
+<text x="35.0" y="149.7" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">T</text>
+</svg>`
+            }
+        ],
+
+        // ------------------------------------------------------------
+        // 59131 : Angles opposes par le sommet, adjacents, supplementaires
+        // ------------------------------------------------------------
+        "59131": [
             {
                 quiz: { q: `<svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
 <line x1="26.0" y1="144.2" x2="214.0" y2="75.8" stroke="#1A1A1A" stroke-width="2.5"/>
@@ -7400,9 +7550,9 @@ const allLocalQuestions5eme = {
         ],
 
         // ------------------------------------------------------------
-        // 59103 : La bissectrice d'un angle (definition + methodes de construction)
+        // 59141 : La bissectrice d'un angle (definition + methodes de construction)
         // ------------------------------------------------------------
-        "59103": [
+        "59141": [
             {
                 quiz: { q: `La bissectrice d'un angle est...`, a: `la demi-droite qui partage l'angle en deux angles de même mesure` },
                 options: `la demi-droite qui partage l'angle en deux angles de même mesure ¤ la droite perpendiculaire à l'un des côtés ¤ le segment qui relie les deux côtés ¤ la demi-droite qui prolonge un des côtés`,

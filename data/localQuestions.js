@@ -997,7 +997,7 @@ const allLocalQuestions = {
 
     // --- CARTE 2 : Division avec position intermédiaire (C est sur la 3ème graduation) ---
     {
-        quiz: { q: 'Le segment $[AB]$ mesure $3x$. Le point $C$ est placé sur la deuxième graduation. Exprime la longueur $[AC]$ en fonction de $x$.', a: '$2x/3$' },
+        quiz: { q: 'Le segment $[AB]$ mesure $x$. Le point $C$ est placé sur la deuxième graduation. Exprime la longueur $[AC]$ en fonction de $x$.', a: '$2x/3$' },
         figure: `<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
             <polyline points="20,30 180,30" fill="none" stroke="black" stroke-width="2"/>
             <!-- Graduations (4 segments) -->
