@@ -762,7 +762,7 @@ async function renderLeaderboard() {
 
     container.innerHTML =
         '<p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:14px;">' +
-        '1 pt par bonne réponse · −0,5 pt par mauvaise · Toutes classes confondues</p>' +
+        '10 à 20 points maximum par QCM et par jour</p>' +
         lb.map((row, i) => {
             const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
             const isMe = row.user_id === me.id;

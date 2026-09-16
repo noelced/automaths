@@ -250,6 +250,47 @@
         .modal-btn-yes:hover { opacity: 0.9; }
         .modal-btn-no { background: var(--bg); color: var(--text-main); border: 1px solid var(--border) !important; }
         .modal-btn-no:hover { background: var(--border); }
+
+        /* ── ONGLET "PROGRESSION" ──────────────────────────────────────── */
+        .progress-back-link {
+            display: inline-block; margin-bottom: 16px; font-size: 0.85rem;
+            color: var(--primary); cursor: pointer; font-weight: 600;
+        }
+        .progress-back-link:hover { text-decoration: underline; }
+        .progress-level-title {
+            font-size: 1.05rem; font-weight: 800; color: var(--primary-dark);
+            margin: 26px 0 10px;
+        }
+        .progress-level-title:first-child { margin-top: 0; }
+        .progress-chapter {
+            margin-bottom: 18px; border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px 18px; background: var(--card-bg);
+        }
+        .progress-chapter-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+        .progress-partie {
+            font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .03em; margin: 12px 0 2px;
+        }
+        .progress-souspartie {
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+            margin: 8px 0 2px 16px;
+        }
+        .progress-quiz-row {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 0 5px 16px; font-size: 0.86rem; cursor: pointer;
+        }
+        .progress-quiz-row input[type="checkbox"] {
+            width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0;
+        }
+        .progress-quiz-row .save-flash {
+            font-size: 0.75rem; color: var(--success); opacity: 0; transition: opacity .3s;
+        }
+        .progress-quiz-row .save-flash.show { opacity: 1; }
+        .progress-note {
+            font-size: 0.8rem; color: var(--text-muted); background: var(--bg);
+            border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px;
+            margin-bottom: 20px;
+        }
         .dashboard-title {
             font-size: 1.6rem; font-weight: 800;
             color: var(--primary-dark); margin-bottom: 6px;
@@ -460,6 +501,7 @@
             <button class="tab-btn" id="tabbtn-qcm" onclick="switchTab('qcm')">🗂️ Suivi des QCM</button>
             <button class="tab-btn" id="tabbtn-particular" onclick="switchTab('particular')">🎯 Suivi particulier</button>
             <button class="tab-btn" id="tabbtn-season" onclick="switchTab('season')">🏆 Saison en cours</button>
+            <button class="tab-btn" id="tabbtn-progression" onclick="switchTab('progression')">📈 Progression</button>
         </div>
 
         <!-- ONGLET 1 : SUIVI STATISTIQUE -->
@@ -553,6 +595,21 @@
             <div class="season-since" id="season-since"></div>
 
             <div id="season-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 5 : PROGRESSION -->
+        <div class="tab-panel" id="tabpanel-progression">
+            <div class="dashboard-title">📈 Progression</div>
+            <div class="dashboard-subtitle">
+                Sélectionnez une classe pour voir le plan détaillé du cours et cocher où vous en êtes.
+            </div>
+
+            <div id="progression-body">
                 <div class="state-message">
                     <div class="icon">⏳</div>
                     Chargement…
@@ -688,6 +745,7 @@ function switchTab(tab) {
 
     // Le classement de saison change souvent : on le recharge à chaque ouverture
     if (tab === 'season') loadSeasonTab();
+    if (tab === 'progression' && !progressionClassId) renderProgressionClassPicker();
 }
 
 
@@ -1560,6 +1618,184 @@ function renderParticularBody() {
             </div>
         `;
     }).join('');
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "PROGRESSION"
+// ══════════════════════════════════════════════════════════════════════════
+// NOTE IMPORTANTE : les libellés "Partie X" / "Sous-partie X.Y" sont générés
+// à partir du format numérique des quiz_key ([niveau][chapitre][H2][H3][n°]),
+// PAS des vrais titres H2/H3 de vos cours (qui vivent dans le HTML des
+// fichiers data/official/officialData_*.js, non exploités ici). L'ordre est
+// donc fiable, mais les libellés sont provisoires en attendant mieux.
+
+let progressionClassId = null;
+let progressionCheckedMap = {}; // quiz_key -> boolean, pour la classe sélectionnée
+
+function renderProgressionClassPicker() {
+    progressionClassId = null;
+    const el = document.getElementById('progression-body');
+
+    if (allClasses.length === 0) {
+        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune classe créée pour l'instant.</div>`;
+        return;
+    }
+
+    el.innerHTML = `<div class="btn-grid">` +
+        allClasses.map(c => `<button class="choice-btn" onclick="selectProgressionClass('${c.id}')">${escapeHtmlDb(c.name)}</button>`).join('') +
+        `</div>`;
+}
+
+async function selectProgressionClass(classId) {
+    progressionClassId = classId;
+    const el = document.getElementById('progression-body');
+    el.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const { data, error } = await sb.from('class_progress')
+        .select('quiz_key, checked')
+        .eq('class_id', classId);
+
+    if (error) {
+        el.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    progressionCheckedMap = {};
+    (data || []).forEach(row => { progressionCheckedMap[row.quiz_key] = row.checked; });
+
+    renderProgressionPlan(classId);
+}
+
+// Décompose une clé standard à 5 chiffres [niveau][chapitre][H2][H3][n°].
+// Renvoie null pour les clés au format spécial (ex: "3_10_101"), non décomposables.
+function parseQuizKeyParts(key) {
+    if (!/^\d{5}$/.test(key)) return null;
+    return { h2: key[2], h3: key[3], num: key[4] };
+}
+
+// Regroupe une liste de quiz_key (déjà triée) par Partie (H2) puis
+// Sous-partie (H3), dans l'ordre. Les clés au format spécial sont
+// renvoyées à part, sans regroupement.
+function groupQuizzesByH2H3(keys) {
+    const byH2 = {};
+    const orderH2 = [];
+    const special = [];
+
+    keys.forEach(k => {
+        const parts = parseQuizKeyParts(k);
+        if (!parts) { special.push(k); return; }
+        if (!byH2[parts.h2]) { byH2[parts.h2] = {}; orderH2.push(parts.h2); }
+        if (!byH2[parts.h2][parts.h3]) byH2[parts.h2][parts.h3] = [];
+        byH2[parts.h2][parts.h3].push(k);
+    });
+
+    orderH2.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    const groups = orderH2.map(h2 => {
+        const h3Map = byH2[h2];
+        const h3Order = Object.keys(h3Map).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        const h3Groups = h3Order.map(h3 => ({
+            label: h3 === '0' ? null : `Sous-partie ${h2}.${h3}`,
+            quizzes: h3Map[h3].sort()
+        }));
+        return { label: `Partie ${h2}`, h3Groups };
+    });
+
+    return { groups, special };
+}
+
+// Retrouve le numéro de chapitre (id) déclaré dans officialStructure.js
+// pour un (niveau, titre de chapitre) donné, si disponible.
+function chapterIdFor(level, chapterTitle) {
+    if (typeof officialStructure === 'undefined') return null;
+    const levelObj = officialStructure.find(l => l.name === level);
+    if (!levelObj) return null;
+    for (const theme of (levelObj.themes || [])) {
+        const ch = (theme.chapters || []).find(c => c.title === chapterTitle);
+        if (ch) return ch.id;
+    }
+    return null;
+}
+
+function renderProgressionPlan(classId) {
+    const el = document.getElementById('progression-body');
+    const classObj = allClasses.find(c => c.id === classId);
+
+    let html = `<div class="progress-back-link" onclick="renderProgressionClassPicker()">‹ Choisir une autre classe</div>`;
+    html += `<div class="progress-note">📌 Les libellés "Partie X" / "Sous-partie X.Y" sont provisoires (voir note dans le code) — l'ordre des questionnaires, lui, est fiable.</div>`;
+    html += `<h2 style="margin-bottom:16px;">${escapeHtmlDb(classObj ? classObj.name : '')}</h2>`;
+
+    let anyContent = false;
+
+    ALL_LEVELS.forEach(level => {
+        const chapters = chaptersForLevel(level);
+        if (chapters.length === 0) return;
+        anyContent = true;
+
+        html += `<div class="progress-level-title">${level}</div>`;
+
+        chapters.forEach(chapter => {
+            const keys = quizzesForChapter(level, chapter);
+            if (keys.length === 0) return;
+
+            const chId = chapterIdFor(level, chapter);
+            const { groups, special } = groupQuizzesByH2H3(keys);
+
+            html += `<div class="progress-chapter">`;
+            html += `<div class="progress-chapter-title">${chId ? 'Chapitre ' + chId + ' — ' : ''}${escapeHtmlDb(chapter)}</div>`;
+
+            groups.forEach(g => {
+                html += `<div class="progress-partie">${g.label}</div>`;
+                g.h3Groups.forEach(h3g => {
+                    if (h3g.label) html += `<div class="progress-souspartie">${h3g.label}</div>`;
+                    h3g.quizzes.forEach(k => html += renderProgressQuizRow(k));
+                });
+            });
+
+            special.forEach(k => html += renderProgressQuizRow(k));
+
+            html += `</div>`;
+        });
+    });
+
+    if (!anyContent) {
+        html += `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour l'instant.</div>`;
+    }
+
+    el.innerHTML = html;
+}
+
+function renderProgressQuizRow(key) {
+    const checked = !!progressionCheckedMap[key];
+    return `
+        <label class="progress-quiz-row">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleProgressCheck('${key}', this.checked, this)">
+            <span>${escapeHtmlDb(quizTitle(key))}</span>
+            <span class="save-flash" id="save-flash-${key}">✓ enregistré</span>
+        </label>
+    `;
+}
+
+async function toggleProgressCheck(quizKey, checked, checkboxEl) {
+    progressionCheckedMap[quizKey] = checked;
+
+    const { error } = await sb.from('class_progress')
+        .upsert({ class_id: progressionClassId, quiz_key: quizKey, checked, updated_at: new Date().toISOString() },
+                { onConflict: 'class_id,quiz_key' });
+
+    const flash = document.getElementById('save-flash-' + quizKey);
+    if (error) {
+        console.error('[Progression] Erreur sauvegarde :', error.message);
+        if (checkboxEl) checkboxEl.checked = !checked; // annule visuellement en cas d'échec
+        progressionCheckedMap[quizKey] = !checked;
+        return;
+    }
+
+    if (flash) {
+        flash.classList.add('show');
+        setTimeout(() => flash.classList.remove('show'), 1200);
+    }
 }
 </script>
 </body>
