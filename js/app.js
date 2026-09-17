@@ -652,6 +652,7 @@ function selectLevel(index) {
     currentMode = mode;
     // Mise à jour visuelle des onglets
     document.getElementById('btn-cours').classList.toggle('active', mode === 'cours');
+    document.getElementById('btn-automatismes').classList.toggle('active', mode === 'automatismes');
     document.getElementById('btn-entrainement').classList.toggle('active', mode === 'entrainement');
     
     // --- CORRECTION : Gestion de la visibilité du bouton Créer une carte ---
@@ -727,6 +728,25 @@ function selectLevel(index) {
     const container = document.getElementById('content-area');
     if (!container) return;
     container.innerHTML = "";
+
+    // --- MODE AUTOMATISMES : en construction pour l'instant ---
+    // Pas de grille de chapitres : on affiche directement le message,
+    // avec un bouton de retour vers le mode Cours.
+    if (currentMode === 'automatismes') {
+        container.innerHTML = `
+            <div class="card" style="text-align:center; padding:60px 20px;">
+                <div style="font-size:3rem; margin-bottom:10px;">🚧</div>
+                <h1 style="color:var(--secondary); margin-bottom:10px;">En construction</h1>
+                <p style="color:var(--text-muted); margin-bottom:25px;">
+                    Cette section accueillera bientôt des questions flash pour
+                    t'entraîner au calcul mental, sans calculatrice.
+                </p>
+                <button class="action-btn" onclick="setMode('cours')" style="max-width:260px; margin:0 auto;">
+                    ← Retour au mode Cours
+                </button>
+            </div>`;
+        return;
+    }
 
     const levelData = data.find(item => item.name === currentLevel);
     if (!levelData) {
@@ -858,6 +878,8 @@ if (currentMode === 'cours') {
             // On compare les titres en minuscules et sans espaces inutiles au début/fin
             return card.title.trim().toLowerCase() === chapter.title.trim().toLowerCase();
         }).map(card => ({
+            id: card.id,
+            created_by: card.created_by,
             quiz: { 
                 q: card.question || "Sans question", 
                 a: card.answer || "" 
@@ -912,14 +934,31 @@ if (currentMode === 'cours') {
     // savoir qu'en mode entraînement, toutes les cartes sont des cartes élèves)
     const sparkle = "✨ "; 
 
+    // On n'affiche le bouton de suppression que si l'élève connecté est
+    // bien l'auteur de CETTE carte précise (created_by rempli automatiquement
+    // par Supabase à la création, voir hotfix_chapters_table.sql).
+    const isOwnCard = typeof currentUser !== 'undefined' && currentUser
+        && currentCard.created_by && currentCard.created_by === currentUser.id;
+    const deleteBtnHTML = isOwnCard
+        ? `<button onclick="deleteMyCard('${currentCard.id}', '${chapterTitle.replace(/'/g, "\\'")}')"
+                   style="background:none; border:none; color:var(--text-muted); font-size:0.78rem; cursor:pointer; text-decoration:underline; padding:0;">
+               🗑️ Supprimer ma carte
+           </button>`
+        : '';
+
     container.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <span style="font-weight:bold; color:var(--primary);">Score: ${trainingSession.score}/${trainingSession.totalAnswered}</span>
             <span style="font-size:0.8rem; color:var(--text-muted);">Question ${trainingSession.currentIndex + 1}/${trainingSession.currentCards.length}</span>
         </div>
         <div class="card">
-            <h2 style="margin-bottom:15px;">Entraînement</h2>
-            <p style="margin-bottom:15px; color:var(--text-muted);">${chapterTitle}</p>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:15px;">
+                <div>
+                    <h2>Entraînement</h2>
+                    <p style="color:var(--text-muted);">${chapterTitle}</p>
+                </div>
+                ${deleteBtnHTML}
+            </div>
             <hr style="margin-bottom:20px; opacity:0.2">
             <!-- On ajoute le sparkle ici -->
             <p style="font-size:1.2rem; margin-bottom:20px;">${sparkle}${currentCard.quiz.q}</p>
@@ -964,6 +1003,37 @@ if (currentMode === 'cours') {
         window.MathJax.typesetPromise([container]).catch((err) => console.log(err));
         }
     }
+
+// Supprime définitivement une carte créée par l'élève lui-même (vérifié
+// côté serveur par la policy RLS "chapters: suppression propre" — même si
+// ce bouton n'est affiché que pour l'auteur, la base refuserait de toute
+// façon la suppression de la carte d'un autre élève).
+async function deleteMyCard(cardId, chapterTitle) {
+    if (!confirm('Supprimer définitivement cette carte que tu as créée ?')) return;
+
+    const { error } = await supabaseClient.from('chapters').delete().eq('id', cardId);
+    if (error) {
+        alert('Erreur lors de la suppression : ' + error.message);
+        return;
+    }
+
+    // On retire la carte des données locales pour ne pas la revoir dans
+    // cette session, ni dans le compteur "X questions" du chapitre.
+    studentCardsGlobal = studentCardsGlobal.filter(c => String(c.id) !== String(cardId));
+    trainingSession.currentCards.splice(trainingSession.currentIndex, 1);
+
+    if (trainingSession.currentCards.length === 0) {
+        showFinalScoreInjected
+            ? showFinalScoreInjected(document.getElementById('content-area'), trainingSession.score, trainingSession.totalAnswered)
+            : showFinalScore();
+        return;
+    }
+
+    if (trainingSession.currentIndex >= trainingSession.currentCards.length) {
+        trainingSession.currentIndex = 0;
+    }
+    displayTrainingQuestion(chapterTitle);
+}
 
 function showFinalScore() {    // Affiche le score final proprement
     const container = document.getElementById('content-area');
