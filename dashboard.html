@@ -291,6 +291,43 @@
             border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px;
             margin-bottom: 20px;
         }
+        .progress-access-box {
+            border: 1px solid var(--primary); background: var(--primary-light);
+            border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+        }
+        .progress-access-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
+        .progress-access-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; }
+        .progress-access-warning { font-size: 0.78rem; color: var(--danger); margin-bottom: 10px; font-weight: 600; }
+        .progress-access-checks { display: flex; flex-wrap: wrap; gap: 16px; }
+        .progress-access-check {
+            display: flex; align-items: center; gap: 6px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer;
+        }
+        .progress-access-check input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
+
+        /* ── ONGLET "CARTES D'ENTRAÎNEMENT" ────────────────────────────── */
+        .card-row {
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px 18px; margin-bottom: 10px; background: var(--card-bg);
+        }
+        .card-row-top {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
+        }
+        .card-row-title { font-weight: 700; font-size: 0.92rem; }
+        .card-row-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .card-row-question { font-size: 0.88rem; margin-bottom: 4px; }
+        .card-row-answer { font-size: 0.82rem; color: var(--text-muted); }
+        .card-row-type-badge {
+            font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+            background: var(--primary-light); color: var(--primary-dark); white-space: nowrap;
+        }
+        .btn-icon-sm {
+            padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--card-bg); font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+        }
+        .btn-icon-sm.danger { border-color: var(--danger); color: var(--danger); }
+        .btn-icon-sm.danger:hover { background: var(--danger); color: white; }
         .dashboard-title {
             font-size: 1.6rem; font-weight: 800;
             color: var(--primary-dark); margin-bottom: 6px;
@@ -502,6 +539,7 @@
             <button class="tab-btn" id="tabbtn-particular" onclick="switchTab('particular')">🎯 Suivi particulier</button>
             <button class="tab-btn" id="tabbtn-season" onclick="switchTab('season')">🏆 Saison en cours</button>
             <button class="tab-btn" id="tabbtn-progression" onclick="switchTab('progression')">📈 Progression</button>
+            <button class="tab-btn" id="tabbtn-cards" onclick="switchTab('cards')">✏️ Cartes d'entraînement</button>
         </div>
 
         <!-- ONGLET 1 : SUIVI STATISTIQUE -->
@@ -607,7 +645,11 @@
             <div class="dashboard-title">📈 Progression</div>
             <div class="dashboard-subtitle">
                 Sélectionnez une classe pour voir le plan détaillé du cours et cocher où vous en êtes.
+                Les QCM non cochés (ou d'un niveau non autorisé) ne rapportent plus ni XP ni point de classement.
             </div>
+
+            <div id="progression-access-panel"></div>
+            <div class="breadcrumb" id="progression-breadcrumb"></div>
 
             <div id="progression-body">
                 <div class="state-message">
@@ -616,8 +658,40 @@
                 </div>
             </div>
         </div>
+
+        <!-- ONGLET 6 : CARTES D'ENTRAÎNEMENT -->
+        <div class="tab-panel" id="tabpanel-cards">
+            <div class="dashboard-title">✏️ Cartes d'entraînement</div>
+            <div class="dashboard-subtitle">
+                Cartes de révision créées par les élèves (mode "Entraînement"), partagées entre toute la plateforme.
+            </div>
+
+            <input class="table-search" type="text" placeholder="🔍 Rechercher par titre, question ou auteur…"
+                style="margin-bottom:16px; width:100%; max-width:400px;"
+                oninput="filterCardsList(this.value)">
+
+            <div id="cards-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+
+<!-- MODALE : confirmation de suppression d'une carte élève -->
+<div class="modal-overlay" id="modal-confirm-delete-card">
+    <div class="modal-box">
+        <h3>🗑️ Supprimer cette carte ?</h3>
+        <p id="delete-card-message">Voulez-vous vraiment supprimer cette carte ?</p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmDeleteCard()">Oui</button>
+            <button class="modal-btn-no" onclick="closeDeleteCardModal()">Non</button>
+        </div>
+    </div>
+</div>
+
 
 <!-- MODALE : confirmation de réinitialisation de saison -->
 <div class="modal-overlay" id="modal-confirm-reset-season">
@@ -640,6 +714,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data/officialStructure.js"></script>
 <script src="data/quizMeta.js"></script>
+<script src="data/courseOutline.js"></script>
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────
 // ⚠️ Remplacez par vos valeurs (identiques à auth.js)
@@ -746,6 +821,7 @@ function switchTab(tab) {
     // Le classement de saison change souvent : on le recharge à chaque ouverture
     if (tab === 'season') loadSeasonTab();
     if (tab === 'progression' && !progressionClassId) renderProgressionClassPicker();
+    if (tab === 'cards') loadCardsTab();
 }
 
 
@@ -1376,7 +1452,7 @@ async function loadSeasonTab() {
 
     bodyEl.innerHTML =
         `<p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">
-            1 pt par bonne réponse · −0,5 pt par mauvaise · toutes classes confondues
+            10 à 20 points maximum par QCM et par jour
         </p>` +
         lb.map((row, i) => {
             const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
@@ -1624,31 +1700,44 @@ function renderParticularBody() {
 // ══════════════════════════════════════════════════════════════════════════
 // ONGLET "PROGRESSION"
 // ══════════════════════════════════════════════════════════════════════════
-// NOTE IMPORTANTE : les libellés "Partie X" / "Sous-partie X.Y" sont générés
-// à partir du format numérique des quiz_key ([niveau][chapitre][H2][H3][n°]),
-// PAS des vrais titres H2/H3 de vos cours (qui vivent dans le HTML des
-// fichiers data/official/officialData_*.js, non exploités ici). L'ordre est
-// donc fiable, mais les libellés sont provisoires en attendant mieux.
+// Fil d'ariane : Classes > [Niveau, si la classe n'a pas de niveau fixe ou
+// si on navigue vers un autre niveau] > Chapitre > Plan détaillé.
+//
+// En haut de page (dès qu'une classe est sélectionnée, quelle que soit la
+// profondeur de navigation) : un panneau d'accès par niveau, qui pilote
+// classes.allowed_levels (utilisé par record_quiz_result() pour bloquer
+// l'XP/le classement des QCM d'un niveau non autorisé — voir
+// migration_progression_gating.sql).
+//
+// Le plan détaillé (étape 4) utilise en priorité les VRAIS titres H2/H3
+// extraits du cours (data/courseOutline.js, généré par
+// data/MAJcourseOutline.js) quand ils sont disponibles pour ce chapitre ;
+// sinon, il retombe sur un regroupement déduit du format numérique des
+// clés de QCM (comme avant), avec des libellés génériques "Partie X".
 
 let progressionClassId = null;
-let progressionCheckedMap = {}; // quiz_key -> boolean, pour la classe sélectionnée
+let progressionLevel   = null;
+let progressionChapter = null;
+let progressionCheckedMap = {};      // quiz_key -> boolean, pour la classe sélectionnée
+let currentProgressionChapterList = []; // pour les onclick par index à l'étape "chapitre"
+
+function renderProgressionTab() {
+    renderProgressionBreadcrumb();
+    renderProgressionAccessPanel();
+    renderProgressionBody();
+}
 
 function renderProgressionClassPicker() {
     progressionClassId = null;
-    const el = document.getElementById('progression-body');
-
-    if (allClasses.length === 0) {
-        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune classe créée pour l'instant.</div>`;
-        return;
-    }
-
-    el.innerHTML = `<div class="btn-grid">` +
-        allClasses.map(c => `<button class="choice-btn" onclick="selectProgressionClass('${c.id}')">${escapeHtmlDb(c.name)}</button>`).join('') +
-        `</div>`;
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
 }
 
 async function selectProgressionClass(classId) {
     progressionClassId = classId;
+    progressionChapter = null;
+
     const el = document.getElementById('progression-body');
     el.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
 
@@ -1664,8 +1753,171 @@ async function selectProgressionClass(classId) {
     progressionCheckedMap = {};
     (data || []).forEach(row => { progressionCheckedMap[row.quiz_key] = row.checked; });
 
-    renderProgressionPlan(classId);
+    // Si la classe a un niveau défini (Gestion des classes), on va
+    // directement à ses chapitres — sinon on demande de choisir un niveau.
+    const classObj = allClasses.find(c => c.id === classId);
+    progressionLevel = (classObj && classObj.level) ? classObj.level : null;
+
+    renderProgressionTab();
 }
+
+function selectProgressionLevel(level) {
+    progressionLevel = level;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function selectProgressionChapterByIndex(i) {
+    progressionChapter = currentProgressionChapterList[i];
+    renderProgressionTab();
+}
+
+function goToProgressionRoot() {
+    progressionClassId = null;
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function goToProgressionClass() {
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function goToProgressionLevel() {
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+// ── FIL D'ARIANE ────────────────────────────────────────────────────────
+function renderProgressionBreadcrumb() {
+    const el = document.getElementById('progression-breadcrumb');
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    const className = classObj ? classObj.name : '';
+    let html = '';
+
+    if (!progressionClassId) {
+        html = `<span class="breadcrumb-item current">Classes</span>`;
+    } else {
+        html += `<span class="breadcrumb-item" onclick="goToProgressionRoot()">Classes</span>`;
+        html += `<span class="breadcrumb-sep">›</span>`;
+
+        if (!progressionLevel) {
+            html += `<span class="breadcrumb-item current">${escapeHtmlDb(className)}</span>`;
+        } else {
+            html += `<span class="breadcrumb-item" onclick="goToProgressionClass()">${escapeHtmlDb(className)}</span>`;
+            html += `<span class="breadcrumb-sep">›</span>`;
+
+            if (!progressionChapter) {
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(progressionLevel)}</span>`;
+            } else {
+                html += `<span class="breadcrumb-item" onclick="goToProgressionLevel()">${escapeHtmlDb(progressionLevel)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(progressionChapter)}</span>`;
+            }
+        }
+    }
+
+    el.innerHTML = html;
+}
+
+// ── PANNEAU D'ACCÈS PAR NIVEAU (toujours visible dès qu'une classe est choisie) ──
+function renderProgressionAccessPanel() {
+    const el = document.getElementById('progression-access-panel');
+    if (!progressionClassId) { el.innerHTML = ''; return; }
+
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    if (!classObj) { el.innerHTML = ''; return; }
+
+    const allowed = classObj.allowed_levels || [];
+    const warning = !classObj.level
+        ? `<div class="progress-access-warning">⚠️ Cette classe n'a pas encore de niveau défini (onglet Gestion des classes) : ces cases n'ont donc aucun effet pour l'instant, mais seront prises en compte dès qu'un niveau sera choisi.</div>`
+        : '';
+
+    el.innerHTML = `
+        <div class="progress-access-box">
+            <div class="progress-access-title">🔓 Accès aux QCM par niveau — ${escapeHtmlDb(classObj.name)}</div>
+            <div class="progress-access-hint">Un niveau décoché = 0 XP et 0 point de classement pour tous ses QCM, quelle que soit la note obtenue.</div>
+            ${warning}
+            <div class="progress-access-checks">
+                ${ALL_LEVELS.map(l => `
+                    <label class="progress-access-check">
+                        <input type="checkbox" ${allowed.includes(l) ? 'checked' : ''} onchange="toggleLevelAccess('${l}', this.checked)">
+                        Accès au QCM ${l}
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+async function toggleLevelAccess(level, checked) {
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    if (!classObj) return;
+
+    let allowed = [...(classObj.allowed_levels || [])];
+    if (checked && !allowed.includes(level)) allowed.push(level);
+    if (!checked) allowed = allowed.filter(l => l !== level);
+
+    const { error } = await sb.from('classes').update({ allowed_levels: allowed }).eq('id', progressionClassId);
+    if (error) {
+        alert('Erreur : ' + error.message);
+        return;
+    }
+
+    classObj.allowed_levels = allowed; // mise à jour locale immédiate, pas de rechargement complet
+    renderProgressionAccessPanel();
+}
+
+// ── CORPS DE LA PAGE (selon la profondeur de navigation) ──────────────────
+function renderProgressionBody() {
+    const el = document.getElementById('progression-body');
+
+    // Étape 1 : choix de la classe
+    if (!progressionClassId) {
+        if (allClasses.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune classe créée pour l'instant.</div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            allClasses.map(c => {
+                const tag = c.level ? ` <span style="font-weight:400; opacity:0.7;">(${escapeHtmlDb(c.level)})</span>` : '';
+                return `<button class="choice-btn" onclick="selectProgressionClass('${c.id}')">${escapeHtmlDb(c.name)}${tag}</button>`;
+            }).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 2 : choix du niveau (seulement si la classe n'en a pas / n'en
+    // a plus, suite à un retour en arrière dans le fil d'ariane)
+    if (!progressionLevel) {
+        el.innerHTML = `<div class="btn-grid">` +
+            ALL_LEVELS.map(l => `<button class="choice-btn" onclick="selectProgressionLevel('${l}')">${l}</button>`).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 3 : choix du chapitre
+    if (!progressionChapter) {
+        currentProgressionChapterList = chaptersForLevel(progressionLevel);
+        if (currentProgressionChapterList.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce niveau.</div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            currentProgressionChapterList.map((c, i) =>
+                `<button class="choice-btn" onclick="selectProgressionChapterByIndex(${i})">${escapeHtmlDb(c)}</button>`
+            ).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 4 : plan détaillé du chapitre
+    el.innerHTML = renderChapterPlan(progressionLevel, progressionChapter);
+}
+
+// ── PLAN DÉTAILLÉ D'UN CHAPITRE ─────────────────────────────────────────
 
 // Décompose une clé standard à 5 chiffres [niveau][chapitre][H2][H3][n°].
 // Renvoie null pour les clés au format spécial (ex: "3_10_101"), non décomposables.
@@ -1675,8 +1927,8 @@ function parseQuizKeyParts(key) {
 }
 
 // Regroupe une liste de quiz_key (déjà triée) par Partie (H2) puis
-// Sous-partie (H3), dans l'ordre. Les clés au format spécial sont
-// renvoyées à part, sans regroupement.
+// Sous-partie (H3), dans l'ordre — repli utilisé quand data/courseOutline.js
+// n'a pas (encore) les vrais titres pour ce chapitre.
 function groupQuizzesByH2H3(keys) {
     const byH2 = {};
     const orderH2 = [];
@@ -1718,52 +1970,47 @@ function chapterIdFor(level, chapterTitle) {
     return null;
 }
 
-function renderProgressionPlan(classId) {
-    const el = document.getElementById('progression-body');
-    const classObj = allClasses.find(c => c.id === classId);
+function renderChapterPlan(level, chapterTitle) {
+    const chId = chapterIdFor(level, chapterTitle);
+    let html = `<h2 style="margin-bottom:16px;">${chId ? 'Chapitre ' + chId + ' — ' : ''}${escapeHtmlDb(chapterTitle)}</h2>`;
 
-    let html = `<div class="progress-back-link" onclick="renderProgressionClassPicker()">‹ Choisir une autre classe</div>`;
-    html += `<div class="progress-note">📌 Les libellés "Partie X" / "Sous-partie X.Y" sont provisoires (voir note dans le code) — l'ordre des questionnaires, lui, est fiable.</div>`;
-    html += `<h2 style="margin-bottom:16px;">${escapeHtmlDb(classObj ? classObj.name : '')}</h2>`;
+    const outlineChapter = (typeof courseOutline !== 'undefined'
+        && courseOutline[level] && courseOutline[level][chapterTitle]) || null;
 
-    let anyContent = false;
-
-    ALL_LEVELS.forEach(level => {
-        const chapters = chaptersForLevel(level);
-        if (chapters.length === 0) return;
-        anyContent = true;
-
-        html += `<div class="progress-level-title">${level}</div>`;
-
-        chapters.forEach(chapter => {
-            const keys = quizzesForChapter(level, chapter);
-            if (keys.length === 0) return;
-
-            const chId = chapterIdFor(level, chapter);
-            const { groups, special } = groupQuizzesByH2H3(keys);
-
-            html += `<div class="progress-chapter">`;
-            html += `<div class="progress-chapter-title">${chId ? 'Chapitre ' + chId + ' — ' : ''}${escapeHtmlDb(chapter)}</div>`;
-
-            groups.forEach(g => {
-                html += `<div class="progress-partie">${g.label}</div>`;
-                g.h3Groups.forEach(h3g => {
-                    if (h3g.label) html += `<div class="progress-souspartie">${h3g.label}</div>`;
-                    h3g.quizzes.forEach(k => html += renderProgressQuizRow(k));
-                });
+    if (outlineChapter && outlineChapter.h2Sections && outlineChapter.h2Sections.length > 0) {
+        // Vrais titres H2/H3, extraits du cours par data/MAJcourseOutline.js
+        outlineChapter.h2Sections.forEach(h2 => {
+            html += `<div class="progress-partie">${escapeHtmlDb(h2.title)}</div>`;
+            let lastH3;
+            h2.items.forEach(item => {
+                if (item.h3Title !== lastH3) {
+                    if (item.h3Title) html += `<div class="progress-souspartie">${escapeHtmlDb(item.h3Title)}</div>`;
+                    lastH3 = item.h3Title;
+                }
+                html += renderProgressQuizRow(item.quizKey);
             });
-
-            special.forEach(k => html += renderProgressQuizRow(k));
-
-            html += `</div>`;
         });
-    });
-
-    if (!anyContent) {
-        html += `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour l'instant.</div>`;
+    } else {
+        // Repli : regroupement déduit du format numérique des clés
+        // (data/courseOutline.js absent ou ce chapitre pas encore scanné)
+        const keys = quizzesForChapter(level, chapterTitle);
+        if (keys.length === 0) {
+            html += `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce chapitre.</div>`;
+            return html;
+        }
+        html += `<div class="progress-note">📌 Titres réels non disponibles pour ce chapitre (voir data/MAJcourseOutline.js) — regroupement déduit du format numérique des clés, libellés "Partie X" provisoires.</div>`;
+        const { groups, special } = groupQuizzesByH2H3(keys);
+        groups.forEach(g => {
+            html += `<div class="progress-partie">${g.label}</div>`;
+            g.h3Groups.forEach(h3g => {
+                if (h3g.label) html += `<div class="progress-souspartie">${h3g.label}</div>`;
+                h3g.quizzes.forEach(k => html += renderProgressQuizRow(k));
+            });
+        });
+        special.forEach(k => html += renderProgressQuizRow(k));
     }
 
-    el.innerHTML = html;
+    return html;
 }
 
 function renderProgressQuizRow(key) {
@@ -1796,6 +2043,133 @@ async function toggleProgressCheck(quizKey, checked, checkboxEl) {
         flash.classList.add('show');
         setTimeout(() => flash.classList.remove('show'), 1200);
     }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "CARTES D'ENTRAÎNEMENT"
+// ══════════════════════════════════════════════════════════════════════════
+
+let allCards = []; // cache brut pour le filtre texte
+
+async function loadCardsTab() {
+    const el = document.getElementById('cards-body');
+    el.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const { data, error } = await sb.from('chapters')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        el.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    allCards = data || [];
+    renderCardsList(allCards);
+}
+
+// created_by référence auth.users(id), pas profiles(id) directement : pas
+// de jointure PostgREST automatique possible, on relie donc côté client
+// avec le roster d'élèves déjà chargé (allStudents).
+function authorNameForCard(card) {
+    if (!card.created_by) return 'Auteur inconnu';
+    const student = allStudents.find(s => s.id === card.created_by);
+    if (student) return student.full_name || 'Élève';
+    if (card.created_by === teacherId) return 'Vous (professeur)';
+    return 'Compte supprimé';
+}
+
+function renderCardsList(cards) {
+    const el = document.getElementById('cards-body');
+
+    if (cards.length === 0) {
+        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune carte créée pour l'instant.</div>`;
+        return;
+    }
+
+    el.innerHTML = cards.map(card => {
+        const author = authorNameForCard(card);
+        const date = card.created_at ? new Date(card.created_at).toLocaleDateString('fr-FR') : '';
+        const typeLabel = card.type === 'qcm' ? 'QCM' : 'Question ouverte';
+
+        return `
+            <div class="card-row">
+                <div class="card-row-top">
+                    <div>
+                        <div class="card-row-title">${escapeHtmlDb(card.title || 'Sans titre')} <span style="color:var(--text-muted); font-weight:400;">· ${escapeHtmlDb(card.level || '')}</span></div>
+                        <div class="card-row-meta">Par ${escapeHtmlDb(author)} · ${date}</div>
+                    </div>
+                    <span class="card-row-type-badge">${typeLabel}</span>
+                </div>
+                <div class="card-row-question"><strong>Q :</strong> ${escapeHtmlDb(card.question || '—')}</div>
+                <div class="card-row-answer"><strong>R :</strong> ${escapeHtmlDb(card.answer || '—')}</div>
+                <div style="margin-top:10px;">
+                    <button class="btn-icon-sm danger" onclick="openDeleteCardModal(${card.id})">🗑️ Supprimer cette carte</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterCardsList(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) { renderCardsList(allCards); return; }
+
+    const filtered = allCards.filter(card => {
+        const author = authorNameForCard(card).toLowerCase();
+        return (card.title || '').toLowerCase().includes(q)
+            || (card.question || '').toLowerCase().includes(q)
+            || (card.answer || '').toLowerCase().includes(q)
+            || author.includes(q);
+    });
+    renderCardsList(filtered);
+}
+
+let pendingDeleteCardId = null;
+
+function openDeleteCardModal(cardId) {
+    pendingDeleteCardId = cardId;
+    const card = allCards.find(c => c.id === cardId);
+    document.getElementById('delete-card-message').innerHTML = card
+        ? `Voulez-vous vraiment supprimer la carte <strong>${escapeHtmlDb(card.title || 'Sans titre')}</strong> (question : « ${escapeHtmlDb((card.question || '').slice(0, 80))} ») ? Cette action est irréversible.`
+        : 'Voulez-vous vraiment supprimer cette carte ?';
+    document.getElementById('modal-confirm-delete-card').classList.add('show');
+}
+
+function closeDeleteCardModal() {
+    pendingDeleteCardId = null;
+    document.getElementById('modal-confirm-delete-card').classList.remove('show');
+}
+
+async function confirmDeleteCard() {
+    if (pendingDeleteCardId === null) return;
+    const cardId = pendingDeleteCardId;
+
+    // Autorisé côté base par la policy "chapters: suppression prof"
+    // (is_teacher()), indépendamment de qui a créé la carte.
+    const { error } = await sb.from('chapters').delete().eq('id', cardId);
+
+    closeDeleteCardModal();
+
+    if (error) {
+        alert('Erreur lors de la suppression : ' + error.message);
+        return;
+    }
+
+    await loadCardsTab();
+    showCardsToast('✓ Carte supprimée');
+}
+
+function showCardsToast(message) {
+    // Pas de système de toast global dans dashboard.html : petit message
+    // inline temporaire en haut de la liste, suffisant pour cette action.
+    const el = document.getElementById('cards-body');
+    const toast = document.createElement('div');
+    toast.style.cssText = 'background:var(--success-light); color:var(--success); padding:10px 14px; border-radius:8px; margin-bottom:12px; font-size:0.85rem; font-weight:600;';
+    toast.textContent = message;
+    el.prepend(toast);
+    setTimeout(() => toast.remove(), 2500);
 }
 </script>
 </body>

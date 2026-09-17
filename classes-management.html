@@ -54,10 +54,11 @@ main{ max-width:1100px; margin:0 auto; padding:32px 24px; }
 
 /* Création de classe */
 .new-class-form{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
-.new-class-form input{
+.new-class-form input, .new-class-form select{
     padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; outline:none;
+    font-family:inherit; background:white;
 }
-.new-class-form input:focus{ border-color:var(--primary); }
+.new-class-form input:focus, .new-class-form select:focus{ border-color:var(--primary); }
 .btn-primary{
     background:var(--primary); color:white; border:none; border-radius:8px;
     padding:10px; font-weight:600; font-size:0.9rem; cursor:pointer;
@@ -231,6 +232,13 @@ input:checked + .slider::before{ transform:translateX(20px); }
 
             <div class="new-class-form">
                 <input type="text" id="new-class-name" placeholder="Nom de la classe (ex: 3ème A)">
+                <select id="new-class-level">
+                    <option value="">Niveau (optionnel)</option>
+                    <option value="6ème">6ème</option>
+                    <option value="5ème">5ème</option>
+                    <option value="4ème">4ème</option>
+                    <option value="3ème">3ème</option>
+                </select>
                 <button class="btn-primary" onclick="createClass()">➕ Créer une classe</button>
             </div>
 
@@ -365,13 +373,22 @@ async function createClass(){
     const name = input.value.trim();
     if (!name) return;
 
-    const { error } = await sb.from('classes').insert([{ teacher_id: teacherId, name, leaderboard_enabled: true }]);
+    const levelSelect = document.getElementById('new-class-level');
+    const level = levelSelect.value || null;
+    // Si un niveau est choisi dès la création, on autorise directement ce
+    // niveau (l'élève pourra faire les QCM de sa classe sans rien configurer
+    // de plus dans l'onglet Progression du tableau de bord).
+    const insertPayload = { teacher_id: teacherId, name, leaderboard_enabled: true, level };
+    if (level) insertPayload.allowed_levels = [level];
+
+    const { error } = await sb.from('classes').insert([insertPayload]);
     if (error){
         alert('Erreur lors de la création : ' + error.message);
         return;
     }
 
     input.value = '';
+    levelSelect.value = '';
     await loadAll();
     showToast('✓ Classe créée');
 }
@@ -393,6 +410,15 @@ function renderClassList(){
             '<div class="class-list-item ' + (active ? 'active' : '') + '" onclick="selectClass(\'' + c.id + '\')">' +
                 '<span class="name">' + escapeHtml(c.name) + '</span>' +
                 '<span class="count">' + count + ' élève(s)</span>' +
+            '</div>' +
+            '<div style="padding:0 4px 10px 4px;">' +
+                '<select onclick="event.stopPropagation()" onchange="event.stopPropagation(); setClassLevel(\'' + c.id + '\', this.value)" ' +
+                    'style="width:100%; font-size:0.78rem; padding:4px 6px; border:1px solid var(--border); border-radius:6px; color:var(--text-muted);">' +
+                    '<option value="">Niveau non défini</option>' +
+                    ['6ème','5ème','4ème','3ème'].map(function(lvl){
+                        return '<option value="' + lvl + '" ' + (c.level === lvl ? 'selected' : '') + '>' + lvl + '</option>';
+                    }).join('') +
+                '</select>' +
             '</div>';
     }).join('');
 }
@@ -401,6 +427,27 @@ function selectClass(classId){
     selectedClassId = classId;
     renderClassList();
     renderClassDetail(classId);
+}
+
+// Change le niveau d'une classe déjà créée. Si allowed_levels est encore
+// vide (classe jamais configurée), on l'initialise à [nouveau niveau] pour
+// que les QCM de la classe restent utilisables sans réglage supplémentaire.
+async function setClassLevel(classId, level){
+    const classObj = myClasses.find(function(c){ return c.id === classId; });
+    const payload = { level: level || null };
+
+    if (level && (!classObj.allowed_levels || classObj.allowed_levels.length === 0)){
+        payload.allowed_levels = [level];
+    }
+
+    const { error } = await sb.from('classes').update(payload).eq('id', classId);
+    if (error){
+        alert('Erreur : ' + error.message);
+        return;
+    }
+
+    await loadAll();
+    showToast('✓ Niveau mis à jour');
 }
 
 
