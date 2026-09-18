@@ -177,32 +177,98 @@ function renderRankBannerHTML(totalXp, options = {}) {
 
 // ── BADGES (trophées événementiels) ────────────────────────────────────────
 const BADGE_DEFINITIONS = {
-    first_quiz:      { icon: '🎯', label: 'Premier pas',       desc: 'Premier QCM terminé' },
-    streak_3:        { icon: '🔥', label: 'En feu',             desc: '3 jours d\'affilée' },
-    streak_7:        { icon: '🌟', label: 'Semaine parfaite',  desc: '7 jours d\'affilée' },
-    streak_30:       { icon: '🏆', label: 'Inarrêtable',       desc: '30 jours d\'affilée' },
-    perfect_chapter: { icon: '💯', label: 'Sans faute',         desc: '100% sur un chapitre' },
-    night_owl:       { icon: '🦉', label: 'Couche-tard',        desc: 'QCM fait après 21h' },
-    early_bird:      { icon: '🐤', label: 'Lève-tôt',           desc: 'QCM fait avant 8h' },
-    speedrun:        { icon: '⚡', label: 'Éclair',             desc: 'QCM réussi en moins de 30s' },
-    comeback:        { icon: '💪', label: 'Revanche',           desc: 'Score 100% après un échec' },
+    first_quiz:      { icon: '🎯', label: 'Premier pas',            desc: 'Premier QCM terminé' },
+    streak_3:        { icon: '🔥', label: 'En feu',                  desc: '3 jours d\'affilée' },
+    streak_7:        { icon: '🌟', label: 'Semaine parfaite',       desc: '7 jours d\'affilée' },
+    streak_30:       { icon: '🏆', label: 'Inarrêtable',            desc: '30 jours d\'affilée' },
+    perfect_chapter: { icon: '💯', label: 'Sans faute',              desc: 'Un chapitre entier validé à 100% (tous les QCM au programme)' },
+    chapters_2:      { icon: '📗', label: 'Deux chapitres maîtrisés', desc: '2 chapitres validés à 100%' },
+    chapters_5:      { icon: '📘', label: 'Cinq chapitres maîtrisés', desc: '5 chapitres validés à 100%' },
+    chapters_10:     { icon: '📙', label: 'Dix chapitres maîtrisés',  desc: '10 chapitres validés à 100%' },
+    chapters_all:    { icon: '🎓', label: 'Programme maîtrisé',      desc: 'Tous les chapitres au programme validés à 100%' },
+    night_owl:       { icon: '🦉', label: 'Couche-tard',             desc: 'QCM fait après 20h' },
+    early_bird:      { icon: '🐤', label: 'Lève-tôt',                desc: 'QCM fait avant 8h' },
+    speedrun:        { icon: '⚡', label: 'Éclair',                  desc: 'QCM réussi en moins de 30s' },
+    comeback:        { icon: '💪', label: 'Revanche',                desc: 'Score 100% après un échec' },
 };
 
 /**
+ * Détermine la liste des chapitres (level + chapter) entièrement validés
+ * à 100% par l'élève connecté. Un chapitre compte comme "validé" quand
+ * TOUS ses QCM "au programme" ont été réussis à 100% (meilleure tentative).
+ *
+ * "Au programme" = QCM cochés dans l'onglet Progression du prof pour la
+ * classe de l'élève, SI le prof a coché au moins une case pour cette
+ * classe (sinon, comme pour l'XP et le classement, aucune restriction :
+ * tous les QCM du chapitre comptent — comportement historique).
+ *
+ * Nécessite que data/quizMeta.js soit chargé (sinon renvoie []).
+ */
+async function getValidatedChapters() {
+    if (!currentUser || typeof quizMeta === 'undefined' || !quizMeta.byKey) return [];
+
+    // 1) Regrouper tous les quiz_key connus par (niveau, chapitre)
+    const byChapter = {};
+    Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
+        const chapterKey = meta.level + '||' + meta.chapter;
+        if (!byChapter[chapterKey]) byChapter[chapterKey] = [];
+        byChapter[chapterKey].push(key);
+    });
+
+    // 2) Classe de l'élève + éventuelle restriction de progression
+    const { data: profile } = await supabaseClient
+        .from('profiles').select('class_id').eq('id', currentUser.id).single();
+    const classId = profile && profile.class_id;
+
+    let checkedMap = null; // null = aucune restriction (comportement historique)
+    if (classId) {
+        const { data: progressRows } = await supabaseClient
+            .from('class_progress').select('quiz_key, checked').eq('class_id', classId);
+        if (progressRows && progressRows.length > 0) {
+            checkedMap = {};
+            progressRows.forEach(r => { checkedMap[r.quiz_key] = r.checked; });
+        }
+    }
+
+    // 3) Meilleur pourcentage de l'élève sur chaque quiz_key déjà tenté
+    const { data: attempts } = await supabaseClient
+        .from('quiz_results').select('quiz_key, score, total').eq('user_id', currentUser.id);
+    const bestPctByKey = {};
+    (attempts || []).forEach(a => {
+        if (a.total > 0) {
+            const p = a.score / a.total;
+            if (!(a.quiz_key in bestPctByKey) || p > bestPctByKey[a.quiz_key]) bestPctByKey[a.quiz_key] = p;
+        }
+    });
+
+    // 4) Un chapitre est validé si tous ses QCM "au programme" sont à 100%
+    // (et qu'il y en a au moins un — un chapitre sans QCM coché ne compte pas).
+    const validated = [];
+    Object.entries(byChapter).forEach(([chapterKey, keys]) => {
+        const inScope = checkedMap ? keys.filter(k => checkedMap[k] === true) : keys;
+        if (inScope.length === 0) return;
+        if (inScope.every(k => bestPctByKey[k] === 1)) validated.push(chapterKey);
+    });
+
+    return validated;
+}
+
+/**
  * Vérifie et débloque les badges mérités après un résultat de QCM.
- * Insère dans student_badges via Supabase (idempotent grâce à la contrainte UNIQUE).
+ * Insère dans student_badges via Supabase — on vérifie D'ABORD les badges
+ * déjà obtenus pour ne tenter d'insérer que les nouveaux (évite de
+ * solliciter Supabase pour rien et de générer des erreurs de contrainte
+ * UNIQUE en boucle).
  */
 async function checkAndUnlockBadges(quizKey, score, total, durationSeconds, currentStreak) {
     if (!currentUser) return [];
-    const unlocked = [];
     const pct = total > 0 ? score / total : 0;
     const hour = new Date().getHours();
 
     const toCheck = [];
     toCheck.push('first_quiz');
-    if (pct === 1) toCheck.push('perfect_chapter');
     if (durationSeconds && durationSeconds < 30 && pct === 1) toCheck.push('speedrun');
-    if (hour >= 21 || hour < 1) toCheck.push('night_owl');
+    if (hour >= 20 || hour < 1) toCheck.push('night_owl');
     if (hour >= 5 && hour < 8) toCheck.push('early_bird');
     if (currentStreak === 3) toCheck.push('streak_3');
     if (currentStreak === 7) toCheck.push('streak_7');
@@ -224,11 +290,40 @@ async function checkAndUnlockBadges(quizKey, score, total, durationSeconds, curr
         }
     }
 
-    for (const badgeKey of toCheck) {
+    // "perfect_chapter" et paliers "N chapitres maîtrisés" : uniquement si
+    // CE QCM est à 100% ET que ça valide effectivement tout son chapitre
+    // (voir getValidatedChapters — respecte la restriction de Progression).
+    if (pct === 1 && quizKey && typeof quizMeta !== 'undefined' && quizMeta.byKey && quizMeta.byKey[quizKey]) {
+        const meta = quizMeta.byKey[quizKey];
+        const thisChapterKey = meta.level + '||' + meta.chapter;
+        const validatedChapters = await getValidatedChapters();
+
+        if (validatedChapters.includes(thisChapterKey)) {
+            toCheck.push('perfect_chapter');
+
+            const n = validatedChapters.length;
+            if (n >= 2) toCheck.push('chapters_2');
+            if (n >= 5) toCheck.push('chapters_5');
+            if (n >= 10) toCheck.push('chapters_10');
+
+            const totalChapters = new Set(Object.values(quizMeta.byKey).map(m => m.level + '||' + m.chapter)).size;
+            if (totalChapters > 0 && n >= totalChapters) toCheck.push('chapters_all');
+        }
+    }
+
+    // Ne tente d'insérer que les badges pas déjà obtenus.
+    const { data: alreadyEarned } = await supabaseClient
+        .from('student_badges').select('badge_key').eq('user_id', currentUser.id);
+    const earnedSet = new Set((alreadyEarned || []).map(b => b.badge_key));
+    const toInsert = [...new Set(toCheck)].filter(k => !earnedSet.has(k));
+
+    const unlocked = [];
+    for (const badgeKey of toInsert) {
         const { error } = await supabaseClient
             .from('student_badges')
             .insert([{ user_id: currentUser.id, badge_key: badgeKey }]);
-        // error.code 23505 = violation de contrainte UNIQUE = déjà débloqué, on ignore
+        // error.code 23505 = violation de contrainte UNIQUE (rare, cas de
+        // concurrence) = déjà débloqué entre-temps, on ignore simplement.
         if (!error) {
             unlocked.push(BADGE_DEFINITIONS[badgeKey]);
         }
