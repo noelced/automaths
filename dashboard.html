@@ -820,7 +820,16 @@ function switchTab(tab) {
 
     // Le classement de saison change souvent : on le recharge à chaque ouverture
     if (tab === 'season') loadSeasonTab();
-    if (tab === 'progression' && !progressionClassId) renderProgressionClassPicker();
+    if (tab === 'progression') {
+        // On recharge les classes à chaque ouverture (niveau/accès modifiables
+        // depuis classes-management.html, potentiellement dans un autre onglet
+        // du navigateur — on évite ainsi un niveau affiché comme "non défini"
+        // alors qu'il vient d'être réglé ailleurs).
+        loadAllClasses().then(() => {
+            if (!progressionClassId) renderProgressionClassPicker();
+            else renderProgressionTab();
+        });
+    }
     if (tab === 'cards') loadCardsTab();
 }
 
@@ -1108,7 +1117,7 @@ async function loadAllStudents() {
 
 async function loadAllClasses() {
     const { data, error } = await sb.from('classes')
-        .select('id, name')
+        .select('*')
         .eq('teacher_id', teacherId)
         .order('name');
     if (error) { console.error('Erreur chargement classes :', error); return; }

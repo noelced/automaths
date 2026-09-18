@@ -720,15 +720,19 @@ function renderChapters() {
 
 // ── RENDU : BADGES ────────────────────────────────────────────────────────
 const BADGE_DEFINITIONS = {
-    first_quiz:      { icon:'🎯', label:'Premier pas',      desc:'Premier QCM terminé' },
-    streak_3:        { icon:'🔥', label:'En feu',            desc:'3 jours d\'affilée' },
-    streak_7:        { icon:'🌟', label:'Semaine parfaite',  desc:'7 jours d\'affilée' },
-    streak_30:       { icon:'🏆', label:'Inarrêtable',       desc:'30 jours d\'affilée' },
-    perfect_chapter: { icon:'💯', label:'Sans faute',        desc:'100% sur un chapitre' },
-    night_owl:       { icon:'🦉', label:'Couche-tard',       desc:'QCM fait après 21h' },
-    early_bird:      { icon:'🐤', label:'Lève-tôt',          desc:'QCM fait avant 8h' },
-    speedrun:        { icon:'⚡', label:'Éclair',            desc:'QCM réussi en moins de 30s' },
-    comeback:        { icon:'💪', label:'Revanche',          desc:'Score 100% après un échec sur ce QCM' },
+    first_quiz:      { icon:'🎯', label:'Premier pas',              desc:'Premier QCM terminé' },
+    streak_3:        { icon:'🔥', label:'En feu',                    desc:'3 jours d\'affilée' },
+    streak_7:        { icon:'🌟', label:'Semaine parfaite',         desc:'7 jours d\'affilée' },
+    streak_30:       { icon:'🏆', label:'Inarrêtable',              desc:'30 jours d\'affilée' },
+    perfect_chapter: { icon:'💯', label:'Sans faute',                desc:'Un chapitre entier validé à 100%' },
+    chapters_2:      { icon:'📗', label:'Deux chapitres maîtrisés',  desc:'2 chapitres validés à 100%' },
+    chapters_5:      { icon:'📘', label:'Cinq chapitres maîtrisés',  desc:'5 chapitres validés à 100%' },
+    chapters_10:     { icon:'📙', label:'Dix chapitres maîtrisés',   desc:'10 chapitres validés à 100%' },
+    chapters_all:    { icon:'🎓', label:'Programme maîtrisé',       desc:'Tous les chapitres au programme validés à 100%' },
+    night_owl:       { icon:'🦉', label:'Couche-tard',               desc:'QCM fait après 20h' },
+    early_bird:      { icon:'🐤', label:'Lève-tôt',                  desc:'QCM fait avant 8h' },
+    speedrun:        { icon:'⚡', label:'Éclair',                    desc:'QCM réussi en moins de 30s' },
+    comeback:        { icon:'💪', label:'Revanche',                  desc:'Score 100% après un échec sur ce QCM' },
 };
 
 function renderBadges() {
