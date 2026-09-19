@@ -433,8 +433,10 @@ let myBestScores30d = [];   // meilleur score par quiz sur 30 jours
 let myLastAttempts = [];    // dernière tentative par quiz (pour quizzes "à revalider")
 let myTotalResults = null;  // agrégats globaux (total bonnes réponses, etc.)
 
-// Chapitres officiels (structure légère chargée depuis officialStructure.js)
-let officialLevelChapters = []; // chapitres du niveau de l'élève (pour afficher à 0% dès le départ)
+// Portée "au programme" pour cet élève, déduite de sa classe
+let myAllowedLevels = null;      // null = aucune restriction de niveau (classe sans niveau défini)
+let myProgressCheckedMap = {};   // quiz_key -> boolean (cases cochées par le prof pour SA classe)
+let myHasProgressConfig = false; // true si le prof a coché au moins une case pour cette classe
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 (async () => {
@@ -445,28 +447,11 @@ let officialLevelChapters = []; // chapitres du niveau de l'élève (pour affich
     if (!profile || profile.role !== 'student') { window.location.href = 'index.html'; return; }
     me = profile;
 
-    // Charge la structure officielle pour avoir la liste complète des chapitres
-    // (même ceux non encore tentés → barres à 0%)
-    try {
-        const resp = await fetch('data/officialStructure.js');
-        const code = await resp.text();
-        const fn = new Function(code + '\nreturn officialStructure;');
-        const structure = fn();
-        // Garde uniquement le niveau de l'élève (ou tout si pas de niveau assigné)
-        structure.forEach(lvl => {
-            lvl.themes.forEach(th => {
-                th.chapters.forEach(ch => {
-                    officialLevelChapters.push({ title: ch.title, level: lvl.name });
-                });
-            });
-        });
-    } catch(e) { console.warn('[Structure] Erreur chargement officialStructure :', e); }
-
     // Attend que quizMeta soit chargé (fetch asynchrone)
     await new Promise(r => setTimeout(r, 300));
 
     // Requêtes Supabase parallèles
-    const [statsRes, badgesRes, best30dRes, lastAttemptRes, totalRes] = await Promise.all([
+    const [statsRes, badgesRes, best30dRes, lastAttemptRes, totalRes, classRes] = await Promise.all([
         sb.from('student_stats').select('*').eq('user_id', me.id).single(),
         sb.from('student_badges').select('*').eq('user_id', me.id),
         sb.from('best_scores_30d').select('*').eq('user_id', me.id),
@@ -475,7 +460,10 @@ let officialLevelChapters = []; // chapitres du niveau de l'élève (pour affich
         // globale ET au calcul de progression par chapitre ci-dessous
         // (sans limite de 30 jours — un chapitre validé il y a plus d'un
         // mois doit continuer à apparaître comme acquis, pas retomber à 0%).
-        sb.from('quiz_results').select('quiz_key, chapter_title, level_name, score, total, completed_at').eq('user_id', me.id)
+        sb.from('quiz_results').select('quiz_key, chapter_title, level_name, score, total, completed_at').eq('user_id', me.id),
+        // Niveau + niveaux autorisés de la classe de l'élève (pour filtrer
+        // "Mes chapitres" — voir plus bas)
+        me.class_id ? sb.from('classes').select('level, allowed_levels').eq('id', me.class_id).maybeSingle() : Promise.resolve({ data: null })
     ]);
 
     myStats      = statsRes.data      || { total_xp: 0, current_streak: 0 };
@@ -483,6 +471,28 @@ let officialLevelChapters = []; // chapitres du niveau de l'élève (pour affich
     myBestScores30d = best30dRes.data || [];
     myLastAttempts  = lastAttemptRes.data || [];
     myTotalResults  = totalRes.data   || [];
+
+    // Niveaux de QCM "au programme" pour cet élève : ceux autorisés pour sa
+    // classe (allowed_levels), sinon juste le niveau de la classe si défini
+    // (comportement historique = aucune restriction si rien n'est configuré).
+    const classInfo = classRes.data;
+    if (classInfo && classInfo.allowed_levels && classInfo.allowed_levels.length > 0) {
+        myAllowedLevels = classInfo.allowed_levels;
+    } else if (classInfo && classInfo.level) {
+        myAllowedLevels = [classInfo.level];
+    } else {
+        myAllowedLevels = null; // pas de restriction
+    }
+
+    // Progression cochée par le prof pour la classe de l'élève (si classe
+    // connue). Table lisible par l'élève depuis AJOUT v13 (auparavant
+    // réservée au professeur).
+    if (me.class_id) {
+        const { data: progressRows } = await sb.from('class_progress')
+            .select('quiz_key, checked').eq('class_id', me.class_id);
+        (progressRows || []).forEach(r => { myProgressCheckedMap[r.quiz_key] = r.checked; });
+        myHasProgressConfig = (progressRows || []).some(r => r.checked === true);
+    }
 
     renderPlayerCard();
     renderProgressBars();
@@ -660,32 +670,37 @@ function renderChapters() {
         if (!r.total || r.total <= 0) return;
         const pct = r.score / r.total;
         if (!bestByKey[r.quiz_key] || pct > bestByKey[r.quiz_key].pct) {
-            bestByKey[r.quiz_key] = { pct, lastAt: r.completed_at, chapter: r.chapter_title, level: r.level_name };
+            bestByKey[r.quiz_key] = { pct, lastAt: r.completed_at };
         }
         if (bestByKey[r.quiz_key] && r.completed_at > bestByKey[r.quiz_key].lastAt) {
             bestByKey[r.quiz_key].lastAt = r.completed_at;
         }
     });
 
-    // ── 2) Regrouper les quiz_key CONNUS (quizMeta) par chapitre, pour
-    // calculer une vraie couverture (QCM tentés / QCM existants du
-    // chapitre) — pas juste "le meilleur score obtenu ce mois-ci".
+    // ── 2) Regrouper les quiz_key CONNUS (quizMeta) par (NIVEAU, chapitre)
+    // — la clé combine bien les deux : deux chapitres de même nom dans
+    // des niveaux différents (ex: "Transformations" en 5ème ET ailleurs)
+    // ne doivent JAMAIS partager la même progression.
+    // On filtre aussi ici les niveaux non autorisés pour la classe de
+    // l'élève (myAllowedLevels), et — si le prof a coché au moins une
+    // case pour cette classe — les QCM non cochés (myProgressCheckedMap).
     const keysByChapter = {}; // "level||chapter" -> [quiz_key,...]
     if (quizMeta && quizMeta.byKey) {
         Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
-            const k = meta.level + '||' + meta.chapter;
-            if (!keysByChapter[k]) keysByChapter[k] = [];
-            keysByChapter[k].push(key);
+            if (myAllowedLevels && !myAllowedLevels.includes(meta.level)) return;
+            if (myHasProgressConfig && myProgressCheckedMap[key] !== true) return;
+
+            const chapterKey = meta.level + '||' + meta.chapter;
+            if (!keysByChapter[chapterKey]) keysByChapter[chapterKey] = [];
+            keysByChapter[chapterKey].push(key);
         });
     }
 
-    // ── 3) Pour chaque chapitre : couverture × qualité moyenne, comme
-    // documenté à l'origine du projet — un chapitre où l'élève a fait la
-    // moitié des QCM avec 80% de réussite affiche 40%, pas 0% ni 80%.
-    const progressByTitle = {}; // chapter_title -> { pct, attempts, lastAt }
+    // ── 3) Pour chaque (niveau, chapitre) "au programme" : couverture ×
+    // qualité moyenne sur les QCM au programme de ce chapitre.
+    const progressByChapterKey = {}; // "level||chapter" -> { pct, attempts, lastAt }
 
     Object.entries(keysByChapter).forEach(([chapterKey, keys]) => {
-        const [level, chapterTitle] = chapterKey.split('||');
         const attemptedKeys = keys.filter(k => bestByKey[k]);
         if (attemptedKeys.length === 0) return; // pas commencé, restera à 0%
 
@@ -697,48 +712,35 @@ function renderChapters() {
             return (!max || t > max) ? t : max;
         }, null);
 
-        progressByTitle[chapterTitle] = {
-            pct,
-            attempts: attemptedKeys.length,
-            lastAt
-        };
+        progressByChapterKey[chapterKey] = { pct, attempts: attemptedKeys.length, lastAt };
     });
 
-    // Chapitres officiels du niveau de l'élève (tous affichés, même à 0%)
-    const chaptersToShow = officialLevelChapters.length > 0
-        ? officialLevelChapters
-        : [...new Set([
-            ...(myTotalResults || []).map(r => ({ title: r.chapter_title, level: r.level_name })),
-          ])];
-
-    if (chaptersToShow.length === 0) {
-        container.innerHTML =
-            '<div class="empty-state"><div class="icon">📭</div>' +
-            '<p>Lance un questionnaire pour voir ta progression ici !</p></div>';
-        return;
-    }
-
-    // Filtre sur le niveau de l'élève si disponible
-    let levelFilter = null;
-    if (me.class_name) {
-        const m = me.class_name.match(/(\d+ème)/i);
-        if (m) levelFilter = m[1];
-    }
-    let displayed = levelFilter
-        ? chaptersToShow.filter(c => c.level === levelFilter)
-        : chaptersToShow;
-    if (displayed.length === 0) displayed = chaptersToShow; // fallback
-
-    // Trie : chapitres avec résultats en premier (du meilleur au moins bon),
-    // puis chapitres non commencés (à 0%)
-    displayed = displayed.slice().sort((a, b) => {
-        const pa = (progressByTitle[a.title] || {}).pct || 0;
-        const pb = (progressByTitle[b.title] || {}).pct || 0;
+    // ── 4) Liste des chapitres à afficher : exactement les (niveau,
+    // chapitre) "au programme" déterminés à l'étape 2 — donc, comme
+    // demandé, uniquement les chapitres cochés par le prof (si une
+    // progression est configurée pour cette classe), et jamais un
+    // chapitre d'un niveau non autorisé.
+    const displayed = Object.keys(keysByChapter).map(chapterKey => {
+        const [level, title] = chapterKey.split('||');
+        return { chapterKey, level, title };
+    }).sort((a, b) => {
+        const pa = (progressByChapterKey[a.chapterKey] || {}).pct || 0;
+        const pb = (progressByChapterKey[b.chapterKey] || {}).pct || 0;
         return pb - pa;
     });
 
+    if (displayed.length === 0) {
+        container.innerHTML =
+            '<div class="empty-state"><div class="icon">📭</div>' +
+            (myHasProgressConfig
+                ? '<p>Ton professeur n\'a pas encore coché de chapitre au programme.</p>'
+                : '<p>Lance un questionnaire pour voir ta progression ici !</p>') +
+            '</div>';
+        return;
+    }
+
     container.innerHTML = displayed.map(ch => {
-        const prog = progressByTitle[ch.title] || { pct: 0, attempts: 0, lastAt: null };
+        const prog = progressByChapterKey[ch.chapterKey] || { pct: 0, attempts: 0, lastAt: null };
         const pct = prog.pct;
         const maxed = pct >= 95;
         const stale = prog.lastAt && (now - new Date(prog.lastAt).getTime()) > THIRTY_DAYS_MS;
