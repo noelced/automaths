@@ -19,6 +19,8 @@ Exécutez-les dans l'ordre, dans Supabase Dashboard > SQL Editor :
 | 7 | `hotfix_security_advisories.sql` | Corrige une partie des alertes de sécurité remontées par Supabase Advisors |
 | 8 | `hotfix_chapters_table.sql` | Sécurise la table `public.chapters` (mode "Entraînement", cartes élèves) : lecture/écriture ouvertes aux visiteurs non connectés, aucune traçabilité de l'auteur |
 | 9 | `migration_progression_gating.sql` | Ajoute le niveau par classe + le blocage XP/classement pour les QCM hors-programme (élèves qui "grillaient" des chapitres non vus pour gonfler leur classement) |
+| 10 | `migration_security_and_badge_fixes.sql` | Anti-triche sur le score brut envoyé à `record_quiz_result()`, `leaderboard_view`/`chapter_progress_view` repassées en SECURITY INVOKER, reset du badge "Sans faute" mal attribué |
+| 11 | `migration_leaderboard_function.sql` | **Annule le choix fait en migration 10 pour `leaderboard_view`** : au lieu d'ouvrir la lecture des scores bruts entre élèves, la vue déménage dans un schéma privé (invisible pour l'API) et n'est plus accessible que via la fonction `get_leaderboard()` — ferme l'alerte du linter sans exposer aucune donnée supplémentaire |
 
 `supabase_schema.sql` reste le **document de référence à jour** : tous
 les correctifs listés ci-dessus y sont déjà intégrés à la fin du fichier
@@ -204,6 +206,12 @@ classe donnée. Une tentative bloquée reste enregistrée (l'élève voit son
 résultat) mais est marquée `counts_for_ranking = false` dans
 `quiz_results`, et exclue du calcul de `leaderboard_view`.
 
+⚠️ **Bug corrigé** : `dashboard.html` ne récupérait que `id, name` en
+interrogeant `classes` (oubli lors de l'ajout du champ `level`), donc le
+niveau paraissait "non défini" dans l'onglet Progression même après
+l'avoir réglé dans Gestion des classes. Corrigé (`select('*')`), et les
+classes sont maintenant rechargées à chaque ouverture de l'onglet.
+
 ### Avatars débloquables par palier
 Un renard 🦊 est offert dès le départ. Chaque changement de **rang
 principal** (Bronze→Argent, Argent→Or, etc. — pas les sous-paliers I/II/III)
@@ -214,15 +222,32 @@ locale dans `student-dashboard.html`). L'élève change d'avatar en
 cliquant sur son icône dans son profil, comme pour le pseudo.
 
 ### Badges débloquables
-Premier QCM, séries de 3/7/30 jours, sans-faute sur un chapitre, QCM
-rapide (<30s), couche-tard/lève-tôt, et "Revanche" (100% après avoir
-déjà échoué sur ce même QCM). Visibles dans l'onglet "Mes badges" du
-tableau de bord élève — un badge non débloqué affiche une infobulle au
-survol donnant sa condition de déblocage.
+Premier QCM, séries de 3/7/30 jours, QCM rapide (<30s), couche-tard
+(après **20h**, pas 21h — pour ne pas encourager les collégiens à se
+coucher tard), lève-tôt, "Revanche" (100% après avoir déjà échoué sur ce
+même QCM), et une série de badges de maîtrise par chapitre : **Sans
+faute** (1 chapitre entier validé à 100%), puis 2, 5, 10 chapitres, et
+**Programme maîtrisé** (tous les chapitres au programme). Visibles dans
+l'onglet "Mes badges" du tableau de bord élève — un badge non débloqué
+affiche une infobulle au survol donnant sa condition de déblocage.
 
-⚠️ **Bug corrigé début [date du correctif]** : il manquait la policy RLS
-d'INSERT sur `student_badges`, donc aucun badge n'avait jamais pu être
-réellement enregistré jusque-là (voir `hotfix_badges_insert_policy.sql`).
+"Chapitre validé à 100%" tient compte de la Progression du prof : si au
+moins un QCM est coché pour la classe de l'élève, seuls les QCM cochés
+du chapitre comptent (sinon, tous les QCM du chapitre comptent — comme
+pour l'XP et le classement, voir plus bas).
+
+Avant tout INSERT, le code vérifie les badges déjà obtenus par l'élève
+et ne tente d'insérer que les nouveaux — évite les allers-retours
+Supabase inutiles et les erreurs de contrainte UNIQUE en boucle.
+
+⚠️ **Bugs corrigés** :
+- Il manquait la policy RLS d'INSERT sur `student_badges`, donc aucun
+  badge n'avait jamais pu être réellement enregistré jusque-là (voir
+  `hotfix_badges_insert_policy.sql`).
+- Le badge "Sans faute" (`perfect_chapter`) se débloquait dès qu'**un
+  seul** QCM était réussi à 100%, au lieu de la totalité du chapitre —
+  corrigé, et réinitialisé pour tous les élèves qui l'avaient obtenu à
+  tort (voir `migration_security_and_badge_fixes.sql`).
 
 ### Classement général — plafonné anti-farming (par "saison")
 Le classement ne compte, pour chaque `(élève, quiz_key, jour)`, que la
@@ -233,6 +258,17 @@ Le classement est **global** (toutes classes confondues), visible dans
 le profil élève et dans l'onglet "🏆 Saison en cours" du tableau de bord
 professeur, où un bouton permet de le réinitialiser (avec confirmation)
 sans toucher à l'XP, aux rangs, aux badges ni à l'historique des QCM.
+Côté professeur uniquement, chaque ligne affiche aussi le **nom complet**
+de l'élève entre parenthèses à côté de son pseudo — jamais affiché côté
+élève.
+
+**Accès technique** : ni `index.html`, ni `student-dashboard.html`, ni
+`dashboard.html` n'interrogent `leaderboard_view` directement — elle vit
+dans un schéma `private` invisible pour l'API REST, et n'est accessible
+qu'à travers la fonction `get_leaderboard()` (`sb.rpc('get_leaderboard')`),
+pour qu'aucun élève ne puisse lire les scores bruts des autres même en
+construisant une requête API à la main (voir
+`migration_leaderboard_function.sql`).
 
 ### Sécurité anti-triche
 Toute la logique d'XP/streak/score/plafond journalier tourne dans la
@@ -272,7 +308,7 @@ section gamification).
 |--------|---------|
 | 📊 Suivi statistique | Stats globales + tableau détaillé filtrable (niveau/QCM/période), reprend l'ancien contenu de la page |
 | 🗂️ Suivi des QCM | Arborescence Niveau → Chapitre → QCM → Classe façon explorateur de fichiers ; liste des élèves avec pastille de couleur selon leur meilleur score normalisé /20 |
-| 🎯 Suivi particulier | Classe → Élève → Chapitre → QCM ; moyenne générale et par chapitre d'un élève donné |
+| 🎯 Suivi particulier | Classe → Élève → Chapitre → QCM ; moyenne générale et par chapitre d'un élève donné. La liste des élèves affiche directement, sur chaque bouton, la moyenne générale et les moyennes par **thème** (regroupement d'officialStructure.js au-dessus des chapitres), sans avoir besoin de cliquer pour les voir |
 | 🏆 Saison en cours | Classement général (identique à celui du profil élève) + bouton de réinitialisation |
 | 📈 Progression | Classe → [Niveau, si la classe n'a pas de niveau fixe] → Chapitre → plan détaillé (fil d'ariane cliquable). Vrais titres H2/H3 quand `data/courseOutline.js` les connaît pour ce chapitre, sinon regroupement provisoire déduit du format numérique des `quiz_key`. Un panneau en haut de page permet d'autoriser/bloquer l'accès aux QCM d'autres niveaux pour la classe. **Effet réel sur le jeu** (contrairement à la version précédente) : voir section dédiée ci-dessous |
 | ✏️ Cartes d'entraînement | Liste de toutes les cartes créées par les élèves (`public.chapters`), avec auteur, recherche texte, et suppression (avec confirmation) — modération du mode "Entraînement" |
@@ -324,6 +360,15 @@ calculatrice" du programme officiel — reste entièrement à construire
 
 
 ## Notes techniques
+
+- **Bug corrigé — "Mes chapitres" (profil élève)** : la barre de
+  progression par chapitre se basait sur `best_scores_30d`, une vue
+  limitée aux 30 derniers jours — un chapitre validé plus tôt retombait
+  à 0%. Elle utilise maintenant l'historique complet des tentatives et
+  la formule couverture × qualité documentée à l'origine du projet (un
+  chapitre où la moitié des QCM sont faits à 80% affiche 40%, pas 0% ni
+  80%), en s'appuyant sur `quizMeta.js` pour connaître le nombre total
+  de QCM par chapitre.
 
 - Le découpage initial du fichier HTML original a été fait sans
   réécrire la logique existante (chaque fonction déplacée telle quelle).

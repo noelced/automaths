@@ -179,6 +179,10 @@
         }
         .simple-list-row:hover { border-color: var(--primary); background: var(--primary-light); }
         .simple-list-row .chevron { color: var(--text-muted); font-size: 1.1rem; }
+        .theme-chip {
+            font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 3px 10px; color: var(--text-muted);
+        }
         .student-score-row.clickable { cursor: pointer; transition: all .15s; }
         .student-score-row.clickable:hover { border-color: var(--primary); background: var(--primary-light); }
         .level-subheader {
@@ -229,6 +233,7 @@
         .season-avatar { font-size: 1.6rem; flex-shrink: 0; }
         .season-info { flex: 1; min-width: 100px; }
         .season-name { font-weight: 700; font-size: 0.9rem; }
+        .season-fullname { font-weight: 400; color: var(--text-muted); font-size: 0.82rem; }
         .season-class { font-size: 0.78rem; color: var(--text-muted); }
         .season-score { font-weight: 800; font-size: 1rem; color: var(--primary-dark); white-space: nowrap; }
 
@@ -1437,7 +1442,7 @@ async function loadSeasonTab() {
     bodyEl.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
 
     const [{ data: lb, error: lbError }, { data: settings }] = await Promise.all([
-        sb.from('leaderboard_view').select('*').order('ladder_score', { ascending: false }),
+        sb.rpc('get_leaderboard').select('*').order('ladder_score', { ascending: false }),
         sb.from('app_settings').select('value').eq('key', 'season_start_at').maybeSingle(),
     ]);
 
@@ -1471,7 +1476,7 @@ async function loadSeasonTab() {
                     <div class="season-rank ${rankClass}">${i + 1}</div>
                     <div class="season-avatar">${row.avatar_emoji || '🦊'}</div>
                     <div class="season-info">
-                        <div class="season-name">${escapeHtmlDb(row.pseudo || 'Élève')}</div>
+                        <div class="season-name">${escapeHtmlDb(row.pseudo || 'Élève')} <span class="season-fullname">(${escapeHtmlDb(row.full_name || '—')})</span></div>
                         <div class="season-class">${escapeHtmlDb(row.class_name || 'Aucune classe')}</div>
                     </div>
                     <div class="season-score">${score} pts</div>
@@ -1535,6 +1540,40 @@ function overallAverageForStudent(studentId) {
     const scores = [...attemptedKeys].map(k => bestNormalizedScore(studentId, k)).filter(v => v !== null);
     if (scores.length === 0) return null;
     return scores.reduce((a, b) => a + b, 0) / scores.length;
+}
+
+// Retrouve le nom du THÈME (regroupement au-dessus des chapitres dans
+// officialStructure.js, ex: "NOMBRES ET CALCULS") auquel appartient un
+// chapitre donné. Renvoie le titre du chapitre lui-même si introuvable
+// (ex: chapitre découvert dynamiquement, absent d'officialStructure.js).
+function themeNameForChapter(level, chapterTitle) {
+    if (typeof officialStructure === 'undefined') return chapterTitle;
+    const levelObj = officialStructure.find(l => l.name === level);
+    if (!levelObj) return chapterTitle;
+    for (const theme of (levelObj.themes || [])) {
+        if ((theme.chapters || []).some(c => c.title === chapterTitle)) return theme.name;
+    }
+    return chapterTitle;
+}
+
+// Moyennes par THÈME pour un élève (moyenne des moyennes de chapitre de
+// ce thème que l'élève a au moins commencées) — pour l'aperçu affiché
+// directement sur le bouton de chaque élève dans "Suivi particulier".
+function themeAveragesForStudent(studentId) {
+    const byTheme = {};
+    studentLevels(studentId).forEach(level => {
+        chaptersForLevel(level).forEach(chapter => {
+            const avg = chapterAverageForStudent(studentId, level, chapter);
+            if (avg === null) return;
+            const theme = themeNameForChapter(level, chapter);
+            if (!byTheme[theme]) byTheme[theme] = [];
+            byTheme[theme].push(avg);
+        });
+    });
+    return Object.entries(byTheme).map(([theme, arr]) => ({
+        theme,
+        avg: arr.reduce((a, b) => a + b, 0) / arr.length
+    }));
 }
 
 // ── NAVIGATION (fil d'ariane) ─────────────────────────────────────────────
@@ -1634,12 +1673,28 @@ function renderParticularBody() {
             return;
         }
 
-        el.innerHTML = students.map(s => `
-            <div class="simple-list-row" onclick="selectParticularStudent('${s.id}')">
-                <span class="name">${escapeHtmlDb(s.full_name || '—')}</span>
-                <span class="chevron">›</span>
-            </div>
-        `).join('');
+        el.innerHTML = students.map(s => {
+            const overall = overallAverageForStudent(s.id);
+            const themes = themeAveragesForStudent(s.id);
+            const overallLabel = overall === null ? '—' : fmtScore(overall);
+            const overallColor = overall === null ? 'var(--text-muted)' : scoreInfo(overall).color;
+            const themeChips = themes.map(t => `
+                <span class="theme-chip">${escapeHtmlDb(t.theme)} : ${fmtScore(t.avg)}</span>
+            `).join('');
+
+            return `
+                <div class="simple-list-row" onclick="selectParticularStudent('${s.id}')" style="flex-direction:column; align-items:stretch; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="name">${escapeHtmlDb(s.full_name || '—')}</span>
+                        <span style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-weight:800; color:${overallColor};">${overallLabel}</span>
+                            <span class="chevron">›</span>
+                        </span>
+                    </div>
+                    ${themeChips ? `<div style="display:flex; flex-wrap:wrap; gap:6px;">${themeChips}</div>` : ''}
+                </div>
+            `;
+        }).join('');
         return;
     }
 

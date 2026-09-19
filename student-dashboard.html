@@ -471,8 +471,11 @@ let officialLevelChapters = []; // chapitres du niveau de l'élève (pour affich
         sb.from('student_badges').select('*').eq('user_id', me.id),
         sb.from('best_scores_30d').select('*').eq('user_id', me.id),
         sb.from('quiz_last_attempt').select('*').eq('user_id', me.id),
-        // Total des bonnes réponses (toutes dates) pour la progression globale
-        sb.from('quiz_results').select('score, total').eq('user_id', me.id)
+        // Toutes les tentatives (toutes dates) : sert à la progression
+        // globale ET au calcul de progression par chapitre ci-dessous
+        // (sans limite de 30 jours — un chapitre validé il y a plus d'un
+        // mois doit continuer à apparaître comme acquis, pas retomber à 0%).
+        sb.from('quiz_results').select('quiz_key, chapter_title, level_name, score, total, completed_at').eq('user_id', me.id)
     ]);
 
     myStats      = statsRes.data      || { total_xp: 0, current_streak: 0 };
@@ -649,22 +652,63 @@ function renderChapters() {
     const now = Date.now();
     const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
-    // Construit un index des résultats de l'élève par chapter_title
-    const progressByTitle = {};
-    myBestScores30d.forEach(r => {
-        const t = r.chapter_title;
-        if (!progressByTitle[t]) progressByTitle[t] = { pct: 0, attempts: 0, lastAt: null };
-        progressByTitle[t].pct = Math.max(progressByTitle[t].pct, Math.round((r.best_pct || 0) * 100));
-        progressByTitle[t].attempts += r.attempt_count || 1;
-        if (!progressByTitle[t].lastAt || r.last_attempt_at > progressByTitle[t].lastAt)
-            progressByTitle[t].lastAt = r.last_attempt_at;
+    // ── 1) Regrouper TOUTES les tentatives de l'élève (sans limite de
+    // date) par quiz_key, en gardant le meilleur % et la date la plus
+    // récente pour chacun.
+    const bestByKey = {}; // quiz_key -> { pct, lastAt }
+    (myTotalResults || []).forEach(r => {
+        if (!r.total || r.total <= 0) return;
+        const pct = r.score / r.total;
+        if (!bestByKey[r.quiz_key] || pct > bestByKey[r.quiz_key].pct) {
+            bestByKey[r.quiz_key] = { pct, lastAt: r.completed_at, chapter: r.chapter_title, level: r.level_name };
+        }
+        if (bestByKey[r.quiz_key] && r.completed_at > bestByKey[r.quiz_key].lastAt) {
+            bestByKey[r.quiz_key].lastAt = r.completed_at;
+        }
+    });
+
+    // ── 2) Regrouper les quiz_key CONNUS (quizMeta) par chapitre, pour
+    // calculer une vraie couverture (QCM tentés / QCM existants du
+    // chapitre) — pas juste "le meilleur score obtenu ce mois-ci".
+    const keysByChapter = {}; // "level||chapter" -> [quiz_key,...]
+    if (quizMeta && quizMeta.byKey) {
+        Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
+            const k = meta.level + '||' + meta.chapter;
+            if (!keysByChapter[k]) keysByChapter[k] = [];
+            keysByChapter[k].push(key);
+        });
+    }
+
+    // ── 3) Pour chaque chapitre : couverture × qualité moyenne, comme
+    // documenté à l'origine du projet — un chapitre où l'élève a fait la
+    // moitié des QCM avec 80% de réussite affiche 40%, pas 0% ni 80%.
+    const progressByTitle = {}; // chapter_title -> { pct, attempts, lastAt }
+
+    Object.entries(keysByChapter).forEach(([chapterKey, keys]) => {
+        const [level, chapterTitle] = chapterKey.split('||');
+        const attemptedKeys = keys.filter(k => bestByKey[k]);
+        if (attemptedKeys.length === 0) return; // pas commencé, restera à 0%
+
+        const coverage = attemptedKeys.length / keys.length;
+        const quality = attemptedKeys.reduce((s, k) => s + bestByKey[k].pct, 0) / attemptedKeys.length;
+        const pct = Math.round(coverage * quality * 100);
+        const lastAt = attemptedKeys.reduce((max, k) => {
+            const t = bestByKey[k].lastAt;
+            return (!max || t > max) ? t : max;
+        }, null);
+
+        progressByTitle[chapterTitle] = {
+            pct,
+            attempts: attemptedKeys.length,
+            lastAt
+        };
     });
 
     // Chapitres officiels du niveau de l'élève (tous affichés, même à 0%)
     const chaptersToShow = officialLevelChapters.length > 0
         ? officialLevelChapters
         : [...new Set([
-            ...myBestScores30d.map(r => ({ title: r.chapter_title, level: r.level_name })),
+            ...(myTotalResults || []).map(r => ({ title: r.chapter_title, level: r.level_name })),
           ])];
 
     if (chaptersToShow.length === 0) {
@@ -710,7 +754,7 @@ function renderChapters() {
                 '</div>' +
                 '<div class="chapter-meta">' +
                     '<span>' + esc(ch.level || '') + '</span>' +
-                    '<span>' + (prog.attempts > 0 ? prog.attempts + ' tentative(s) ce mois' : 'Pas encore commencé') + '</span>' +
+                    '<span>' + (prog.attempts > 0 ? prog.attempts + ' QCM tenté(s) sur ce chapitre' : 'Pas encore commencé') + '</span>' +
                 '</div>' +
                 (stale ? '<div class="chapter-stale">⚠️ Non revalidé depuis plus d\'un mois — clique pour refaire !</div>' : '') +
             '</div>';
@@ -755,7 +799,7 @@ async function renderLeaderboard() {
 
     // Nouveau : classement GLOBAL, pas filtré par classe
     const { data: lb, error } = await sb
-        .from('leaderboard_view')
+        .rpc('get_leaderboard')
         .select('*')
         .order('ladder_score', { ascending: false })
         .limit(50);
