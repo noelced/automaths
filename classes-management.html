@@ -639,26 +639,22 @@ async function submitAddStudent(){
     submitBtn.disabled = true;
     submitBtn.textContent = 'Création…';
 
-    // IMPORTANT : on utilise un client Supabase TEMPORAIRE et non persistant
-    // pour cet appel signUp(). Le client principal "sb" gère la session du
-    // professeur connecté ; appeler auth.signUp() dessus remplacerait sa
-    // session par celle du nouvel élève et le déconnecterait de son propre
-    // tableau de bord. Ce client jetable évite totalement ce problème.
-    const tempClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false }
-    });
-
-    const { error } = await tempClient.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName, role: 'student' } }
+    // Passe par la fonction Edge manage-student (clé service_role côté
+    // serveur) plutôt que par auth.signUp() directement : ça fonctionne
+    // même si les inscriptions publiques (index.html) sont désactivées
+    // dans Authentication > Settings, et le compte est immédiatement
+    // utilisable (pas besoin de confirmation d'email). Utilise la session
+    // normale du professeur ("sb") — pas de client temporaire nécessaire,
+    // cet appel ne touche à aucune session contrairement à signUp().
+    const { data, error } = await sb.functions.invoke('manage-student', {
+        body: { action: 'create_student', email, password, fullName }
     });
 
     submitBtn.disabled = false;
     submitBtn.textContent = "Créer l'élève";
 
-    if (error){
-        errorEl.textContent = 'Erreur : ' + error.message;
+    if (error || (data && data.error)){
+        errorEl.textContent = 'Erreur : ' + (error ? error.message : data.error);
         return;
     }
 
