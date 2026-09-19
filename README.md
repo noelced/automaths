@@ -21,6 +21,7 @@ Exécutez-les dans l'ordre, dans Supabase Dashboard > SQL Editor :
 | 9 | `migration_progression_gating.sql` | Ajoute le niveau par classe + le blocage XP/classement pour les QCM hors-programme (élèves qui "grillaient" des chapitres non vus pour gonfler leur classement) |
 | 10 | `migration_security_and_badge_fixes.sql` | Anti-triche sur le score brut envoyé à `record_quiz_result()`, `leaderboard_view`/`chapter_progress_view` repassées en SECURITY INVOKER, reset du badge "Sans faute" mal attribué |
 | 11 | `migration_leaderboard_function.sql` | **Annule le choix fait en migration 10 pour `leaderboard_view`** : au lieu d'ouvrir la lecture des scores bruts entre élèves, la vue déménage dans un schéma privé (invisible pour l'API) et n'est plus accessible que via la fonction `get_leaderboard()` — ferme l'alerte du linter sans exposer aucune donnée supplémentaire |
+| 12 | `migration_student_chapter_scope.sql` | Donne à l'élève le droit de lire `class_progress` pour sa propre classe (nécessaire pour qu'il ne voie que les chapitres cochés par le prof dans "Mes chapitres") |
 
 `supabase_schema.sql` reste le **document de référence à jour** : tous
 les correctifs listés ci-dessus y sont déjà intégrés à la fin du fichier
@@ -130,10 +131,12 @@ Puis ouvrez `http://localhost:8000`.
    Aucune clé à configurer manuellement : Supabase fournit automatiquement
    `SUPABASE_URL` et `SUPABASE_SERVICE_ROLE_KEY` à la fonction.
 
-4. **Désactivez la confirmation d'email** (nécessaire pour que le bouton
-   "Ajouter un élève" de `classes-management.html` fonctionne sans que
-   l'élève ait besoin de cliquer un lien reçu par mail) : Authentication
-   → Providers → Email → désactivez "Confirm email".
+4. **Confirmation d'email** : le bouton "Ajouter un élève" de
+   `classes-management.html` n'en a **pas besoin** (l'Edge Function
+   crée le compte avec `email_confirm: true`, immédiatement utilisable).
+   Ce réglage (Authentication → Providers → Email → "Confirm email")
+   ne concerne donc plus que l'inscription publique éventuelle depuis
+   `index.html` — à activer ou non selon que vous l'utilisez.
 
 5. **Activez la protection contre les mots de passe compromis**
    (recommandé par Supabase Advisors, réglage non disponible en SQL) :
@@ -290,12 +293,16 @@ client envoie.
 - Glisser chaque élève dans la bonne classe (menu déroulant)
 - Activer/désactiver le classement (leaderboard) **par classe**
 - **Ajouter un élève** directement (crée son compte Supabase Auth + son
-  profil) sans passer par la page d'inscription
+  profil) sans passer par la page d'inscription — passe par l'Edge
+  Function `manage-student` (action `create_student`), donc fonctionne
+  même si les inscriptions publiques d'`index.html` sont désactivées
+  (Authentication → Settings → "Allow new users to sign up"), et le
+  compte est immédiatement utilisable sans confirmation d'email
 - **Changer le mot de passe** d'un élève, ou **le supprimer**
   entièrement (compte + toutes ses données) — ces deux actions passent
-  par l'Edge Function `manage-student` (voir mise en place ci-dessus),
-  seule façon sécurisée de le faire sans exposer la clé service_role au
-  navigateur
+  aussi par l'Edge Function `manage-student` (voir mise en place
+  ci-dessus), seule façon sécurisée de le faire sans exposer la clé
+  service_role au navigateur
 
 Les élèves sans classe assignée ne voient pas de leaderboard "par
 classe" (le classement général, lui, reste toujours visible — voir
@@ -361,14 +368,26 @@ calculatrice" du programme officiel — reste entièrement à construire
 
 ## Notes techniques
 
-- **Bug corrigé — "Mes chapitres" (profil élève)** : la barre de
-  progression par chapitre se basait sur `best_scores_30d`, une vue
-  limitée aux 30 derniers jours — un chapitre validé plus tôt retombait
-  à 0%. Elle utilise maintenant l'historique complet des tentatives et
-  la formule couverture × qualité documentée à l'origine du projet (un
-  chapitre où la moitié des QCM sont faits à 80% affiche 40%, pas 0% ni
-  80%), en s'appuyant sur `quizMeta.js` pour connaître le nombre total
-  de QCM par chapitre.
+- **Bug corrigé — "Mes chapitres" (profil élève)** : trois problèmes en
+  fait, tous corrigés ensemble.
+  1. La barre de progression se basait sur `best_scores_30d` (30 derniers
+     jours seulement) — un chapitre validé plus tôt retombait à 0%. Elle
+     utilise maintenant l'historique complet des tentatives.
+  2. **Tous les chapitres de tous les niveaux s'affichaient**, sans
+     filtrer sur le niveau réellement autorisé pour la classe de l'élève
+     (`classes.allowed_levels`) ni sur les chapitres effectivement cochés
+     dans l'onglet Progression du prof (`class_progress`) — corrigé :
+     seuls les chapitres "au programme" apparaissent désormais (si le
+     prof en a coché au moins un pour cette classe ; sinon, comportement
+     historique inchangé).
+  3. **Bug de collision entre niveaux** : le code regroupait les
+     tentatives par titre de chapitre seul (`chapter_title`), or certains
+     titres se répètent d'un niveau à l'autre (ex: "Transformations").
+     Valider un chapitre en 5ème validait donc à tort la progression du
+     chapitre de même nom en 4ème/3ème. Corrigé : tout est désormais
+     indexé par la paire (niveau, chapitre), jamais le titre seul —
+     nécessite que l'élève puisse lire `class_progress` pour sa classe
+     (nouvelle policy RLS, voir `migration_student_chapter_scope.sql`).
 
 - Le découpage initial du fichier HTML original a été fait sans
   réécrire la logique existante (chaque fonction déplacée telle quelle).
