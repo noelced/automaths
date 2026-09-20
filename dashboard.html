@@ -243,6 +243,8 @@
         .student-score-row .name { font-weight: 600; flex: 1; }
         .student-score-row .class-tag { color: var(--text-muted); font-size: 0.8rem; }
         .student-score-row .score-val { font-weight: 700; font-size: 0.9rem; min-width: 64px; text-align: right; }
+        .student-score-row .attempts-count { color: var(--text-muted); font-size: 0.78rem; white-space: nowrap; }
+        .student-score-row .chevron { color: var(--text-muted); font-size: 1.1rem; }
 
         /* ── ONGLET "SAISON EN COURS" ──────────────────────────────────── */
         .season-header {
@@ -814,7 +816,7 @@ let qcmPath           = { level: null, chapter: null, quizKey: null, classId: nu
 let currentChapterList = []; // liste affichée à l'étape "chapitre" (pour les onclick par index)
 
 // ── ÉTAT — ONGLET "SUIVI PARTICULIER" ──────────────────────────────────────
-let particularPath = { classId: null, studentId: null, level: null, chapter: null };
+let particularPath = { classId: null, studentId: null, level: null, chapter: null, quizKey: null };
 let currentParticularChapterRows = []; // [{level, chapter}] affiché à l'étape "chapitres de l'élève"
 
 
@@ -1631,34 +1633,50 @@ function themeAveragesForStudent(studentId) {
 
 // ── NAVIGATION (fil d'ariane) ─────────────────────────────────────────────
 function selectParticularClass(classId) {
-    particularPath = { classId, studentId: null, level: null, chapter: null };
+    particularPath = { classId, studentId: null, level: null, chapter: null, quizKey: null };
     renderParticularTab();
 }
 function selectParticularStudent(studentId) {
     particularPath.studentId = studentId;
     particularPath.level = null;
     particularPath.chapter = null;
+    particularPath.quizKey = null;
     renderParticularTab();
 }
 function selectParticularChapterByIndex(i) {
     const row = currentParticularChapterRows[i];
     particularPath.level = row.level;
     particularPath.chapter = row.chapter;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+// Ouvre le détail des tentatives d'un QCM précis pour l'élève courant
+// (étape 5, atteinte en cliquant sur la barre d'un QCM à l'étape 4).
+function selectParticularQuiz(quizKey) {
+    particularPath.quizKey = quizKey;
     renderParticularTab();
 }
 function goToParticularRoot() {
-    particularPath = { classId: null, studentId: null, level: null, chapter: null };
+    particularPath = { classId: null, studentId: null, level: null, chapter: null, quizKey: null };
     renderParticularTab();
 }
 function goToParticularClass() {
     particularPath.studentId = null;
     particularPath.level = null;
     particularPath.chapter = null;
+    particularPath.quizKey = null;
     renderParticularTab();
 }
 function goToParticularStudent() {
     particularPath.level = null;
     particularPath.chapter = null;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+// Retour de la liste des tentatives (étape 5) à la liste des QCM du
+// chapitre (étape 4), sans perdre le chapitre sélectionné.
+function goToParticularChapter() {
+    particularPath.quizKey = null;
     renderParticularTab();
 }
 
@@ -1689,10 +1707,16 @@ function renderParticularBreadcrumb() {
 
             if (!particularPath.chapter) {
                 html += `<span class="breadcrumb-item current">${escapeHtmlDb(studentName)}</span>`;
-            } else {
+            } else if (!particularPath.quizKey) {
                 html += `<span class="breadcrumb-item" onclick="goToParticularStudent()">${escapeHtmlDb(studentName)}</span>`;
                 html += `<span class="breadcrumb-sep">›</span>`;
                 html += `<span class="breadcrumb-item current">${escapeHtmlDb(particularPath.chapter)} (${escapeHtmlDb(particularPath.level)})</span>`;
+            } else {
+                html += `<span class="breadcrumb-item" onclick="goToParticularStudent()">${escapeHtmlDb(studentName)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item" onclick="goToParticularChapter()">${escapeHtmlDb(particularPath.chapter)} (${escapeHtmlDb(particularPath.level)})</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(quizTitle(particularPath.quizKey))}</span>`;
             }
         }
     }
@@ -1794,23 +1818,74 @@ function renderParticularBody() {
     }
 
     // Étape 4 : détail des moyennes par QCM au sein du chapitre choisi
-    const keys = quizzesForChapter(particularPath.level, particularPath.chapter);
-    if (keys.length === 0) {
-        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce chapitre.</div>`;
+    if (!particularPath.quizKey) {
+        const keys = quizzesForChapter(particularPath.level, particularPath.chapter);
+        if (keys.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce chapitre.</div>`;
+            return;
+        }
+
+        el.innerHTML = keys.map(k => {
+            const norm = bestNormalizedScore(particularPath.studentId, k);
+            const info = scoreInfo(norm);
+            const nbAttempts = attemptsForStudentQuiz(particularPath.studentId, k).length;
+            return `
+                <div class="student-score-row clickable" onclick="selectParticularQuiz('${escapeHtmlDb(k)}')">
+                    <span class="score-dot" style="background:${info.color};"></span>
+                    <span class="name">${escapeHtmlDb(quizTitle(k))}</span>
+                    <span class="attempts-count">${nbAttempts > 0 ? nbAttempts + ' réalisation' + (nbAttempts > 1 ? 's' : '') : 'Jamais fait'}</span>
+                    <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
+                    <span class="chevron">›</span>
+                </div>
+            `;
+        }).join('');
         return;
     }
 
-    el.innerHTML = keys.map(k => {
-        const norm = bestNormalizedScore(particularPath.studentId, k);
-        const info = scoreInfo(norm);
-        return `
-            <div class="student-score-row">
-                <span class="score-dot" style="background:${info.color};"></span>
-                <span class="name">${escapeHtmlDb(quizTitle(k))}</span>
-                <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
+    // Étape 5 : liste des tentatives de cet élève pour ce QCM précis
+    // (même table que l'onglet "Suivi statistique", filtrée élève + QCM).
+    renderParticularQuizAttempts(el);
+}
+
+// Toutes les tentatives (non limitées par période) d'un élève sur un QCM
+function attemptsForStudentQuiz(studentId, quizKey) {
+    return allTimeResults.filter(r => r.user_id === studentId && r.quiz_key === quizKey);
+}
+
+function renderParticularQuizAttempts(el) {
+    const attempts = [...attemptsForStudentQuiz(particularPath.studentId, particularPath.quizKey)]
+        .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
+
+    if (attempts.length === 0) {
+        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune tentative enregistrée pour ce QCM.</div>`;
+        return;
+    }
+
+    el.innerHTML = `
+        <div class="table-card">
+            <div class="table-toolbar">
+                <h2>Tentatives — ${escapeHtmlDb(quizTitle(particularPath.quizKey))}</h2>
             </div>
-        `;
-    }).join('');
+            <table>
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                        <th>Durée</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${attempts.map(r => `
+                        <tr>
+                            <td>${scoreBadge(r.score, r.total)}</td>
+                            <td class="td-duration">${r.duration_seconds ? formatDuration(r.duration_seconds) : '—'}</td>
+                            <td class="td-date">${formatDate(r.completed_at)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
 }
 
 
