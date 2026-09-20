@@ -162,6 +162,48 @@
             color: var(--primary-dark);
         }
 
+        /* ── ÉTAPE 1 : NIVEAU + SES CLASSES SUR LA MÊME LIGNE ──────────── */
+        .qcm-level-group {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+            margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+        }
+        .qcm-level-group:last-child { border-bottom: none; }
+        .choice-btn-class {
+            padding: 8px 14px; border: 1px dashed var(--border); border-radius: 10px;
+            background: var(--bg); font-size: 0.85rem; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; transition: all .15s;
+        }
+        .choice-btn-class:hover { border-color: var(--primary); color: var(--primary-dark); border-style: solid; }
+
+        /* ── QCM SÉLECTIONNÉ : LISTE ÉLÈVES + BARRE LATÉRALE DES QCM SŒURS ── */
+        .qcm-detail-layout { display: flex; gap: 24px; align-items: flex-start; }
+        .qcm-main { flex: 1; min-width: 0; }
+        .qcm-sidebar {
+            width: 240px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+            position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto;
+            padding-left: 18px; border-left: 1px solid var(--border);
+        }
+        .qcm-sidebar-title {
+            font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px;
+        }
+        .qcm-sidebar-btn {
+            text-align: left; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+            background: var(--card-bg); font-size: 0.83rem; font-weight: 600; color: var(--text-main);
+            cursor: pointer; transition: all .15s;
+        }
+        .qcm-sidebar-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+        .qcm-sidebar-btn.active {
+            background: var(--primary); border-color: var(--primary); color: white;
+        }
+        @media (max-width: 900px) {
+            .qcm-detail-layout { flex-direction: column; }
+            .qcm-sidebar {
+                width: 100%; position: static; max-height: none; overflow-y: visible;
+                border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px;
+            }
+        }
+
         /* ── LÉGENDE DES PASTILLES ─────────────────────────────── */
         .legend {
             display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;
@@ -1206,42 +1248,40 @@ function classLabel(classId) {
 }
 
 // ── NAVIGATION (fil d'ariane) ─────────────────────────────────────────────
-function selectQcmLevel(level) {
-    qcmPath = { level, chapter: null, quizKey: null, classId: null };
+// qcmPath.classId vaut soit 'ALL' (= "toutes les classes de ce niveau",
+// équivalent de l'ancien bouton "Niveau" générique), soit l'id d'une
+// classe précise — dans les deux cas, qcmPath.level est déjà déterminé
+// dès cette première étape (une classe n'a qu'un seul niveau), donc il
+// n'y a plus d'étape "Classe" séparée plus loin dans le parcours.
+function selectQcmLevelAll(level) {
+    qcmPath = { level, classId: 'ALL', chapter: null, quizKey: null };
+    renderQcmTab();
+}
+function selectQcmClassDirect(classId) {
+    const c = allClasses.find(cl => cl.id === classId);
+    qcmPath = { level: c ? c.level : null, classId, chapter: null, quizKey: null };
     renderQcmTab();
 }
 function selectQcmChapterByIndex(i) {
     qcmPath.chapter = currentChapterList[i];
     qcmPath.quizKey = null;
-    qcmPath.classId = null;
     renderQcmTab();
 }
 function selectQcmQuiz(key) {
     qcmPath.quizKey = key;
-    qcmPath.classId = null;
-    renderQcmTab();
-}
-function selectQcmClass(classId) {
-    qcmPath.classId = classId;
     renderQcmTab();
 }
 function goToQcmRoot() {
-    qcmPath = { level: null, chapter: null, quizKey: null, classId: null };
+    qcmPath = { level: null, classId: null, chapter: null, quizKey: null };
     renderQcmTab();
 }
-function goToQcmLevel() {
+function goToQcmLevelOrClass() {
     qcmPath.chapter = null;
     qcmPath.quizKey = null;
-    qcmPath.classId = null;
     renderQcmTab();
 }
 function goToQcmChapter() {
     qcmPath.quizKey = null;
-    qcmPath.classId = null;
-    renderQcmTab();
-}
-function goToQcmQuiz() {
-    qcmPath.classId = null;
     renderQcmTab();
 }
 
@@ -1261,10 +1301,12 @@ function renderQcmBreadcrumb() {
         html += `<span class="breadcrumb-item" onclick="goToQcmRoot()">Niveaux</span>`;
         html += `<span class="breadcrumb-sep">›</span>`;
 
+        const stepOneLabel = qcmPath.classId === 'ALL' ? qcmPath.level : classLabel(qcmPath.classId);
+
         if (!qcmPath.chapter) {
-            html += `<span class="breadcrumb-item current">${escapeHtmlDb(qcmPath.level)}</span>`;
+            html += `<span class="breadcrumb-item current">${escapeHtmlDb(stepOneLabel)}</span>`;
         } else {
-            html += `<span class="breadcrumb-item" onclick="goToQcmLevel()">${escapeHtmlDb(qcmPath.level)}</span>`;
+            html += `<span class="breadcrumb-item" onclick="goToQcmLevelOrClass()">${escapeHtmlDb(stepOneLabel)}</span>`;
             html += `<span class="breadcrumb-sep">›</span>`;
 
             if (!qcmPath.quizKey) {
@@ -1272,14 +1314,7 @@ function renderQcmBreadcrumb() {
             } else {
                 html += `<span class="breadcrumb-item" onclick="goToQcmChapter()">${escapeHtmlDb(qcmPath.chapter)}</span>`;
                 html += `<span class="breadcrumb-sep">›</span>`;
-
-                if (!qcmPath.classId) {
-                    html += `<span class="breadcrumb-item current">${escapeHtmlDb(quizTitle(qcmPath.quizKey))}</span>`;
-                } else {
-                    html += `<span class="breadcrumb-item" onclick="goToQcmQuiz()">${escapeHtmlDb(quizTitle(qcmPath.quizKey))}</span>`;
-                    html += `<span class="breadcrumb-sep">›</span>`;
-                    html += `<span class="breadcrumb-item current">${escapeHtmlDb(classLabel(qcmPath.classId))}</span>`;
-                }
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(quizTitle(qcmPath.quizKey))}</span>`;
             }
         }
     }
@@ -1290,11 +1325,21 @@ function renderQcmBreadcrumb() {
 function renderQcmBody() {
     const el = document.getElementById('qcm-body');
 
-    // Étape 1 : choix du niveau
+    // Étape 1 : niveau générique OU classe précise (une classe n'ayant
+    // qu'un seul niveau, les deux choix sont réunis à la même étape —
+    // plus besoin de choisir la classe séparément après le QCM).
     if (!qcmPath.level) {
-        el.innerHTML = `<div class="btn-grid">` +
-            ALL_LEVELS.map(l => `<button class="choice-btn" onclick="selectQcmLevel('${l}')">${l}</button>`).join('') +
-            `</div>`;
+        el.innerHTML = ALL_LEVELS.map(l => {
+            const classesOfLevel = allClasses.filter(c => c.level === l);
+            return `
+                <div class="qcm-level-group">
+                    <button class="choice-btn" onclick="selectQcmLevelAll('${l}')">${l}</button>
+                    ${classesOfLevel.map(c =>
+                        `<button class="choice-btn-class" onclick="selectQcmClassDirect('${c.id}')">${escapeHtmlDb(c.name)}</button>`
+                    ).join('')}
+                </div>
+            `;
+        }).join('');
         return;
     }
 
@@ -1332,19 +1377,27 @@ function renderQcmBody() {
         return;
     }
 
-    // Étape 4 : choix de la classe (ou "Toutes les classes")
-    if (!qcmPath.classId) {
-        el.innerHTML = `<div class="btn-grid">` +
-            `<button class="choice-btn" onclick="selectQcmClass('ALL')">Toutes les classes</button>` +
-            allClasses.map(c =>
-                `<button class="choice-btn" onclick="selectQcmClass('${c.id}')">${escapeHtmlDb(c.name)}</button>`
-            ).join('') +
-            `</div>`;
-        return;
-    }
+    // Étape 4 : liste des élèves pour le QCM (et la classe/niveau) choisis,
+    // avec une barre latérale permettant de passer directement à un autre
+    // QCM du même chapitre en un clic.
+    const siblingKeys = quizzesForChapter(qcmPath.level, qcmPath.chapter);
+    const sidebarHTML = siblingKeys.map(k => {
+        const active = k === qcmPath.quizKey;
+        return `<button class="qcm-sidebar-btn ${active ? 'active' : ''}" onclick="selectQcmQuiz('${k}')" title="${k}">${escapeHtmlDb(quizTitle(k))}</button>`;
+    }).join('');
 
-    // Étape 5 : liste des élèves pour le QCM et la classe choisis
-    el.innerHTML = renderQcmLegend() + renderStudentScoreList(qcmPath.quizKey, qcmPath.classId);
+    el.innerHTML = `
+        <div class="qcm-detail-layout">
+            <div class="qcm-main">
+                ${renderQcmLegend()}
+                ${renderStudentScoreList(qcmPath.quizKey, qcmPath.classId)}
+            </div>
+            <div class="qcm-sidebar">
+                <div class="qcm-sidebar-title">Autres QCM — ${escapeHtmlDb(qcmPath.chapter)}</div>
+                ${sidebarHTML}
+            </div>
+        </div>
+    `;
 }
 
 function renderQcmLegend() {
