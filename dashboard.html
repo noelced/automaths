@@ -225,6 +225,9 @@
             font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border);
             border-radius: 20px; padding: 3px 10px; color: var(--text-muted);
         }
+        .time-chip {
+            font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;
+        }
         .student-score-row.clickable { cursor: pointer; transition: all .15s; }
         .student-score-row.clickable:hover { border-color: var(--primary); background: var(--primary-light); }
         .level-subheader {
@@ -1724,6 +1727,51 @@ function renderParticularBreadcrumb() {
     el.innerHTML = html;
 }
 
+// ── TEMPS PASSÉ (durée cumulée, tentatives incohérentes exclues) ──────────
+// Une tentative de plus de 30 minutes est considérée comme une page laissée
+// inactive/ouverte par erreur et n'est pas comptabilisée dans le temps réel
+// passé à répondre.
+const MAX_VALID_DURATION_SECONDS = 30 * 60;
+
+function isValidDurationAttempt(r) {
+    return !!(r.duration_seconds && r.duration_seconds > 0 && r.duration_seconds <= MAX_VALID_DURATION_SECONDS);
+}
+
+// Temps total (toutes tentatives valides, tous chapitres/QCM confondus) pour un élève
+function totalDurationForStudent(studentId) {
+    return allTimeResults
+        .filter(r => r.user_id === studentId && isValidDurationAttempt(r))
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Temps total pour un élève, limité à un chapitre donné
+function totalDurationForStudentChapter(studentId, level, chapter) {
+    const keySet = new Set(quizzesForChapter(level, chapter));
+    return allTimeResults
+        .filter(r => r.user_id === studentId && keySet.has(r.quiz_key) && isValidDurationAttempt(r))
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Temps total pour un élève, limité à un QCM précis
+function totalDurationForStudentQuiz(studentId, quizKey) {
+    return attemptsForStudentQuiz(studentId, quizKey)
+        .filter(isValidDurationAttempt)
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Formatage jours/heures/minutes (ex: "1j 2h 05min", "45min", "0min")
+function formatDurationLong(totalSeconds) {
+    if (!totalSeconds || totalSeconds <= 0) return '0min';
+    const days    = Math.floor(totalSeconds / 86400);
+    const hours   = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const parts = [];
+    if (days > 0)    parts.push(`${days}j`);
+    if (hours > 0)   parts.push(`${hours}h`);
+    if (minutes > 0 || parts.length === 0) parts.push(`${minutes}min`);
+    return parts.join(' ');
+}
+
 function renderParticularBody() {
     const el = document.getElementById('particular-body');
 
@@ -1755,6 +1803,7 @@ function renderParticularBody() {
             const themes = themeAveragesForStudent(s.id);
             const overallLabel = overall === null ? '—' : fmtScore(overall);
             const overallColor = overall === null ? 'var(--text-muted)' : scoreInfo(overall).color;
+            const totalTime = totalDurationForStudent(s.id);
             const themeChips = themes.map(t => `
                 <span class="theme-chip">${escapeHtmlDb(t.theme)} : ${fmtScore(t.avg)}</span>
             `).join('');
@@ -1764,6 +1813,7 @@ function renderParticularBody() {
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span class="name">${escapeHtmlDb(s.full_name || '—')}</span>
                         <span style="display:flex; align-items:center; gap:10px;">
+                            <span class="time-chip">⏱ ${formatDurationLong(totalTime)}</span>
                             <span style="font-weight:800; color:${overallColor};">${overallLabel}</span>
                             <span class="chevron">›</span>
                         </span>
@@ -1779,12 +1829,18 @@ function renderParticularBody() {
     if (!particularPath.chapter) {
         const overall = overallAverageForStudent(particularPath.studentId);
         const levels = studentLevels(particularPath.studentId);
+        const totalTime = totalDurationForStudent(particularPath.studentId);
 
         let html = `<div class="stats-grid" style="margin-bottom:24px;">
             <div class="stat-card">
                 <div class="stat-label">Moyenne générale</div>
                 <div class="stat-value">${overall === null ? '—' : fmtScore(overall)}</div>
                 <div class="stat-sub">tous QCM tentés confondus</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Temps total</div>
+                <div class="stat-value">${formatDurationLong(totalTime)}</div>
+                <div class="stat-sub">tentatives &gt; 30min exclues</div>
             </div>
         </div>`;
 
@@ -1802,10 +1858,12 @@ function renderParticularBody() {
                 currentParticularChapterRows.push({ level, chapter });
                 const avg = chapterAverageForStudent(particularPath.studentId, level, chapter);
                 const info = scoreInfo(avg);
+                const chapterTime = totalDurationForStudentChapter(particularPath.studentId, level, chapter);
                 html += `
                     <div class="student-score-row clickable" onclick="selectParticularChapterByIndex(${idx})">
                         <span class="score-dot" style="background:${info.color};"></span>
                         <span class="name">${escapeHtmlDb(chapter)}</span>
+                        <span class="time-chip">⏱ ${formatDurationLong(chapterTime)}</span>
                         <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
                         <span class="chevron">›</span>
                     </div>
@@ -1829,11 +1887,13 @@ function renderParticularBody() {
             const norm = bestNormalizedScore(particularPath.studentId, k);
             const info = scoreInfo(norm);
             const nbAttempts = attemptsForStudentQuiz(particularPath.studentId, k).length;
+            const quizTime = totalDurationForStudentQuiz(particularPath.studentId, k);
             return `
                 <div class="student-score-row clickable" onclick="selectParticularQuiz('${escapeHtmlDb(k)}')">
                     <span class="score-dot" style="background:${info.color};"></span>
                     <span class="name">${escapeHtmlDb(quizTitle(k))}</span>
                     <span class="attempts-count">${nbAttempts > 0 ? nbAttempts + ' réalisation' + (nbAttempts > 1 ? 's' : '') : 'Jamais fait'}</span>
+                    <span class="time-chip">⏱ ${formatDurationLong(quizTime)}</span>
                     <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
                     <span class="chevron">›</span>
                 </div>
