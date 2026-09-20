@@ -155,7 +155,7 @@ var chapterData_5eme_1 = {
                                         </div>
                                     </div>
                                     <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong> quand il n'y a que des additions et des soustractions (ou que des multiplications et des divisions), on calcule <strong>de gauche à droite</strong> : $C = 12 - 8 + 2$ ne vaut pas $12 - 10 = 2$ !
+                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong> quand il n'y a que des additions et des soustractions (ou que des multiplications et des divisions), on calcule <strong>de gauche à droite</strong> : $C = 12 - 8 + 2 = 6$ ne vaut pas $12 - 10 = 2$ !
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPpriorites"
@@ -169,11 +169,13 @@ var chapterData_5eme_1 = {
                                         <p>Un <strong>programme de calcul</strong> décrit une suite d'étapes en français. Pour le traduire en une seule expression, on utilise des <strong>parenthèses</strong> chaque fois que l'on doit forcer le calcul à se faire dans un ordre différent des priorités habituelles.</p>
                                     </div>
                                     <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Traduire le programme de calcul :
-                                        <blockquote>« Choisir un nombre ; lui ajouter 3 ; multiplier le résultat par 9 ; soustraire 5 »</blockquote>
+                                        <span class="method-badge">🚀 Méthode</span> En choisissant le nombre 7, traduire le programme de calcul suivant en une seule expression :
+                                        <strong><blockquote>« Choisir un nombre ; lui ajouter 3 ; multiplier le résultat par 9 ; soustraire 5 »</blockquote></strong>
                                         <ul>
-                                            <li>On choisit un nombre, par exemple $7$.</li>
-                                            <li>« lui ajouter 3 » : il faut que l'addition soit calculée <strong>avant</strong> la multiplication qui suit &rarr; on doit donc l'entourer de parenthèses.</li>
+                                            <li> Je choisis 7</li>
+                                            <li> J'ajoute 3 =>  7+3</li>
+                                            <li> Je multiplie le résultat par 9 => ce n'est pas $7+3 \\times 9$ : il faut absoument faire $7+3$ avant de multiplier. Il faut que l'addition soit calculée <strong>avant</strong> la multiplication qui suit &rarr; on doit donc l'entourer de parenthèses. On écrira $(7+3) \\times 9$</li>
+                                            <li> Soustraire 5 => Je mets $-5$ à la fin de mon calcul mais sans mettre de parenthèses car je veux que le $-5$ se fasse en dernier.</li>
                                             <li>On obtient : $(7 + 3) \\times 9 - 5$</li>
                                         </ul>
                                     </div>
@@ -204,18 +206,24 @@ var chapterData_5eme_1 = {
                                     <p><strong>Exemples :</strong></p>
                                     <div class="calculation-container">
                                         <div class="calculation-block">
-                                            <p>$A = 5 \\times 98$</p>
-                                            <p>$A = 5 \\times (100 - 2)$</p>
-                                            <p>$A = 5 \\times 100 - 5 \\times 2$</p>
-                                            <p>$A = 500 - 10 = 490$</p>
+                                            <p>$A = 12 \\times 103$</p>
+                                            <p>$A = 12 \\times (100 + 3)$</p>
+                                            <p>$A = 12 \\times 100 + 12 \\times 3$</p>
+                                            <p>$A = 1200 + 36 = 1236$</p>
                                         </div>
                                         <div class="calculation-block">
-                                            <p>$B = 12 \\times 103$</p>
-                                            <p>$B = 12 \\times (100 + 3)$</p>
-                                            <p>$B = 12 \\times 100 + 12 \\times 3$</p>
-                                            <p>$B = 1200 + 36 = 1236$</p>
+                                            <p>$B = 5 \\times 98$</p>
+                                            <p>$B = 5 \\times (100 - 2)$</p>
+                                            <p>$B = 5 \\times 100 - 5 \\times 2$</p>
+                                            <p>$B = 500 - 10 = 490$</p>
                                         </div>
                                     </div>
+                                    </br>
+                                    <p> En pratique, on écrit pas tous ces calculs : on les fait dans sa tête.</p>
+                                    <p> $1005 \\times 7 = ?$ (on remarque que 1005 c'est 1000+5)
+                                    <p> on calcule mentalement $1000 \\times 7 = 7000$</p>
+                                    <p> on calcule mentalement $5 \\times 7 =35$</p>
+                                    <p> donc $1005 \\times 7 = 7035$ </p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-OPdistributivite"
                                         onclick="startQuizFromButton('quiz-area-OPdistributivite', '51301')">
