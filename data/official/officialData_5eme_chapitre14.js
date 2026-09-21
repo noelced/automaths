@@ -10,11 +10,28 @@
 // NOTE : les codes des quiz ("btn-check-understanding") sont des
 // identifiants prévisionnels (514xxx) à créer/associer dans la
 // banque de quiz du site avant mise en ligne.
-// Cette version s'appuie notamment sur les « Attendus de fin
-// d'année de 5e » (rubrique Organisation et gestion de données,
-// fonctions > Résoudre des problèmes de proportionnalité)
-// fournis par l'enseignant. Ce chapitre ouvre le thème
-// « Proportionnalité, fonctions ».
+// ------------------------------------------------------------
+// OBJECTIFS : repris strictement du programme officiel fourni
+// par l'enseignant (aucun ajout, aucune notion hors-programme
+// dans les objectifs — ex. pas de "ratio", qui relève du
+// programme de 3e).
+// ------------------------------------------------------------
+// CONTENU : le coefficient de proportionnalité et le produit en
+// croix sont conservés comme méthodes de résolution (demande
+// explicite de l'enseignant), même si le produit en croix n'est
+// pas un attendu formel de 5e — c'est un outil supplémentaire
+// proposé aux élèves, en plus du retour à l'unité et de la
+// linéarité qui sont, eux, les automatismes officiels.
+// ------------------------------------------------------------
+// PÉDAGOGIE : tous les tableaux de données utilisent désormais
+// la classe .custom-table du site (plus de tableaux "faits
+// maison" en CSS inline). Chaque fois que le texte évoque un
+// tableau ("on lit dans le tableau..."), le tableau est
+// effectivement affiché, pas seulement décrit. Le vocabulaire et
+// les exemples sont volontairement très détaillés et concrets,
+// pensés pour des élèves de 12 ans en difficulté.
+// Un bouton "Ai-je bien compris ?" est présent pour chaque
+// partie H2 et chaque sous-partie H3.
 
 var chapterData_5eme_14 = {
     themeName: "PROPORTIONNALITÉ, FONCTIONS",
@@ -28,53 +45,104 @@ var chapterData_5eme_14 = {
                                 <section class="course-section">
                                     <p><strong>Objectifs :</strong></p>
                                     <ul>
-                                        <li>Je sais identifier une situation de proportionnalité dans un contexte concret (prix, recettes, distances, échelles...)</li>
-                                        <li>Je sais utiliser un coefficient de proportionnalité</li>
-                                        <li>Je sais mobiliser différentes procédures pour résoudre un problème de proportionnalité</li>
-                                        <li>Je sais représenter une situation de proportionnalité par un tableau ou un graphique</li>
-                                        <li>Je sais reconnaître une situation de proportionnalité à partir d'un tableau, d'un graphique ou d'un nuage de points</li>
-                                        <li>Je sais calculer et appliquer des pourcentages</li>
-                                        <li>Je sais partager une quantité selon un ratio donné</li>
+                                        <li>Je sais utiliser des proportions, des pourcentages.</li>
+                                        <li>Je sais calculer et appliquer des proportions, des pourcentages.</li>
+                                        <li>Je sais identifier des situations de proportionnalité dans des contextes concrets (prix, recettes, distances, échelles).</li>
+                                        <li>Je sais utiliser un coefficient de proportionnalité dans des contextes concrets (prix unitaire, vitesse moyenne, échelle, etc.).</li>
+                                        <li>Je sais représenter une situation de proportionnalité par un tableau ou un graphique.</li>
+                                        <li>Je sais reconnaître une situation de proportionnalité à partir d'un tableau ou d'un graphique.</li>
+                                        <li>Je sais reconnaître graphiquement qu'un nuage de points est ou n'est pas associé à une situation de proportionnalité.</li>
                                     </ul>
                                 </section>
 
                                 <!-- SECTION : RECONNAITRE UNE SITUATION DE PROPORTIONNALITE -->
                                 <section class="course-section">
                                     <h2 class="section-title">Reconnaître une situation de proportionnalité</h2>
+
                                     <div class="notion-box">
-                                        <p>Deux grandeurs sont <strong>proportionnelles</strong> lorsque l'on passe des valeurs de l'une aux valeurs de l'autre en multipliant <strong>toujours par le même nombre</strong>, appelé <strong>coefficient de proportionnalité</strong>.</p>
+                                        <p>Deux grandeurs sont <strong>proportionnelles</strong> quand on passe des valeurs de l'une aux valeurs de l'autre en multipliant <strong>toujours par le même nombre</strong>.</p>
+                                        <p>Ce nombre s'appelle le <strong>coefficient de proportionnalité</strong>.</p>
                                     </div>
-                                    <p><strong>Exemple (situation proportionnelle) :</strong> le prix de tomates selon leur masse.</p>
-                                    <table style="width:100%; border-collapse: collapse; text-align: center;">
-                                        <thead>
-                                            <tr>
-                                                <th style="border-right: 1px solid black; padding: 8px;">Masse (kg)</th>
-                                                <th style="border-right: 1px solid black; padding: 8px;">1</th>
-                                                <th style="border-right: 1px solid black; padding: 8px;">2</th>
-                                                <th style="border-right: 1px solid black; padding: 8px;">3</th>
-                                                <th style="padding: 8px;">5</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td style="border-right: 1px solid black; padding: 8px;">Prix (€)</td>
-                                                <td style="border-right: 1px solid black; padding: 8px;">2,50</td>
-                                                <td style="border-right: 1px solid black; padding: 8px;">5</td>
-                                                <td style="border-right: 1px solid black; padding: 8px;">7,50</td>
-                                                <td style="padding: 8px;">12,50</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <p class="indent-text">On passe toujours de la masse au prix en multipliant par $2,5$ (le coefficient de proportionnalité) : $1 \\times 2,5 = 2,5$ ; $2 \\times 2,5 = 5$ ; $3 \\times 2,5 = 7,5$... Ce tableau est donc un <strong>tableau de proportionnalité</strong>.</p>
+
+                                    <p><strong>Exemple :</strong> le prix de tomates selon leur masse.</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Masse (kg)</th>
+                                                    <td>1</td>
+                                                    <td>2</td>
+                                                    <td>3</td>
+                                                    <td>5</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Prix (€)</th>
+                                                    <td>2,50</td>
+                                                    <td>5</td>
+                                                    <td>7,50</td>
+                                                    <td>12,50</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <p class="indent-text">Pour passer de la masse au prix, on multiplie <strong>toujours</strong> par $2,5$ :</p>
+                                    <ul>
+                                        <li>$1 \\times 2,5 = 2,5$</li>
+                                        <li>$2 \\times 2,5 = 5$</li>
+                                        <li>$3 \\times 2,5 = 7,5$</li>
+                                        <li>$5 \\times 2,5 = 12,5$</li>
+                                    </ul>
+                                    <p class="indent-text">C'est toujours le même nombre ($2,5$) : ce tableau est donc un <strong>tableau de proportionnalité</strong>, et $2,5$ est le coefficient de proportionnalité.</p>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Vérifier si un tableau est un tableau de proportionnalité
+                                        <ol>
+                                            <li>Dans chaque colonne, on calcule le quotient <strong>(nombre du bas) $\\div$ (nombre du haut)</strong>.</li>
+                                            <li>On calcule ce quotient <strong>toujours dans le même sens</strong> pour toutes les colonnes.</li>
+                                            <li>Si tous les quotients trouvés sont <strong>égaux</strong>, alors c'est un tableau de proportionnalité.</li>
+                                        </ol>
+                                        <p>Avec l'exemple des tomates : $2,5 \\div 1 = 2,5$ ; $\\ 5 \\div 2 = 2,5$ ; $\\ 7,5 \\div 3 = 2,5$ ; $\\ 12,5 \\div 5 = 2,5$.</p>
+                                        <p>Les $4$ quotients sont égaux à $2,5$ : c'est bien un tableau de proportionnalité.</p>
+                                    </div>
+
                                     <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Exemple de situation NON proportionnelle :</strong> l'aire d'un carré en fonction de son côté. Un carré de côté $2$ a une aire de $4$, un carré de côté $4$ (deux fois plus grand) a une aire de $16$ (quatre fois plus grande, pas deux fois) : il n'y a pas de coefficient unique.
+                                        <strong style="color: var(--secondary);">⚠️ Attention :</strong>
+                                        <p>il faut toujours diviser dans le <strong>même sens</strong>.</p>
+                                        <p>Par exemple, on fait toujours « prix $\\div$ masse ». On ne fait jamais « prix $\\div$ masse » pour une colonne puis « masse $\\div$ prix » pour une autre colonne.</p>
                                     </div>
-                                    <p><strong>D'autres exemples classiques :</strong></p>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Exemple de situation NON proportionnelle :</strong>
+                                        <p>l'aire d'un carré selon son côté.</p>
+                                    </div>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Côté (cm)</th>
+                                                    <td>2</td>
+                                                    <td>4</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Aire (cm²)</th>
+                                                    <td>4</td>
+                                                    <td>16</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <p class="indent-text">Un carré de côté $4$ cm est <strong>deux fois</strong> plus grand qu'un carré de côté $2$ cm. Pourtant, son aire ($16$ cm²) n'est pas deux fois plus grande, mais <strong>quatre fois</strong> plus grande ($4 \\times 4 = 16$). Il n'y a pas de coefficient unique : ce n'est <strong>pas</strong> une situation de proportionnalité.</p>
+
+                                    <p><strong>D'autres exemples classiques à connaître :</strong></p>
                                     <ul>
                                         <li>proportionnels : le côté et le périmètre d'un carré, le diamètre et la longueur d'un cercle, la masse et le prix d'une denrée ;</li>
                                         <li>non proportionnels : le côté et l'aire d'un carré, l'âge et la taille d'une personne.</li>
                                     </ul>
+
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-PROPreconnaitre"
                                         onclick="startQuizFromButton('quiz-area-PROPreconnaitre', '514101')">
@@ -87,44 +155,202 @@ var chapterData_5eme_14 = {
                                 <section class="course-section">
                                     <h2 class="section-title">Résoudre un problème de proportionnalité</h2>
                                     <div class="notion-box">
-                                        <p>Il existe plusieurs méthodes pour compléter un tableau de proportionnalité. On peut choisir celle qui est la plus pratique selon les nombres en jeu.</p>
+                                        <p>Il existe plusieurs méthodes pour compléter un tableau de proportionnalité.</p>
+                                        <p>On peut choisir celle qui est la plus pratique selon les nombres de l'énoncé.</p>
                                     </div>
 
                                     <h3 class="section-title">Le coefficient de proportionnalité</h3>
-                                    <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> $4$ stylos coûtent $6$ €. Combien coûtent $10$ stylos ?
-                                        <ul>
-                                            <li>Coefficient de proportionnalité : $6 \\div 4 = 1,5$ (le prix d'un stylo).</li>
-                                            <li>Prix de $10$ stylos : $10 \\times 1,5 = 15$ €.</li>
-                                        </ul>
+                                    <p><strong>Exemple :</strong> $4$ stylos coûtent $6$ €. Combien coûtent $10$ stylos ?</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Stylos</th>
+                                                    <td>4</td>
+                                                    <td>10</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Prix (€)</th>
+                                                    <td>6</td>
+                                                    <td>?</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
-                                    <h3 class="section-title">Le retour à l'unité</h3>
                                     <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité de farine pour $6$ personnes ?
-                                        <ul>
-                                            <li>On calcule la quantité pour $1$ personne : $300 \\div 4 = 75$ g.</li>
-                                            <li>On calcule la quantité pour $6$ personnes : $75 \\times 6 = 450$ g.</li>
-                                        </ul>
+                                        <span class="method-badge">🚀 Méthode</span> Utiliser le coefficient
+                                        <ol>
+                                            <li>On cherche le coefficient de proportionnalité : $6 \\div 4 = 1,5$ (c'est le prix d'<strong>un seul</strong> stylo).</li>
+                                            <li>On multiplie par ce coefficient pour trouver le prix de $10$ stylos : $10 \\times 1,5 = 15$.</li>
+                                            <li>Prix de $10$ stylos : <strong>$15$ €</strong>.</li>
+                                        </ol>
                                     </div>
 
-                                    <h3 class="section-title">La linéarité (multiplicative ou additive)</h3>
-                                    <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité pour $2$ personnes ? Pour $6$ personnes ?
-                                        <ul>
-                                            <li><strong>Linéarité multiplicative :</strong> pour $2$ personnes (moitié de $4$), on prend la moitié : $300 \\div 2 = 150$ g.</li>
-                                            <li><strong>Linéarité additive :</strong> pour $6$ personnes ($4 + 2$), on additionne les quantités pour $4$ et pour $2$ personnes : $300 + 150 = 450$ g.</li>
-                                        </ul>
-                                    </div>
-                                    <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong> ces différentes procédures donnent toujours le <strong>même résultat</strong> ! Le tout est de choisir celle qui est la plus rapide selon les nombres de l'énoncé.
-                                    </div>
                                     <button class="btn-check-understanding"
-                                        data_quiz_target="quiz-area-PROPprocedures"
-                                        onclick="startQuizFromButton('quiz-area-PROPprocedures', '514201')">
+                                        data_quiz_target="quiz-area-PROPcoefficient"
+                                        onclick="startQuizFromButton('quiz-area-PROPcoefficient', '514211')">
                                         Ai-je bien compris ?
                                     </button>
-                                    <div id="quiz-area-PROPprocedures"></div>
+                                    <div id="quiz-area-PROPcoefficient"></div>
+
+                                    <h3 class="section-title">Le retour à l'unité</h3>
+                                    <p><strong>Exemple :</strong> une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité de farine pour $6$ personnes ?</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Personnes</th>
+                                                    <td>4</td>
+                                                    <td>1</td>
+                                                    <td>6</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Farine (g)</th>
+                                                    <td>300</td>
+                                                    <td>?</td>
+                                                    <td>?</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Passer par « 1 personne »
+                                        <ol>
+                                            <li>On cherche d'abord la quantité pour <strong>1 seule</strong> personne : $300 \\div 4 = 75$ g.</li>
+                                            <li>On multiplie ensuite par le nombre de personnes voulu : $75 \\times 6 = 450$.</li>
+                                            <li>Quantité pour $6$ personnes : <strong>$450$ g</strong>.</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Astuce :</strong>
+                                        <p>« retour à l'unité » veut simplement dire : on calcule d'abord la valeur pour <strong>1</strong>, avant de calculer la valeur demandée.</p>
+                                    </div>
+
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-PROPretourunite"
+                                        onclick="startQuizFromButton('quiz-area-PROPretourunite', '514221')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-PROPretourunite"></div>
+
+                                    <h3 class="section-title">La linéarité (multiplicative ou additive)</h3>
+                                    <p><strong>Exemple :</strong> une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité pour $2$ personnes ? Pour $6$ personnes ?</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Personnes</th>
+                                                    <td>4</td>
+                                                    <td>2</td>
+                                                    <td>6</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Farine (g)</th>
+                                                    <td>300</td>
+                                                    <td>?</td>
+                                                    <td>?</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Utiliser des liens entre les colonnes
+                                        <p><strong>Pour 2 personnes (linéarité multiplicative) :</strong></p>
+                                        <ol>
+                                            <li>$2$ personnes, c'est <strong>la moitié</strong> de $4$ personnes.</li>
+                                            <li>On prend donc la moitié de la farine : $300 \\div 2 = 150$ g.</li>
+                                        </ol>
+                                        <p><strong>Pour 6 personnes (linéarité additive) :</strong></p>
+                                        <ol>
+                                            <li>$6$ personnes, c'est $4$ personnes <strong>+</strong> $2$ personnes.</li>
+                                            <li>On additionne donc les quantités de farine : $300 + 150 = 450$ g.</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Personnes</th>
+                                                    <td>4</td>
+                                                    <td>2</td>
+                                                    <td>6</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Farine (g)</th>
+                                                    <td>300</td>
+                                                    <td>150</td>
+                                                    <td>450</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-PROPlinearite"
+                                        onclick="startQuizFromButton('quiz-area-PROPlinearite', '514231')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-PROPlinearite"></div>
+
+                                    <h3 class="section-title">Le produit en croix</h3>
+                                    <div class="notion-box">
+                                        <p>Le <strong>produit en croix</strong> est une autre méthode, qui fonctionne <strong>toujours</strong>, même quand les nombres ne sont pas pratiques.</p>
+                                    </div>
+
+                                    <p><strong>Exemple :</strong> une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité de farine pour $7$ personnes ?</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Personnes</th>
+                                                    <td>4</td>
+                                                    <td>7</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Farine (g)</th>
+                                                    <td>300</td>
+                                                    <td>$x$</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Multiplier en croix, puis diviser
+                                        <ol>
+                                            <li><span class="text-blue"><strong>On multiplie en diagonale</strong></span> les deux nombres reliés au nombre cherché $x$ : $300 \\times 7 = 2\\,100$.</li>
+                                            <li><span class="text-red"><strong>On divise</strong></span> ce résultat par le nombre qui reste dans le tableau : $2\\,100 \\div 4 = 525$.</li>
+                                            <li>Il faut donc <strong>$525$ g</strong> de farine pour $7$ personnes.</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Astuce :</strong>
+                                        <p><span class="text-blue"><strong>Diagonale = multiplication</strong></span> (les deux nombres reliés à $x$).</p>
+                                        <p><span class="text-red"><strong>Colonne restante = division</strong></span> (le seul nombre qui n'a pas encore servi).</p>
+                                    </div>
+
+                                    <button class="btn-check-understanding"
+                                        data_quiz_target="quiz-area-PROPproduitcroix"
+                                        onclick="startQuizFromButton('quiz-area-PROPproduitcroix', '514241')">
+                                        Ai-je bien compris ?
+                                    </button>
+                                    <div id="quiz-area-PROPproduitcroix"></div>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Remarque :</strong>
+                                        <p>ces différentes méthodes (coefficient, retour à l'unité, linéarité, produit en croix) donnent toujours le <strong>même résultat</strong> !</p>
+                                        <p>On choisit celle qui est la plus rapide et la plus facile selon les nombres de l'énoncé.</p>
+                                    </div>
                                 </section>
 
                                 <!-- SECTION : REPRESENTER ET RECONNAITRE GRAPHIQUEMENT -->
@@ -158,16 +384,94 @@ var chapterData_5eme_14 = {
                                 <!-- SECTION : POURCENTAGES -->
                                 <section class="course-section">
                                     <h2 class="section-title">Calculer et appliquer un pourcentage</h2>
+
                                     <div class="notion-box">
-                                        <p>Calculer $t\\%$ d'une quantité, c'est appliquer un coefficient de proportionnalité égal à $\\dfrac{t}{100}$.</p>
+                                        <p>Un <strong>pourcentage</strong> est une proportion "sur 100". Calculer $t\\%$ d'une quantité, c'est appliquer le coefficient de proportionnalité $\\dfrac{t}{100}$.</p>
                                     </div>
+
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Méthode</span> Calculer $25\\%$ de $80$ €
-                                        <ul>
-                                            <li>$25\\% = \\dfrac{25}{100} = 0,25$.</li>
-                                            <li>$25\\%$ de $80$ € $= 0,25 \\times 80 = 20$ €.</li>
-                                        </ul>
+                                        <ol>
+                                            <li>$25\\%$, c'est $\\dfrac{25}{100} = 0,25$.</li>
+                                            <li>On multiplie : $0,25 \\times 80 = 20$.</li>
+                                            <li>$25\\%$ de $80$ € $= \\textbf{20 €}$.</li>
+                                        </ol>
                                     </div>
+
+                                    <div class="notion-box">
+                                        <p><strong>Autre méthode : le tableau avec 100.</strong> On ajoute une colonne « $100$ » dans un tableau de proportionnalité, puis on utilise le produit en croix.</p>
+                                    </div>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Pourcentage</th>
+                                                    <td>100</td>
+                                                    <td>25</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Quantité (€)</th>
+                                                    <td>80</td>
+                                                    <td>$x$</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Retrouver $25\\%$ de $80$ € avec le tableau
+                                        <ol>
+                                            <li>On multiplie en croix : $80 \\times 25 = 2\\,000$.</li>
+                                            <li>On divise par le nombre restant : $2\\,000 \\div 100 = 20$.</li>
+                                            <li>On retrouve bien <strong>$20$ €</strong>, comme avec l'autre méthode !</li>
+                                        </ol>
+                                    </div>
+
+                                    <p><strong>Calculer un pourcentage à partir d'un effectif (l'inverse) :</strong></p>
+                                    <div class="notion-box">
+                                        <p>On peut aussi devoir faire l'inverse : à partir d'un <strong>nombre</strong> parmi un <strong>total</strong>, retrouver le <strong>pourcentage</strong> qu'il représente.</p>
+                                    </div>
+
+                                    <p><strong>Exemple :</strong> lors de l'élection des délégués de classe, $4$ élèves se présentent. Il y a $24$ votants au total.</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Candidat</th>
+                                                    <td>Alexis</td>
+                                                    <td>Chloé</td>
+                                                    <td>Salma</td>
+                                                    <td>Djibril</td>
+                                                    <td><strong>Total</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Voix</th>
+                                                    <td>6</td>
+                                                    <td>12</td>
+                                                    <td>3</td>
+                                                    <td>3</td>
+                                                    <td><strong>24</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Calculer le pourcentage de voix de Chloé
+                                        <ol>
+                                            <li>Chloé a obtenu $12$ voix sur $24$ votants.</li>
+                                            <li>On calcule : $\\dfrac{12 \\times 100}{24} = \\dfrac{1\\,200}{24} = 50$.</li>
+                                            <li>Chloé a obtenu <strong>$50\\%$</strong> des voix.</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">💡 Astuce :</strong>
+                                        <p>pour trouver un pourcentage à partir d'un nombre parmi un total, on calcule toujours : $\\dfrac{\\text{nombre} \\times 100}{\\text{total}}$.</p>
+                                    </div>
+
                                     <p><strong>Appliquer une remise ou une augmentation :</strong></p>
                                     <div class="calculation-container">
                                         <div class="calculation-block">
@@ -192,61 +496,45 @@ var chapterData_5eme_14 = {
                                     <div id="quiz-area-PROPpourcentages"></div>
                                 </section>
 
-                                <!-- SECTION : PARTAGER SELON UN RATIO -->
-                                <section class="course-section">
-                                    <h2 class="section-title">Partager une quantité selon un ratio donné</h2>
-                                    <div class="notion-box">
-                                        <p>Partager une quantité selon un <strong>ratio</strong> $a : b$, c'est la diviser en $a + b$ parts égales, puis en attribuer $a$ parts à la première partie et $b$ parts à la seconde.</p>
-                                    </div>
-                                    <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Partager $10$ € selon le ratio $2 : 3$
-                                        <ul>
-                                            <li>Nombre total de parts : $2 + 3 = 5$.</li>
-                                            <li>Valeur d'une part : $10 \\div 5 = 2$ €.</li>
-                                            <li>Première partie : $2 \\times 2 = 4$ €. Deuxième partie : $3 \\times 2 = 6$ €.</li>
-                                        </ul>
-                                    </div>
-                                    <div style="text-align:center; margin: 15px 0;">
-                                        <svg viewBox="0 0 430 210" xmlns="http://www.w3.org/2000/svg" style="max-width:460px; display:block; margin:0 auto; font-family:sans-serif;">
-<text x="215.0" y="30" font-size="14" fill="#1A1A1A" text-anchor="middle" font-weight="bold">10 € partagés selon le ratio 2 : 3</text>
-<rect x="40" y="60" width="140" height="70" fill="#2E5C8A" stroke="white" stroke-width="2"/>
-<rect x="180" y="60" width="210" height="70" fill="#B5651D" stroke="white" stroke-width="2"/>
-<line x1="110" y1="60" x2="110" y2="130" stroke="white" stroke-width="1.5" stroke-dasharray="3,3"/>
-<line x1="180" y1="60" x2="180" y2="130" stroke="white" stroke-width="1.5" stroke-dasharray="3,3"/>
-<line x1="250" y1="60" x2="250" y2="130" stroke="white" stroke-width="1.5" stroke-dasharray="3,3"/>
-<line x1="320" y1="60" x2="320" y2="130" stroke="white" stroke-width="1.5" stroke-dasharray="3,3"/>
-<text x="110.0" y="101.0" font-size="16" fill="white" text-anchor="middle" font-weight="bold">4 €</text>
-<text x="285.0" y="101.0" font-size="16" fill="white" text-anchor="middle" font-weight="bold">6 €</text>
-<text x="110.0" y="152" font-size="12" fill="#2E5C8A" text-anchor="middle">2 parts</text>
-<text x="285.0" y="152" font-size="12" fill="#B5651D" text-anchor="middle">3 parts</text>
-<text x="215.0" y="180" font-size="12" fill="#1A1A1A" text-anchor="middle">1 part = 10 € ÷ 5 = 2 €</text>
-</svg>
-                                    </div>
-                                    <p>Autre exemple : pour réaliser $500$ mL de vinaigrette dans le ratio huile : vinaigre $= 3 : 1$, on a $3+1=4$ parts, une part $= 500 \\div 4 = 125$ mL, donc $375$ mL d'huile et $125$ mL de vinaigre.</p>
-                                    <button class="btn-check-understanding"
-                                        data_quiz_target="quiz-area-PROPratio"
-                                        onclick="startQuizFromButton('quiz-area-PROPratio', '514501')">
-                                        Ai-je bien compris ?
-                                    </button>
-                                    <div id="quiz-area-PROPratio"></div>
-                                </section>
-
                                 <!-- SECTION : ECHELLES -->
                                 <section class="course-section">
                                     <h2 class="section-title">Utiliser une échelle</h2>
                                     <div class="notion-box">
                                         <p>L'<strong>échelle</strong> d'une carte ou d'un plan est le coefficient de proportionnalité entre une distance mesurée <strong>sur le document</strong> et la distance <strong>réelle</strong> correspondante (dans la même unité).</p>
                                     </div>
-                                    <div class="method-box">
-                                        <span class="method-badge">🚀 Méthode</span> Sur une carte à l'échelle $1 : 25\\,000$, deux villes sont distantes de $8$ cm. Quelle est la distance réelle ?
-                                        <ul>
-                                            <li>L'échelle $1:25\\,000$ signifie que $1$ cm sur la carte représente $25\\,000$ cm dans la réalité.</li>
-                                            <li>Distance réelle $= 8 \\times 25\\,000 = 200\\,000$ cm $= 2\\,000$ m $= 2$ km.</li>
-                                        </ul>
+
+                                    <p><strong>Exemple :</strong> sur une carte à l'échelle $1 : 25\\,000$, deux villes sont distantes de $8$ cm. Quelle est la distance réelle ?</p>
+
+                                    <div class="table-container" style="margin:10px 0;">
+                                        <table class="custom-table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Sur la carte (cm)</th>
+                                                    <td>1</td>
+                                                    <td>8</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Dans la réalité (cm)</th>
+                                                    <td>25 000</td>
+                                                    <td>?</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
+
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span> Trouver la distance réelle
+                                        <ol>
+                                            <li>L'échelle $1 : 25\\,000$ signifie que $1$ cm sur la carte représente $25\\,000$ cm dans la réalité.</li>
+                                            <li>On multiplie donc par $25\\,000$ : $8 \\times 25\\,000 = 200\\,000$.</li>
+                                            <li>Distance réelle $= 200\\,000$ cm.</li>
+                                            <li>On convertit en unité plus pratique : $200\\,000$ cm $= 2\\,000$ m $= 2$ km.</li>
+                                        </ol>
+                                    </div>
+
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-PROPechelles"
-                                        onclick="startQuizFromButton('quiz-area-PROPechelles', '514601')">
+                                        onclick="startQuizFromButton('quiz-area-PROPechelles', '514501')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-PROPechelles"></div>
