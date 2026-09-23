@@ -843,6 +843,12 @@ if (currentMode === 'cours') {
         container.appendChild(card);
         applyAutomaticNumbering(card);
 
+        // ── Colore les boutons "Ai-je bien compris ?" selon leur état ──────
+        // (hors-programme / pas encore fait / résultat du jour, voir index.html)
+        if (typeof refreshQuizButtonStates === 'function') {
+            await refreshQuizButtonStates(card);
+        }
+
         // ── Détection et activation des balances d'équations [[BALANCE:...]] ──
         if (typeof initEquationBalances === 'function') {
             initEquationBalances(card, (solutionValue, eqString) => {

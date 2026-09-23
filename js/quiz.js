@@ -207,6 +207,14 @@ function nextLocalQuestion(containerId) {
     const container = document.getElementById(containerId);
     if (container) {
         renderInjectedQuiz(container, trainingSession.currentCards, containerId);
+        // Remonte l'écran en haut du questionnaire : sans ça, après avoir
+        // descendu la page pour lire une explication longue, l'élève ne
+        // voit plus la nouvelle question qui vient d'être affichée plus
+        // haut. Léger délai pour laisser le nouveau contenu (et MathJax)
+        // se stabiliser avant de calculer la position de défilement.
+        setTimeout(() => {
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
     }
 }
 
