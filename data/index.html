@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMaths | Apprentissage Interactif</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/equation-balance.css">
+
+    <!-- MathJax — Rendu des formules mathématiques -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true
+        },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- ÉCRAN DE LOGIN (affiché avant connexion, masqué après)           -->
+<!-- ================================================================ -->
+<div id="auth-screen" style="
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; background: var(--bg);">
+
+    <div style="background: white; padding: 40px; border-radius: 16px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+
+        <!-- Logo -->
+        <div style="text-align:center; margin-bottom:28px;">
+            <img src="images/logo_robot.webp" alt="Logo AutoMaths" style="height:48px;">
+            <div style="font-size:1.8rem; font-weight:800; font-style:italic;
+                        color:var(--primary-dark); margin-top:8px;">AutoMaths</div>
+        </div>
+
+        <!-- Formulaire de connexion -->
+        <div id="login-form">
+            <div style="margin-bottom:16px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Adresse email</label>
+                <input type="email" id="auth-email" placeholder="3LettresNom.prenom@college.fr"
+                    onkeydown="if(event.key==='Enter') login()"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div style="margin-bottom:8px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Mot de passe</label>
+                <input type="password" id="auth-password" placeholder="••••••"
+                    onkeydown="if(event.key==='Enter') login()"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div id="auth-error" style="color:#dc2626; font-size:0.85rem; min-height:20px; margin-bottom:12px;"></div>
+            <button id="btn-login" onclick="login()" style="
+                width:100%; padding:14px; border:none; border-radius:10px;
+                background:var(--primary); color:white; font-size:1rem; font-weight:700; cursor:pointer;">
+                Se connecter
+            </button>
+            <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
+                Pas encore de compte ?
+                <a href="#" onclick="toggleAuthForm()" style="color:var(--primary);">S'inscrire</a>
+            </p>
+        </div>
+
+        <!-- Formulaire d'inscription (masqué par défaut) -->
+        <div id="register-form" style="display:none;">
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Prénom et nom *</label>
+                <input type="text" id="reg-name" placeholder="Marie Dupont"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Classe *</label>
+                <input type="text" id="reg-class" placeholder="3ème A"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Adresse email *</label>
+                <input type="email" id="reg-email" placeholder="3LettresNom.prenom@college.fr"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div style="margin-bottom:8px;">
+                <label style="display:block; font-weight:600; margin-bottom:6px; font-size:0.9rem;">Mot de passe * (6 caractères min.)</label>
+                <input type="password" id="reg-password" placeholder="••••••"
+                    style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; outline:none;">
+            </div>
+            <div id="reg-error" style="color:#dc2626; font-size:0.85rem; min-height:20px; margin-bottom:12px;"></div>
+            <div id="reg-success" style="display:none; color:#16a34a; font-size:0.9rem;
+                background:#dcfce7; padding:10px; border-radius:8px; margin-bottom:12px;">
+                ✓ Compte créé ! Vérifie ta boîte mail pour confirmer.
+            </div>
+            <button id="btn-register" onclick="register()" style="
+                width:100%; padding:14px; border:none; border-radius:10px;
+                background:var(--secondary); color:white; font-size:1rem; font-weight:700; cursor:pointer;">
+                Créer mon compte
+            </button>
+            <p style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--text-muted);">
+                Déjà un compte ?
+                <a href="#" onclick="toggleAuthForm()" style="color:var(--primary);">Se connecter</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- CONTENU APP (masqué avant connexion)                             -->
+<!-- ================================================================ -->
+<div id="app-content" style="display:none;">
+
+  <header>
+    <div class="brand-container"> 
+        <img src="images/logo_robot.webp" alt="Logo AutoMaths" class="site-logo">
+        <h6 class="site-title">AutoMaths</h6> 
+    </div>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <div id="level-display"></div>
+        <a href="student-dashboard.html" id="btn-my-profile" style="
+            display:none; align-items:center; gap:6px; padding:6px 14px;
+            background:linear-gradient(135deg,#8b5cf6,#a78bfa); color:white;
+            border-radius:30px; text-decoration:none; font-weight:700; font-size:0.82rem;
+            box-shadow:0 2px 8px rgba(139,92,246,0.4);">
+            🏆 Mon profil
+        </a>
+        <div id="user-info-header" style="display:flex; align-items:center;"></div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ÉCRAN 1 : CHOIX DU NIVEAU -->
+    <section id="view-levels" class="view active">
+        <div class="hero-section">
+            <p>Choisis ta classe pour commencer</p>
+        </div>
+        <div class="level-grid">
+            <div class="level-card" onclick="selectLevel(0)"><h5>6ème</h5><p>Débutant</p></div>
+            <div class="level-card" onclick="selectLevel(1)"><h5>5ème</h5><p>Intermédiaire</p></div>
+            <div class="level-card" onclick="selectLevel(2)"><h5>4ème</h5><p>Avancé</p></div>
+            <div class="level-card" onclick="selectLevel(3)"><h5>3ème</h5><p>Expert</p></div>
+        </div>
+    </section>
+
+    <!-- ÉCRAN 2 : MODE ET CONTENU -->
+    <section id="view-app" class="view">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <button class="btn-back" onclick="resetApp()">← Retour au menu</button>
+            <button id="btn-create-card" onclick="openCreator()" style="background:none; border:1.5px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-weight:bold;">➕ Créer une carte</button>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" id="btn-cours" onclick="setMode('cours')">📖 Cours</button>
+            <button class="mode-btn" id="btn-automatismes" onclick="setMode('automatismes')">⚡ Automatismes</button>
+            <button class="mode-btn" id="btn-entrainement" onclick="setMode('entrainement')">✍️ Entraînement</button>
+        </div>
+
+        <div id="content-area">
+            <!-- Le contenu sera injecté ici -->
+        </div>
+    </section>
+
+    <!-- FORMULAIRE DE CRÉATION -->
+    <section id="view-creator" class="view">
+        <button class="btn-back" onclick="resetApp()">← Retour</button>
+        <div class="card">
+            <h2 style="color: var(--primary); margin-bottom: 10px;">✨ Créer ma carte de révision</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Choisis le format et crée ta question !</p>
+            <hr style="margin: 20px 0; opacity: 0.1;">
+            
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Dans quel chapitre ajouter ta carte ?</label>
+            <select id="new-chap-select" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;"></select>
+
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Type de question</label>
+            <select id="new-question-type" onchange="toggleQuestionType()" style="width:100%; padding:12px; border-radius:10px; border:2px solid #e2e8f0; font-family:inherit; outline:none; margin-bottom:15px;">
+                <option value="ouverte">❓ Question ouverte</option>
+                <option value="qcm">🔘 QCM (Choix multiples)</option>
+            </select>
+
+            <!-- Question -->
+            <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Question</label>
+            <div id="preview-q" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+            <input type="text" id="new-quiz-q" placeholder="...">
+            <div class="math-keyboard" style="margin-bottom:25px;">
+                <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+                <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+                <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+                <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+                <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+                <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+            </div>
+
+            <!-- Réponse (ouverte) -->
+            <div id="zone-reponse-ouverte">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">Ma Réponse</label>
+                <div id="preview-a" style="font-size:1.2rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+                <input type="text" id="new-quiz-a" placeholder="...">
+                <div class="math-keyboard" style="margin-bottom:25px;">
+                    <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+                    <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+                </div>
+            </div>
+
+            <!-- Réponse (QCM) -->
+            <div id="zone-reponse-qcm" style="display:none;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">Réponse correcte</label>
+                <input type="text" id="new-qcm-correct" placeholder="ex: 3/4">
+                <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:10px;">Options (séparées par un antislash "\" )</label>
+                <input type="text" id="new-qcm-options" placeholder="ex: 0,5 \ 1 \ 2">
+            </div>
+
+            <!-- Contenu de leçon -->
+            <label style="display:block; font-weight:bold; margin-bottom:5px; margin-top:20px;">Contenu de la leçon (optionnel)</label>
+            <div id="preview-content" style="font-size:1rem; min-height:30px; padding:10px; background:#f8fafc; border-radius:8px; margin-bottom:5px; color:var(--text-main);"></div>
+            <textarea id="new-chap-content" style="width:100%; border-radius:10px; padding:10px; border:2px solid #e2e8f0; min-height:80px; margin-bottom:15px; font-family:inherit;" placeholder="Explique la règle ici..."></textarea>
+            <div class="math-keyboard" style="margin-top:15px;">
+                <button type="button" class="math-key" onclick="insertMathChar('√', this)">√</button>
+                <button type="button" class="math-key" onclick="insertMathChar('^', this)">^</button>
+                <button type="button" class="math-key" onclick="insertMathChar('/', this)">/</button>
+                <button type="button" class="math-key" onclick="insertMathChar('<', this)">&lt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('>', this)">&gt;</button>
+                <button type="button" class="math-key" onclick="insertMathChar('*', this)">×</button>
+                <button type="button" class="math-key" onclick="insertMathChar('.', this)">.</button>
+                <button type="button" class="math-key" onclick="insertMathChar('-', this)">-</button>
+            </div>
+            <button class="action-btn" style="background: var(--secondary); margin-top:10px;" onclick="saveNewCard()">Enregistrer ma carte</button>
+        </div>
+    </section>
+
+  </main>
+
+  <footer>
+      &copy; 2026 AutoMaths - Plateforme d'apprentissage numérique
+  </footer>
+
+</div><!-- fin #app-content -->
+
+
+<!-- ================================================================ -->
+<!-- SCRIPTS (ordre important)                                         -->
+<!-- ================================================================ -->
+
+<!-- 1. Supabase JS v2 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- 2. Auth + Tracker (à activer quand les tables Supabase sont en place) -->
+<script src="js/auth.js"></script>
+<script src="js/tracker.js"></script>
+<script src="js/gamification.js"></script>
+
+<!-- 3. Logique applicative (doit être chargée AVANT les données : -->
+<!--    localQuestions.js appelle generateTriangleSVG() au chargement) -->
+<script src="js/utils.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/equation-balance.js"></script>
+<script src="js/app.js"></script>
+
+<!-- 4. Données pédagogiques -->
+<script src="data/officialStructure.js"></script>
+<script src="data/quizMeta.js"></script>
+<script src="data/localQuestions.js"></script>
+<script src="data/localQuestions5eme.js"></script>
+<script>
+    // Fusionne les questions de 5ème (allLocalQuestions5eme, défini dans
+    // localQuestions5eme.js) dans l'objet principal allLocalQuestions utilisé
+    // par app.js (startQuizFromButton). On garde deux fichiers séparés pour
+    // ne pas alourdir le chargement avec un seul gros fichier, mais tout le
+    // reste du code continue de lire un unique objet allLocalQuestions.
+    if (typeof allLocalQuestions5eme !== 'undefined') {
+        Object.assign(allLocalQuestions, allLocalQuestions5eme);
+    } else {
+        console.error('[AutoMaths] data/localQuestions5eme.js introuvable ou allLocalQuestions5eme non défini.');
+    }
+</script>
+
+<!-- 5. Graphiques -->
+<!--    chart.min.js : librairie Chart.js, conservée pour de FUTURS graphiques -->
+<!--    (l'histogramme actuel n'en a pas besoin, il est en SVG pur dans charts.js) -->
+<script src="data/chart.min.js"></script>
+<script src="data/chartsData.js"></script>
+<script src="js/charts.js"></script>
+
+<!-- 6. Initialisation + lancement automatique de quiz depuis le tableau de bord élève -->
+<script>
+    window.addEventListener('DOMContentLoaded', initAuth);
+
+    // ════════════════════════════════════════════════════════════════════
+    // COULEUR DES BOUTONS "Ai-je bien compris ?" SELON L'ÉTAT DU QCM
+    // ════════════════════════════════════════════════════════════════════
+    // États (et couleurs) :
+    //   • Gris    : ce QCM ne compte pas actuellement (hors niveau autorisé
+    //               pour la classe, ou pas coché dans la Progression du
+    //               prof alors qu'une progression est configurée) — même
+    //               logique de gating que record_quiz_result() côté serveur.
+    //   • --secondary (couleur par défaut, inchangée) : QCM "au programme",
+    //               pas encore tenté AUJOURD'HUI.
+    //   • Rouge / Orange / Vert clair / Vert foncé : tenté aujourd'hui,
+    //               coloré selon le meilleur score du jour (< 50% / 50-79% /
+    //               80-99% / 100%).
+    // "Aujourd'hui" correspond au moment où le QCM peut de nouveau rapporter
+    // des points (le plafond d'XP/QCM/jour se réinitialise à minuit, voir
+    // record_quiz_result) — la couleur se réinitialise donc au même rythme.
+    const QUIZ_BTN_COLORS = {
+        hors_programme: '#9ca3af',
+        rouge:          '#ef4444',
+        orange:         '#f59e0b',
+        vert_clair:     '#4ade80',
+        vert_fonce:     '#15803d',
+    };
+
+    let _quizButtonState = {
+        allowedLevels: null,       // null = pas de restriction de niveau
+        hasProgressConfig: false,
+        checkedMap: {},            // quiz_key -> boolean
+        todayBestByKey: {},        // quiz_key -> { score, total, pct }
+    };
+
+    async function loadQuizButtonStateData() {
+        if (typeof currentProfile === 'undefined' || !currentProfile || currentProfile.role !== 'student') return;
+        if (typeof currentUser === 'undefined' || !currentUser) return;
+
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        const [classRes, progressRes, todayRes] = await Promise.all([
+            currentProfile.class_id
+                ? supabaseClient.from('classes').select('level, allowed_levels').eq('id', currentProfile.class_id).maybeSingle()
+                : Promise.resolve({ data: null }),
+            currentProfile.class_id
+                ? supabaseClient.from('class_progress').select('quiz_key, checked').eq('class_id', currentProfile.class_id)
+                : Promise.resolve({ data: [] }),
+            supabaseClient.from('quiz_results').select('quiz_key, score, total').eq('user_id', currentUser.id).gte('completed_at', todayStr)
+        ]);
+
+        const classInfo = classRes.data;
+        _quizButtonState.allowedLevels =
+            (classInfo && classInfo.allowed_levels && classInfo.allowed_levels.length > 0) ? classInfo.allowed_levels
+            : (classInfo && classInfo.level ? [classInfo.level] : null);
+
+        const progressRows = progressRes.data || [];
+        _quizButtonState.checkedMap = {};
+        progressRows.forEach(r => { _quizButtonState.checkedMap[r.quiz_key] = r.checked; });
+        _quizButtonState.hasProgressConfig = progressRows.some(r => r.checked === true);
+
+        _quizButtonState.todayBestByKey = {};
+        (todayRes.data || []).forEach(r => {
+            if (!r.total) return;
+            const pct = r.score / r.total;
+            const cur = _quizButtonState.todayBestByKey[r.quiz_key];
+            if (!cur || pct > cur.pct) {
+                _quizButtonState.todayBestByKey[r.quiz_key] = { score: r.score, total: r.total, pct };
+            }
+        });
+    }
+
+    function getQuizButtonState(quizKey) {
+        const meta = (typeof quizMeta !== 'undefined' && quizMeta.byKey) ? quizMeta.byKey[quizKey] : null;
+
+        let inProgress = true;
+        if (meta && _quizButtonState.allowedLevels && !_quizButtonState.allowedLevels.includes(meta.level)) {
+            inProgress = false;
+        }
+        if (inProgress && _quizButtonState.hasProgressConfig && _quizButtonState.checkedMap[quizKey] !== true) {
+            inProgress = false;
+        }
+
+        if (!inProgress) {
+            return { color: QUIZ_BTN_COLORS.hors_programme, label: 'Ce QCM n\'est pas (encore) au programme de ta classe' };
+        }
+
+        const today = _quizButtonState.todayBestByKey[quizKey];
+        if (!today) {
+            return { color: null, label: 'Pas encore tenté aujourd\'hui' }; // null = garde la couleur --secondary par défaut
+        }
+        if (today.pct >= 1)   return { color: QUIZ_BTN_COLORS.vert_fonce, label: `Aujourd'hui : ${today.score}/${today.total} — parfait !` };
+        if (today.pct >= 0.8) return { color: QUIZ_BTN_COLORS.vert_clair, label: `Aujourd'hui : ${today.score}/${today.total} — bon résultat` };
+        if (today.pct >= 0.5) return { color: QUIZ_BTN_COLORS.orange,     label: `Aujourd'hui : ${today.score}/${today.total} — résultat moyen` };
+        return                       { color: QUIZ_BTN_COLORS.rouge,      label: `Aujourd'hui : ${today.score}/${today.total} — à retravailler` };
+    }
+
+    // Colorie tous les boutons ".btn-check-understanding" trouvés dans
+    // scopeEl (par défaut : tout le document). La clé de QCM est extraite
+    // de l'attribut onclick="startQuizFromButton('containerId','quizKey')"
+    // plutôt que d'un data-attribute dédié, pour ne pas avoir à modifier
+    // les fichiers officialData_*.js existants.
+    function applyQuizButtonStates(scopeEl) {
+        const scope = scopeEl || document;
+        const buttons = scope.querySelectorAll('.btn-check-understanding');
+        buttons.forEach(btn => {
+            const match = /startQuizFromButton\(\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/.exec(btn.getAttribute('onclick') || '');
+            if (!match) return;
+            const quizKey = match[2];
+            const state = getQuizButtonState(quizKey);
+            if (state.color) {
+                btn.style.backgroundColor = state.color;
+                btn.style.borderColor = state.color;
+            } else {
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+            }
+            btn.title = state.label;
+        });
+    }
+
+    // Point d'entrée à appeler : après le rendu d'un chapitre (app.js,
+    // launchChapter) et après l'enregistrement d'un résultat de QCM
+    // (gamification.js, gamifiedSaveResult).
+    async function refreshQuizButtonStates(scopeEl) {
+        try {
+            await loadQuizButtonStateData();
+            applyQuizButtonStates(scopeEl);
+        } catch (e) {
+            console.warn('[Boutons QCM] Impossible de rafraîchir leur état :', e);
+        }
+    }
+
+    // Quand l'élève clique sur un quiz "à revalider" dans student-dashboard.html,
+    // il est redirigé vers index.html?quiz=31101. Ce code détecte ce paramètre
+    // et lance automatiquement le bon QCM dès que l'authentification est confirmée
+    // et que le contenu est chargé.
+    (function checkPendingQuiz() {
+        const params = new URLSearchParams(window.location.search);
+        const pendingKey = params.get('quiz');
+        if (!pendingKey) return;
+
+        console.log('[Lancement auto] QCM demandé via l\'URL :', pendingKey);
+
+        let launched = false;
+
+        // Filet de sécurité : si rien ne s'est lancé après 8 secondes (ex.
+        // ce quiz_key n'a pas encore de questions dans localQuestions.js,
+        // ou la session ne s'est pas rechargée), on prévient plutôt que de
+        // laisser l'élève sur l'écran par défaut sans explication.
+        const timeoutId = setTimeout(() => {
+            if (launched) return;
+            console.warn(
+                '[Lancement auto] Le QCM "' + pendingKey + '" ne s\'est pas lancé après 8s. ' +
+                'Causes possibles : session non restaurée (voir #app-content), ou ce quiz_key ' +
+                'n\'existe pas dans allLocalQuestions (questions pas encore rédigées pour ce QCM).',
+                'app-content visible =', document.getElementById('app-content')?.style.display !== 'none',
+                'allLocalQuestions chargé =', typeof allLocalQuestions !== 'undefined',
+                'clé présente =', typeof allLocalQuestions !== 'undefined' && !!allLocalQuestions[pendingKey]
+            );
+        }, 8000);
+
+        // On observe quand #app-content devient visible (= élève connecté et app prête)
+        const observer = new MutationObserver(() => {
+            const appContent = document.getElementById('app-content');
+            if (!appContent || appContent.style.display === 'none') return;
+
+            // Attend que allLocalQuestions soit chargé
+            if (typeof allLocalQuestions === 'undefined' || !allLocalQuestions[pendingKey]) return;
+
+            launched = true;
+            clearTimeout(timeoutId);
+            observer.disconnect();
+
+            // Nettoie l'URL pour ne pas re-lancer le quiz si l'élève recharge
+            history.replaceState({}, '', 'index.html');
+
+            // Lance le quiz directement (simule un clic sur "Ai-je bien compris ?")
+            // On doit d'abord afficher la vue-app, puis lancer le quiz.
+            // On attend un tick pour laisser le DOM se stabiliser.
+            setTimeout(() => {
+                // Initialise correctement l'état de l'appli (currentLevel,
+                // data, bascule de vue) EXACTEMENT comme un clic manuel sur
+                // le niveau — c'est ce qui manquait avant : le quiz se
+                // lançait bien, mais currentLevel restait vide et data[]
+                // vide, donc cliquer ensuite sur "Cours"/"Entraînement"
+                // affichait "contenu en préparation" faute de niveau connu.
+                const meta = (typeof quizMeta !== 'undefined' && quizMeta.byKey) ? quizMeta.byKey[pendingKey] : null;
+                const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+                const levelIndex = meta ? levelsOrder.indexOf(meta.level) : -1;
+
+                if (levelIndex !== -1 && typeof selectLevel === 'function') {
+                    selectLevel(levelIndex);
+                } else {
+                    console.warn('[Lancement auto] Niveau introuvable pour', pendingKey, '— navigation dégradée (currentLevel restera vide).');
+                    document.getElementById('view-levels')?.classList.remove('active');
+                    document.getElementById('view-creator')?.classList.remove('active');
+                    document.getElementById('view-app')?.classList.add('active');
+                }
+
+                // Crée un conteneur flottant pour le quiz si pas de containerId existant
+                const containerId = 'quiz-area-auto-' + pendingKey;
+                let container = document.getElementById(containerId);
+                if (!container) {
+                    const wrap = document.getElementById('content-area');
+                    if (!wrap) return;
+                    wrap.innerHTML = '<div id="' + containerId + '"></div>';
+                    container = document.getElementById(containerId);
+                }
+                if (typeof startQuizFromButton === 'function') {
+                    startQuizFromButton(containerId, pendingKey);
+                }
+            }, 200);
+        });
+
+        observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+    })();
+</script>
+</body>
+</html>

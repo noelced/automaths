@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMaths — Tableau de bord professeur</title>
+
+    <!-- Supabase JS v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary:       #2563eb;
+            --primary-light: #dbeafe;
+            --primary-dark:  #1e40af;
+            --secondary:     #7c3aed;
+            --success:       #16a34a;
+            --success-light: #dcfce7;
+            --warning:       #d97706;
+            --warning-light: #fef3c7;
+            --danger:        #dc2626;
+            --danger-light:  #fee2e2;
+            --bg:            #f8fafc;
+            --card-bg:       #ffffff;
+            --text-main:     #1e293b;
+            --text-muted:    #64748b;
+            --border:        #e2e8f0;
+            --radius:        12px;
+            --shadow:        0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.06);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ─────────────────────────────────────────── */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-brand { display: flex; align-items: center; gap: 10px; }
+        .header-brand img { height: 32px; }
+        .header-brand span {
+            font-size: 1.2rem; font-weight: 800;
+            font-style: italic; color: var(--primary-dark);
+        }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .header-right .teacher-name { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* ── LAYOUT ──────────────────────────────────────────── */
+        .page { display: flex; min-height: calc(100vh - 60px); }
+
+        /* ── SIDEBAR FILTRES ─────────────────────────────────── */
+        aside {
+            width: 280px;
+            min-width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+        .filter-section { margin-bottom: 28px; }
+        .filter-section h3 {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            transition: background 0.15s;
+        }
+        .filter-option:hover { background: var(--bg); }
+        .filter-option input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+        .filter-option label { cursor: pointer; flex: 1; }
+        .filter-count {
+            font-size: 0.75rem; color: var(--text-muted);
+            background: var(--bg); padding: 1px 6px; border-radius: 10px;
+        }
+        .btn-save-filters {
+            width: 100%; padding: 10px; border: none; border-radius: 8px;
+            background: var(--primary); color: white; font-weight: 600;
+            font-size: 0.9rem; cursor: pointer; margin-top: 8px;
+            transition: opacity .2s;
+        }
+        .btn-save-filters:hover { opacity: .9; }
+        .save-status {
+            text-align: center; font-size: 0.8rem; color: var(--success);
+            margin-top: 6px; min-height: 18px;
+        }
+
+        /* ── CONTENU PRINCIPAL ───────────────────────────────── */
+        main {
+            flex: 1;
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        /* ── ONGLETS ──────────────────────────────────────────── */
+        .tabs-nav {
+            display: flex; gap: 4px; margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .tab-btn {
+            padding: 10px 18px; border: none; background: none;
+            font-weight: 600; font-size: 0.92rem; color: var(--text-muted);
+            cursor: pointer; border-bottom: 3px solid transparent;
+            transition: all .15s;
+        }
+        .tab-btn:hover { color: var(--primary-dark); }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        body.qcm-mode aside { display: none; }
+
+        /* ── FIL D'ARIANE (SUIVI DES QCM) ─────────────────────── */
+        .breadcrumb {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+            margin-bottom: 20px; font-size: 0.9rem;
+        }
+        .breadcrumb-item {
+            color: var(--primary); cursor: pointer;
+            padding: 4px 10px; border-radius: 6px; transition: background .15s;
+        }
+        .breadcrumb-item:hover { background: var(--primary-light); }
+        .breadcrumb-item.current {
+            color: var(--text-main); font-weight: 700; cursor: default;
+        }
+        .breadcrumb-item.current:hover { background: none; }
+        .breadcrumb-sep { color: var(--text-muted); }
+
+        /* ── BOUTONS DE SÉLECTION (NIVEAU/CHAPITRE/QCM) ───────── */
+        .btn-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+        .choice-btn {
+            padding: 11px 18px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--card-bg); font-size: 0.9rem; font-weight: 600;
+            color: var(--text-main); cursor: pointer; transition: all .15s;
+        }
+        .choice-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+        .choice-btn.active {
+            background: var(--primary-light); border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        /* ── ÉTAPE 1 : NIVEAU + SES CLASSES SUR LA MÊME LIGNE ──────────── */
+        .qcm-level-group {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+            margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+        }
+        .qcm-level-group:last-child { border-bottom: none; }
+        .choice-btn-class {
+            padding: 8px 14px; border: 1px dashed var(--border); border-radius: 10px;
+            background: var(--bg); font-size: 0.85rem; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; transition: all .15s;
+        }
+        .choice-btn-class:hover { border-color: var(--primary); color: var(--primary-dark); border-style: solid; }
+
+        /* ── QCM SÉLECTIONNÉ : LISTE ÉLÈVES + BARRE LATÉRALE DES QCM SŒURS ── */
+        .qcm-detail-layout { display: flex; gap: 24px; align-items: flex-start; }
+        .qcm-main { flex: 1; min-width: 0; }
+        .qcm-sidebar {
+            width: 240px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+            position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto;
+            padding-left: 18px; border-left: 1px solid var(--border);
+        }
+        .qcm-sidebar-title {
+            font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px;
+        }
+        .qcm-sidebar-btn {
+            text-align: left; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+            background: var(--card-bg); font-size: 0.83rem; font-weight: 600; color: var(--text-main);
+            cursor: pointer; transition: all .15s;
+        }
+        .qcm-sidebar-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+        .qcm-sidebar-btn.active {
+            background: var(--primary); border-color: var(--primary); color: white;
+        }
+        @media (max-width: 900px) {
+            .qcm-detail-layout { flex-direction: column; }
+            .qcm-sidebar {
+                width: 100%; position: static; max-height: none; overflow-y: visible;
+                border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px;
+            }
+        }
+
+        /* ── LÉGENDE DES PASTILLES ─────────────────────────────── */
+        .legend {
+            display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+        /* ── LISTE SIMPLE CLIQUABLE (SUIVI PARTICULIER) ───────── */
+        .simple-list-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--card-bg); cursor: pointer; transition: all .15s;
+            margin-bottom: 6px;
+        }
+        .simple-list-row:hover { border-color: var(--primary); background: var(--primary-light); }
+        .simple-list-row .chevron { color: var(--text-muted); font-size: 1.1rem; }
+        .theme-chip {
+            font-size: 0.75rem; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 3px 10px; color: var(--text-muted);
+        }
+        .time-chip {
+            font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;
+        }
+        .student-score-row.clickable { cursor: pointer; transition: all .15s; }
+        .student-score-row.clickable:hover { border-color: var(--primary); background: var(--primary-light); }
+        .level-subheader {
+            font-weight: 700; font-size: 0.85rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .03em;
+            margin: 18px 0 8px; padding-top: 4px; border-top: 1px solid var(--border);
+        }
+        .level-subheader:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+        .student-score-list { display: flex; flex-direction: column; gap: 6px; }
+        .student-score-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; border: 1px solid var(--border);
+            border-radius: 10px; background: var(--card-bg);
+        }
+        .student-score-row .score-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+        .student-score-row .name { font-weight: 600; flex: 1; }
+        .student-score-row .class-tag { color: var(--text-muted); font-size: 0.8rem; }
+        .student-score-row .score-val { font-weight: 700; font-size: 0.9rem; min-width: 64px; text-align: right; }
+        .student-score-row .attempts-count { color: var(--text-muted); font-size: 0.78rem; white-space: nowrap; }
+        .student-score-row .chevron { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* ── ONGLET "SAISON EN COURS" ──────────────────────────────────── */
+        .season-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+        }
+        .season-since {
+            font-size: 0.8rem; color: var(--text-muted); margin-bottom: 18px;
+        }
+        .btn-danger-outline {
+            padding: 9px 16px; border: 1px solid var(--danger); border-radius: 8px;
+            background: var(--danger-light); color: var(--danger); font-size: 0.85rem;
+            font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .btn-danger-outline:hover { background: var(--danger); color: white; }
+
+        .season-row {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--card-bg); margin-bottom: 8px;
+        }
+        .season-rank {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.9rem; background: var(--bg); color: var(--text-muted);
+        }
+        .season-rank.top1 { background: #fde68a; color: #92400e; }
+        .season-rank.top2 { background: #e5e7eb; color: #374151; }
+        .season-rank.top3 { background: #fbd38d; color: #7c2d12; }
+        .season-avatar { font-size: 1.6rem; flex-shrink: 0; }
+        .season-info { flex: 1; min-width: 100px; }
+        .season-name { font-weight: 700; font-size: 0.9rem; }
+        .season-fullname { font-weight: 400; color: var(--text-muted); font-size: 0.82rem; }
+        .season-class { font-size: 0.78rem; color: var(--text-muted); }
+        .season-score { font-weight: 800; font-size: 1rem; color: var(--primary-dark); white-space: nowrap; }
+
+        /* ── FENÊTRE MODALE (confirmation reset saison) ───────────────── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+            align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+            padding: 26px; width: 100%; max-width: 380px;
+        }
+        .modal-box h3 { font-size: 1.05rem; margin-bottom: 14px; }
+        .modal-box p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+        .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; }
+        .modal-btn-yes { background: var(--danger); color: white; }
+        .modal-btn-yes:hover { opacity: 0.9; }
+        .modal-btn-no { background: var(--bg); color: var(--text-main); border: 1px solid var(--border) !important; }
+        .modal-btn-no:hover { background: var(--border); }
+
+        /* ── ONGLET "PROGRESSION" ──────────────────────────────────────── */
+        .progress-back-link {
+            display: inline-block; margin-bottom: 16px; font-size: 0.85rem;
+            color: var(--primary); cursor: pointer; font-weight: 600;
+        }
+        .progress-back-link:hover { text-decoration: underline; }
+        .progress-level-title {
+            font-size: 1.05rem; font-weight: 800; color: var(--primary-dark);
+            margin: 26px 0 10px;
+        }
+        .progress-level-title:first-child { margin-top: 0; }
+        .progress-chapter {
+            margin-bottom: 18px; border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px 18px; background: var(--card-bg);
+        }
+        .progress-chapter-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+        .progress-partie {
+            font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .03em; margin: 12px 0 2px;
+        }
+        .progress-souspartie {
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+            margin: 8px 0 2px 16px;
+        }
+        .progress-quiz-row {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 0 5px 16px; font-size: 0.86rem; cursor: pointer;
+        }
+        .progress-quiz-row input[type="checkbox"] {
+            width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0;
+        }
+        .progress-quiz-row .save-flash {
+            font-size: 0.75rem; color: var(--success); opacity: 0; transition: opacity .3s;
+        }
+        .progress-quiz-row .save-flash.show { opacity: 1; }
+        .progress-note {
+            font-size: 0.8rem; color: var(--text-muted); background: var(--bg);
+            border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px;
+            margin-bottom: 20px;
+        }
+        .progress-access-box {
+            border: 1px solid var(--primary); background: var(--primary-light);
+            border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+        }
+        .progress-access-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
+        .progress-access-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; }
+        .progress-access-warning { font-size: 0.78rem; color: var(--danger); margin-bottom: 10px; font-weight: 600; }
+        .progress-access-checks { display: flex; flex-wrap: wrap; gap: 16px; }
+        .progress-access-check {
+            display: flex; align-items: center; gap: 6px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer;
+        }
+        .progress-access-check input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
+
+        /* ── ONGLET "CARTES D'ENTRAÎNEMENT" ────────────────────────────── */
+        .card-row {
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px 18px; margin-bottom: 10px; background: var(--card-bg);
+        }
+        .card-row-top {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 10px; margin-bottom: 8px;
+        }
+        .card-row-title { font-weight: 700; font-size: 0.92rem; }
+        .card-row-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .card-row-question { font-size: 0.88rem; margin-bottom: 4px; }
+        .card-row-answer { font-size: 0.82rem; color: var(--text-muted); }
+        .card-row-type-badge {
+            font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+            background: var(--primary-light); color: var(--primary-dark); white-space: nowrap;
+        }
+        .btn-icon-sm {
+            padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+            background: var(--card-bg); font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+        }
+        .btn-icon-sm.danger { border-color: var(--danger); color: var(--danger); }
+        .btn-icon-sm.danger:hover { background: var(--danger); color: white; }
+        .dashboard-title {
+            font-size: 1.6rem; font-weight: 800;
+            color: var(--primary-dark); margin-bottom: 6px;
+        }
+        .dashboard-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+
+        /* ── STATS CARDS ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+        }
+        .stat-card .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .stat-card .stat-sub   { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* ── TABLEAU ─────────────────────────────────────────── */
+        .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .table-toolbar {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .table-toolbar h2 { font-size: 1rem; font-weight: 700; }
+        .table-search {
+            padding: 7px 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.85rem; outline: none; width: 220px;
+        }
+        .table-search:focus { border-color: var(--primary); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        thead th {
+            background: var(--bg); text-align: left;
+            padding: 10px 16px; font-size: 0.75rem;
+            font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .5px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer; user-select: none;
+            white-space: nowrap;
+        }
+        thead th:hover { color: var(--primary); }
+        thead th.sorted { color: var(--primary); }
+        thead th .sort-icon { margin-left: 4px; opacity: .5; }
+        thead th.sorted .sort-icon { opacity: 1; }
+        tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #f8faff; }
+        td { padding: 11px 16px; }
+        .td-name { font-weight: 600; }
+        .td-class { color: var(--text-muted); font-size: 0.82rem; }
+        .td-chapter { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .td-key { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); }
+        .td-duration { color: var(--text-muted); }
+        .td-date { color: var(--text-muted); font-size: 0.82rem; }
+
+        /* Badge score */
+        .score-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px;
+            font-weight: 700; font-size: 0.85rem;
+        }
+        .score-high   { background: var(--success-light); color: var(--success); }
+        .score-medium { background: var(--warning-light); color: var(--warning); }
+        .score-low    { background: var(--danger-light);  color: var(--danger);  }
+
+        /* ── EMPTY / LOADING STATES ──────────────────────────── */
+        .state-message {
+            text-align: center; padding: 60px 20px;
+            color: var(--text-muted); font-size: 0.95rem;
+        }
+        .state-message .icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+        /* ── BOUTON DÉCONNEXION ──────────────────────────────── */
+        .btn-logout {
+            padding: 6px 14px; border: 1px solid var(--border);
+            border-radius: 8px; background: none; font-size: 0.85rem;
+            cursor: pointer; color: var(--text-muted); transition: all .2s;
+        }
+        .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+        /* ── RESPONSIVE ──────────────────────────────────────── */
+        @media (max-width: 768px) {
+            aside { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ── ÉCRAN DE CHARGEMENT ─────────────────────────────── */
+        #loading-screen {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 12px; font-size: 1rem;
+            color: var(--text-muted); z-index: 999;
+        }
+        .spinner {
+            width: 36px; height: 36px; border: 3px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- ÉCRAN DE CHARGEMENT -->
+<div id="loading-screen">
+    <div class="spinner"></div>
+    <span>Chargement du tableau de bord…</span>
+</div>
+
+<!-- HEADER -->
+<header>
+    <div class="header-brand">
+        <img src="images/logo_robot.webp" alt="Logo AutoMaths">
+        <span>AutoMaths</span>
+        <span style="color:var(--text-muted); font-size:0.85rem; font-weight:400; font-style:normal;">
+            — Tableau de bord
+        </span>
+    </div>
+    <div class="header-right">
+        <a href="index.html?presenter=1" target="_blank" style="
+            padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+            background:none; font-size:0.85rem; color:var(--text-muted);
+            text-decoration:none; transition:all .2s;"
+            onmouseover="this.style.borderColor='var(--primary)'; this.style.color='var(--primary)';"
+            onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+            📖 Accès aux cours
+        </a>
+        <a href="classes-management.html" style="
+            padding:6px 14px; border:1px solid var(--border); border-radius:8px;
+            background:none; font-size:0.85rem; color:var(--text-muted);
+            text-decoration:none; transition:all .2s;"
+            onmouseover="this.style.borderColor='var(--primary)'; this.style.color='var(--primary)';"
+            onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text-muted)';">
+            🏫 Gérer les classes
+        </a>
+        <span class="teacher-name" id="teacher-name-header"></span>
+        <button class="btn-logout" onclick="logoutTeacher()">Déconnexion</button>
+    </div>
+</header>
+
+<div class="page">
+
+    <!-- SIDEBAR FILTRES -->
+    <aside>
+        <!-- Niveaux -->
+        <div class="filter-section">
+            <h3>Niveaux</h3>
+            <div id="filter-levels">
+                <!-- Généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- QCM -->
+        <div class="filter-section">
+            <h3>QCM à surveiller</h3>
+            <div id="filter-quizzes">
+                <!-- Généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Période -->
+        <div class="filter-section">
+            <h3>Période</h3>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p7"  value="7"  checked>
+                <label for="p7">7 derniers jours</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p30" value="30">
+                <label for="p30">30 derniers jours</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p90" value="90">
+                <label for="p90">3 derniers mois</label>
+            </div>
+            <div class="filter-option">
+                <input type="radio" name="period" id="p0"  value="0">
+                <label for="p0">Toute l'année</label>
+            </div>
+        </div>
+
+        <button class="btn-save-filters" onclick="saveFiltersAndRefresh()">
+            💾 Sauvegarder les filtres
+        </button>
+        <div class="save-status" id="save-status"></div>
+    </aside>
+
+    <!-- CONTENU PRINCIPAL -->
+    <main>
+        <!-- ONGLETS -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" id="tabbtn-stats" onclick="switchTab('stats')">📊 Suivi statistique</button>
+            <button class="tab-btn" id="tabbtn-qcm" onclick="switchTab('qcm')">🗂️ Suivi des QCM</button>
+            <button class="tab-btn" id="tabbtn-particular" onclick="switchTab('particular')">🎯 Suivi particulier</button>
+            <button class="tab-btn" id="tabbtn-season" onclick="switchTab('season')">🏆 Saison en cours</button>
+            <button class="tab-btn" id="tabbtn-progression" onclick="switchTab('progression')">📈 Progression</button>
+            <button class="tab-btn" id="tabbtn-cards" onclick="switchTab('cards')">✏️ Cartes d'entraînement</button>
+        </div>
+
+        <!-- ONGLET 1 : SUIVI STATISTIQUE -->
+        <div class="tab-panel active" id="tabpanel-stats">
+            <div class="dashboard-title">📊 Suivi des élèves</div>
+            <div class="dashboard-subtitle" id="dashboard-subtitle">Chargement…</div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Sessions totales</div>
+                    <div class="stat-value" id="stat-sessions">—</div>
+                    <div class="stat-sub">QCM effectués (filtrés)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Élèves actifs</div>
+                    <div class="stat-value" id="stat-students">—</div>
+                    <div class="stat-sub">ayant fait au moins 1 QCM</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Score moyen</div>
+                    <div class="stat-value" id="stat-avg">—</div>
+                    <div class="stat-sub">sur les QCM filtrés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Temps moyen</div>
+                    <div class="stat-value" id="stat-time">—</div>
+                    <div class="stat-sub">par session</div>
+                </div>
+            </div>
+
+            <!-- TABLEAU -->
+            <div class="table-card">
+                <div class="table-toolbar">
+                    <h2>Résultats détaillés</h2>
+                    <input class="table-search" type="text" placeholder="🔍 Rechercher un élève…"
+                        oninput="filterTable(this.value)">
+                </div>
+                <div id="table-container">
+                    <div class="state-message">
+                        <div class="icon">⏳</div>
+                        Chargement des données…
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 2 : SUIVI DES QCM -->
+        <div class="tab-panel" id="tabpanel-qcm">
+            <div class="dashboard-title">🗂️ Suivi des QCM</div>
+            <div class="dashboard-subtitle">
+                Sélectionnez un niveau, un chapitre puis un QCM pour voir la situation de chaque élève.
+            </div>
+
+            <div class="breadcrumb" id="qcm-breadcrumb"></div>
+            <div id="qcm-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 3 : SUIVI PARTICULIER -->
+        <div class="tab-panel" id="tabpanel-particular">
+            <div class="dashboard-title">🎯 Suivi particulier</div>
+            <div class="dashboard-subtitle">
+                Sélectionnez une classe, puis un élève, pour voir ses statistiques détaillées par chapitre et par QCM.
+            </div>
+
+            <div class="breadcrumb" id="particular-breadcrumb"></div>
+            <div id="particular-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 4 : SAISON EN COURS -->
+        <div class="tab-panel" id="tabpanel-season">
+            <div class="season-header">
+                <div>
+                    <div class="dashboard-title" style="margin-bottom:4px;">🏆 Saison en cours</div>
+                    <div class="dashboard-subtitle" style="margin-bottom:0;">
+                        Le même classement que celui affiché dans le profil des élèves.
+                    </div>
+                </div>
+                <button class="btn-danger-outline" onclick="openResetSeasonModal()">🔄 Réinitialiser la saison</button>
+            </div>
+            <div class="season-since" id="season-since"></div>
+
+            <div id="season-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 5 : PROGRESSION -->
+        <div class="tab-panel" id="tabpanel-progression">
+            <div class="dashboard-title">📈 Progression</div>
+            <div class="dashboard-subtitle">
+                Sélectionnez une classe pour voir le plan détaillé du cours et cocher où vous en êtes.
+                Les QCM non cochés (ou d'un niveau non autorisé) ne rapportent plus ni XP ni point de classement.
+            </div>
+
+            <div id="progression-access-panel"></div>
+            <div class="breadcrumb" id="progression-breadcrumb"></div>
+
+            <div id="progression-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 6 : CARTES D'ENTRAÎNEMENT -->
+        <div class="tab-panel" id="tabpanel-cards">
+            <div class="dashboard-title">✏️ Cartes d'entraînement</div>
+            <div class="dashboard-subtitle">
+                Cartes de révision créées par les élèves (mode "Entraînement"), partagées entre toute la plateforme.
+            </div>
+
+            <input class="table-search" type="text" placeholder="🔍 Rechercher par titre, question ou auteur…"
+                style="margin-bottom:16px; width:100%; max-width:400px;"
+                oninput="filterCardsList(this.value)">
+
+            <div id="cards-body">
+                <div class="state-message">
+                    <div class="icon">⏳</div>
+                    Chargement…
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODALE : confirmation de suppression d'une carte élève -->
+<div class="modal-overlay" id="modal-confirm-delete-card">
+    <div class="modal-box">
+        <h3>🗑️ Supprimer cette carte ?</h3>
+        <p id="delete-card-message">Voulez-vous vraiment supprimer cette carte ?</p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmDeleteCard()">Oui</button>
+            <button class="modal-btn-no" onclick="closeDeleteCardModal()">Non</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODALE : confirmation de réinitialisation de saison -->
+<div class="modal-overlay" id="modal-confirm-reset-season">
+    <div class="modal-box">
+        <h3>🔄 Réinitialiser la saison ?</h3>
+        <p>
+            Le classement général va repartir de zéro pour tous les élèves à partir de maintenant.
+            L'XP, les rangs, les badges et l'historique des QCM ne sont pas affectés — seul le classement
+            de cet onglet (et celui visible par les élèves) est remis à zéro.
+        </p>
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmResetSeason()">Oui</button>
+            <button class="modal-btn-no" onclick="closeResetSeasonModal()">Non</button>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data/officialStructure.js"></script>
+<script src="data/quizMeta.js"></script>
+<script src="data/courseOutline.js"></script>
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+// ⚠️ Remplacez par vos valeurs (identiques à auth.js)
+const SUPABASE_URL     = 'https://ppedtegkqcklkleeghbc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── ÉTAT LOCAL ────────────────────────────────────────────────────────────
+let allResults       = [];   // données brutes de Supabase
+let filteredResults  = [];   // après application des filtres
+let searchQuery      = '';
+let sortColumn       = 'completed_at';
+let sortAsc          = false;
+
+// Filtres (chargés depuis Supabase, persistés)
+let selectedLevels   = new Set();
+let selectedKeys     = new Set();
+let selectedPeriod   = 7;
+
+// Index des QCM connus (clé → titre lisible)
+// Adaptez cette liste à vos chapitres existants
+const QUIZ_META = {
+    '31101': { title: 'Relatifs',              level: '3ème' },
+    '31201': { title: 'Fractions',             level: '3ème' },
+    '31301': { title: 'Racines carrées',       level: '3ème' },
+    '31401': { title: 'Puissances',            level: '3ème' },
+    '32231': { title: 'Diviseurs',             level: '3ème' },
+    '32301': { title: 'Nombres premiers',      level: '3ème' },
+    '32302': { title: 'Décomposition premiers',level: '3ème' },
+    '32401': { title: 'Fractions irréductibles',level: '3ème'},
+    '33101': { title: 'Expressions littérales',level: '3ème' },
+    '33102': { title: 'Programmes de calcul',  level: '3ème' },
+    '33601': { title: 'Développement',         level: '3ème' },
+    '33602': { title: 'Identités remarquables',level: '3ème' },
+    '33701': { title: 'Factorisation simple',  level: '3ème' },
+    '33702': { title: 'Identités remarquables factorisation', level: '3ème' },
+    // Ajoutez les vôtres ici…
+};
+const ALL_LEVELS = ['6ème', '5ème', '4ème', '3ème'];
+
+// ── ÉTAT — ONGLET "SUIVI DES QCM" ──────────────────────────────────────────
+let allStudents      = [];   // profils role='student' (toutes classes)
+let allTimeResults    = [];  // dashboard_view SANS filtre de période (toujours nécessaire
+                             // pour calculer le MEILLEUR score jamais obtenu par élève/QCM)
+let allClasses        = [];  // classes créées par ce professeur (pour le filtre par classe)
+let mergedQuizMeta    = {};  // quiz_key -> { level, chapter } (quizMeta.js + découverte dynamique)
+let chapterOrderByLvl = {};  // niveau -> [titres de chapitres dans l'ordre du programme]
+let qcmPath           = { level: null, chapter: null, quizKey: null, classId: null };
+let currentChapterList = []; // liste affichée à l'étape "chapitre" (pour les onclick par index)
+
+// ── ÉTAT — ONGLET "SUIVI PARTICULIER" ──────────────────────────────────────
+let particularPath = { classId: null, studentId: null, level: null, chapter: null, quizKey: null };
+let currentParticularChapterRows = []; // [{level, chapter}] affiché à l'étape "chapitres de l'élève"
+
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(async () => {
+    // Vérifie l'authentification
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+
+    // Vérifie le rôle
+    const { data: profile } = await sb.from('profiles')
+        .select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'teacher') {
+        window.location.href = 'index.html'; return;
+    }
+
+    document.getElementById('teacher-name-header').textContent =
+        '👋 Professeur' + (profile.full_name && profile.full_name !== 'Élève' ? ' · ' + profile.full_name : '');
+
+    // Charge les filtres sauvegardés
+    await loadSavedFilters(session.user.id);
+
+    // Génère les checkboxes des filtres
+    buildFilterUI();
+
+    // Charge les données de l'onglet "Suivi statistique"
+    await loadData();
+
+    // Charge les données de l'onglet "Suivi des QCM" (roster élèves + résultats non filtrés + classes)
+    await Promise.all([loadAllStudents(), loadAllTimeResults(), loadAllClasses()]);
+    buildMergedQuizMeta();
+    buildChapterOrder();
+    renderQcmTab();
+    renderParticularTab();
+
+    document.getElementById('loading-screen').style.display = 'none';
+})();
+
+
+// ── GESTION DES ONGLETS ────────────────────────────────────────────────────
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tabbtn-' + tab).classList.add('active');
+
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tabpanel-' + tab).classList.add('active');
+
+    // La sidebar de filtres ne concerne que l'onglet "Suivi statistique"
+    document.body.classList.toggle('qcm-mode', tab !== 'stats');
+
+    // Le classement de saison change souvent : on le recharge à chaque ouverture
+    if (tab === 'season') loadSeasonTab();
+    if (tab === 'progression') {
+        // On recharge les classes à chaque ouverture (niveau/accès modifiables
+        // depuis classes-management.html, potentiellement dans un autre onglet
+        // du navigateur — on évite ainsi un niveau affiché comme "non défini"
+        // alors qu'il vient d'être réglé ailleurs).
+        loadAllClasses().then(() => {
+            if (!progressionClassId) renderProgressionClassPicker();
+            else renderProgressionTab();
+        });
+    }
+    if (tab === 'cards') loadCardsTab();
+}
+
+
+// ── FILTRES SAUVEGARDÉS ───────────────────────────────────────────────────
+let teacherId = null;
+
+async function loadSavedFilters(userId) {
+    teacherId = userId;
+    const { data } = await sb.from('teacher_filters')
+        .select('*').eq('teacher_id', userId).single();
+
+    if (data) {
+        selectedLevels = new Set(data.selected_levels || []);
+        selectedKeys   = new Set(data.selected_keys   || []);
+    } else {
+        // Première connexion : sélectionne tout par défaut
+        selectedLevels = new Set(ALL_LEVELS);
+        selectedKeys   = new Set(Object.keys(QUIZ_META));
+    }
+}
+
+async function saveFiltersAndRefresh() {
+    // Lit l'état actuel des checkboxes
+    selectedLevels = new Set();
+    document.querySelectorAll('#filter-levels   input:checked').forEach(cb => selectedLevels.add(cb.value));
+
+    selectedKeys = new Set();
+    document.querySelectorAll('#filter-quizzes  input:checked').forEach(cb => selectedKeys.add(cb.value));
+
+    selectedPeriod = parseInt(document.querySelector('input[name="period"]:checked')?.value || '7');
+
+    // Sauvegarde dans Supabase (UPSERT)
+    const { error } = await sb.from('teacher_filters').upsert({
+        teacher_id:      teacherId,
+        selected_levels: [...selectedLevels],
+        selected_keys:   [...selectedKeys],
+        updated_at:      new Date().toISOString()
+    });
+
+    const statusEl = document.getElementById('save-status');
+    if (error) {
+        statusEl.style.color = '#dc2626';
+        statusEl.textContent = 'Erreur lors de la sauvegarde.';
+    } else {
+        statusEl.style.color = '#16a34a';
+        statusEl.textContent = '✓ Filtres sauvegardés !';
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    }
+
+    applyFiltersAndRender();
+}
+
+
+// ── CONSTRUCTION DU PANNEAU FILTRES ──────────────────────────────────────
+function buildFilterUI() {
+    // Niveaux
+    const levelsEl = document.getElementById('filter-levels');
+    levelsEl.innerHTML = ALL_LEVELS.map(lvl => `
+        <div class="filter-option">
+            <input type="checkbox" id="lvl-${lvl}" value="${lvl}"
+                ${selectedLevels.has(lvl) ? 'checked' : ''}>
+            <label for="lvl-${lvl}">${lvl}</label>
+        </div>
+    `).join('');
+
+    // QCM (groupés par niveau)
+    const quizzesEl = document.getElementById('filter-quizzes');
+    const grouped   = {};
+    Object.entries(QUIZ_META).forEach(([key, meta]) => {
+        if (!grouped[meta.level]) grouped[meta.level] = [];
+        grouped[meta.level].push({ key, ...meta });
+    });
+
+    quizzesEl.innerHTML = Object.entries(grouped).map(([lvl, quizzes]) => `
+        <div style="margin-bottom:10px;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--primary);
+                        text-transform:uppercase; margin-bottom:4px;">${lvl}</div>
+            ${quizzes.map(q => `
+                <div class="filter-option">
+                    <input type="checkbox" id="qk-${q.key}" value="${q.key}"
+                        ${selectedKeys.has(q.key) ? 'checked' : ''}>
+                    <label for="qk-${q.key}" title="${q.key}">
+                        ${q.title}
+                    </label>
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
+
+// ── CHARGEMENT DES DONNÉES ────────────────────────────────────────────────
+async function loadData() {
+    // Requête sur la vue dashboard_view (déjà jointe avec profiles)
+    let query = sb.from('dashboard_view').select('*').order('completed_at', { ascending: false });
+
+    // Filtre période
+    if (selectedPeriod > 0) {
+        const since = new Date();
+        since.setDate(since.getDate() - selectedPeriod);
+        query = query.gte('completed_at', since.toISOString());
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+        console.error('Erreur chargement données :', error);
+        document.getElementById('table-container').innerHTML = `
+            <div class="state-message">
+                <div class="icon">⚠️</div>
+                Erreur lors du chargement. Vérifiez votre connexion.
+            </div>`;
+        return;
+    }
+
+    allResults = data || [];
+    applyFiltersAndRender();
+}
+
+
+// ── FILTRAGE & RENDU ──────────────────────────────────────────────────────
+function applyFiltersAndRender() {
+    filteredResults = allResults.filter(r =>
+        (selectedLevels.size === 0 || selectedLevels.has(r.level_name)) &&
+        (selectedKeys.size   === 0 || selectedKeys.has(r.quiz_key))
+    );
+
+    updateStats();
+    renderTable();
+}
+
+function updateStats() {
+    const sessions  = filteredResults.length;
+    const students  = new Set(filteredResults.map(r => r.user_id)).size;
+    const totalScore = filteredResults.reduce((s, r) => s + (r.total > 0 ? r.score / r.total : 0), 0);
+    const avgPct    = sessions > 0 ? Math.round((totalScore / sessions) * 100) : null;
+    const durations = filteredResults.filter(r => r.duration_seconds).map(r => r.duration_seconds);
+    const avgTime   = durations.length > 0
+        ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+        : null;
+
+    document.getElementById('stat-sessions').textContent  = sessions;
+    document.getElementById('stat-students').textContent  = students;
+    document.getElementById('stat-avg').textContent       = avgPct !== null ? avgPct + '%' : '—';
+    document.getElementById('stat-time').textContent      = avgTime !== null ? formatDuration(avgTime) : '—';
+
+    const period = selectedPeriod > 0 ? `${selectedPeriod} derniers jours` : "toute l'année";
+    document.getElementById('dashboard-subtitle').textContent =
+        `${sessions} session(s) sur ${students} élève(s) — ${period}`;
+}
+
+function renderTable() {
+    let rows = [...filteredResults];
+
+    // Filtre recherche
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        rows = rows.filter(r =>
+            (r.student_name  || '').toLowerCase().includes(q) ||
+            (r.student_class || '').toLowerCase().includes(q) ||
+            (r.chapter_title || '').toLowerCase().includes(q)
+        );
+    }
+
+    // Tri
+    rows.sort((a, b) => {
+        let va = a[sortColumn] ?? '';
+        let vb = b[sortColumn] ?? '';
+        if (typeof va === 'number') return sortAsc ? va - vb : vb - va;
+        return sortAsc
+            ? String(va).localeCompare(String(vb), 'fr')
+            : String(vb).localeCompare(String(va), 'fr');
+    });
+
+    if (rows.length === 0) {
+        document.getElementById('table-container').innerHTML = `
+            <div class="state-message">
+                <div class="icon">📭</div>
+                Aucun résultat pour les filtres sélectionnés.
+            </div>`;
+        return;
+    }
+
+    document.getElementById('table-container').innerHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th onclick="sortBy('student_name')"   class="${sortColumn==='student_name'?'sorted':''}">
+                        Élève <span class="sort-icon">${sortArrow('student_name')}</span>
+                    </th>
+                    <th onclick="sortBy('student_class')"  class="${sortColumn==='student_class'?'sorted':''}">
+                        Classe <span class="sort-icon">${sortArrow('student_class')}</span>
+                    </th>
+                    <th onclick="sortBy('chapter_title')"  class="${sortColumn==='chapter_title'?'sorted':''}">
+                        Chapitre <span class="sort-icon">${sortArrow('chapter_title')}</span>
+                    </th>
+                    <th onclick="sortBy('quiz_key')"       class="${sortColumn==='quiz_key'?'sorted':''}">
+                        Clé QCM <span class="sort-icon">${sortArrow('quiz_key')}</span>
+                    </th>
+                    <th onclick="sortBy('score')"          class="${sortColumn==='score'?'sorted':''}">
+                        Score <span class="sort-icon">${sortArrow('score')}</span>
+                    </th>
+                    <th onclick="sortBy('duration_seconds')" class="${sortColumn==='duration_seconds'?'sorted':''}">
+                        Durée <span class="sort-icon">${sortArrow('duration_seconds')}</span>
+                    </th>
+                    <th onclick="sortBy('completed_at')"   class="${sortColumn==='completed_at'?'sorted':''}">
+                        Date <span class="sort-icon">${sortArrow('completed_at')}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map(r => `
+                    <tr>
+                        <td class="td-name">${r.student_name || '—'}</td>
+                        <td class="td-class">${r.student_class || '—'}</td>
+                        <td class="td-chapter" title="${r.chapter_title}">${r.chapter_title}</td>
+                        <td class="td-key">${r.quiz_key}</td>
+                        <td>${scoreBadge(r.score, r.total)}</td>
+                        <td class="td-duration">${r.duration_seconds ? formatDuration(r.duration_seconds) : '—'}</td>
+                        <td class="td-date">${formatDate(r.completed_at)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+
+// ── UTILITAIRES UI ────────────────────────────────────────────────────────
+function scoreBadge(score, total) {
+    if (!total) return '—';
+    const pct = score / total;
+    const cls = pct >= .8 ? 'score-high' : pct >= .5 ? 'score-medium' : 'score-low';
+    return `<span class="score-badge ${cls}">${score}/${total} (${Math.round(pct*100)}%)</span>`;
+}
+
+function formatDuration(seconds) {
+    if (!seconds) return '—';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return m > 0 ? `${m}m ${s.toString().padStart(2,'0')}s` : `${s}s`;
+}
+
+function formatDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('fr-FR', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+function sortBy(col) {
+    if (sortColumn === col) sortAsc = !sortAsc;
+    else { sortColumn = col; sortAsc = false; }
+    renderTable();
+}
+function sortArrow(col) {
+    if (sortColumn !== col) return '↕';
+    return sortAsc ? '↑' : '↓';
+}
+function filterTable(val) {
+    searchQuery = val;
+    renderTable();
+}
+
+async function logoutTeacher() {
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "SUIVI DES QCM"
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── CHARGEMENT DES DONNÉES ────────────────────────────────────────────────
+async function loadAllStudents() {
+    const { data, error } = await sb.from('profiles')
+        .select('id, full_name, class_name, class_id')
+        .eq('role', 'student');
+    if (error) { console.error('Erreur chargement élèves :', error); return; }
+    allStudents = data || [];
+}
+
+async function loadAllClasses() {
+    const { data, error } = await sb.from('classes')
+        .select('*')
+        .eq('teacher_id', teacherId)
+        .order('name');
+    if (error) { console.error('Erreur chargement classes :', error); return; }
+    allClasses = data || [];
+}
+
+async function loadAllTimeResults() {
+    // Toujours interroger dashboard_view SANS filtre de période : on a besoin
+    // du meilleur score jamais obtenu, quelle que soit la date de la tentative.
+    const { data, error } = await sb.from('dashboard_view').select('*');
+    if (error) { console.error('Erreur chargement résultats (QCM) :', error); return; }
+    allTimeResults = data || [];
+}
+
+// ── FUSION quizMeta.js + DÉCOUVERTE DYNAMIQUE ─────────────────────────────
+function buildMergedQuizMeta() {
+    mergedQuizMeta = {};
+
+    if (typeof quizMeta !== 'undefined' && quizMeta.byKey) {
+        Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
+            mergedQuizMeta[key] = { level: meta.level, chapter: meta.chapter };
+        });
+    }
+
+    // Complète avec les quiz_key présents dans les résultats réels mais absents
+    // de data/quizMeta.js (ex. QCM de 5ème pas encore ajoutés au fichier).
+    // Chaque tentative stocke déjà son level_name/chapter_title en base, donc
+    // ces QCM apparaissent automatiquement dès qu'un élève y a répondu.
+    allTimeResults.forEach(r => {
+        if (r.quiz_key && !mergedQuizMeta[r.quiz_key] && r.level_name && r.chapter_title) {
+            mergedQuizMeta[r.quiz_key] = { level: r.level_name, chapter: r.chapter_title };
+        }
+    });
+}
+
+// ── ORDRE DES CHAPITRES (depuis officialStructure.js) ─────────────────────
+function buildChapterOrder() {
+    chapterOrderByLvl = {};
+    if (typeof officialStructure === 'undefined') return;
+
+    officialStructure.forEach(levelObj => {
+        const list = [];
+        (levelObj.themes || []).forEach(theme => {
+            (theme.chapters || []).forEach(ch => {
+                if (!list.includes(ch.title)) list.push(ch.title);
+            });
+        });
+        chapterOrderByLvl[levelObj.name] = list;
+    });
+}
+
+function chaptersForLevel(level) {
+    const set = new Set();
+    Object.values(mergedQuizMeta).forEach(m => { if (m.level === level) set.add(m.chapter); });
+
+    const order = chapterOrderByLvl[level] || [];
+    return [...set].sort((a, b) => {
+        const ia = order.indexOf(a), ib = order.indexOf(b);
+        if (ia === -1 && ib === -1) return a.localeCompare(b, 'fr');
+        if (ia === -1) return 1;
+        if (ib === -1) return -1;
+        return ia - ib;
+    });
+}
+
+function quizzesForChapter(level, chapter) {
+    return Object.entries(mergedQuizMeta)
+        .filter(([, m]) => m.level === level && m.chapter === chapter)
+        .map(([key]) => key)
+        .sort();
+}
+
+function quizTitle(key) {
+    return (typeof quizMeta !== 'undefined' && quizMeta.titles && quizMeta.titles[key]) || ('QCM ' + key);
+}
+
+function classLabel(classId) {
+    if (classId === 'ALL') return 'Toutes les classes';
+    const c = allClasses.find(cl => cl.id === classId);
+    return c ? c.name : 'Classe';
+}
+
+// ── NAVIGATION (fil d'ariane) ─────────────────────────────────────────────
+// qcmPath.classId vaut soit 'ALL' (= "toutes les classes de ce niveau",
+// équivalent de l'ancien bouton "Niveau" générique), soit l'id d'une
+// classe précise — dans les deux cas, qcmPath.level est déjà déterminé
+// dès cette première étape (une classe n'a qu'un seul niveau), donc il
+// n'y a plus d'étape "Classe" séparée plus loin dans le parcours.
+function selectQcmLevelAll(level) {
+    qcmPath = { level, classId: 'ALL', chapter: null, quizKey: null };
+    renderQcmTab();
+}
+function selectQcmClassDirect(classId) {
+    const c = allClasses.find(cl => cl.id === classId);
+    qcmPath = { level: c ? c.level : null, classId, chapter: null, quizKey: null };
+    renderQcmTab();
+}
+function selectQcmChapterByIndex(i) {
+    qcmPath.chapter = currentChapterList[i];
+    qcmPath.quizKey = null;
+    renderQcmTab();
+}
+function selectQcmQuiz(key) {
+    qcmPath.quizKey = key;
+    renderQcmTab();
+}
+function goToQcmRoot() {
+    qcmPath = { level: null, classId: null, chapter: null, quizKey: null };
+    renderQcmTab();
+}
+function goToQcmLevelOrClass() {
+    qcmPath.chapter = null;
+    qcmPath.quizKey = null;
+    renderQcmTab();
+}
+function goToQcmChapter() {
+    qcmPath.quizKey = null;
+    renderQcmTab();
+}
+
+// ── RENDU ──────────────────────────────────────────────────────────────────
+function renderQcmTab() {
+    renderQcmBreadcrumb();
+    renderQcmBody();
+}
+
+function renderQcmBreadcrumb() {
+    const el = document.getElementById('qcm-breadcrumb');
+    let html = '';
+
+    if (!qcmPath.level) {
+        html = `<span class="breadcrumb-item current">Niveaux</span>`;
+    } else {
+        html += `<span class="breadcrumb-item" onclick="goToQcmRoot()">Niveaux</span>`;
+        html += `<span class="breadcrumb-sep">›</span>`;
+
+        const stepOneLabel = qcmPath.classId === 'ALL' ? qcmPath.level : classLabel(qcmPath.classId);
+
+        if (!qcmPath.chapter) {
+            html += `<span class="breadcrumb-item current">${escapeHtmlDb(stepOneLabel)}</span>`;
+        } else {
+            html += `<span class="breadcrumb-item" onclick="goToQcmLevelOrClass()">${escapeHtmlDb(stepOneLabel)}</span>`;
+            html += `<span class="breadcrumb-sep">›</span>`;
+
+            if (!qcmPath.quizKey) {
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(qcmPath.chapter)}</span>`;
+            } else {
+                html += `<span class="breadcrumb-item" onclick="goToQcmChapter()">${escapeHtmlDb(qcmPath.chapter)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(quizTitle(qcmPath.quizKey))}</span>`;
+            }
+        }
+    }
+
+    el.innerHTML = html;
+}
+
+function renderQcmBody() {
+    const el = document.getElementById('qcm-body');
+
+    // Étape 1 : niveau générique OU classe précise (une classe n'ayant
+    // qu'un seul niveau, les deux choix sont réunis à la même étape —
+    // plus besoin de choisir la classe séparément après le QCM).
+    if (!qcmPath.level) {
+        el.innerHTML = ALL_LEVELS.map(l => {
+            const classesOfLevel = allClasses.filter(c => c.level === l);
+            return `
+                <div class="qcm-level-group">
+                    <button class="choice-btn" onclick="selectQcmLevelAll('${l}')">${l}</button>
+                    ${classesOfLevel.map(c =>
+                        `<button class="choice-btn-class" onclick="selectQcmClassDirect('${c.id}')">${escapeHtmlDb(c.name)}</button>`
+                    ).join('')}
+                </div>
+            `;
+        }).join('');
+        return;
+    }
+
+    // Étape 2 : choix du chapitre
+    if (!qcmPath.chapter) {
+        currentChapterList = chaptersForLevel(qcmPath.level);
+        if (currentChapterList.length === 0) {
+            el.innerHTML = `<div class="state-message">
+                <div class="icon">📭</div>
+                Aucun QCM enregistré pour ce niveau pour l'instant.
+            </div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            currentChapterList.map((c, i) =>
+                `<button class="choice-btn" onclick="selectQcmChapterByIndex(${i})">${escapeHtmlDb(c)}</button>`
+            ).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 3 : choix du QCM
+    if (!qcmPath.quizKey) {
+        const keys = quizzesForChapter(qcmPath.level, qcmPath.chapter);
+        if (keys.length === 0) {
+            el.innerHTML = `<div class="state-message">
+                <div class="icon">📭</div>
+                Aucun QCM enregistré pour ce chapitre pour l'instant.
+            </div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            keys.map(k => `<button class="choice-btn" onclick="selectQcmQuiz('${k}')" title="${k}">${escapeHtmlDb(quizTitle(k))}</button>`).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 4 : liste des élèves pour le QCM (et la classe/niveau) choisis,
+    // avec une barre latérale permettant de passer directement à un autre
+    // QCM du même chapitre en un clic.
+    const siblingKeys = quizzesForChapter(qcmPath.level, qcmPath.chapter);
+    const sidebarHTML = siblingKeys.map(k => {
+        const active = k === qcmPath.quizKey;
+        return `<button class="qcm-sidebar-btn ${active ? 'active' : ''}" onclick="selectQcmQuiz('${k}')" title="${k}">${escapeHtmlDb(quizTitle(k))}</button>`;
+    }).join('');
+
+    el.innerHTML = `
+        <div class="qcm-detail-layout">
+            <div class="qcm-main">
+                ${renderQcmLegend()}
+                ${renderStudentScoreList(qcmPath.quizKey, qcmPath.classId)}
+            </div>
+            <div class="qcm-sidebar">
+                <div class="qcm-sidebar-title">Autres QCM — ${escapeHtmlDb(qcmPath.chapter)}</div>
+                ${sidebarHTML}
+            </div>
+        </div>
+    `;
+}
+
+function renderQcmLegend() {
+    const items = [
+        { color: '#111827', label: 'Jamais fait' },
+        { color: '#dc2626', label: '< 6/20' },
+        { color: '#f97316', label: '6 à 10/20' },
+        { color: '#fde047', label: '10 à 15/20' },
+        { color: '#86efac', label: '15 à 19/20' },
+        { color: '#15803d', label: '19 ou 20/20' },
+    ];
+    return `<div class="legend">` +
+        items.map(it => `
+            <div class="legend-item">
+                <span class="legend-dot" style="background:${it.color};"></span>
+                <span>${it.label}</span>
+            </div>
+        `).join('') +
+        `</div>`;
+}
+
+// ── CALCUL DU MEILLEUR SCORE NORMALISÉ /20 ────────────────────────────────
+function bestNormalizedScore(studentId, quizKey) {
+    const attempts = allTimeResults.filter(r =>
+        r.user_id === studentId && r.quiz_key === quizKey && r.total > 0
+    );
+    if (attempts.length === 0) return null;
+    return Math.max(...attempts.map(r => (r.score / r.total) * 20));
+}
+
+function scoreInfo(norm) {
+    if (norm === null) return { rank: 0, color: '#111827', label: 'Jamais fait' };
+    if (norm < 6)       return { rank: 1, color: '#dc2626', label: fmtScore(norm) };
+    if (norm < 10)      return { rank: 2, color: '#f97316', label: fmtScore(norm) };
+    if (norm < 15)      return { rank: 3, color: '#fde047', label: fmtScore(norm) };
+    if (norm < 19)      return { rank: 4, color: '#86efac', label: fmtScore(norm) };
+    return                     { rank: 5, color: '#15803d', label: fmtScore(norm) };
+}
+
+function fmtScore(norm) {
+    return (Math.round(norm * 10) / 10).toString().replace('.', ',') + '/20';
+}
+
+function renderStudentScoreList(quizKey, classId) {
+    const pool = classId === 'ALL'
+        ? allStudents
+        : allStudents.filter(s => s.class_id === classId);
+
+    if (pool.length === 0) {
+        return `<div class="state-message"><div class="icon">📭</div>Aucun élève dans cette classe.</div>`;
+    }
+
+    const rows = pool.map(s => {
+        const norm = bestNormalizedScore(s.id, quizKey);
+        return { student: s, info: scoreInfo(norm) };
+    });
+
+    rows.sort((a, b) => {
+        if (a.info.rank !== b.info.rank) return a.info.rank - b.info.rank;
+        return (a.student.full_name || '').localeCompare(b.student.full_name || '', 'fr');
+    });
+
+    return `<div class="student-score-list">` +
+        rows.map(r => `
+            <div class="student-score-row">
+                <span class="score-dot" style="background:${r.info.color};"></span>
+                <span class="name">${escapeHtmlDb(r.student.full_name || '—')}</span>
+                <span class="class-tag">${escapeHtmlDb(r.student.class_name || 'Sans classe')}</span>
+                <span class="score-val" style="color:${r.info.color === '#fde047' ? '#a16207' : r.info.color};">
+                    ${r.info.label}
+                </span>
+            </div>
+        `).join('') +
+        `</div>`;
+}
+
+// ── UTILITAIRE ÉCHAPPEMENT HTML ────────────────────────────────────────────
+function escapeHtmlDb(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "SAISON EN COURS"
+// ══════════════════════════════════════════════════════════════════════════
+
+async function loadSeasonTab() {
+    const bodyEl = document.getElementById('season-body');
+    const sinceEl = document.getElementById('season-since');
+    bodyEl.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const [{ data: lb, error: lbError }, { data: settings }] = await Promise.all([
+        sb.rpc('get_leaderboard').select('*').order('ladder_score', { ascending: false }),
+        sb.from('app_settings').select('value').eq('key', 'season_start_at').maybeSingle(),
+    ]);
+
+    if (settings && settings.value) {
+        const d = new Date(settings.value);
+        sinceEl.textContent = 'Saison en cours depuis le ' +
+            d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    } else {
+        sinceEl.textContent = '';
+    }
+
+    if (lbError) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur de chargement : ${escapeHtmlDb(lbError.message)}</div>`;
+        return;
+    }
+
+    if (!lb || lb.length === 0) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">📭</div>Pas encore de classement pour cette saison.</div>`;
+        return;
+    }
+
+    bodyEl.innerHTML =
+        `<p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:14px;">
+            10 à 20 points maximum par QCM et par jour
+        </p>` +
+        lb.map((row, i) => {
+            const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+            const score = row.ladder_score !== null ? row.ladder_score : '—';
+            return `
+                <div class="season-row">
+                    <div class="season-rank ${rankClass}">${i + 1}</div>
+                    <div class="season-avatar">${row.avatar_emoji || '🦊'}</div>
+                    <div class="season-info">
+                        <div class="season-name">${escapeHtmlDb(row.pseudo || 'Élève')} <span class="season-fullname">(${escapeHtmlDb(row.full_name || '—')})</span></div>
+                        <div class="season-class">${escapeHtmlDb(row.class_name || 'Aucune classe')}</div>
+                    </div>
+                    <div class="season-score">${score} pts</div>
+                </div>
+            `;
+        }).join('');
+}
+
+function openResetSeasonModal() {
+    document.getElementById('modal-confirm-reset-season').classList.add('show');
+}
+
+function closeResetSeasonModal() {
+    document.getElementById('modal-confirm-reset-season').classList.remove('show');
+}
+
+async function confirmResetSeason() {
+    closeResetSeasonModal();
+
+    const bodyEl = document.getElementById('season-body');
+    bodyEl.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Réinitialisation…</div>`;
+
+    const { error } = await sb.rpc('reset_season');
+
+    if (error) {
+        bodyEl.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    await loadSeasonTab();
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "SUIVI PARTICULIER"
+// ══════════════════════════════════════════════════════════════════════════
+
+function findStudent(id) {
+    return allStudents.find(s => s.id === id);
+}
+
+// Niveaux pour lesquels cet élève a au moins une tentative enregistrée
+function studentLevels(studentId) {
+    const set = new Set();
+    allTimeResults.forEach(r => { if (r.user_id === studentId) set.add(r.level_name); });
+    return ALL_LEVELS.filter(l => set.has(l));
+}
+
+// Moyenne (meilleurs scores) d'un élève pour un chapitre donné, normalisée /20
+function chapterAverageForStudent(studentId, level, chapter) {
+    const keys = quizzesForChapter(level, chapter);
+    const scores = keys.map(k => bestNormalizedScore(studentId, k)).filter(v => v !== null);
+    if (scores.length === 0) return null;
+    return scores.reduce((a, b) => a + b, 0) / scores.length;
+}
+
+// Moyenne générale d'un élève, tous QCM tentés confondus, normalisée /20
+function overallAverageForStudent(studentId) {
+    const attemptedKeys = new Set();
+    allTimeResults.forEach(r => { if (r.user_id === studentId && r.total > 0) attemptedKeys.add(r.quiz_key); });
+    const scores = [...attemptedKeys].map(k => bestNormalizedScore(studentId, k)).filter(v => v !== null);
+    if (scores.length === 0) return null;
+    return scores.reduce((a, b) => a + b, 0) / scores.length;
+}
+
+// Retrouve le nom du THÈME (regroupement au-dessus des chapitres dans
+// officialStructure.js, ex: "NOMBRES ET CALCULS") auquel appartient un
+// chapitre donné. Renvoie le titre du chapitre lui-même si introuvable
+// (ex: chapitre découvert dynamiquement, absent d'officialStructure.js).
+function themeNameForChapter(level, chapterTitle) {
+    if (typeof officialStructure === 'undefined') return chapterTitle;
+    const levelObj = officialStructure.find(l => l.name === level);
+    if (!levelObj) return chapterTitle;
+    for (const theme of (levelObj.themes || [])) {
+        if ((theme.chapters || []).some(c => c.title === chapterTitle)) return theme.name;
+    }
+    return chapterTitle;
+}
+
+// Moyennes par THÈME pour un élève (moyenne des moyennes de chapitre de
+// ce thème que l'élève a au moins commencées) — pour l'aperçu affiché
+// directement sur le bouton de chaque élève dans "Suivi particulier".
+function themeAveragesForStudent(studentId) {
+    const byTheme = {};
+    studentLevels(studentId).forEach(level => {
+        chaptersForLevel(level).forEach(chapter => {
+            const avg = chapterAverageForStudent(studentId, level, chapter);
+            if (avg === null) return;
+            const theme = themeNameForChapter(level, chapter);
+            if (!byTheme[theme]) byTheme[theme] = [];
+            byTheme[theme].push(avg);
+        });
+    });
+    return Object.entries(byTheme).map(([theme, arr]) => ({
+        theme,
+        avg: arr.reduce((a, b) => a + b, 0) / arr.length
+    }));
+}
+
+// ── NAVIGATION (fil d'ariane) ─────────────────────────────────────────────
+function selectParticularClass(classId) {
+    particularPath = { classId, studentId: null, level: null, chapter: null, quizKey: null };
+    renderParticularTab();
+}
+function selectParticularStudent(studentId) {
+    particularPath.studentId = studentId;
+    particularPath.level = null;
+    particularPath.chapter = null;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+function selectParticularChapterByIndex(i) {
+    const row = currentParticularChapterRows[i];
+    particularPath.level = row.level;
+    particularPath.chapter = row.chapter;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+// Ouvre le détail des tentatives d'un QCM précis pour l'élève courant
+// (étape 5, atteinte en cliquant sur la barre d'un QCM à l'étape 4).
+function selectParticularQuiz(quizKey) {
+    particularPath.quizKey = quizKey;
+    renderParticularTab();
+}
+function goToParticularRoot() {
+    particularPath = { classId: null, studentId: null, level: null, chapter: null, quizKey: null };
+    renderParticularTab();
+}
+function goToParticularClass() {
+    particularPath.studentId = null;
+    particularPath.level = null;
+    particularPath.chapter = null;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+function goToParticularStudent() {
+    particularPath.level = null;
+    particularPath.chapter = null;
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+// Retour de la liste des tentatives (étape 5) à la liste des QCM du
+// chapitre (étape 4), sans perdre le chapitre sélectionné.
+function goToParticularChapter() {
+    particularPath.quizKey = null;
+    renderParticularTab();
+}
+
+// ── RENDU ──────────────────────────────────────────────────────────────────
+function renderParticularTab() {
+    renderParticularBreadcrumb();
+    renderParticularBody();
+}
+
+function renderParticularBreadcrumb() {
+    const el = document.getElementById('particular-breadcrumb');
+    let html = '';
+
+    if (!particularPath.classId) {
+        html = `<span class="breadcrumb-item current">Classes</span>`;
+    } else {
+        html += `<span class="breadcrumb-item" onclick="goToParticularRoot()">Classes</span>`;
+        html += `<span class="breadcrumb-sep">›</span>`;
+
+        if (!particularPath.studentId) {
+            html += `<span class="breadcrumb-item current">${escapeHtmlDb(classLabel(particularPath.classId))}</span>`;
+        } else {
+            html += `<span class="breadcrumb-item" onclick="goToParticularClass()">${escapeHtmlDb(classLabel(particularPath.classId))}</span>`;
+            html += `<span class="breadcrumb-sep">›</span>`;
+
+            const student = findStudent(particularPath.studentId);
+            const studentName = student ? student.full_name : 'Élève';
+
+            if (!particularPath.chapter) {
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(studentName)}</span>`;
+            } else if (!particularPath.quizKey) {
+                html += `<span class="breadcrumb-item" onclick="goToParticularStudent()">${escapeHtmlDb(studentName)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(particularPath.chapter)} (${escapeHtmlDb(particularPath.level)})</span>`;
+            } else {
+                html += `<span class="breadcrumb-item" onclick="goToParticularStudent()">${escapeHtmlDb(studentName)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item" onclick="goToParticularChapter()">${escapeHtmlDb(particularPath.chapter)} (${escapeHtmlDb(particularPath.level)})</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(quizTitle(particularPath.quizKey))}</span>`;
+            }
+        }
+    }
+
+    el.innerHTML = html;
+}
+
+// ── TEMPS PASSÉ (durée cumulée, tentatives incohérentes exclues) ──────────
+// Une tentative de plus de 30 minutes est considérée comme une page laissée
+// inactive/ouverte par erreur et n'est pas comptabilisée dans le temps réel
+// passé à répondre.
+const MAX_VALID_DURATION_SECONDS = 30 * 60;
+
+function isValidDurationAttempt(r) {
+    return !!(r.duration_seconds && r.duration_seconds > 0 && r.duration_seconds <= MAX_VALID_DURATION_SECONDS);
+}
+
+// Temps total (toutes tentatives valides, tous chapitres/QCM confondus) pour un élève
+function totalDurationForStudent(studentId) {
+    return allTimeResults
+        .filter(r => r.user_id === studentId && isValidDurationAttempt(r))
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Temps total pour un élève, limité à un chapitre donné
+function totalDurationForStudentChapter(studentId, level, chapter) {
+    const keySet = new Set(quizzesForChapter(level, chapter));
+    return allTimeResults
+        .filter(r => r.user_id === studentId && keySet.has(r.quiz_key) && isValidDurationAttempt(r))
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Temps total pour un élève, limité à un QCM précis
+function totalDurationForStudentQuiz(studentId, quizKey) {
+    return attemptsForStudentQuiz(studentId, quizKey)
+        .filter(isValidDurationAttempt)
+        .reduce((s, r) => s + r.duration_seconds, 0);
+}
+
+// Formatage jours/heures/minutes (ex: "1j 2h 05min", "45min", "0min")
+function formatDurationLong(totalSeconds) {
+    if (!totalSeconds || totalSeconds <= 0) return '0min';
+    const days    = Math.floor(totalSeconds / 86400);
+    const hours   = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const parts = [];
+    if (days > 0)    parts.push(`${days}j`);
+    if (hours > 0)   parts.push(`${hours}h`);
+    if (minutes > 0 || parts.length === 0) parts.push(`${minutes}min`);
+    return parts.join(' ');
+}
+
+function renderParticularBody() {
+    const el = document.getElementById('particular-body');
+
+    // Étape 1 : choix de la classe
+    if (!particularPath.classId) {
+        if (allClasses.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune classe créée pour l'instant.</div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            allClasses.map(c => `<button class="choice-btn" onclick="selectParticularClass('${c.id}')">${escapeHtmlDb(c.name)}</button>`).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 2 : choix de l'élève dans la classe
+    if (!particularPath.studentId) {
+        const students = allStudents
+            .filter(s => s.class_id === particularPath.classId)
+            .sort((a, b) => (a.full_name || '').localeCompare(b.full_name || '', 'fr'));
+
+        if (students.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun élève dans cette classe.</div>`;
+            return;
+        }
+
+        el.innerHTML = students.map(s => {
+            const overall = overallAverageForStudent(s.id);
+            const themes = themeAveragesForStudent(s.id);
+            const overallLabel = overall === null ? '—' : fmtScore(overall);
+            const overallColor = overall === null ? 'var(--text-muted)' : scoreInfo(overall).color;
+            const totalTime = totalDurationForStudent(s.id);
+            const themeChips = themes.map(t => `
+                <span class="theme-chip">${escapeHtmlDb(t.theme)} : ${fmtScore(t.avg)}</span>
+            `).join('');
+
+            return `
+                <div class="simple-list-row" onclick="selectParticularStudent('${s.id}')" style="flex-direction:column; align-items:stretch; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="name">${escapeHtmlDb(s.full_name || '—')}</span>
+                        <span style="display:flex; align-items:center; gap:10px;">
+                            <span class="time-chip">⏱ ${formatDurationLong(totalTime)}</span>
+                            <span style="font-weight:800; color:${overallColor};">${overallLabel}</span>
+                            <span class="chevron">›</span>
+                        </span>
+                    </div>
+                    ${themeChips ? `<div style="display:flex; flex-wrap:wrap; gap:6px;">${themeChips}</div>` : ''}
+                </div>
+            `;
+        }).join('');
+        return;
+    }
+
+    // Étape 3 : statistiques de l'élève — moyenne générale + moyennes par chapitre
+    if (!particularPath.chapter) {
+        const overall = overallAverageForStudent(particularPath.studentId);
+        const levels = studentLevels(particularPath.studentId);
+        const totalTime = totalDurationForStudent(particularPath.studentId);
+
+        let html = `<div class="stats-grid" style="margin-bottom:24px;">
+            <div class="stat-card">
+                <div class="stat-label">Moyenne générale</div>
+                <div class="stat-value">${overall === null ? '—' : fmtScore(overall)}</div>
+                <div class="stat-sub">tous QCM tentés confondus</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Temps total</div>
+                <div class="stat-value">${formatDurationLong(totalTime)}</div>
+                <div class="stat-sub">tentatives &gt; 30min exclues</div>
+            </div>
+        </div>`;
+
+        if (levels.length === 0) {
+            html += `<div class="state-message"><div class="icon">📭</div>Cet élève n'a réalisé aucun QCM pour le moment.</div>`;
+            el.innerHTML = html;
+            return;
+        }
+
+        currentParticularChapterRows = [];
+        levels.forEach(level => {
+            html += `<div class="level-subheader">${escapeHtmlDb(level)}</div>`;
+            chaptersForLevel(level).forEach(chapter => {
+                const idx = currentParticularChapterRows.length;
+                currentParticularChapterRows.push({ level, chapter });
+                const avg = chapterAverageForStudent(particularPath.studentId, level, chapter);
+                const info = scoreInfo(avg);
+                const chapterTime = totalDurationForStudentChapter(particularPath.studentId, level, chapter);
+                html += `
+                    <div class="student-score-row clickable" onclick="selectParticularChapterByIndex(${idx})">
+                        <span class="score-dot" style="background:${info.color};"></span>
+                        <span class="name">${escapeHtmlDb(chapter)}</span>
+                        <span class="time-chip">⏱ ${formatDurationLong(chapterTime)}</span>
+                        <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
+                        <span class="chevron">›</span>
+                    </div>
+                `;
+            });
+        });
+
+        el.innerHTML = html;
+        return;
+    }
+
+    // Étape 4 : détail des moyennes par QCM au sein du chapitre choisi
+    if (!particularPath.quizKey) {
+        const keys = quizzesForChapter(particularPath.level, particularPath.chapter);
+        if (keys.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce chapitre.</div>`;
+            return;
+        }
+
+        el.innerHTML = keys.map(k => {
+            const norm = bestNormalizedScore(particularPath.studentId, k);
+            const info = scoreInfo(norm);
+            const nbAttempts = attemptsForStudentQuiz(particularPath.studentId, k).length;
+            const quizTime = totalDurationForStudentQuiz(particularPath.studentId, k);
+            return `
+                <div class="student-score-row clickable" onclick="selectParticularQuiz('${escapeHtmlDb(k)}')">
+                    <span class="score-dot" style="background:${info.color};"></span>
+                    <span class="name">${escapeHtmlDb(quizTitle(k))}</span>
+                    <span class="attempts-count">${nbAttempts > 0 ? nbAttempts + ' réalisation' + (nbAttempts > 1 ? 's' : '') : 'Jamais fait'}</span>
+                    <span class="time-chip">⏱ ${formatDurationLong(quizTime)}</span>
+                    <span class="score-val" style="color:${info.color === '#fde047' ? '#a16207' : info.color};">${info.label}</span>
+                    <span class="chevron">›</span>
+                </div>
+            `;
+        }).join('');
+        return;
+    }
+
+    // Étape 5 : liste des tentatives de cet élève pour ce QCM précis
+    // (même table que l'onglet "Suivi statistique", filtrée élève + QCM).
+    renderParticularQuizAttempts(el);
+}
+
+// Toutes les tentatives (non limitées par période) d'un élève sur un QCM
+function attemptsForStudentQuiz(studentId, quizKey) {
+    return allTimeResults.filter(r => r.user_id === studentId && r.quiz_key === quizKey);
+}
+
+function renderParticularQuizAttempts(el) {
+    const attempts = [...attemptsForStudentQuiz(particularPath.studentId, particularPath.quizKey)]
+        .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
+
+    if (attempts.length === 0) {
+        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune tentative enregistrée pour ce QCM.</div>`;
+        return;
+    }
+
+    el.innerHTML = `
+        <div class="table-card">
+            <div class="table-toolbar">
+                <h2>Tentatives — ${escapeHtmlDb(quizTitle(particularPath.quizKey))}</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                        <th>Durée</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${attempts.map(r => `
+                        <tr>
+                            <td>${scoreBadge(r.score, r.total)}</td>
+                            <td class="td-duration">${r.duration_seconds ? formatDuration(r.duration_seconds) : '—'}</td>
+                            <td class="td-date">${formatDate(r.completed_at)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "PROGRESSION"
+// ══════════════════════════════════════════════════════════════════════════
+// Fil d'ariane : Classes > [Niveau, si la classe n'a pas de niveau fixe ou
+// si on navigue vers un autre niveau] > Chapitre > Plan détaillé.
+//
+// En haut de page (dès qu'une classe est sélectionnée, quelle que soit la
+// profondeur de navigation) : un panneau d'accès par niveau, qui pilote
+// classes.allowed_levels (utilisé par record_quiz_result() pour bloquer
+// l'XP/le classement des QCM d'un niveau non autorisé — voir
+// migration_progression_gating.sql).
+//
+// Le plan détaillé (étape 4) utilise en priorité les VRAIS titres H2/H3
+// extraits du cours (data/courseOutline.js, généré par
+// data/MAJcourseOutline.js) quand ils sont disponibles pour ce chapitre ;
+// sinon, il retombe sur un regroupement déduit du format numérique des
+// clés de QCM (comme avant), avec des libellés génériques "Partie X".
+
+let progressionClassId = null;
+let progressionLevel   = null;
+let progressionChapter = null;
+let progressionCheckedMap = {};      // quiz_key -> boolean, pour la classe sélectionnée
+let currentProgressionChapterList = []; // pour les onclick par index à l'étape "chapitre"
+
+function renderProgressionTab() {
+    renderProgressionBreadcrumb();
+    renderProgressionAccessPanel();
+    renderProgressionBody();
+}
+
+function renderProgressionClassPicker() {
+    progressionClassId = null;
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+async function selectProgressionClass(classId) {
+    progressionClassId = classId;
+    progressionChapter = null;
+
+    const el = document.getElementById('progression-body');
+    el.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const { data, error } = await sb.from('class_progress')
+        .select('quiz_key, checked')
+        .eq('class_id', classId);
+
+    if (error) {
+        el.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    progressionCheckedMap = {};
+    (data || []).forEach(row => { progressionCheckedMap[row.quiz_key] = row.checked; });
+
+    // Si la classe a un niveau défini (Gestion des classes), on va
+    // directement à ses chapitres — sinon on demande de choisir un niveau.
+    const classObj = allClasses.find(c => c.id === classId);
+    progressionLevel = (classObj && classObj.level) ? classObj.level : null;
+
+    renderProgressionTab();
+}
+
+function selectProgressionLevel(level) {
+    progressionLevel = level;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function selectProgressionChapterByIndex(i) {
+    progressionChapter = currentProgressionChapterList[i];
+    renderProgressionTab();
+}
+
+function goToProgressionRoot() {
+    progressionClassId = null;
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function goToProgressionClass() {
+    progressionLevel = null;
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+function goToProgressionLevel() {
+    progressionChapter = null;
+    renderProgressionTab();
+}
+
+// ── FIL D'ARIANE ────────────────────────────────────────────────────────
+function renderProgressionBreadcrumb() {
+    const el = document.getElementById('progression-breadcrumb');
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    const className = classObj ? classObj.name : '';
+    let html = '';
+
+    if (!progressionClassId) {
+        html = `<span class="breadcrumb-item current">Classes</span>`;
+    } else {
+        html += `<span class="breadcrumb-item" onclick="goToProgressionRoot()">Classes</span>`;
+        html += `<span class="breadcrumb-sep">›</span>`;
+
+        if (!progressionLevel) {
+            html += `<span class="breadcrumb-item current">${escapeHtmlDb(className)}</span>`;
+        } else {
+            html += `<span class="breadcrumb-item" onclick="goToProgressionClass()">${escapeHtmlDb(className)}</span>`;
+            html += `<span class="breadcrumb-sep">›</span>`;
+
+            if (!progressionChapter) {
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(progressionLevel)}</span>`;
+            } else {
+                html += `<span class="breadcrumb-item" onclick="goToProgressionLevel()">${escapeHtmlDb(progressionLevel)}</span>`;
+                html += `<span class="breadcrumb-sep">›</span>`;
+                html += `<span class="breadcrumb-item current">${escapeHtmlDb(progressionChapter)}</span>`;
+            }
+        }
+    }
+
+    el.innerHTML = html;
+}
+
+// ── PANNEAU D'ACCÈS PAR NIVEAU (toujours visible dès qu'une classe est choisie) ──
+function renderProgressionAccessPanel() {
+    const el = document.getElementById('progression-access-panel');
+    if (!progressionClassId) { el.innerHTML = ''; return; }
+
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    if (!classObj) { el.innerHTML = ''; return; }
+
+    const allowed = classObj.allowed_levels || [];
+    const warning = !classObj.level
+        ? `<div class="progress-access-warning">⚠️ Cette classe n'a pas encore de niveau défini (onglet Gestion des classes) : ces cases n'ont donc aucun effet pour l'instant, mais seront prises en compte dès qu'un niveau sera choisi.</div>`
+        : '';
+
+    el.innerHTML = `
+        <div class="progress-access-box">
+            <div class="progress-access-title">🔓 Accès aux QCM par niveau — ${escapeHtmlDb(classObj.name)}</div>
+            <div class="progress-access-hint">Un niveau décoché = 0 XP et 0 point de classement pour tous ses QCM, quelle que soit la note obtenue.</div>
+            ${warning}
+            <div class="progress-access-checks">
+                ${ALL_LEVELS.map(l => `
+                    <label class="progress-access-check">
+                        <input type="checkbox" ${allowed.includes(l) ? 'checked' : ''} onchange="toggleLevelAccess('${l}', this.checked)">
+                        Accès au QCM ${l}
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+async function toggleLevelAccess(level, checked) {
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    if (!classObj) return;
+
+    let allowed = [...(classObj.allowed_levels || [])];
+    if (checked && !allowed.includes(level)) allowed.push(level);
+    if (!checked) allowed = allowed.filter(l => l !== level);
+
+    const { error } = await sb.from('classes').update({ allowed_levels: allowed }).eq('id', progressionClassId);
+    if (error) {
+        alert('Erreur : ' + error.message);
+        return;
+    }
+
+    classObj.allowed_levels = allowed; // mise à jour locale immédiate, pas de rechargement complet
+    renderProgressionAccessPanel();
+}
+
+// ── CORPS DE LA PAGE (selon la profondeur de navigation) ──────────────────
+function renderProgressionBody() {
+    const el = document.getElementById('progression-body');
+
+    // Étape 1 : choix de la classe
+    if (!progressionClassId) {
+        if (allClasses.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune classe créée pour l'instant.</div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            allClasses.map(c => {
+                const tag = c.level ? ` <span style="font-weight:400; opacity:0.7;">(${escapeHtmlDb(c.level)})</span>` : '';
+                return `<button class="choice-btn" onclick="selectProgressionClass('${c.id}')">${escapeHtmlDb(c.name)}${tag}</button>`;
+            }).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 2 : choix du niveau (seulement si la classe n'en a pas / n'en
+    // a plus, suite à un retour en arrière dans le fil d'ariane)
+    if (!progressionLevel) {
+        el.innerHTML = `<div class="btn-grid">` +
+            ALL_LEVELS.map(l => `<button class="choice-btn" onclick="selectProgressionLevel('${l}')">${l}</button>`).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 3 : choix du chapitre
+    if (!progressionChapter) {
+        currentProgressionChapterList = chaptersForLevel(progressionLevel);
+        if (currentProgressionChapterList.length === 0) {
+            el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce niveau.</div>`;
+            return;
+        }
+        el.innerHTML = `<div class="btn-grid">` +
+            currentProgressionChapterList.map((c, i) =>
+                `<button class="choice-btn" onclick="selectProgressionChapterByIndex(${i})">${escapeHtmlDb(c)}</button>`
+            ).join('') +
+            `</div>`;
+        return;
+    }
+
+    // Étape 4 : plan détaillé du chapitre
+    el.innerHTML = renderChapterPlan(progressionLevel, progressionChapter);
+}
+
+// ── PLAN DÉTAILLÉ D'UN CHAPITRE ─────────────────────────────────────────
+
+// Décompose une clé standard à 5 chiffres [niveau][chapitre][H2][H3][n°].
+// Renvoie null pour les clés au format spécial (ex: "3_10_101"), non décomposables.
+function parseQuizKeyParts(key) {
+    if (!/^\d{5}$/.test(key)) return null;
+    return { h2: key[2], h3: key[3], num: key[4] };
+}
+
+// Regroupe une liste de quiz_key (déjà triée) par Partie (H2) puis
+// Sous-partie (H3), dans l'ordre — repli utilisé quand data/courseOutline.js
+// n'a pas (encore) les vrais titres pour ce chapitre.
+function groupQuizzesByH2H3(keys) {
+    const byH2 = {};
+    const orderH2 = [];
+    const special = [];
+
+    keys.forEach(k => {
+        const parts = parseQuizKeyParts(k);
+        if (!parts) { special.push(k); return; }
+        if (!byH2[parts.h2]) { byH2[parts.h2] = {}; orderH2.push(parts.h2); }
+        if (!byH2[parts.h2][parts.h3]) byH2[parts.h2][parts.h3] = [];
+        byH2[parts.h2][parts.h3].push(k);
+    });
+
+    orderH2.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    const groups = orderH2.map(h2 => {
+        const h3Map = byH2[h2];
+        const h3Order = Object.keys(h3Map).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        const h3Groups = h3Order.map(h3 => ({
+            label: h3 === '0' ? null : `Sous-partie ${h2}.${h3}`,
+            quizzes: h3Map[h3].sort()
+        }));
+        return { label: `Partie ${h2}`, h3Groups };
+    });
+
+    return { groups, special };
+}
+
+// Retrouve le numéro de chapitre (id) déclaré dans officialStructure.js
+// pour un (niveau, titre de chapitre) donné, si disponible.
+function chapterIdFor(level, chapterTitle) {
+    if (typeof officialStructure === 'undefined') return null;
+    const levelObj = officialStructure.find(l => l.name === level);
+    if (!levelObj) return null;
+    for (const theme of (levelObj.themes || [])) {
+        const ch = (theme.chapters || []).find(c => c.title === chapterTitle);
+        if (ch) return ch.id;
+    }
+    return null;
+}
+
+function renderChapterPlan(level, chapterTitle) {
+    const chId = chapterIdFor(level, chapterTitle);
+    let html = `<h2 style="margin-bottom:16px;">${chId ? 'Chapitre ' + chId + ' — ' : ''}${escapeHtmlDb(chapterTitle)}</h2>`;
+
+    const outlineChapter = (typeof courseOutline !== 'undefined'
+        && courseOutline[level] && courseOutline[level][chapterTitle]) || null;
+
+    if (outlineChapter && outlineChapter.h2Sections && outlineChapter.h2Sections.length > 0) {
+        // Vrais titres H2/H3, extraits du cours par data/MAJcourseOutline.js
+        outlineChapter.h2Sections.forEach(h2 => {
+            html += `<div class="progress-partie">${escapeHtmlDb(h2.title)}</div>`;
+            let lastH3;
+            h2.items.forEach(item => {
+                if (item.h3Title !== lastH3) {
+                    if (item.h3Title) html += `<div class="progress-souspartie">${escapeHtmlDb(item.h3Title)}</div>`;
+                    lastH3 = item.h3Title;
+                }
+                html += renderProgressQuizRow(item.quizKey);
+            });
+        });
+    } else {
+        // Repli : regroupement déduit du format numérique des clés
+        // (data/courseOutline.js absent ou ce chapitre pas encore scanné)
+        const keys = quizzesForChapter(level, chapterTitle);
+        if (keys.length === 0) {
+            html += `<div class="state-message"><div class="icon">📭</div>Aucun QCM enregistré pour ce chapitre.</div>`;
+            return html;
+        }
+        html += `<div class="progress-note">📌 Titres réels non disponibles pour ce chapitre (voir data/MAJcourseOutline.js) — regroupement déduit du format numérique des clés, libellés "Partie X" provisoires.</div>`;
+        const { groups, special } = groupQuizzesByH2H3(keys);
+        groups.forEach(g => {
+            html += `<div class="progress-partie">${g.label}</div>`;
+            g.h3Groups.forEach(h3g => {
+                if (h3g.label) html += `<div class="progress-souspartie">${h3g.label}</div>`;
+                h3g.quizzes.forEach(k => html += renderProgressQuizRow(k));
+            });
+        });
+        special.forEach(k => html += renderProgressQuizRow(k));
+    }
+
+    return html;
+}
+
+function renderProgressQuizRow(key) {
+    const checked = !!progressionCheckedMap[key];
+    return `
+        <label class="progress-quiz-row">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleProgressCheck('${key}', this.checked, this)">
+            <span>${escapeHtmlDb(quizTitle(key))}</span>
+            <span class="save-flash" id="save-flash-${key}">✓ enregistré</span>
+        </label>
+    `;
+}
+
+async function toggleProgressCheck(quizKey, checked, checkboxEl) {
+    progressionCheckedMap[quizKey] = checked;
+
+    const { error } = await sb.from('class_progress')
+        .upsert({ class_id: progressionClassId, quiz_key: quizKey, checked, updated_at: new Date().toISOString() },
+                { onConflict: 'class_id,quiz_key' });
+
+    const flash = document.getElementById('save-flash-' + quizKey);
+    if (error) {
+        console.error('[Progression] Erreur sauvegarde :', error.message);
+        if (checkboxEl) checkboxEl.checked = !checked; // annule visuellement en cas d'échec
+        progressionCheckedMap[quizKey] = !checked;
+        return;
+    }
+
+    if (flash) {
+        flash.classList.add('show');
+        setTimeout(() => flash.classList.remove('show'), 1200);
+    }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════
+// ONGLET "CARTES D'ENTRAÎNEMENT"
+// ══════════════════════════════════════════════════════════════════════════
+
+let allCards = []; // cache brut pour le filtre texte
+
+async function loadCardsTab() {
+    const el = document.getElementById('cards-body');
+    el.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Chargement…</div>`;
+
+    const { data, error } = await sb.from('chapters')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        el.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    allCards = data || [];
+    renderCardsList(allCards);
+}
+
+// created_by référence auth.users(id), pas profiles(id) directement : pas
+// de jointure PostgREST automatique possible, on relie donc côté client
+// avec le roster d'élèves déjà chargé (allStudents).
+function authorNameForCard(card) {
+    if (!card.created_by) return 'Auteur inconnu';
+    const student = allStudents.find(s => s.id === card.created_by);
+    if (student) return student.full_name || 'Élève';
+    if (card.created_by === teacherId) return 'Vous (professeur)';
+    return 'Compte supprimé';
+}
+
+function renderCardsList(cards) {
+    const el = document.getElementById('cards-body');
+
+    if (cards.length === 0) {
+        el.innerHTML = `<div class="state-message"><div class="icon">📭</div>Aucune carte créée pour l'instant.</div>`;
+        return;
+    }
+
+    el.innerHTML = cards.map(card => {
+        const author = authorNameForCard(card);
+        const date = card.created_at ? new Date(card.created_at).toLocaleDateString('fr-FR') : '';
+        const typeLabel = card.type === 'qcm' ? 'QCM' : 'Question ouverte';
+
+        return `
+            <div class="card-row">
+                <div class="card-row-top">
+                    <div>
+                        <div class="card-row-title">${escapeHtmlDb(card.title || 'Sans titre')} <span style="color:var(--text-muted); font-weight:400;">· ${escapeHtmlDb(card.level || '')}</span></div>
+                        <div class="card-row-meta">Par ${escapeHtmlDb(author)} · ${date}</div>
+                    </div>
+                    <span class="card-row-type-badge">${typeLabel}</span>
+                </div>
+                <div class="card-row-question"><strong>Q :</strong> ${escapeHtmlDb(card.question || '—')}</div>
+                <div class="card-row-answer"><strong>R :</strong> ${escapeHtmlDb(card.answer || '—')}</div>
+                <div style="margin-top:10px;">
+                    <button class="btn-icon-sm danger" onclick="openDeleteCardModal(${card.id})">🗑️ Supprimer cette carte</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterCardsList(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) { renderCardsList(allCards); return; }
+
+    const filtered = allCards.filter(card => {
+        const author = authorNameForCard(card).toLowerCase();
+        return (card.title || '').toLowerCase().includes(q)
+            || (card.question || '').toLowerCase().includes(q)
+            || (card.answer || '').toLowerCase().includes(q)
+            || author.includes(q);
+    });
+    renderCardsList(filtered);
+}
+
+let pendingDeleteCardId = null;
+
+function openDeleteCardModal(cardId) {
+    pendingDeleteCardId = cardId;
+    const card = allCards.find(c => c.id === cardId);
+    document.getElementById('delete-card-message').innerHTML = card
+        ? `Voulez-vous vraiment supprimer la carte <strong>${escapeHtmlDb(card.title || 'Sans titre')}</strong> (question : « ${escapeHtmlDb((card.question || '').slice(0, 80))} ») ? Cette action est irréversible.`
+        : 'Voulez-vous vraiment supprimer cette carte ?';
+    document.getElementById('modal-confirm-delete-card').classList.add('show');
+}
+
+function closeDeleteCardModal() {
+    pendingDeleteCardId = null;
+    document.getElementById('modal-confirm-delete-card').classList.remove('show');
+}
+
+async function confirmDeleteCard() {
+    if (pendingDeleteCardId === null) return;
+    const cardId = pendingDeleteCardId;
+
+    // Autorisé côté base par la policy "chapters: suppression prof"
+    // (is_teacher()), indépendamment de qui a créé la carte.
+    const { error } = await sb.from('chapters').delete().eq('id', cardId);
+
+    closeDeleteCardModal();
+
+    if (error) {
+        alert('Erreur lors de la suppression : ' + error.message);
+        return;
+    }
+
+    await loadCardsTab();
+    showCardsToast('✓ Carte supprimée');
+}
+
+function showCardsToast(message) {
+    // Pas de système de toast global dans dashboard.html : petit message
+    // inline temporaire en haut de la liste, suffisant pour cette action.
+    const el = document.getElementById('cards-body');
+    const toast = document.createElement('div');
+    toast.style.cssText = 'background:var(--success-light); color:var(--success); padding:10px 14px; border-radius:8px; margin-bottom:12px; font-size:0.85rem; font-weight:600;';
+    toast.textContent = message;
+    el.prepend(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Profil — AutoMaths</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- data/quizMeta.js est chargé en balise classique ci-dessous, PAS via
+     fetch() : fetch() vers un fichier local est bloqué par la politique
+     CORS des navigateurs en file://, alors qu'une balise de script
+     fonctionne normalement, que le site soit ouvert via un serveur ou en
+     double-clic depuis le disque. Même mécanisme que index.html et
+     dashboard.html. -->
+<script src="data/quizMeta.js"></script>
+<style>
+:root{
+    --bg:#0b1120; --bg-card:#141d33; --bg-card-light:#1b2742;
+    --border:#243456; --text:#e8edf9; --text-dim:#8b9bc4;
+    --accent:#8b5cf6; --accent-glow:#a78bfa;
+    --success:#22c55e; --gold:#ffd23f;
+    --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+    font-family:'Segoe UI',system-ui,sans-serif;
+    background:
+        radial-gradient(circle at 15% 0%, #1a1040 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, #0a2440 0%, transparent 40%),
+        var(--bg);
+    color:var(--text); min-height:100vh; padding-bottom:60px;
+}
+header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; background:rgba(11,17,32,0.85); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;
+}
+.header-brand{display:flex; align-items:center; gap:10px;}
+.header-brand img{height:30px;}
+.header-brand span{font-size:1.15rem; font-weight:800; font-style:italic; color:var(--accent-glow);}
+.header-actions{display:flex; align-items:center; gap:14px;}
+.btn-icon{
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
+    width:38px; height:38px; border-radius:10px; display:flex; align-items:center;
+    justify-content:center; cursor:pointer; font-size:1.1rem; transition:all .2s;
+}
+.btn-icon:hover{border-color:var(--accent); color:var(--accent-glow);}
+
+/* ── CARTE JOUEUR ── */
+.player-hero{max-width:1000px; margin:32px auto 0; padding:0 20px;}
+.player-card{
+    position:relative;
+    background:linear-gradient(160deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
+    border:1px solid var(--border); border-radius:24px; padding:32px;
+    overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+.player-card::before{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 80% -10%, var(--rank-glow, var(--accent)) 0%, transparent 55%);
+    opacity:0.25; pointer-events:none;
+}
+.player-top{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; position:relative; z-index:1;}
+.player-identity{display:flex; align-items:center; gap:18px;}
+.player-avatar{
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
+    display:flex; align-items:center; justify-content:center; font-size:2.2rem;
+    box-shadow:0 0 0 4px var(--bg-card), 0 0 24px var(--rank-glow, var(--accent-glow)); flex-shrink:0;
+    position:relative; cursor:pointer;
+}
+.player-avatar .avatar-edit-badge{
+    position:absolute; bottom:-2px; right:-2px;
+    width:24px; height:24px; border-radius:50%;
+    background:var(--bg-card); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:0.75rem;
+    opacity:0; transition:opacity .2s;
+}
+.player-avatar:hover .avatar-edit-badge{ opacity:1; }
+#player-avatar-emoji{ display:inline-block; }
+.player-avatar.mood-proud #player-avatar-emoji{ animation:avatarBounce 2.4s ease-in-out infinite; }
+@keyframes avatarBounce{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-5px) rotate(-4deg); } }
+.player-avatar.mood-worried #player-avatar-emoji{ animation:avatarNod 1.3s ease-in-out infinite; }
+@keyframes avatarNod{ 0%,100%{ transform:rotate(-6deg); } 50%{ transform:rotate(6deg); } }
+.player-avatar.mood-idle #player-avatar-emoji{ animation:avatarBreathe 3.2s ease-in-out infinite; }
+@keyframes avatarBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+
+/* ── FENÊTRE DE SÉLECTION D'AVATAR ──────────────────────────────────────── */
+.avatar-modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(5,8,16,0.7);
+    align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.avatar-modal-overlay.show{ display:flex; }
+.avatar-modal-box{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:26px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.avatar-modal-box h3{ font-size:1.1rem; margin-bottom:6px; color:var(--text); }
+.avatar-modal-box .avatar-modal-sub{ font-size:0.82rem; color:var(--text-dim); margin-bottom:18px; }
+.avatar-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px;
+}
+.avatar-choice{
+    position:relative; aspect-ratio:1; border-radius:14px;
+    background:var(--bg-card-light); border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:1.9rem;
+    cursor:pointer; transition:all .15s;
+}
+.avatar-choice:hover{ border-color:var(--accent-glow); transform:translateY(-2px); }
+.avatar-choice.selected{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow)55; }
+.avatar-choice.locked{ opacity:0.35; cursor:not-allowed; filter:grayscale(1); }
+.avatar-choice.locked:hover{ transform:none; border-color:var(--border); }
+.avatar-choice .lock-icon{
+    position:absolute; top:-6px; right:-6px; font-size:0.85rem;
+    background:var(--bg-card); border-radius:50%; padding:2px;
+}
+.avatar-tier-label{ font-size:0.7rem; color:var(--text-dim); margin:14px 0 6px; text-transform:uppercase; letter-spacing:.04em; }
+.theme-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.theme-choice{
+    display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
+    padding:10px 12px; border-radius:14px; border:2px solid transparent; transition:all .2s;
+}
+.theme-choice:hover{ background:var(--bg-card-light); }
+.theme-choice.selected{ border-color:var(--swatch, var(--accent)); background:var(--bg-card-light); }
+.theme-swatch{
+    width:32px; height:32px; border-radius:50%;
+    background:linear-gradient(135deg, var(--swatch), var(--swatch-glow));
+    box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.theme-choice.selected .theme-swatch{ box-shadow:0 0 0 3px var(--swatch-glow)55, 0 2px 8px rgba(0,0,0,.35); }
+.theme-label{ font-size:0.68rem; color:var(--text-dim); font-weight:700; }
+.theme-choice.selected .theme-label{ color:var(--text); }
+.avatar-modal-close{
+    width:100%; padding:11px; border:1px solid var(--border); border-radius:10px;
+    background:none; color:var(--text-dim); font-weight:700; cursor:pointer;
+}
+.avatar-modal-close:hover{ border-color:var(--accent); color:var(--text); }
+.player-name-block .pseudo{font-size:1.5rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.player-name-block .class-tag{font-size:0.8rem; color:var(--text-dim); margin-top:2px;}
+.streak-badge{
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,210,63,0.12); border:1px solid rgba(255,210,63,0.35);
+    padding:8px 16px; border-radius:30px; font-weight:700; font-size:0.95rem; color:var(--gold);
+    transition:background .3s, border-color .3s;
+}
+.streak-cluster{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.flame-icon{display:inline-block; animation:flameFlicker 1.6s ease-in-out infinite; transform-origin:50% 85%;}
+@keyframes flameFlicker{
+    0%,100%{transform:scale(1) rotate(-1deg);}
+    25%{transform:scale(1.08) rotate(1.5deg);}
+    50%{transform:scale(0.96) rotate(-2deg);}
+    75%{transform:scale(1.05) rotate(1deg);}
+}
+.freeze-indicator{
+    display:flex; align-items:center; gap:5px;
+    background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.35);
+    padding:8px 14px; border-radius:30px; font-weight:700; font-size:0.9rem; color:#7dd3fc;
+}
+.streak-badge.at-risk{background:rgba(251,146,60,0.14); border-color:rgba(251,146,60,0.4); color:#fb923c;}
+.streak-badge.at-risk .flame-icon{animation:flameFlicker 0.8s ease-in-out infinite;}
+.streak-badge.broken{background:rgba(148,163,184,0.1); border-color:var(--border); color:var(--text-dim);}
+.streak-badge.broken .flame-icon{animation:none; filter:grayscale(1); opacity:0.6;}
+.streak-risk-msg{width:100%; font-size:0.76rem; color:#fb923c; margin-top:8px; font-weight:600;}
+.xp-progress-wrap{margin-top:26px; position:relative; z-index:1;}
+.xp-progress-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; font-size:0.82rem; color:var(--text-dim);}
+.xp-progress-labels b{color:var(--text); font-size:0.95rem;}
+.xp-bar-track{height:14px; border-radius:20px; background:#0a1020; border:1px solid var(--border); overflow:hidden;}
+.xp-bar-fill{
+    height:100%; border-radius:20px;
+    background:linear-gradient(90deg, var(--rank-color, var(--accent)), var(--rank-glow, var(--accent-glow)));
+    box-shadow:0 0 14px var(--rank-glow, var(--accent-glow));
+    transition:width 1s cubic-bezier(.34,1.56,.64,1); position:relative;
+}
+.xp-bar-fill::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    width:40%; animation:shimmer 2.2s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-120%);}100%{transform:translateX(280%);}}
+
+/* ── DEUX BARRES DE PROGRESSION ── */
+.progress-section{max-width:1000px; margin:20px auto 0; padding:0 20px; display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:640px){.progress-section{grid-template-columns:1fr;}}
+.progress-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 22px; cursor:pointer; transition:border-color .2s;
+}
+.progress-card:hover{border-color:var(--accent);}
+.progress-card .label{font-size:0.8rem; color:var(--text-dim); margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:.5px;}
+.progress-card .value{font-size:2rem; font-weight:800; color:var(--text); margin-bottom:10px;}
+.progress-bar-track{height:12px; border-radius:20px; background:#0a1020; border:1px solid var(--border); overflow:hidden;}
+.progress-bar-fill{height:100%; border-radius:20px; transition:width 0.8s ease-out;}
+.fill-green{background:linear-gradient(90deg, #16a34a, #4ade80); box-shadow:0 0 10px #22c55e55;}
+.fill-blue{background:linear-gradient(90deg, #2563eb, #60a5fa); box-shadow:0 0 10px #3b82f655;}
+.progress-card .sub{font-size:0.72rem; color:var(--text-dim); margin-top:6px;}
+
+/* ── PANEL DÉTAIL QUIZZES À REVALIDER ── */
+.revalid-panel{
+    display:none; max-width:1000px; margin:16px auto 0; padding:0 20px;
+}
+.revalid-panel.open{display:block;}
+.revalid-inner{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+}
+.revalid-header{
+    padding:14px 20px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+}
+.revalid-header h3{font-size:0.95rem; font-weight:700;}
+.revalid-close{background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;}
+.revalid-row{
+    display:flex; align-items:center; gap:14px; padding:12px 20px;
+    border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s;
+}
+.revalid-row:last-child{border-bottom:none;}
+.revalid-row:hover{background:rgba(139,92,246,0.08);}
+.revalid-icon{font-size:1.4rem; flex-shrink:0;}
+.revalid-info{flex:1;}
+.revalid-title{font-weight:700; font-size:0.9rem;}
+.revalid-sub{font-size:0.75rem; color:var(--text-dim); margin-top:2px;}
+.revalid-badge{font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(220,38,38,0.15); color:#f87171; font-weight:700; flex-shrink:0;}
+.revalid-empty{padding:30px 20px; text-align:center; color:var(--text-dim); font-size:0.9rem;}
+
+/* ── TABS ── */
+.tabs-row{max-width:1000px; margin:28px auto 0; padding:0 20px; display:flex; gap:10px; flex-wrap:wrap;}
+.tab-btn{
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
+    padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:700; font-size:0.88rem; transition:all .2s;
+}
+.tab-btn.active{background:linear-gradient(135deg, var(--accent), var(--accent-glow)); color:white; border-color:transparent; box-shadow:0 4px 16px rgba(139,92,246,0.4);}
+.tab-btn:hover:not(.active){border-color:var(--accent); color:var(--text);}
+.tab-content{max-width:1000px; margin:20px auto 0; padding:0 20px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block; animation:fadeUp .35s ease-out;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:translateY(0);}}
+
+/* ── ARBRE DE PROGRESSION (chapitres) ── */
+.skill-path{position:relative; padding:10px 0 6px;}
+.skill-line{position:absolute; left:50%; top:16px; bottom:16px; width:4px; transform:translateX(-50%); border-radius:4px; background:var(--border); z-index:0; overflow:hidden;}
+.skill-line-fill{position:absolute; left:0; top:0; width:100%; background:linear-gradient(180deg, var(--gold), #ffb700); border-radius:4px; transition:height 1s ease-out;}
+.skill-level-divider{
+    text-align:center; font-size:0.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-dim); margin:26px 0 18px; position:relative; z-index:1;
+}
+.skill-level-divider span{background:var(--bg-card, var(--bg)); padding:0 14px; border-radius:8px;}
+.skill-node-row{position:relative; z-index:1; display:flex; align-items:center; gap:14px; margin-bottom:28px; animation:fadeUp .4s ease-out backwards;}
+.skill-node-row.side-left{justify-content:flex-start; padding-right:52%;}
+.skill-node-row.side-right{justify-content:flex-end; padding-left:52%; flex-direction:row-reverse;}
+.skill-node-row.side-right .skill-node-info{text-align:right;}
+.skill-node-row.side-right .skill-node-sub{justify-content:flex-end;}
+.skill-node{
+    position:relative; flex-shrink:0; width:56px; height:56px; border-radius:50%; border:none; padding:0; cursor:pointer;
+    background:var(--bg-card); display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+    box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--border); transition:transform .2s;
+}
+.skill-node:hover{transform:scale(1.08);}
+.skill-node:active{transform:scale(0.95);}
+.skill-node .ring{
+    position:absolute; inset:-4px; border-radius:50%; padding:4px;
+    background:conic-gradient(var(--ring-color, var(--accent)) calc(var(--pct,0)*1%), var(--border) 0);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+    mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+}
+.skill-node-row.state-mastered .skill-node{box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--gold), 0 0 18px rgba(255,210,63,.35);}
+.skill-node-row.state-current .skill-node{animation:pulseNode 1.8s ease-in-out infinite; box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--accent-glow), 0 0 20px var(--accent-glow);}
+.skill-node-row.state-todo .skill-node{opacity:.5; filter:grayscale(.5);}
+@keyframes pulseNode{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+.skill-node-info{min-width:0;}
+.skill-node-title{font-weight:700; font-size:0.92rem; line-height:1.25;}
+.skill-node-sub{font-size:0.72rem; color:var(--text-dim); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.skill-node-pct{font-weight:800; color:var(--accent-glow);}
+.skill-node-row.state-mastered .skill-node-pct{color:var(--gold);}
+.skill-node-stale{color:#f87171; font-weight:700;}
+
+/* ── BADGES ── */
+.badges-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;}
+.badge-tile{background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:18px 12px; text-align:center; transition:all .25s;}
+.badge-tile.unlocked{border-color:var(--gold); box-shadow:0 0 16px rgba(255,210,63,0.15);}
+.badge-tile.locked{opacity:0.35; filter:grayscale(1); cursor:help;}
+.badge-tile .icon{font-size:2.2rem; margin-bottom:8px;}
+.badge-tile .name{font-size:0.78rem; font-weight:700;}
+.badge-tile .desc{font-size:0.68rem; color:var(--text-dim); margin-top:4px;}
+
+/* ── LEADERBOARD ── */
+.leaderboard-row{
+    display:flex; align-items:center; gap:14px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:14px 18px; margin-bottom:10px;
+}
+.leaderboard-row.me{border-color:var(--accent); box-shadow:0 0 16px rgba(139,92,246,0.2);}
+.lb-rank-num{width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9rem; background:#0a1020; color:var(--text-dim);}
+.lb-rank-num.top1{background:linear-gradient(135deg,#ffd23f,#ffb700); color:#1a1100;}
+.lb-rank-num.top2{background:linear-gradient(135deg,#cfd8e3,#9aa5b1); color:#1a1100;}
+.lb-rank-num.top3{background:linear-gradient(135deg,#d8a373,#a86a3d); color:#1a1100;}
+.lb-avatar{font-size:1.5rem;}
+.lb-name{font-weight:700; flex:1;}
+.lb-score{font-weight:800; color:var(--gold); font-size:0.95rem;}
+.lb-class{font-size:0.72rem; color:var(--text-dim); margin-top:2px;}
+.leaderboard-disabled{text-align:center; padding:50px 20px; color:var(--text-dim); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);}
+.lb-scope-toggle{display:flex; gap:8px; margin-bottom:16px;}
+.lb-scope-toggle button{
+    flex:1; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--bg-card);
+    color:var(--text-dim); font-weight:700; font-size:0.85rem; cursor:pointer; transition:all .2s;
+}
+.lb-scope-toggle button:hover{border-color:var(--accent); color:var(--text);}
+.lb-scope-toggle button.active{
+    background:linear-gradient(135deg, var(--accent), var(--accent-glow)); border-color:transparent; color:white;
+    box-shadow:0 4px 14px rgba(139,92,246,0.35);
+}
+.star-full{color:#ffd23f; text-shadow:0 0 6px #ffd23f88;}
+.star-half{color:#ffd23f; opacity:0.5;}
+.star-empty{color:#475569;}
+
+#loading-screen{position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:var(--text-dim); z-index:999;}
+.spinner{width:38px; height:38px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty-state{text-align:center; padding:50px 20px; color:var(--text-dim);}
+.empty-state .icon{font-size:2.6rem; margin-bottom:10px;}
+@media(max-width:640px){
+    .player-card{padding:22px 18px;} .player-avatar{width:56px; height:56px; font-size:1.7rem;} .player-name-block .pseudo{font-size:1.2rem;}
+    .skill-line{left:23px;}
+    .skill-node-row, .skill-node-row.side-right{justify-content:flex-start; padding:0; flex-direction:row; margin-left:0;}
+    .skill-node-row.side-right .skill-node-info, .skill-node-row.side-right .skill-node-sub{text-align:left; justify-content:flex-start;}
+    .skill-node{width:46px; height:46px; font-size:1.2rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-screen"><div class="spinner"></div><span>Chargement de ton profil…</span></div>
+
+<header>
+    <div class="header-brand">
+        <img src="images/logo_robot.webp" alt="Logo" onerror="this.style.display='none'">
+        <span>AutoMaths</span>
+    </div>
+    <div class="header-actions">
+        <button class="btn-icon" onclick="window.location.href='index.html'" title="Retour aux cours">📚</button>
+        <button class="btn-icon" onclick="logoutStudent()" title="Déconnexion">🚪</button>
+    </div>
+</header>
+
+<!-- CARTE JOUEUR -->
+<div class="player-hero">
+    <div class="player-card" id="player-card">
+        <div class="player-top">
+            <div class="player-identity">
+                <div class="player-avatar" id="player-avatar" onclick="openAvatarPicker()" title="Cliquer pour changer d'avatar">
+                    <span id="player-avatar-emoji">🦊</span>
+                    <span class="avatar-edit-badge">✏️</span>
+                </div>
+                <div class="player-name-block">
+                    <div class="pseudo">
+                        <!-- Cliquer sur le pseudo ou le crayon pour l'éditer -->
+                        <span id="player-pseudo" onclick="startEditPseudo()"
+                              style="cursor:pointer;" title="Cliquer pour modifier">…</span>
+                        <button id="btn-edit-pseudo" onclick="startEditPseudo()"
+                                style="background:none;border:none;cursor:pointer;color:var(--text-dim);font-size:0.9rem;padding:2px 4px;opacity:0.6;transition:opacity .2s;"
+                                onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.6"
+                                title="Modifier le pseudo">✏️</button>
+                        <!-- Input d'édition (masqué par défaut) -->
+                        <form id="pseudo-edit-form" onsubmit="savePseudo(event)"
+                              style="display:none; align-items:center; gap:8px;">
+                            <input id="pseudo-input" type="text" maxlength="30"
+                                   style="background:#0a1020; border:2px solid var(--accent); border-radius:8px;
+                                          color:var(--text); font-size:1.3rem; font-weight:800; padding:4px 10px;
+                                          width:180px; outline:none;"
+                                   onblur="savePseudo(null)" onkeydown="if(event.key==='Escape') cancelEditPseudo()">
+                            <button type="submit"
+                                    style="background:var(--accent);border:none;color:white;border-radius:6px;
+                                           padding:4px 10px;cursor:pointer;font-size:0.8rem;font-weight:700;">OK</button>
+                            <button type="button" onclick="cancelEditPseudo()"
+                                    style="background:none;border:1px solid var(--border);color:var(--text-dim);
+                                           border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.8rem;">✕</button>
+                        </form>
+                        <span id="rank-banner-slot"></span>
+                    </div>
+                    <div class="class-tag" id="player-class">—</div>
+                </div>
+            </div>
+            <div class="streak-cluster">
+                <div class="streak-badge" id="streak-badge">
+                    <span class="flame-icon" id="flame-icon">🔥</span>
+                    <span id="streak-count">0</span> jour(s) de suite
+                </div>
+                <div class="freeze-indicator" id="freeze-indicator" title="Gels de série disponibles : couvrent automatiquement un jour manqué">
+                    ❄️ <span id="freeze-count">0</span>
+                </div>
+            </div>
+            <div class="streak-risk-msg" id="streak-risk-msg" style="display:none;"></div>
+        </div>
+        <div class="xp-progress-wrap">
+            <div class="xp-progress-labels">
+                <span><b id="xp-current">0</b> XP</span>
+                <span id="xp-next-label">—</span>
+            </div>
+            <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%;"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- DEUX BARRES DE PROGRESSION -->
+<div class="progress-section">
+    <!-- Barre 1 : % de réussite aux questionnaires (30j glissants) -->
+    <div class="progress-card" id="card-reussite" onclick="toggleRevalidPanel()">
+        <div class="label">% de réussite aux questionnaires réalisés</div>
+        <div class="value" id="reussite-pct">—</div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill fill-green" id="reussite-bar" style="width:0%;"></div>
+        </div>
+        <div class="sub" id="reussite-sub">Sur les 30 derniers jours · Cliquer pour voir le détail</div>
+    </div>
+    <!-- Barre 2 : Progression globale du programme -->
+    <div class="progress-card">
+        <div class="label">Progression globale du programme</div>
+        <div class="value" id="global-pct">—</div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill fill-blue" id="global-bar" style="width:0%;"></div>
+        </div>
+        <div class="sub" id="global-sub">Questions réussies / total du programme</div>
+    </div>
+</div>
+
+<!-- PANEL DÉTAIL QUIZZES À REVALIDER -->
+<div class="revalid-panel" id="revalid-panel">
+    <div class="revalid-inner">
+        <div class="revalid-header">
+            <h3>📋 Questionnaires à revalider (non refaits depuis &gt;30 jours)</h3>
+            <button class="revalid-close" onclick="toggleRevalidPanel()">✕</button>
+        </div>
+        <div id="revalid-list"></div>
+    </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-row">
+    <button class="tab-btn active" data-tab="chapters" onclick="switchTab('chapters')">📖 Mes chapitres</button>
+    <button class="tab-btn" data-tab="badges" onclick="switchTab('badges')">🏅 Mes badges</button>
+    <button class="tab-btn" data-tab="leaderboard" onclick="switchTab('leaderboard')">🏆 Classement</button>
+</div>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="tab-chapters"><div id="chapters-list"></div></div>
+    <div class="tab-pane" id="tab-badges"><div class="badges-grid" id="badges-grid"></div></div>
+    <div class="tab-pane" id="tab-leaderboard"><div id="leaderboard-content"></div></div>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────────────────
+const SUPABASE_URL      = 'https://ppedtegkqcklkleeghbc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZWR0ZWdrcWNrbGtsZWVnaGJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTMxMjQsImV4cCI6MjA5NTY4OTEyNH0.WFbk-EdrbN5vtZJzjO3dcK2BkpASti00Fn5KZDwWZxc';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── RANGS ──────────────────────────────────────────────────────────────────
+const RANK_TIERS = [
+    { key:'bronze',  label:'Bronze',  color:'#a86a3d', glow:'#cd8a5e', icon:'🥉', minXp:0    },
+    { key:'argent',  label:'Argent',  color:'#9aa5b1', glow:'#c9d2db', icon:'🥈', minXp:150  },
+    { key:'or',      label:'Or',      color:'#d4af37', glow:'#f4d160', icon:'🥇', minXp:400  },
+    { key:'platine', label:'Platine', color:'#3fb8af', glow:'#7eded6', icon:'💎', minXp:800  },
+    { key:'diamant', label:'Diamant', color:'#5b8cff', glow:'#9bb8ff', icon:'💠', minXp:1400 },
+    { key:'master',  label:'Master',  color:'#b042ff', glow:'#e29bff', icon:'👑', minXp:2200 },
+];
+const SUB_TIERS = ['III','II','I'];
+
+function getRankFromXp(xp) {
+    let cur = RANK_TIERS[0], next = RANK_TIERS[1];
+    for (let i = 0; i < RANK_TIERS.length; i++) {
+        if (xp >= RANK_TIERS[i].minXp) { cur = RANK_TIERS[i]; next = RANK_TIERS[i+1] || null; }
+    }
+    let subTier = '', prog = 1, xpTo = 0;
+    if (next) {
+        const span = next.minXp - cur.minXp, earned = xp - cur.minXp;
+        prog = Math.min(1, earned / span);
+        xpTo = Math.max(0, next.minXp - xp);
+        subTier = SUB_TIERS[Math.min(2, Math.floor(prog * 3))];
+    }
+    return { ...cur, subTier, progressToNext: prog, xpToNext: xpTo, nextRankLabel: next ? next.label : null };
+}
+
+// ── AVATARS DÉBLOQUABLES PAR PALIER ────────────────────────────────────────
+// (copie locale, en miroir de js/gamification.js — voir la remarque sur
+// quizMeta juste au-dessus : ce fichier reste volontairement autonome)
+const AVATAR_TIERS = [
+    { rankKey: 'bronze',  icons: ['🦊'] },
+    { rankKey: 'argent',  icons: ['🐱', '🐺'] },
+    { rankKey: 'or',      icons: ['🦄', '🐉'] },
+    { rankKey: 'platine', icons: ['🦋', '🦁'] },
+    { rankKey: 'diamant', icons: ['🧚', '🐯'] },
+    { rankKey: 'master',  icons: ['🦢', '🦅'] },
+];
+
+function getAllAvatarsWithStatus(totalXp) {
+    const rank = getRankFromXp(totalXp);
+    const rankIndex = RANK_TIERS.findIndex(r => r.key === rank.key);
+    const result = [];
+    AVATAR_TIERS.forEach((tier, i) => {
+        const tierRank = RANK_TIERS.find(r => r.key === tier.rankKey);
+        const unlocked = i <= rankIndex;
+        tier.icons.forEach(icon => {
+            result.push({ icon, unlocked, rankKey: tier.rankKey, rankLabel: tierRank.label });
+        });
+    });
+    return result;
+}
+
+// ── MÉTADONNÉES DES QUIZZES ────────────────────────────────────────────────
+// quizMeta est chargé via <script src="data/quizMeta.js"> dans le <head>
+// (voir plus haut) — PAS via fetch(), qui est bloqué par CORS lorsque le
+// site est ouvert directement depuis le disque (file://) plutôt que servi
+// par un serveur. La balise <script> fonctionne dans les deux cas.
+// Filet de sécurité si le fichier n'a pas pu se charger pour une autre
+// raison (chemin incorrect, fichier absent) : évite un crash JS plus loin.
+if (typeof quizMeta === 'undefined' || !quizMeta) {
+    console.warn('[QuizMeta] data/quizMeta.js ne semble pas chargé (vérifie que le fichier existe bien à ce chemin).');
+    quizMeta = { byKey: {}, questionCount: {}, totalByLevel: {} };
+}
+
+// ── ÉTAT ───────────────────────────────────────────────────────────────────
+let me = null;
+let myStats = null;
+let myBadges = [];
+let myBestScores30d = [];   // meilleur score par quiz sur 30 jours
+let myLastAttempts = [];    // dernière tentative par quiz (pour quizzes "à revalider")
+let myTotalResults = null;  // agrégats globaux (total bonnes réponses, etc.)
+
+// Portée "au programme" pour cet élève, déduite de sa classe
+let myAllowedLevels = null;      // null = aucune restriction de niveau (classe sans niveau défini)
+let myProgressCheckedMap = {};   // quiz_key -> boolean (cases cochées par le prof pour SA classe)
+let myHasProgressConfig = false; // true si le prof a coché au moins une case pour cette classe
+let myClassLeaderboardEnabled = true; // false si le prof a désactivé le classement pour la classe de l'élève
+let leaderboardScope = 'class';       // 'class' (petit groupe, par défaut) | 'global' — bascule dans l'onglet Classement
+let leaderboardRowsCache = null;      // dernier résultat de get_leaderboard(), pour basculer sans re-fetch
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+(async () => {
+    const { data:{ session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    if (!profile || profile.role !== 'student') { window.location.href = 'index.html'; return; }
+    me = profile;
+    applyTheme(me.theme_key || 'violet'); // le plus tôt possible pour éviter un flash de couleur par défaut
+
+    // Requêtes Supabase parallèles
+    const [statsRes, badgesRes, best30dRes, lastAttemptRes, totalRes, classRes] = await Promise.all([
+        sb.from('student_stats').select('*').eq('user_id', me.id).single(),
+        sb.from('student_badges').select('*').eq('user_id', me.id),
+        sb.from('best_scores_30d').select('*').eq('user_id', me.id),
+        sb.from('quiz_last_attempt').select('*').eq('user_id', me.id),
+        // Toutes les tentatives (toutes dates) : sert à la progression
+        // globale ET au calcul de progression par chapitre ci-dessous
+        // (sans limite de 30 jours — un chapitre validé il y a plus d'un
+        // mois doit continuer à apparaître comme acquis, pas retomber à 0%).
+        sb.from('quiz_results').select('quiz_key, chapter_title, level_name, score, total, completed_at').eq('user_id', me.id),
+        // Niveau + niveaux autorisés + statut du classement de la classe de
+        // l'élève (pour filtrer "Mes chapitres" et gérer l'onglet Classement)
+        me.class_id ? sb.from('classes').select('level, allowed_levels, leaderboard_enabled').eq('id', me.class_id).maybeSingle() : Promise.resolve({ data: null })
+    ]);
+
+    myStats      = statsRes.data      || { total_xp: 0, current_streak: 0, streak_freezes: 0 };
+    myBadges     = badgesRes.data     || [];
+    myBestScores30d = best30dRes.data || [];
+    myLastAttempts  = lastAttemptRes.data || [];
+    myTotalResults  = totalRes.data   || [];
+
+    // Niveaux de QCM "au programme" pour cet élève : ceux autorisés pour sa
+    // classe (allowed_levels), sinon juste le niveau de la classe si défini
+    // (comportement historique = aucune restriction si rien n'est configuré).
+    const classInfo = classRes.data;
+    if (classInfo && classInfo.allowed_levels && classInfo.allowed_levels.length > 0) {
+        myAllowedLevels = classInfo.allowed_levels;
+    } else if (classInfo && classInfo.level) {
+        myAllowedLevels = [classInfo.level];
+    } else {
+        myAllowedLevels = null; // pas de restriction
+    }
+    // leaderboard_enabled est NULL pour une classe créée avant cette
+    // fonctionnalité ou pour un élève sans classe : on considère "activé"
+    // par défaut (comportement historique, cohérent avec le reste de
+    // l'appli — aucune restriction tant que rien n'est configuré).
+    myClassLeaderboardEnabled = !classInfo || classInfo.leaderboard_enabled !== false;
+    // Par défaut : classement "petit groupe" (sa classe) si l'élève a une
+    // classe, plus lisible et moins intimidant qu'un classement global de
+    // tout l'établissement — bascule possible vers "Global" dans l'onglet.
+    leaderboardScope = me.class_id ? 'class' : 'global';
+
+    // Progression cochée par le prof pour la classe de l'élève (si classe
+    // connue). Table lisible par l'élève depuis AJOUT v13 (auparavant
+    // réservée au professeur).
+    if (me.class_id) {
+        const { data: progressRows } = await sb.from('class_progress')
+            .select('quiz_key, checked').eq('class_id', me.class_id);
+        (progressRows || []).forEach(r => { myProgressCheckedMap[r.quiz_key] = r.checked; });
+        myHasProgressConfig = (progressRows || []).some(r => r.checked === true);
+    }
+
+    renderPlayerCard();
+    renderProgressBars();
+    renderChapters();
+    renderBadges();
+    await renderLeaderboard();
+
+    document.getElementById('loading-screen').style.display = 'none';
+})();
+
+
+// ── RENDU : CARTE JOUEUR ───────────────────────────────────────────────────
+function renderPlayerCard() {
+    const rank = getRankFromXp(myStats.total_xp || 0);
+    const card = document.getElementById('player-card');
+    card.style.setProperty('--rank-color', rank.color);
+    card.style.setProperty('--rank-glow', rank.glow);
+
+    document.getElementById('player-avatar-emoji').textContent = me.avatar_emoji || '🦊';
+    document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
+    document.getElementById('player-class').textContent  = me.class_name || '';
+    document.getElementById('streak-count').textContent  = myStats.current_streak || 0;
+    document.getElementById('freeze-count').textContent  = myStats.streak_freezes || 0;
+    renderStreakRiskState();
+
+    document.getElementById('rank-banner-slot').innerHTML =
+        '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:30px;' +
+        'background:linear-gradient(135deg,' + rank.color + ',' + rank.glow + ');' +
+        'box-shadow:0 0 14px ' + rank.glow + '77;font-size:0.78rem;font-weight:800;color:white;text-shadow:0 1px 2px rgba(0,0,0,.3);">' +
+        rank.icon + ' ' + rank.label + (rank.subTier ? ' ' + rank.subTier : '') + '</span>';
+
+    document.getElementById('xp-current').textContent = myStats.total_xp || 0;
+    document.getElementById('xp-next-label').textContent = rank.nextRankLabel
+        ? (rank.xpToNext + ' XP avant ' + rank.nextRankLabel)
+        : 'Rang maximum atteint !';
+
+    setTimeout(() => {
+        document.getElementById('xp-bar-fill').style.width = (rank.progressToNext * 100) + '%';
+    }, 200);
+}
+
+/**
+ * Calcule l'état "à risque" du streak à partir de last_activity_date, sans
+ * attendre le prochain QCM (qui est le seul moment où le serveur recalcule
+ * réellement current_streak — voir record_quiz_result). Purement indicatif
+ * côté client : la logique qui fait foi reste côté serveur (gel de série
+ * inclus), mais ça évite d'afficher un compteur "5 jours 🔥" trompeur à un
+ * élève qui n'a en réalité pas joué depuis 3 jours.
+ *   - écart 0 (a déjà joué aujourd'hui) : état normal
+ *   - écart 1 (pas encore joué aujourd'hui) : "à risque", flamme orange
+ *   - écart 2 : dernier jour avant rupture (un gel sera utilisé
+ *     automatiquement s'il en reste un et que l'élève joue aujourd'hui)
+ *   - écart ≥ 3 : la série affichée est en réalité déjà caduque (elle
+ *     sera remise à 1 au prochain QCM) — on grise la flamme plutôt que
+ *     d'afficher un chiffre qui n'est plus honnête.
+ */
+function renderStreakRiskState() {
+    const badge = document.getElementById('streak-badge');
+    const msg = document.getElementById('streak-risk-msg');
+    const avatar = document.getElementById('player-avatar');
+    if (!badge || !msg) return;
+
+    badge.classList.remove('at-risk', 'broken');
+    if (avatar) avatar.classList.remove('mood-proud', 'mood-worried', 'mood-idle');
+    msg.style.display = 'none';
+
+    if (!myStats.last_activity_date || !myStats.current_streak) {
+        if (avatar) avatar.classList.add('mood-idle');
+        return;
+    }
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const gapDays = Math.round((new Date(todayStr) - new Date(myStats.last_activity_date)) / 86400000);
+    const freezes = myStats.streak_freezes || 0;
+
+    if (gapDays <= 0) {
+        // A déjà joué aujourd'hui : mascotte tranquille, ou fière si la
+        // série est déjà solide (7 jours ou plus).
+        if (avatar) avatar.classList.add(myStats.current_streak >= 7 ? 'mood-proud' : 'mood-idle');
+        return;
+    }
+    if (gapDays === 1) {
+        badge.classList.add('at-risk');
+        if (avatar) avatar.classList.add('mood-worried');
+        msg.textContent = '⏳ Joue un questionnaire aujourd\'hui pour garder ta série !';
+        msg.style.display = 'block';
+    } else if (gapDays === 2 && freezes > 0) {
+        badge.classList.add('at-risk');
+        if (avatar) avatar.classList.add('mood-worried');
+        msg.textContent = '❄️ Un gel de série sera utilisé automatiquement si tu joues aujourd\'hui.';
+        msg.style.display = 'block';
+    } else {
+        badge.classList.add('broken');
+        if (avatar) avatar.classList.add('mood-idle');
+        msg.textContent = 'Série interrompue — rejoue pour en démarrer une nouvelle !';
+        msg.style.display = 'block';
+    }
+}
+
+
+// ── RENDU : DEUX BARRES DE PROGRESSION ────────────────────────────────────
+function renderProgressBars() {
+    // ── BARRE 1 : % de réussite sur 30 jours ────────────────────────────
+    // Calcul : pour chaque quiz tenté, on prend son MEILLEUR score sur 30j.
+    // Le % est la moyenne de ces meilleurs scores.
+    let reussitePct = 0;
+    if (myBestScores30d.length > 0) {
+        const sum = myBestScores30d.reduce((s, r) => s + (r.best_pct || 0), 0);
+        reussitePct = Math.round(sum / myBestScores30d.length * 100);
+    }
+    document.getElementById('reussite-pct').textContent = reussitePct + '%';
+    document.getElementById('reussite-sub').textContent =
+        myBestScores30d.length + ' questionnaire(s) tenté(s) sur 30 jours · Cliquer pour le détail';
+    setTimeout(() => {
+        document.getElementById('reussite-bar').style.width = reussitePct + '%';
+    }, 200);
+
+    // ── BARRE 2 : Progression globale du programme ───────────────────────
+    // Calcul : total de bonnes réponses (toutes dates) / total de questions
+    // du programme selon localQuestions.js (via quizMeta.totalByLevel).
+    // Si l'élève a un niveau assigné, on filtre sur ce niveau.
+    let levelFilter = null;
+    if (me.class_name) {
+        // Tente de déduire le niveau depuis le nom de classe ("3ème A" → "3ème")
+        const m = me.class_name.match(/(\d+ème)/i);
+        if (m) levelFilter = m[1];
+    }
+
+    const totalQuestionsInProgram = quizMeta && quizMeta.totalByLevel
+        ? (levelFilter && quizMeta.totalByLevel[levelFilter]
+            ? quizMeta.totalByLevel[levelFilter]
+            : Object.values(quizMeta.totalByLevel || {}).reduce((s, v) => s + v, 0))
+        : 0;
+
+    // Total de bonnes réponses tous quiz confondus (meilleur score par quiz)
+    // On garde le meilleur score par quiz_key pour ne pas sur-compter les reattempts
+    const bestByKey = {};
+    myTotalResults.forEach(r => {
+        const key = r.quiz_key || r.quizKey;
+        if (!key) return;
+        if (!bestByKey[key] || r.score > bestByKey[key].score) {
+            bestByKey[key] = r;
+        }
+    });
+    const totalCorrect = Object.values(bestByKey).reduce((s, r) => s + (r.score || 0), 0);
+
+    let globalPct = totalQuestionsInProgram > 0
+        ? Math.min(100, Math.round(totalCorrect / totalQuestionsInProgram * 100))
+        : 0;
+
+    document.getElementById('global-pct').textContent = globalPct + '%';
+    document.getElementById('global-sub').textContent =
+        totalCorrect + ' bonne(s) réponse(s) / ' + (totalQuestionsInProgram || '?') + ' questions du programme';
+    setTimeout(() => {
+        document.getElementById('global-bar').style.width = globalPct + '%';
+    }, 300);
+}
+
+
+// ── PANEL QUIZZES À REVALIDER ─────────────────────────────────────────────
+function toggleRevalidPanel() {
+    const panel = document.getElementById('revalid-panel');
+    const isOpen = panel.classList.contains('open');
+    if (!isOpen) renderRevalidList();
+    panel.classList.toggle('open', !isOpen);
+}
+
+function renderRevalidList() {
+    const list = document.getElementById('revalid-list');
+    const now = Date.now();
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+    // Quizzes "à revalider" = dernière tentative datant de plus de 30 jours
+    // (ou quizzes jamais tentés qui font partie du programme)
+    const staleAttempts = myLastAttempts
+        .filter(r => {
+            if (!r.last_attempt_at) return true;
+            return (now - new Date(r.last_attempt_at).getTime()) > THIRTY_DAYS_MS;
+        })
+        .sort((a, b) => new Date(a.last_attempt_at || 0) - new Date(b.last_attempt_at || 0));
+
+    if (staleAttempts.length === 0) {
+        list.innerHTML = '<div class="revalid-empty">✅ Tous tes questionnaires sont à jour ! Bravo.</div>';
+        return;
+    }
+
+    list.innerHTML = staleAttempts.map(r => {
+        const key = r.quiz_key;
+        const meta = quizMeta && quizMeta.byKey ? quizMeta.byKey[key] : null;
+        const chapterTitle = r.chapter_title || (meta ? meta.chapter : key);
+        const level = r.level_name || (meta ? meta.level : '');
+        const lastDate = r.last_attempt_at
+            ? new Date(r.last_attempt_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+            : 'jamais tenté';
+        const daysAgo = r.last_attempt_at
+            ? Math.floor((now - new Date(r.last_attempt_at).getTime()) / (24 * 60 * 60 * 1000))
+            : null;
+        const badge = daysAgo !== null ? (daysAgo + 'j') : 'jamais';
+
+        return '' +
+            '<div class="revalid-row" onclick="launchQuizFromDashboard(\'' + esc(key) + '\', \'' + esc(chapterTitle) + '\')">' +
+                '<div class="revalid-icon">📝</div>' +
+                '<div class="revalid-info">' +
+                    '<div class="revalid-title">' + esc(chapterTitle) + '</div>' +
+                    '<div class="revalid-sub">' + esc(level) + ' · Dernier : ' + lastDate + '</div>' +
+                '</div>' +
+                '<div class="revalid-badge">' + badge + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+function launchQuizFromDashboard(quizKey, chapterTitle) {
+    // Stocke en sessionStorage le quiz à lancer, puis redirige vers le cours
+    sessionStorage.setItem('pendingQuizKey', quizKey);
+    sessionStorage.setItem('pendingQuizTitle', chapterTitle);
+    window.location.href = 'index.html?quiz=' + encodeURIComponent(quizKey);
+}
+
+function esc(str) {
+    return String(str || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+
+// ── RENDU : CHAPITRES — ARBRE / PARCOURS DE PROGRESSION ────────────────────
+// Même ordre que dans dashboard.html (onglet Progression) : programme
+// officiel 6ème → 3ème.
+const LEVEL_ORDER = ['6ème', '5ème', '4ème', '3ème'];
+
+/**
+ * Échappe une valeur pour l'insérer dans un attribut onclick="...('VALEUR')"
+ * (distinct de esc(), qui échappe pour du contenu HTML affiché : ici on doit
+ * échapper au niveau JS — un antislash ou une apostrophe non échappés
+ * casseraient la chaîne littérale, alors qu'une entité HTML comme &#39;
+ * serait redécodée en ' par le navigateur AVANT l'exécution du JS et
+ * casserait quand même la chaîne).
+ */
+function jsAttrEscape(str) {
+    return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function renderChapters() {
+    const container = document.getElementById('chapters-list');
+    const now = Date.now();
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
+    // ── 1) Regrouper TOUTES les tentatives de l'élève (sans limite de
+    // date) par quiz_key, en gardant le meilleur % et la date la plus
+    // récente pour chacun. (inchangé)
+    const bestByKey = {}; // quiz_key -> { pct, lastAt }
+    (myTotalResults || []).forEach(r => {
+        if (!r.total || r.total <= 0) return;
+        const pct = r.score / r.total;
+        if (!bestByKey[r.quiz_key] || pct > bestByKey[r.quiz_key].pct) {
+            bestByKey[r.quiz_key] = { pct, lastAt: r.completed_at };
+        }
+        if (bestByKey[r.quiz_key] && r.completed_at > bestByKey[r.quiz_key].lastAt) {
+            bestByKey[r.quiz_key].lastAt = r.completed_at;
+        }
+    });
+
+    // ── 2) Regrouper les quiz_key CONNUS (quizMeta) par (NIVEAU, chapitre)
+    // — la clé combine bien les deux : deux chapitres de même nom dans
+    // des niveaux différents (ex: "Transformations" en 5ème ET ailleurs)
+    // ne doivent JAMAIS partager la même progression. (inchangé)
+    const keysByChapter = {}; // "level||chapter" -> [quiz_key,...]
+    if (quizMeta && quizMeta.byKey) {
+        Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
+            if (myAllowedLevels && !myAllowedLevels.includes(meta.level)) return;
+            if (myHasProgressConfig && myProgressCheckedMap[key] !== true) return;
+
+            const chapterKey = meta.level + '||' + meta.chapter;
+            if (!keysByChapter[chapterKey]) keysByChapter[chapterKey] = [];
+            keysByChapter[chapterKey].push(key);
+        });
+    }
+
+    // ── 3) Pour chaque (niveau, chapitre) "au programme" : couverture ×
+    // qualité moyenne sur les QCM au programme de ce chapitre. (inchangé)
+    const progressByChapterKey = {}; // "level||chapter" -> { pct, attempts, lastAt }
+    Object.entries(keysByChapter).forEach(([chapterKey, keys]) => {
+        const attemptedKeys = keys.filter(k => bestByKey[k]);
+        if (attemptedKeys.length === 0) return; // pas commencé, restera à 0%
+
+        const coverage = attemptedKeys.length / keys.length;
+        const quality = attemptedKeys.reduce((s, k) => s + bestByKey[k].pct, 0) / attemptedKeys.length;
+        const pct = Math.round(coverage * quality * 100);
+        const lastAt = attemptedKeys.reduce((max, k) => {
+            const t = bestByKey[k].lastAt;
+            return (!max || t > max) ? t : max;
+        }, null);
+
+        progressByChapterKey[chapterKey] = { pct, attempts: attemptedKeys.length, lastAt };
+    });
+
+    // ── 4) NOUVEAU — ordre du PARCOURS (au lieu du tri par % décroissant) :
+    // suit le programme officiel, niveau par niveau (6e→3e), puis chapitre
+    // par chapitre au sein d'un niveau, dans l'ordre déduit du plus petit
+    // quiz_key numérique du chapitre — même heuristique que le regroupement
+    // provisoire de MAJcourseOutline.js (voir README, "courseOutline.js
+    // n'est rempli que pour 2 chapitres"). Un vrai parcours de compétences
+    // doit suivre la progression du cours, pas le classement par score.
+    const displayed = Object.keys(keysByChapter).map(chapterKey => {
+        const [level, title] = chapterKey.split('||');
+        const keys = keysByChapter[chapterKey];
+        const nums = keys.map(k => parseInt(k, 10)).filter(n => !isNaN(n));
+        const minKey = nums.length ? Math.min(...nums) : Infinity;
+        return { chapterKey, level, title, minKey };
+    }).sort((a, b) => {
+        const la = LEVEL_ORDER.indexOf(a.level), lb = LEVEL_ORDER.indexOf(b.level);
+        const ra = la === -1 ? LEVEL_ORDER.length : la, rb = lb === -1 ? LEVEL_ORDER.length : lb;
+        if (ra !== rb) return ra - rb;
+        return a.minKey - b.minKey;
+    });
+
+    if (displayed.length === 0) {
+        container.innerHTML =
+            '<div class="empty-state"><div class="icon">📭</div>' +
+            (myHasProgressConfig
+                ? '<p>Ton professeur n\'a pas encore coché de chapitre au programme.</p>'
+                : '<p>Lance un questionnaire pour voir ta progression ici !</p>') +
+            '</div>';
+        return;
+    }
+
+    // ── 5) État de chaque nœud + repérage du nœud "en cours" : le premier
+    // du parcours qui n'est pas encore maîtrisé (pct >= 95%) — c'est celui
+    // qu'on met en avant (pulsation), comme la leçon suivante surlignée
+    // dans un parcours façon Duolingo. S'il n'y en a aucun (tout maîtrisé),
+    // on considère le dernier nœud comme "actuel" pour que la ligne du
+    // parcours se remplisse entièrement.
+    let currentIndex = -1;
+    const nodes = displayed.map((ch, i) => {
+        const prog = progressByChapterKey[ch.chapterKey] || { pct: 0, attempts: 0, lastAt: null };
+        const mastered = prog.pct >= 95;
+        if (!mastered && currentIndex === -1) currentIndex = i;
+        return { ...ch, prog, mastered };
+    });
+    if (currentIndex === -1) currentIndex = nodes.length - 1;
+
+    const lineFillPct = nodes.length > 1 ? Math.round((currentIndex / (nodes.length - 1)) * 100) : 100;
+
+    let html = '<div class="skill-path">' +
+        '<div class="skill-line"><div class="skill-line-fill" style="height:' + lineFillPct + '%;"></div></div>';
+
+    let prevLevel = null;
+    nodes.forEach((n, i) => {
+        if (n.level !== prevLevel) {
+            html += '<div class="skill-level-divider"><span>' + esc(n.level || 'Autre') + '</span></div>';
+            prevLevel = n.level;
+        }
+
+        const pct = n.prog.pct;
+        const stale = n.prog.lastAt && (now - new Date(n.prog.lastAt).getTime()) > THIRTY_DAYS_MS;
+        const isCurrent = i === currentIndex && !n.mastered;
+        const state = n.mastered ? 'mastered' : (isCurrent ? 'current' : (n.prog.attempts > 0 ? 'started' : 'todo'));
+        const side = i % 2 === 0 ? 'side-left' : 'side-right';
+        const icon = n.mastered ? '✓' : (n.prog.attempts > 0 ? '📘' : '○');
+        const ringColor = n.mastered ? 'var(--gold)' : (isCurrent ? 'var(--accent-glow)' : 'var(--accent)');
+        const animDelay = Math.min(i, 10) * 0.06;
+
+        html += '' +
+            '<div class="skill-node-row ' + side + ' state-' + state + '" style="animation-delay:' + animDelay + 's;">' +
+                '<button class="skill-node" style="--pct:' + pct + '; --ring-color:' + ringColor + ';" ' +
+                    'onclick="launchChapterFromTree(\'' + jsAttrEscape(n.chapterKey) + '\')" ' +
+                    'title="' + esc(n.title) + ' — ' + pct + '%">' +
+                    '<span class="ring"></span>' +
+                    '<span style="position:relative;">' + icon + '</span>' +
+                '</button>' +
+                '<div class="skill-node-info">' +
+                    '<div class="skill-node-title">' + esc(n.title) + '</div>' +
+                    '<div class="skill-node-sub">' +
+                        '<span class="skill-node-pct">' + pct + '%</span>' +
+                        '<span>' + (n.prog.attempts > 0 ? n.prog.attempts + ' QCM tenté(s)' : 'Pas encore commencé') + '</span>' +
+                        (stale ? '<span class="skill-node-stale">⚠️ à revalider</span>' : '') +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Mémorise la correspondance chapitre → quiz_key pour le clic sur un
+    // nœud (voir launchChapterFromTree juste en dessous).
+    window._skillTreeKeysByChapter = keysByChapter;
+    window._skillTreeBestByKey = bestByKey;
+}
+
+/**
+ * Clic sur un nœud de l'arbre de progression : lance le premier QCM non
+ * encore maîtrisé (<100%) du chapitre correspondant, dans l'ordre
+ * numérique du quiz_key (même heuristique de tri que pour l'ordre des
+ * chapitres eux-mêmes, voir renderChapters) — ou, si le chapitre est déjà
+ * entièrement maîtrisé, le premier QCM du chapitre pour permettre de le
+ * rejouer. Réutilise le même mécanisme de redirection que "à revalider"
+ * (index.html?quiz=... intercepté par checkPendingQuiz()).
+ */
+function launchChapterFromTree(chapterKey) {
+    const keys = ((window._skillTreeKeysByChapter || {})[chapterKey] || [])
+        .slice()
+        .sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
+    if (keys.length === 0) return;
+    const bestByKey = window._skillTreeBestByKey || {};
+    const notMastered = keys.find(k => !bestByKey[k] || bestByKey[k].pct < 1);
+    const targetKey = notMastered || keys[0];
+    console.log('[Arbre de progression] Lancement du QCM', targetKey, 'pour le chapitre', chapterKey);
+    window.location.href = 'index.html?quiz=' + encodeURIComponent(targetKey);
+}
+
+
+// ── RENDU : BADGES ────────────────────────────────────────────────────────
+const BADGE_DEFINITIONS = {
+    first_quiz:      { icon:'🎯', label:'Premier pas',              desc:'Premier QCM terminé' },
+    streak_3:        { icon:'🔥', label:'En feu',                    desc:'3 jours d\'affilée' },
+    streak_7:        { icon:'🌟', label:'Semaine parfaite',         desc:'7 jours d\'affilée' },
+    streak_30:       { icon:'🏆', label:'Inarrêtable',              desc:'30 jours d\'affilée' },
+    perfect_chapter: { icon:'💯', label:'Sans faute',                desc:'Un chapitre entier validé à 100%' },
+    chapters_2:      { icon:'📗', label:'Deux chapitres maîtrisés',  desc:'2 chapitres validés à 100%' },
+    chapters_5:      { icon:'📘', label:'Cinq chapitres maîtrisés',  desc:'5 chapitres validés à 100%' },
+    chapters_10:     { icon:'📙', label:'Dix chapitres maîtrisés',   desc:'10 chapitres validés à 100%' },
+    chapters_all:    { icon:'🎓', label:'Programme maîtrisé',       desc:'Tous les chapitres au programme validés à 100%' },
+    night_owl:       { icon:'🦉', label:'Couche-tard',               desc:'QCM fait après 20h' },
+    early_bird:      { icon:'🐤', label:'Lève-tôt',                  desc:'QCM fait avant 8h' },
+    speedrun:        { icon:'⚡', label:'Éclair',                    desc:'QCM réussi en moins de 30s' },
+    comeback:        { icon:'💪', label:'Revanche',                  desc:'Score 100% après un échec sur ce QCM' },
+    flawless_10:     { icon:'🎖️', label:'Dix sur dix',               desc:'10 QCM d\'affilée réussis à 100% (sans faute)' },
+};
+
+function renderBadges() {
+    const earnedKeys = new Set(myBadges.map(b => b.badge_key));
+    document.getElementById('badges-grid').innerHTML = Object.entries(BADGE_DEFINITIONS).map(([key, def]) => {
+        const unlocked = earnedKeys.has(key);
+        const titleAttr = unlocked ? '' : ' title="🔒 Condition : ' + def.desc.replace(/"/g, '&quot;') + '"';
+        return '<div class="badge-tile ' + (unlocked ? 'unlocked' : 'locked') + '"' + titleAttr + '>' +
+            '<div class="icon">' + def.icon + '</div>' +
+            '<div class="name">' + def.label + '</div>' +
+            '<div class="desc">' + (unlocked ? def.desc : '???') + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+
+// ── RENDU : LEADERBOARD (global, toutes classes, points réels) ────────────
+async function renderLeaderboard() {
+    const container = document.getElementById('leaderboard-content');
+
+    // Le prof a désactivé le classement pour cette classe (case décochée
+    // dans classes-management.html) : on respecte ce choix côté élève —
+    // pas de pression de classement pour cette classe, ni dans un sens ni
+    // dans l'autre (l'élève n'y apparaît plus non plus pour les autres,
+    // voir AJOUT v17 côté SQL).
+    if (!myClassLeaderboardEnabled) {
+        container.innerHTML =
+            '<div class="leaderboard-disabled">🙈 Le classement est désactivé pour ta classe par ton professeur.</div>';
+        return;
+    }
+
+    if (!leaderboardRowsCache) {
+        const { data: lb, error } = await sb
+            .rpc('get_leaderboard')
+            .select('*')
+            .order('ladder_score', { ascending: false })
+            .limit(200); // large : filtré côté client par classe, voir plus bas
+
+        if (error || !lb) {
+            container.innerHTML = '<div class="leaderboard-disabled">Pas encore de classement disponible.</div>';
+            return;
+        }
+        leaderboardRowsCache = lb;
+    }
+
+    renderLeaderboardContent();
+}
+
+/**
+ * Rendu pur (pas de requête réseau) : dessine le toggle Global/Ma classe
+ * + la liste, à partir de leaderboardRowsCache et de leaderboardScope.
+ * Séparé de renderLeaderboard() pour que basculer entre les deux vues
+ * soit instantané (pas de nouvel aller-retour Supabase).
+ */
+function renderLeaderboardContent() {
+    const container = document.getElementById('leaderboard-content');
+    const all = leaderboardRowsCache || [];
+
+    const scopedRows = (leaderboardScope === 'class' && me.class_id)
+        ? all.filter(r => r.class_id === me.class_id)
+        : all;
+    const rows = scopedRows.slice(0, 50);
+
+    let toggleHtml = '';
+    if (me.class_id) {
+        toggleHtml =
+            '<div class="lb-scope-toggle">' +
+                '<button class="' + (leaderboardScope === 'class' ? 'active' : '') + '" onclick="setLeaderboardScope(\'class\')">🏫 Ma classe</button>' +
+                '<button class="' + (leaderboardScope === 'global' ? 'active' : '') + '" onclick="setLeaderboardScope(\'global\')">🌍 Global</button>' +
+            '</div>';
+    }
+
+    if (rows.length === 0) {
+        container.innerHTML = toggleHtml +
+            '<div class="leaderboard-disabled">Pas encore de classement disponible pour ce groupe.</div>';
+        return;
+    }
+
+    container.innerHTML = toggleHtml +
+        '<p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:14px;">' +
+        '10 à 20 points maximum par QCM et par jour</p>' +
+        rows.map((row, i) => {
+            const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+            const isMe = row.user_id === me.id;
+            const score = row.ladder_score !== null ? row.ladder_score : '—';
+            return '<div class="leaderboard-row ' + (isMe ? 'me' : '') + '">' +
+                '<div class="lb-rank-num ' + rankClass + '">' + (i+1) + '</div>' +
+                '<div class="lb-avatar">' + (row.avatar_emoji || '🦊') + '</div>' +
+                '<div style="flex:1;">' +
+                    '<div class="lb-name">' + esc(row.pseudo || 'Élève') + (isMe ? ' 👈' : '') + '</div>' +
+                    '<div class="lb-class">' + esc(row.class_name || '') + '</div>' +
+                '</div>' +
+                '<div class="lb-score">' + score + ' pts</div>' +
+                '</div>';
+        }).join('');
+}
+
+function setLeaderboardScope(scope) {
+    leaderboardScope = scope;
+    renderLeaderboardContent();
+}
+
+
+// ── ÉDITION DU PSEUDO EN LIGNE ────────────────────────────────────────────
+function startEditPseudo() {
+    const pseudoSpan  = document.getElementById('player-pseudo');
+    const editBtn     = document.getElementById('btn-edit-pseudo');
+    const editForm    = document.getElementById('pseudo-edit-form');
+    const input       = document.getElementById('pseudo-input');
+
+    input.value = me.pseudo || me.full_name || '';
+    pseudoSpan.style.display  = 'none';
+    editBtn.style.display     = 'none';
+    editForm.style.display    = 'flex';
+    // Sélectionne tout le texte pour faciliter le remplacement
+    setTimeout(() => { input.focus(); input.select(); }, 0);
+}
+
+async function savePseudo(event) {
+    if (event) event.preventDefault();
+
+    const input    = document.getElementById('pseudo-input');
+    const newPseudo = input.value.trim();
+
+    // Annule si vide ou inchangé
+    if (!newPseudo || newPseudo === (me.pseudo || me.full_name)) {
+        cancelEditPseudo();
+        return;
+    }
+
+    // Sauvegarde dans Supabase
+    const { error } = await sb.from('profiles')
+        .update({ pseudo: newPseudo })
+        .eq('id', me.id);
+
+    if (error) {
+        console.error('[Pseudo] Erreur sauvegarde :', error.message);
+        // Affiche un message d'erreur discret dans l'input
+        input.style.borderColor = '#ef4444';
+        input.placeholder = 'Erreur — réessaie';
+        return;
+    }
+
+    // Met à jour l'état local et l'affichage
+    me.pseudo = newPseudo;
+    document.getElementById('player-pseudo').textContent = newPseudo;
+    cancelEditPseudo();
+}
+
+function cancelEditPseudo() {
+    const pseudoSpan = document.getElementById('player-pseudo');
+    const editBtn    = document.getElementById('btn-edit-pseudo');
+    const editForm   = document.getElementById('pseudo-edit-form');
+    const input      = document.getElementById('pseudo-input');
+
+    pseudoSpan.style.display = '';
+    editBtn.style.display    = '';
+    editForm.style.display   = 'none';
+    // Remet le style par défaut de l'input pour la prochaine fois
+    input.style.borderColor  = 'var(--accent)';
+    input.placeholder        = '';
+}
+
+
+// ── SÉLECTION DE L'AVATAR ──────────────────────────────────────────────────
+// ── PERSONNALISATION : THÈME DE COULEUR ─────────────────────────────────
+// Rapport gamification, point "Personnalisation (avatar, thème)" — variables
+// CSS permutables (--accent/--accent-glow) + préférence stockée sur le
+// profil (profiles.theme_key, AJOUT v18) pour la retrouver partout.
+const THEME_DEFINITIONS = {
+    violet: { label: 'Violet',  accent: '#8b5cf6', glow: '#a78bfa' },
+    ocean:  { label: 'Océan',   accent: '#0ea5e9', glow: '#38bdf8' },
+    foret:  { label: 'Forêt',   accent: '#22c55e', glow: '#4ade80' },
+    corail: { label: 'Corail',  accent: '#f97316', glow: '#fb923c' },
+    rose:   { label: 'Rose',    accent: '#ec4899', glow: '#f472b6' },
+};
+
+function applyTheme(themeKey) {
+    const t = THEME_DEFINITIONS[themeKey] || THEME_DEFINITIONS.violet;
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--accent-glow', t.glow);
+}
+
+function renderThemeGrid() {
+    const container = document.getElementById('theme-grid-container');
+    if (!container) return;
+    const current = me.theme_key || 'violet';
+    container.innerHTML = Object.entries(THEME_DEFINITIONS).map(([key, t]) => {
+        const isSelected = current === key;
+        return '<div class="theme-choice' + (isSelected ? ' selected' : '') + '" ' +
+            'style="--swatch:' + t.accent + '; --swatch-glow:' + t.glow + ';" ' +
+            'onclick="selectTheme(\'' + key + '\')" title="' + esc(t.label) + '">' +
+            '<span class="theme-swatch"></span><span class="theme-label">' + esc(t.label) + '</span>' +
+            '</div>';
+    }).join('');
+}
+
+async function selectTheme(themeKey) {
+    if (themeKey === (me.theme_key || 'violet') || !THEME_DEFINITIONS[themeKey]) return;
+
+    const { error } = await sb.from('profiles').update({ theme_key: themeKey }).eq('id', me.id);
+    if (error) {
+        console.error('[Thème] Erreur sauvegarde :', error.message);
+        return;
+    }
+
+    me.theme_key = themeKey;
+    applyTheme(themeKey);
+    renderThemeGrid();
+}
+
+function openAvatarPicker() {
+    renderAvatarGrid();
+    renderThemeGrid();
+    document.getElementById('avatar-modal-overlay').classList.add('show');
+}
+
+function closeAvatarPicker() {
+    document.getElementById('avatar-modal-overlay').classList.remove('show');
+}
+
+function renderAvatarGrid() {
+    const container = document.getElementById('avatar-grid-container');
+    const avatars = getAllAvatarsWithStatus(myStats.total_xp || 0);
+
+    // Regroupe les icônes par palier pour afficher un libellé de rang
+    // au-dessus de chaque ligne (débloqué / à débloquer).
+    const byTier = {};
+    const tierOrder = [];
+    avatars.forEach(a => {
+        if (!byTier[a.rankLabel]) { byTier[a.rankLabel] = []; tierOrder.push(a.rankLabel); }
+        byTier[a.rankLabel].push(a);
+    });
+
+    let html = '';
+    tierOrder.forEach(rankLabel => {
+        const group = byTier[rankLabel];
+        const groupUnlocked = group[0].unlocked;
+        html += `<div class="avatar-tier-label">${groupUnlocked ? '✅ Débloqué — Rang ' + rankLabel : '🔒 À débloquer — Rang ' + rankLabel}</div>`;
+        html += '<div class="avatar-grid">';
+        group.forEach(a => {
+            const isSelected = (me.avatar_emoji || '🦊') === a.icon;
+            const classes = ['avatar-choice'];
+            if (isSelected) classes.push('selected');
+            if (!a.unlocked) classes.push('locked');
+            const clickAttr = a.unlocked ? `onclick="selectAvatar('${a.icon}')"` : '';
+            const lock = a.unlocked ? '' : '<span class="lock-icon">🔒</span>';
+            html += `<div class="${classes.join(' ')}" ${clickAttr} title="${a.unlocked ? '' : 'Débloqué au rang ' + rankLabel}">${a.icon}${lock}</div>`;
+        });
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+async function selectAvatar(icon) {
+    if (icon === me.avatar_emoji) { closeAvatarPicker(); return; }
+
+    const { error } = await sb.from('profiles')
+        .update({ avatar_emoji: icon })
+        .eq('id', me.id);
+
+    if (error) {
+        console.error('[Avatar] Erreur sauvegarde :', error.message);
+        return;
+    }
+
+    me.avatar_emoji = icon;
+    document.getElementById('player-avatar-emoji').textContent = icon;
+    closeAvatarPicker();
+}
+
+
+// ── TABS ──────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+async function logoutStudent() {
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+}
+</script>
+<!-- FENÊTRE DE PERSONNALISATION (avatar + thème) -->
+<div class="avatar-modal-overlay" id="avatar-modal-overlay">
+    <div class="avatar-modal-box">
+        <h3>🎨 Personnalise ton profil</h3>
+        <div class="avatar-modal-sub">Débloque de nouvelles icônes en montant de rang !</div>
+        <div id="avatar-grid-container"></div>
+
+        <h3 style="margin-top:22px;">🌈 Couleur du thème</h3>
+        <div class="avatar-modal-sub">Change les couleurs de tout ton profil — juste pour toi.</div>
+        <div id="theme-grid-container" class="theme-grid"></div>
+
+        <button class="avatar-modal-close" onclick="closeAvatarPicker()">Fermer</button>
+    </div>
+</div>
+
+</body>
+</html>
