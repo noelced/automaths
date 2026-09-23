@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mon Profil — AutoMaths</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- data/quizMeta.js est chargé en balise classique ci-dessous, PAS via
+     fetch() : fetch() vers un fichier local est bloqué par la politique
+     CORS des navigateurs en file://, alors qu'une balise de script
+     fonctionne normalement, que le site soit ouvert via un serveur ou en
+     double-clic depuis le disque. Même mécanisme que index.html et
+     dashboard.html. -->
+<script src="data/quizMeta.js"></script>
 <style>
 :root{
     --bg:#0b1120; --bg-card:#141d33; --bg-card-light:#1b2742;
@@ -68,6 +75,13 @@ header{
     opacity:0; transition:opacity .2s;
 }
 .player-avatar:hover .avatar-edit-badge{ opacity:1; }
+#player-avatar-emoji{ display:inline-block; }
+.player-avatar.mood-proud #player-avatar-emoji{ animation:avatarBounce 2.4s ease-in-out infinite; }
+@keyframes avatarBounce{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-5px) rotate(-4deg); } }
+.player-avatar.mood-worried #player-avatar-emoji{ animation:avatarNod 1.3s ease-in-out infinite; }
+@keyframes avatarNod{ 0%,100%{ transform:rotate(-6deg); } 50%{ transform:rotate(6deg); } }
+.player-avatar.mood-idle #player-avatar-emoji{ animation:avatarBreathe 3.2s ease-in-out infinite; }
+@keyframes avatarBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
 
 /* ── FENÊTRE DE SÉLECTION D'AVATAR ──────────────────────────────────────── */
 .avatar-modal-overlay{
@@ -99,6 +113,21 @@ header{
     background:var(--bg-card); border-radius:50%; padding:2px;
 }
 .avatar-tier-label{ font-size:0.7rem; color:var(--text-dim); margin:14px 0 6px; text-transform:uppercase; letter-spacing:.04em; }
+.theme-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.theme-choice{
+    display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
+    padding:10px 12px; border-radius:14px; border:2px solid transparent; transition:all .2s;
+}
+.theme-choice:hover{ background:var(--bg-card-light); }
+.theme-choice.selected{ border-color:var(--swatch, var(--accent)); background:var(--bg-card-light); }
+.theme-swatch{
+    width:32px; height:32px; border-radius:50%;
+    background:linear-gradient(135deg, var(--swatch), var(--swatch-glow));
+    box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.theme-choice.selected .theme-swatch{ box-shadow:0 0 0 3px var(--swatch-glow)55, 0 2px 8px rgba(0,0,0,.35); }
+.theme-label{ font-size:0.68rem; color:var(--text-dim); font-weight:700; }
+.theme-choice.selected .theme-label{ color:var(--text); }
 .avatar-modal-close{
     width:100%; padding:11px; border:1px solid var(--border); border-radius:10px;
     background:none; color:var(--text-dim); font-weight:700; cursor:pointer;
@@ -110,7 +139,26 @@ header{
     display:flex; align-items:center; gap:6px;
     background:rgba(255,210,63,0.12); border:1px solid rgba(255,210,63,0.35);
     padding:8px 16px; border-radius:30px; font-weight:700; font-size:0.95rem; color:var(--gold);
+    transition:background .3s, border-color .3s;
 }
+.streak-cluster{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.flame-icon{display:inline-block; animation:flameFlicker 1.6s ease-in-out infinite; transform-origin:50% 85%;}
+@keyframes flameFlicker{
+    0%,100%{transform:scale(1) rotate(-1deg);}
+    25%{transform:scale(1.08) rotate(1.5deg);}
+    50%{transform:scale(0.96) rotate(-2deg);}
+    75%{transform:scale(1.05) rotate(1deg);}
+}
+.freeze-indicator{
+    display:flex; align-items:center; gap:5px;
+    background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.35);
+    padding:8px 14px; border-radius:30px; font-weight:700; font-size:0.9rem; color:#7dd3fc;
+}
+.streak-badge.at-risk{background:rgba(251,146,60,0.14); border-color:rgba(251,146,60,0.4); color:#fb923c;}
+.streak-badge.at-risk .flame-icon{animation:flameFlicker 0.8s ease-in-out infinite;}
+.streak-badge.broken{background:rgba(148,163,184,0.1); border-color:var(--border); color:var(--text-dim);}
+.streak-badge.broken .flame-icon{animation:none; filter:grayscale(1); opacity:0.6;}
+.streak-risk-msg{width:100%; font-size:0.76rem; color:#fb923c; margin-top:8px; font-weight:600;}
 .xp-progress-wrap{margin-top:26px; position:relative; z-index:1;}
 .xp-progress-labels{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; font-size:0.82rem; color:var(--text-dim);}
 .xp-progress-labels b{color:var(--text); font-size:0.95rem;}
@@ -184,20 +232,43 @@ header{
 .tab-pane.active{display:block; animation:fadeUp .35s ease-out;}
 @keyframes fadeUp{from{opacity:0; transform:translateY(10px);}to{opacity:1; transform:translateY(0);}}
 
-/* ── CHAPITRES ── */
-.chapter-row{
-    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm);
-    padding:16px 20px; margin-bottom:12px; transition:border-color .2s;
+/* ── ARBRE DE PROGRESSION (chapitres) ── */
+.skill-path{position:relative; padding:10px 0 6px;}
+.skill-line{position:absolute; left:50%; top:16px; bottom:16px; width:4px; transform:translateX(-50%); border-radius:4px; background:var(--border); z-index:0; overflow:hidden;}
+.skill-line-fill{position:absolute; left:0; top:0; width:100%; background:linear-gradient(180deg, var(--gold), #ffb700); border-radius:4px; transition:height 1s ease-out;}
+.skill-level-divider{
+    text-align:center; font-size:0.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-dim); margin:26px 0 18px; position:relative; z-index:1;
 }
-.chapter-row:hover{border-color:var(--accent);}
-.chapter-row-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;}
-.chapter-title-text{font-weight:700; font-size:0.95rem;}
-.chapter-pct{font-weight:800; font-size:1rem; color:var(--accent-glow);}
-.chapter-bar-track{height:10px; border-radius:10px; background:#0a1020; overflow:hidden; border:1px solid var(--border);}
-.chapter-bar-fill{height:100%; border-radius:10px; background:linear-gradient(90deg, #6366f1, var(--accent-glow)); transition:width 0.8s ease-out;}
-.chapter-bar-fill.maxed{background:linear-gradient(90deg, var(--success), #4ade80);}
-.chapter-meta{display:flex; justify-content:space-between; margin-top:6px; font-size:0.72rem; color:var(--text-dim);}
-.chapter-stale{font-size:0.7rem; color:#f87171; margin-top:4px; display:flex; align-items:center; gap:4px;}
+.skill-level-divider span{background:var(--bg-card, var(--bg)); padding:0 14px; border-radius:8px;}
+.skill-node-row{position:relative; z-index:1; display:flex; align-items:center; gap:14px; margin-bottom:28px; animation:fadeUp .4s ease-out backwards;}
+.skill-node-row.side-left{justify-content:flex-start; padding-right:52%;}
+.skill-node-row.side-right{justify-content:flex-end; padding-left:52%; flex-direction:row-reverse;}
+.skill-node-row.side-right .skill-node-info{text-align:right;}
+.skill-node-row.side-right .skill-node-sub{justify-content:flex-end;}
+.skill-node{
+    position:relative; flex-shrink:0; width:56px; height:56px; border-radius:50%; border:none; padding:0; cursor:pointer;
+    background:var(--bg-card); display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+    box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--border); transition:transform .2s;
+}
+.skill-node:hover{transform:scale(1.08);}
+.skill-node:active{transform:scale(0.95);}
+.skill-node .ring{
+    position:absolute; inset:-4px; border-radius:50%; padding:4px;
+    background:conic-gradient(var(--ring-color, var(--accent)) calc(var(--pct,0)*1%), var(--border) 0);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+    mask:radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+}
+.skill-node-row.state-mastered .skill-node{box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--gold), 0 0 18px rgba(255,210,63,.35);}
+.skill-node-row.state-current .skill-node{animation:pulseNode 1.8s ease-in-out infinite; box-shadow:0 0 0 4px var(--bg), inset 0 0 0 2px var(--accent-glow), 0 0 20px var(--accent-glow);}
+.skill-node-row.state-todo .skill-node{opacity:.5; filter:grayscale(.5);}
+@keyframes pulseNode{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+.skill-node-info{min-width:0;}
+.skill-node-title{font-weight:700; font-size:0.92rem; line-height:1.25;}
+.skill-node-sub{font-size:0.72rem; color:var(--text-dim); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.skill-node-pct{font-weight:800; color:var(--accent-glow);}
+.skill-node-row.state-mastered .skill-node-pct{color:var(--gold);}
+.skill-node-stale{color:#f87171; font-weight:700;}
 
 /* ── BADGES ── */
 .badges-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px;}
@@ -224,6 +295,16 @@ header{
 .lb-score{font-weight:800; color:var(--gold); font-size:0.95rem;}
 .lb-class{font-size:0.72rem; color:var(--text-dim); margin-top:2px;}
 .leaderboard-disabled{text-align:center; padding:50px 20px; color:var(--text-dim); background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);}
+.lb-scope-toggle{display:flex; gap:8px; margin-bottom:16px;}
+.lb-scope-toggle button{
+    flex:1; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--bg-card);
+    color:var(--text-dim); font-weight:700; font-size:0.85rem; cursor:pointer; transition:all .2s;
+}
+.lb-scope-toggle button:hover{border-color:var(--accent); color:var(--text);}
+.lb-scope-toggle button.active{
+    background:linear-gradient(135deg, var(--accent), var(--accent-glow)); border-color:transparent; color:white;
+    box-shadow:0 4px 14px rgba(139,92,246,0.35);
+}
 .star-full{color:#ffd23f; text-shadow:0 0 6px #ffd23f88;}
 .star-half{color:#ffd23f; opacity:0.5;}
 .star-empty{color:#475569;}
@@ -233,7 +314,13 @@ header{
 @keyframes spin{to{transform:rotate(360deg);}}
 .empty-state{text-align:center; padding:50px 20px; color:var(--text-dim);}
 .empty-state .icon{font-size:2.6rem; margin-bottom:10px;}
-@media(max-width:640px){.player-card{padding:22px 18px;} .player-avatar{width:56px; height:56px; font-size:1.7rem;} .player-name-block .pseudo{font-size:1.2rem;}}
+@media(max-width:640px){
+    .player-card{padding:22px 18px;} .player-avatar{width:56px; height:56px; font-size:1.7rem;} .player-name-block .pseudo{font-size:1.2rem;}
+    .skill-line{left:23px;}
+    .skill-node-row, .skill-node-row.side-right{justify-content:flex-start; padding:0; flex-direction:row; margin-left:0;}
+    .skill-node-row.side-right .skill-node-info, .skill-node-row.side-right .skill-node-sub{text-align:left; justify-content:flex-start;}
+    .skill-node{width:46px; height:46px; font-size:1.2rem;}
+}
 </style>
 </head>
 <body>
@@ -289,7 +376,16 @@ header{
                     <div class="class-tag" id="player-class">—</div>
                 </div>
             </div>
-            <div class="streak-badge">🔥 <span id="streak-count">0</span> jour(s) de suite</div>
+            <div class="streak-cluster">
+                <div class="streak-badge" id="streak-badge">
+                    <span class="flame-icon" id="flame-icon">🔥</span>
+                    <span id="streak-count">0</span> jour(s) de suite
+                </div>
+                <div class="freeze-indicator" id="freeze-indicator" title="Gels de série disponibles : couvrent automatiquement un jour manqué">
+                    ❄️ <span id="freeze-count">0</span>
+                </div>
+            </div>
+            <div class="streak-risk-msg" id="streak-risk-msg" style="display:none;"></div>
         </div>
         <div class="xp-progress-wrap">
             <div class="xp-progress-labels">
@@ -406,24 +502,16 @@ function getAllAvatarsWithStatus(totalXp) {
 }
 
 // ── MÉTADONNÉES DES QUIZZES ────────────────────────────────────────────────
-// quizMeta est chargé depuis data/quizMeta.js (via <script> dans index.html ou inline).
-// Ici on le définit inline pour que student-dashboard.html reste autonome.
-// IMPORTANT : ce bloc est généré automatiquement depuis localQuestions.js.
-// Si vous ajoutez des quizzes, régénérez data/quizMeta.js et copiez ici.
-// Structure : byKey[quiz_key] = { level, chapter }, totalByLevel[level] = total_questions
-let quizMeta = null;
-(async function loadQuizMeta() {
-    try {
-        const resp = await fetch('data/quizMeta.js');
-        const code = await resp.text();
-        // Évalue dans un contexte isolé pour extraire quizMeta
-        const fn = new Function(code + '\nreturn quizMeta;');
-        quizMeta = fn();
-    } catch(e) {
-        console.warn('[QuizMeta] Impossible de charger data/quizMeta.js :', e);
-        quizMeta = { byKey: {}, questionCount: {}, totalByLevel: {} };
-    }
-})();
+// quizMeta est chargé via <script src="data/quizMeta.js"> dans le <head>
+// (voir plus haut) — PAS via fetch(), qui est bloqué par CORS lorsque le
+// site est ouvert directement depuis le disque (file://) plutôt que servi
+// par un serveur. La balise <script> fonctionne dans les deux cas.
+// Filet de sécurité si le fichier n'a pas pu se charger pour une autre
+// raison (chemin incorrect, fichier absent) : évite un crash JS plus loin.
+if (typeof quizMeta === 'undefined' || !quizMeta) {
+    console.warn('[QuizMeta] data/quizMeta.js ne semble pas chargé (vérifie que le fichier existe bien à ce chemin).');
+    quizMeta = { byKey: {}, questionCount: {}, totalByLevel: {} };
+}
 
 // ── ÉTAT ───────────────────────────────────────────────────────────────────
 let me = null;
@@ -437,6 +525,9 @@ let myTotalResults = null;  // agrégats globaux (total bonnes réponses, etc.)
 let myAllowedLevels = null;      // null = aucune restriction de niveau (classe sans niveau défini)
 let myProgressCheckedMap = {};   // quiz_key -> boolean (cases cochées par le prof pour SA classe)
 let myHasProgressConfig = false; // true si le prof a coché au moins une case pour cette classe
+let myClassLeaderboardEnabled = true; // false si le prof a désactivé le classement pour la classe de l'élève
+let leaderboardScope = 'class';       // 'class' (petit groupe, par défaut) | 'global' — bascule dans l'onglet Classement
+let leaderboardRowsCache = null;      // dernier résultat de get_leaderboard(), pour basculer sans re-fetch
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 (async () => {
@@ -446,9 +537,7 @@ let myHasProgressConfig = false; // true si le prof a coché au moins une case p
     const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
     if (!profile || profile.role !== 'student') { window.location.href = 'index.html'; return; }
     me = profile;
-
-    // Attend que quizMeta soit chargé (fetch asynchrone)
-    await new Promise(r => setTimeout(r, 300));
+    applyTheme(me.theme_key || 'violet'); // le plus tôt possible pour éviter un flash de couleur par défaut
 
     // Requêtes Supabase parallèles
     const [statsRes, badgesRes, best30dRes, lastAttemptRes, totalRes, classRes] = await Promise.all([
@@ -461,12 +550,12 @@ let myHasProgressConfig = false; // true si le prof a coché au moins une case p
         // (sans limite de 30 jours — un chapitre validé il y a plus d'un
         // mois doit continuer à apparaître comme acquis, pas retomber à 0%).
         sb.from('quiz_results').select('quiz_key, chapter_title, level_name, score, total, completed_at').eq('user_id', me.id),
-        // Niveau + niveaux autorisés de la classe de l'élève (pour filtrer
-        // "Mes chapitres" — voir plus bas)
-        me.class_id ? sb.from('classes').select('level, allowed_levels').eq('id', me.class_id).maybeSingle() : Promise.resolve({ data: null })
+        // Niveau + niveaux autorisés + statut du classement de la classe de
+        // l'élève (pour filtrer "Mes chapitres" et gérer l'onglet Classement)
+        me.class_id ? sb.from('classes').select('level, allowed_levels, leaderboard_enabled').eq('id', me.class_id).maybeSingle() : Promise.resolve({ data: null })
     ]);
 
-    myStats      = statsRes.data      || { total_xp: 0, current_streak: 0 };
+    myStats      = statsRes.data      || { total_xp: 0, current_streak: 0, streak_freezes: 0 };
     myBadges     = badgesRes.data     || [];
     myBestScores30d = best30dRes.data || [];
     myLastAttempts  = lastAttemptRes.data || [];
@@ -483,6 +572,15 @@ let myHasProgressConfig = false; // true si le prof a coché au moins une case p
     } else {
         myAllowedLevels = null; // pas de restriction
     }
+    // leaderboard_enabled est NULL pour une classe créée avant cette
+    // fonctionnalité ou pour un élève sans classe : on considère "activé"
+    // par défaut (comportement historique, cohérent avec le reste de
+    // l'appli — aucune restriction tant que rien n'est configuré).
+    myClassLeaderboardEnabled = !classInfo || classInfo.leaderboard_enabled !== false;
+    // Par défaut : classement "petit groupe" (sa classe) si l'élève a une
+    // classe, plus lisible et moins intimidant qu'un classement global de
+    // tout l'établissement — bascule possible vers "Global" dans l'onglet.
+    leaderboardScope = me.class_id ? 'class' : 'global';
 
     // Progression cochée par le prof pour la classe de l'élève (si classe
     // connue). Table lisible par l'élève depuis AJOUT v13 (auparavant
@@ -515,6 +613,8 @@ function renderPlayerCard() {
     document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
     document.getElementById('player-class').textContent  = me.class_name || '';
     document.getElementById('streak-count').textContent  = myStats.current_streak || 0;
+    document.getElementById('freeze-count').textContent  = myStats.streak_freezes || 0;
+    renderStreakRiskState();
 
     document.getElementById('rank-banner-slot').innerHTML =
         '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:30px;' +
@@ -530,6 +630,64 @@ function renderPlayerCard() {
     setTimeout(() => {
         document.getElementById('xp-bar-fill').style.width = (rank.progressToNext * 100) + '%';
     }, 200);
+}
+
+/**
+ * Calcule l'état "à risque" du streak à partir de last_activity_date, sans
+ * attendre le prochain QCM (qui est le seul moment où le serveur recalcule
+ * réellement current_streak — voir record_quiz_result). Purement indicatif
+ * côté client : la logique qui fait foi reste côté serveur (gel de série
+ * inclus), mais ça évite d'afficher un compteur "5 jours 🔥" trompeur à un
+ * élève qui n'a en réalité pas joué depuis 3 jours.
+ *   - écart 0 (a déjà joué aujourd'hui) : état normal
+ *   - écart 1 (pas encore joué aujourd'hui) : "à risque", flamme orange
+ *   - écart 2 : dernier jour avant rupture (un gel sera utilisé
+ *     automatiquement s'il en reste un et que l'élève joue aujourd'hui)
+ *   - écart ≥ 3 : la série affichée est en réalité déjà caduque (elle
+ *     sera remise à 1 au prochain QCM) — on grise la flamme plutôt que
+ *     d'afficher un chiffre qui n'est plus honnête.
+ */
+function renderStreakRiskState() {
+    const badge = document.getElementById('streak-badge');
+    const msg = document.getElementById('streak-risk-msg');
+    const avatar = document.getElementById('player-avatar');
+    if (!badge || !msg) return;
+
+    badge.classList.remove('at-risk', 'broken');
+    if (avatar) avatar.classList.remove('mood-proud', 'mood-worried', 'mood-idle');
+    msg.style.display = 'none';
+
+    if (!myStats.last_activity_date || !myStats.current_streak) {
+        if (avatar) avatar.classList.add('mood-idle');
+        return;
+    }
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const gapDays = Math.round((new Date(todayStr) - new Date(myStats.last_activity_date)) / 86400000);
+    const freezes = myStats.streak_freezes || 0;
+
+    if (gapDays <= 0) {
+        // A déjà joué aujourd'hui : mascotte tranquille, ou fière si la
+        // série est déjà solide (7 jours ou plus).
+        if (avatar) avatar.classList.add(myStats.current_streak >= 7 ? 'mood-proud' : 'mood-idle');
+        return;
+    }
+    if (gapDays === 1) {
+        badge.classList.add('at-risk');
+        if (avatar) avatar.classList.add('mood-worried');
+        msg.textContent = '⏳ Joue un questionnaire aujourd\'hui pour garder ta série !';
+        msg.style.display = 'block';
+    } else if (gapDays === 2 && freezes > 0) {
+        badge.classList.add('at-risk');
+        if (avatar) avatar.classList.add('mood-worried');
+        msg.textContent = '❄️ Un gel de série sera utilisé automatiquement si tu joues aujourd\'hui.';
+        msg.style.display = 'block';
+    } else {
+        badge.classList.add('broken');
+        if (avatar) avatar.classList.add('mood-idle');
+        msg.textContent = 'Série interrompue — rejoue pour en démarrer une nouvelle !';
+        msg.style.display = 'block';
+    }
 }
 
 
@@ -656,7 +814,23 @@ function esc(str) {
 }
 
 
-// ── RENDU : CHAPITRES ─────────────────────────────────────────────────────
+// ── RENDU : CHAPITRES — ARBRE / PARCOURS DE PROGRESSION ────────────────────
+// Même ordre que dans dashboard.html (onglet Progression) : programme
+// officiel 6ème → 3ème.
+const LEVEL_ORDER = ['6ème', '5ème', '4ème', '3ème'];
+
+/**
+ * Échappe une valeur pour l'insérer dans un attribut onclick="...('VALEUR')"
+ * (distinct de esc(), qui échappe pour du contenu HTML affiché : ici on doit
+ * échapper au niveau JS — un antislash ou une apostrophe non échappés
+ * casseraient la chaîne littérale, alors qu'une entité HTML comme &#39;
+ * serait redécodée en ' par le navigateur AVANT l'exécution du JS et
+ * casserait quand même la chaîne).
+ */
+function jsAttrEscape(str) {
+    return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
 function renderChapters() {
     const container = document.getElementById('chapters-list');
     const now = Date.now();
@@ -664,7 +838,7 @@ function renderChapters() {
 
     // ── 1) Regrouper TOUTES les tentatives de l'élève (sans limite de
     // date) par quiz_key, en gardant le meilleur % et la date la plus
-    // récente pour chacun.
+    // récente pour chacun. (inchangé)
     const bestByKey = {}; // quiz_key -> { pct, lastAt }
     (myTotalResults || []).forEach(r => {
         if (!r.total || r.total <= 0) return;
@@ -680,10 +854,7 @@ function renderChapters() {
     // ── 2) Regrouper les quiz_key CONNUS (quizMeta) par (NIVEAU, chapitre)
     // — la clé combine bien les deux : deux chapitres de même nom dans
     // des niveaux différents (ex: "Transformations" en 5ème ET ailleurs)
-    // ne doivent JAMAIS partager la même progression.
-    // On filtre aussi ici les niveaux non autorisés pour la classe de
-    // l'élève (myAllowedLevels), et — si le prof a coché au moins une
-    // case pour cette classe — les QCM non cochés (myProgressCheckedMap).
+    // ne doivent JAMAIS partager la même progression. (inchangé)
     const keysByChapter = {}; // "level||chapter" -> [quiz_key,...]
     if (quizMeta && quizMeta.byKey) {
         Object.entries(quizMeta.byKey).forEach(([key, meta]) => {
@@ -697,9 +868,8 @@ function renderChapters() {
     }
 
     // ── 3) Pour chaque (niveau, chapitre) "au programme" : couverture ×
-    // qualité moyenne sur les QCM au programme de ce chapitre.
+    // qualité moyenne sur les QCM au programme de ce chapitre. (inchangé)
     const progressByChapterKey = {}; // "level||chapter" -> { pct, attempts, lastAt }
-
     Object.entries(keysByChapter).forEach(([chapterKey, keys]) => {
         const attemptedKeys = keys.filter(k => bestByKey[k]);
         if (attemptedKeys.length === 0) return; // pas commencé, restera à 0%
@@ -715,18 +885,24 @@ function renderChapters() {
         progressByChapterKey[chapterKey] = { pct, attempts: attemptedKeys.length, lastAt };
     });
 
-    // ── 4) Liste des chapitres à afficher : exactement les (niveau,
-    // chapitre) "au programme" déterminés à l'étape 2 — donc, comme
-    // demandé, uniquement les chapitres cochés par le prof (si une
-    // progression est configurée pour cette classe), et jamais un
-    // chapitre d'un niveau non autorisé.
+    // ── 4) NOUVEAU — ordre du PARCOURS (au lieu du tri par % décroissant) :
+    // suit le programme officiel, niveau par niveau (6e→3e), puis chapitre
+    // par chapitre au sein d'un niveau, dans l'ordre déduit du plus petit
+    // quiz_key numérique du chapitre — même heuristique que le regroupement
+    // provisoire de MAJcourseOutline.js (voir README, "courseOutline.js
+    // n'est rempli que pour 2 chapitres"). Un vrai parcours de compétences
+    // doit suivre la progression du cours, pas le classement par score.
     const displayed = Object.keys(keysByChapter).map(chapterKey => {
         const [level, title] = chapterKey.split('||');
-        return { chapterKey, level, title };
+        const keys = keysByChapter[chapterKey];
+        const nums = keys.map(k => parseInt(k, 10)).filter(n => !isNaN(n));
+        const minKey = nums.length ? Math.min(...nums) : Infinity;
+        return { chapterKey, level, title, minKey };
     }).sort((a, b) => {
-        const pa = (progressByChapterKey[a.chapterKey] || {}).pct || 0;
-        const pb = (progressByChapterKey[b.chapterKey] || {}).pct || 0;
-        return pb - pa;
+        const la = LEVEL_ORDER.indexOf(a.level), lb = LEVEL_ORDER.indexOf(b.level);
+        const ra = la === -1 ? LEVEL_ORDER.length : la, rb = lb === -1 ? LEVEL_ORDER.length : lb;
+        if (ra !== rb) return ra - rb;
+        return a.minKey - b.minKey;
     });
 
     if (displayed.length === 0) {
@@ -739,28 +915,89 @@ function renderChapters() {
         return;
     }
 
-    container.innerHTML = displayed.map(ch => {
+    // ── 5) État de chaque nœud + repérage du nœud "en cours" : le premier
+    // du parcours qui n'est pas encore maîtrisé (pct >= 95%) — c'est celui
+    // qu'on met en avant (pulsation), comme la leçon suivante surlignée
+    // dans un parcours façon Duolingo. S'il n'y en a aucun (tout maîtrisé),
+    // on considère le dernier nœud comme "actuel" pour que la ligne du
+    // parcours se remplisse entièrement.
+    let currentIndex = -1;
+    const nodes = displayed.map((ch, i) => {
         const prog = progressByChapterKey[ch.chapterKey] || { pct: 0, attempts: 0, lastAt: null };
-        const pct = prog.pct;
-        const maxed = pct >= 95;
-        const stale = prog.lastAt && (now - new Date(prog.lastAt).getTime()) > THIRTY_DAYS_MS;
+        const mastered = prog.pct >= 95;
+        if (!mastered && currentIndex === -1) currentIndex = i;
+        return { ...ch, prog, mastered };
+    });
+    if (currentIndex === -1) currentIndex = nodes.length - 1;
 
-        return '' +
-            '<div class="chapter-row">' +
-                '<div class="chapter-row-top">' +
-                    '<span class="chapter-title-text">' + esc(ch.title) + '</span>' +
-                    '<span class="chapter-pct">' + pct + '%</span>' +
+    const lineFillPct = nodes.length > 1 ? Math.round((currentIndex / (nodes.length - 1)) * 100) : 100;
+
+    let html = '<div class="skill-path">' +
+        '<div class="skill-line"><div class="skill-line-fill" style="height:' + lineFillPct + '%;"></div></div>';
+
+    let prevLevel = null;
+    nodes.forEach((n, i) => {
+        if (n.level !== prevLevel) {
+            html += '<div class="skill-level-divider"><span>' + esc(n.level || 'Autre') + '</span></div>';
+            prevLevel = n.level;
+        }
+
+        const pct = n.prog.pct;
+        const stale = n.prog.lastAt && (now - new Date(n.prog.lastAt).getTime()) > THIRTY_DAYS_MS;
+        const isCurrent = i === currentIndex && !n.mastered;
+        const state = n.mastered ? 'mastered' : (isCurrent ? 'current' : (n.prog.attempts > 0 ? 'started' : 'todo'));
+        const side = i % 2 === 0 ? 'side-left' : 'side-right';
+        const icon = n.mastered ? '✓' : (n.prog.attempts > 0 ? '📘' : '○');
+        const ringColor = n.mastered ? 'var(--gold)' : (isCurrent ? 'var(--accent-glow)' : 'var(--accent)');
+        const animDelay = Math.min(i, 10) * 0.06;
+
+        html += '' +
+            '<div class="skill-node-row ' + side + ' state-' + state + '" style="animation-delay:' + animDelay + 's;">' +
+                '<button class="skill-node" style="--pct:' + pct + '; --ring-color:' + ringColor + ';" ' +
+                    'onclick="launchChapterFromTree(\'' + jsAttrEscape(n.chapterKey) + '\')" ' +
+                    'title="' + esc(n.title) + ' — ' + pct + '%">' +
+                    '<span class="ring"></span>' +
+                    '<span style="position:relative;">' + icon + '</span>' +
+                '</button>' +
+                '<div class="skill-node-info">' +
+                    '<div class="skill-node-title">' + esc(n.title) + '</div>' +
+                    '<div class="skill-node-sub">' +
+                        '<span class="skill-node-pct">' + pct + '%</span>' +
+                        '<span>' + (n.prog.attempts > 0 ? n.prog.attempts + ' QCM tenté(s)' : 'Pas encore commencé') + '</span>' +
+                        (stale ? '<span class="skill-node-stale">⚠️ à revalider</span>' : '') +
+                    '</div>' +
                 '</div>' +
-                '<div class="chapter-bar-track">' +
-                    '<div class="chapter-bar-fill ' + (maxed ? 'maxed' : '') + '" style="width:' + pct + '%;"></div>' +
-                '</div>' +
-                '<div class="chapter-meta">' +
-                    '<span>' + esc(ch.level || '') + '</span>' +
-                    '<span>' + (prog.attempts > 0 ? prog.attempts + ' QCM tenté(s) sur ce chapitre' : 'Pas encore commencé') + '</span>' +
-                '</div>' +
-                (stale ? '<div class="chapter-stale">⚠️ Non revalidé depuis plus d\'un mois — clique pour refaire !</div>' : '') +
             '</div>';
-    }).join('');
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Mémorise la correspondance chapitre → quiz_key pour le clic sur un
+    // nœud (voir launchChapterFromTree juste en dessous).
+    window._skillTreeKeysByChapter = keysByChapter;
+    window._skillTreeBestByKey = bestByKey;
+}
+
+/**
+ * Clic sur un nœud de l'arbre de progression : lance le premier QCM non
+ * encore maîtrisé (<100%) du chapitre correspondant, dans l'ordre
+ * numérique du quiz_key (même heuristique de tri que pour l'ordre des
+ * chapitres eux-mêmes, voir renderChapters) — ou, si le chapitre est déjà
+ * entièrement maîtrisé, le premier QCM du chapitre pour permettre de le
+ * rejouer. Réutilise le même mécanisme de redirection que "à revalider"
+ * (index.html?quiz=... intercepté par checkPendingQuiz()).
+ */
+function launchChapterFromTree(chapterKey) {
+    const keys = ((window._skillTreeKeysByChapter || {})[chapterKey] || [])
+        .slice()
+        .sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
+    if (keys.length === 0) return;
+    const bestByKey = window._skillTreeBestByKey || {};
+    const notMastered = keys.find(k => !bestByKey[k] || bestByKey[k].pct < 1);
+    const targetKey = notMastered || keys[0];
+    console.log('[Arbre de progression] Lancement du QCM', targetKey, 'pour le chapitre', chapterKey);
+    window.location.href = 'index.html?quiz=' + encodeURIComponent(targetKey);
 }
 
 
@@ -779,6 +1016,7 @@ const BADGE_DEFINITIONS = {
     early_bird:      { icon:'🐤', label:'Lève-tôt',                  desc:'QCM fait avant 8h' },
     speedrun:        { icon:'⚡', label:'Éclair',                    desc:'QCM réussi en moins de 30s' },
     comeback:        { icon:'💪', label:'Revanche',                  desc:'Score 100% après un échec sur ce QCM' },
+    flawless_10:     { icon:'🎖️', label:'Dix sur dix',               desc:'10 QCM d\'affilée réussis à 100% (sans faute)' },
 };
 
 function renderBadges() {
@@ -799,22 +1037,68 @@ function renderBadges() {
 async function renderLeaderboard() {
     const container = document.getElementById('leaderboard-content');
 
-    // Nouveau : classement GLOBAL, pas filtré par classe
-    const { data: lb, error } = await sb
-        .rpc('get_leaderboard')
-        .select('*')
-        .order('ladder_score', { ascending: false })
-        .limit(50);
-
-    if (error || !lb || lb.length === 0) {
-        container.innerHTML = '<div class="leaderboard-disabled">Pas encore de classement disponible.</div>';
+    // Le prof a désactivé le classement pour cette classe (case décochée
+    // dans classes-management.html) : on respecte ce choix côté élève —
+    // pas de pression de classement pour cette classe, ni dans un sens ni
+    // dans l'autre (l'élève n'y apparaît plus non plus pour les autres,
+    // voir AJOUT v17 côté SQL).
+    if (!myClassLeaderboardEnabled) {
+        container.innerHTML =
+            '<div class="leaderboard-disabled">🙈 Le classement est désactivé pour ta classe par ton professeur.</div>';
         return;
     }
 
-    container.innerHTML =
+    if (!leaderboardRowsCache) {
+        const { data: lb, error } = await sb
+            .rpc('get_leaderboard')
+            .select('*')
+            .order('ladder_score', { ascending: false })
+            .limit(200); // large : filtré côté client par classe, voir plus bas
+
+        if (error || !lb) {
+            container.innerHTML = '<div class="leaderboard-disabled">Pas encore de classement disponible.</div>';
+            return;
+        }
+        leaderboardRowsCache = lb;
+    }
+
+    renderLeaderboardContent();
+}
+
+/**
+ * Rendu pur (pas de requête réseau) : dessine le toggle Global/Ma classe
+ * + la liste, à partir de leaderboardRowsCache et de leaderboardScope.
+ * Séparé de renderLeaderboard() pour que basculer entre les deux vues
+ * soit instantané (pas de nouvel aller-retour Supabase).
+ */
+function renderLeaderboardContent() {
+    const container = document.getElementById('leaderboard-content');
+    const all = leaderboardRowsCache || [];
+
+    const scopedRows = (leaderboardScope === 'class' && me.class_id)
+        ? all.filter(r => r.class_id === me.class_id)
+        : all;
+    const rows = scopedRows.slice(0, 50);
+
+    let toggleHtml = '';
+    if (me.class_id) {
+        toggleHtml =
+            '<div class="lb-scope-toggle">' +
+                '<button class="' + (leaderboardScope === 'class' ? 'active' : '') + '" onclick="setLeaderboardScope(\'class\')">🏫 Ma classe</button>' +
+                '<button class="' + (leaderboardScope === 'global' ? 'active' : '') + '" onclick="setLeaderboardScope(\'global\')">🌍 Global</button>' +
+            '</div>';
+    }
+
+    if (rows.length === 0) {
+        container.innerHTML = toggleHtml +
+            '<div class="leaderboard-disabled">Pas encore de classement disponible pour ce groupe.</div>';
+        return;
+    }
+
+    container.innerHTML = toggleHtml +
         '<p style="font-size:0.8rem; color:var(--text-dim); margin-bottom:14px;">' +
         '10 à 20 points maximum par QCM et par jour</p>' +
-        lb.map((row, i) => {
+        rows.map((row, i) => {
             const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
             const isMe = row.user_id === me.id;
             const score = row.ladder_score !== null ? row.ladder_score : '—';
@@ -828,6 +1112,11 @@ async function renderLeaderboard() {
                 '<div class="lb-score">' + score + ' pts</div>' +
                 '</div>';
         }).join('');
+}
+
+function setLeaderboardScope(scope) {
+    leaderboardScope = scope;
+    renderLeaderboardContent();
 }
 
 
@@ -893,8 +1182,55 @@ function cancelEditPseudo() {
 
 
 // ── SÉLECTION DE L'AVATAR ──────────────────────────────────────────────────
+// ── PERSONNALISATION : THÈME DE COULEUR ─────────────────────────────────
+// Rapport gamification, point "Personnalisation (avatar, thème)" — variables
+// CSS permutables (--accent/--accent-glow) + préférence stockée sur le
+// profil (profiles.theme_key, AJOUT v18) pour la retrouver partout.
+const THEME_DEFINITIONS = {
+    violet: { label: 'Violet',  accent: '#8b5cf6', glow: '#a78bfa' },
+    ocean:  { label: 'Océan',   accent: '#0ea5e9', glow: '#38bdf8' },
+    foret:  { label: 'Forêt',   accent: '#22c55e', glow: '#4ade80' },
+    corail: { label: 'Corail',  accent: '#f97316', glow: '#fb923c' },
+    rose:   { label: 'Rose',    accent: '#ec4899', glow: '#f472b6' },
+};
+
+function applyTheme(themeKey) {
+    const t = THEME_DEFINITIONS[themeKey] || THEME_DEFINITIONS.violet;
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--accent-glow', t.glow);
+}
+
+function renderThemeGrid() {
+    const container = document.getElementById('theme-grid-container');
+    if (!container) return;
+    const current = me.theme_key || 'violet';
+    container.innerHTML = Object.entries(THEME_DEFINITIONS).map(([key, t]) => {
+        const isSelected = current === key;
+        return '<div class="theme-choice' + (isSelected ? ' selected' : '') + '" ' +
+            'style="--swatch:' + t.accent + '; --swatch-glow:' + t.glow + ';" ' +
+            'onclick="selectTheme(\'' + key + '\')" title="' + esc(t.label) + '">' +
+            '<span class="theme-swatch"></span><span class="theme-label">' + esc(t.label) + '</span>' +
+            '</div>';
+    }).join('');
+}
+
+async function selectTheme(themeKey) {
+    if (themeKey === (me.theme_key || 'violet') || !THEME_DEFINITIONS[themeKey]) return;
+
+    const { error } = await sb.from('profiles').update({ theme_key: themeKey }).eq('id', me.id);
+    if (error) {
+        console.error('[Thème] Erreur sauvegarde :', error.message);
+        return;
+    }
+
+    me.theme_key = themeKey;
+    applyTheme(themeKey);
+    renderThemeGrid();
+}
+
 function openAvatarPicker() {
     renderAvatarGrid();
+    renderThemeGrid();
     document.getElementById('avatar-modal-overlay').classList.add('show');
 }
 
@@ -966,12 +1302,17 @@ async function logoutStudent() {
     window.location.href = 'index.html';
 }
 </script>
-<!-- FENÊTRE DE SÉLECTION D'AVATAR -->
+<!-- FENÊTRE DE PERSONNALISATION (avatar + thème) -->
 <div class="avatar-modal-overlay" id="avatar-modal-overlay">
     <div class="avatar-modal-box">
-        <h3>🎨 Choisis ton avatar</h3>
+        <h3>🎨 Personnalise ton profil</h3>
         <div class="avatar-modal-sub">Débloque de nouvelles icônes en montant de rang !</div>
         <div id="avatar-grid-container"></div>
+
+        <h3 style="margin-top:22px;">🌈 Couleur du thème</h3>
+        <div class="avatar-modal-sub">Change les couleurs de tout ton profil — juste pour toi.</div>
+        <div id="theme-grid-container" class="theme-grid"></div>
+
         <button class="avatar-modal-close" onclick="closeAvatarPicker()">Fermer</button>
     </div>
 </div>

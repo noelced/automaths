@@ -298,6 +298,135 @@
 <script>
     window.addEventListener('DOMContentLoaded', initAuth);
 
+    // ════════════════════════════════════════════════════════════════════
+    // COULEUR DES BOUTONS "Ai-je bien compris ?" SELON L'ÉTAT DU QCM
+    // ════════════════════════════════════════════════════════════════════
+    // États (et couleurs) :
+    //   • Gris    : ce QCM ne compte pas actuellement (hors niveau autorisé
+    //               pour la classe, ou pas coché dans la Progression du
+    //               prof alors qu'une progression est configurée) — même
+    //               logique de gating que record_quiz_result() côté serveur.
+    //   • --secondary (couleur par défaut, inchangée) : QCM "au programme",
+    //               pas encore tenté AUJOURD'HUI.
+    //   • Rouge / Orange / Vert clair / Vert foncé : tenté aujourd'hui,
+    //               coloré selon le meilleur score du jour (< 50% / 50-79% /
+    //               80-99% / 100%).
+    // "Aujourd'hui" correspond au moment où le QCM peut de nouveau rapporter
+    // des points (le plafond d'XP/QCM/jour se réinitialise à minuit, voir
+    // record_quiz_result) — la couleur se réinitialise donc au même rythme.
+    const QUIZ_BTN_COLORS = {
+        hors_programme: '#9ca3af',
+        rouge:          '#ef4444',
+        orange:         '#f59e0b',
+        vert_clair:     '#4ade80',
+        vert_fonce:     '#15803d',
+    };
+
+    let _quizButtonState = {
+        allowedLevels: null,       // null = pas de restriction de niveau
+        hasProgressConfig: false,
+        checkedMap: {},            // quiz_key -> boolean
+        todayBestByKey: {},        // quiz_key -> { score, total, pct }
+    };
+
+    async function loadQuizButtonStateData() {
+        if (typeof currentProfile === 'undefined' || !currentProfile || currentProfile.role !== 'student') return;
+        if (typeof currentUser === 'undefined' || !currentUser) return;
+
+        const todayStr = new Date().toISOString().slice(0, 10);
+
+        const [classRes, progressRes, todayRes] = await Promise.all([
+            currentProfile.class_id
+                ? supabaseClient.from('classes').select('level, allowed_levels').eq('id', currentProfile.class_id).maybeSingle()
+                : Promise.resolve({ data: null }),
+            currentProfile.class_id
+                ? supabaseClient.from('class_progress').select('quiz_key, checked').eq('class_id', currentProfile.class_id)
+                : Promise.resolve({ data: [] }),
+            supabaseClient.from('quiz_results').select('quiz_key, score, total').eq('user_id', currentUser.id).gte('completed_at', todayStr)
+        ]);
+
+        const classInfo = classRes.data;
+        _quizButtonState.allowedLevels =
+            (classInfo && classInfo.allowed_levels && classInfo.allowed_levels.length > 0) ? classInfo.allowed_levels
+            : (classInfo && classInfo.level ? [classInfo.level] : null);
+
+        const progressRows = progressRes.data || [];
+        _quizButtonState.checkedMap = {};
+        progressRows.forEach(r => { _quizButtonState.checkedMap[r.quiz_key] = r.checked; });
+        _quizButtonState.hasProgressConfig = progressRows.some(r => r.checked === true);
+
+        _quizButtonState.todayBestByKey = {};
+        (todayRes.data || []).forEach(r => {
+            if (!r.total) return;
+            const pct = r.score / r.total;
+            const cur = _quizButtonState.todayBestByKey[r.quiz_key];
+            if (!cur || pct > cur.pct) {
+                _quizButtonState.todayBestByKey[r.quiz_key] = { score: r.score, total: r.total, pct };
+            }
+        });
+    }
+
+    function getQuizButtonState(quizKey) {
+        const meta = (typeof quizMeta !== 'undefined' && quizMeta.byKey) ? quizMeta.byKey[quizKey] : null;
+
+        let inProgress = true;
+        if (meta && _quizButtonState.allowedLevels && !_quizButtonState.allowedLevels.includes(meta.level)) {
+            inProgress = false;
+        }
+        if (inProgress && _quizButtonState.hasProgressConfig && _quizButtonState.checkedMap[quizKey] !== true) {
+            inProgress = false;
+        }
+
+        if (!inProgress) {
+            return { color: QUIZ_BTN_COLORS.hors_programme, label: 'Ce QCM n\'est pas (encore) au programme de ta classe' };
+        }
+
+        const today = _quizButtonState.todayBestByKey[quizKey];
+        if (!today) {
+            return { color: null, label: 'Pas encore tenté aujourd\'hui' }; // null = garde la couleur --secondary par défaut
+        }
+        if (today.pct >= 1)   return { color: QUIZ_BTN_COLORS.vert_fonce, label: `Aujourd'hui : ${today.score}/${today.total} — parfait !` };
+        if (today.pct >= 0.8) return { color: QUIZ_BTN_COLORS.vert_clair, label: `Aujourd'hui : ${today.score}/${today.total} — bon résultat` };
+        if (today.pct >= 0.5) return { color: QUIZ_BTN_COLORS.orange,     label: `Aujourd'hui : ${today.score}/${today.total} — résultat moyen` };
+        return                       { color: QUIZ_BTN_COLORS.rouge,      label: `Aujourd'hui : ${today.score}/${today.total} — à retravailler` };
+    }
+
+    // Colorie tous les boutons ".btn-check-understanding" trouvés dans
+    // scopeEl (par défaut : tout le document). La clé de QCM est extraite
+    // de l'attribut onclick="startQuizFromButton('containerId','quizKey')"
+    // plutôt que d'un data-attribute dédié, pour ne pas avoir à modifier
+    // les fichiers officialData_*.js existants.
+    function applyQuizButtonStates(scopeEl) {
+        const scope = scopeEl || document;
+        const buttons = scope.querySelectorAll('.btn-check-understanding');
+        buttons.forEach(btn => {
+            const match = /startQuizFromButton\(\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/.exec(btn.getAttribute('onclick') || '');
+            if (!match) return;
+            const quizKey = match[2];
+            const state = getQuizButtonState(quizKey);
+            if (state.color) {
+                btn.style.backgroundColor = state.color;
+                btn.style.borderColor = state.color;
+            } else {
+                btn.style.backgroundColor = '';
+                btn.style.borderColor = '';
+            }
+            btn.title = state.label;
+        });
+    }
+
+    // Point d'entrée à appeler : après le rendu d'un chapitre (app.js,
+    // launchChapter) et après l'enregistrement d'un résultat de QCM
+    // (gamification.js, gamifiedSaveResult).
+    async function refreshQuizButtonStates(scopeEl) {
+        try {
+            await loadQuizButtonStateData();
+            applyQuizButtonStates(scopeEl);
+        } catch (e) {
+            console.warn('[Boutons QCM] Impossible de rafraîchir leur état :', e);
+        }
+    }
+
     // Quand l'élève clique sur un quiz "à revalider" dans student-dashboard.html,
     // il est redirigé vers index.html?quiz=31101. Ce code détecte ce paramètre
     // et lance automatiquement le bon QCM dès que l'authentification est confirmée
@@ -307,6 +436,26 @@
         const pendingKey = params.get('quiz');
         if (!pendingKey) return;
 
+        console.log('[Lancement auto] QCM demandé via l\'URL :', pendingKey);
+
+        let launched = false;
+
+        // Filet de sécurité : si rien ne s'est lancé après 8 secondes (ex.
+        // ce quiz_key n'a pas encore de questions dans localQuestions.js,
+        // ou la session ne s'est pas rechargée), on prévient plutôt que de
+        // laisser l'élève sur l'écran par défaut sans explication.
+        const timeoutId = setTimeout(() => {
+            if (launched) return;
+            console.warn(
+                '[Lancement auto] Le QCM "' + pendingKey + '" ne s\'est pas lancé après 8s. ' +
+                'Causes possibles : session non restaurée (voir #app-content), ou ce quiz_key ' +
+                'n\'existe pas dans allLocalQuestions (questions pas encore rédigées pour ce QCM).',
+                'app-content visible =', document.getElementById('app-content')?.style.display !== 'none',
+                'allLocalQuestions chargé =', typeof allLocalQuestions !== 'undefined',
+                'clé présente =', typeof allLocalQuestions !== 'undefined' && !!allLocalQuestions[pendingKey]
+            );
+        }, 8000);
+
         // On observe quand #app-content devient visible (= élève connecté et app prête)
         const observer = new MutationObserver(() => {
             const appContent = document.getElementById('app-content');
@@ -315,6 +464,8 @@
             // Attend que allLocalQuestions soit chargé
             if (typeof allLocalQuestions === 'undefined' || !allLocalQuestions[pendingKey]) return;
 
+            launched = true;
+            clearTimeout(timeoutId);
             observer.disconnect();
 
             // Nettoie l'URL pour ne pas re-lancer le quiz si l'élève recharge
@@ -324,6 +475,25 @@
             // On doit d'abord afficher la vue-app, puis lancer le quiz.
             // On attend un tick pour laisser le DOM se stabiliser.
             setTimeout(() => {
+                // Initialise correctement l'état de l'appli (currentLevel,
+                // data, bascule de vue) EXACTEMENT comme un clic manuel sur
+                // le niveau — c'est ce qui manquait avant : le quiz se
+                // lançait bien, mais currentLevel restait vide et data[]
+                // vide, donc cliquer ensuite sur "Cours"/"Entraînement"
+                // affichait "contenu en préparation" faute de niveau connu.
+                const meta = (typeof quizMeta !== 'undefined' && quizMeta.byKey) ? quizMeta.byKey[pendingKey] : null;
+                const levelsOrder = ["6ème", "5ème", "4ème", "3ème"];
+                const levelIndex = meta ? levelsOrder.indexOf(meta.level) : -1;
+
+                if (levelIndex !== -1 && typeof selectLevel === 'function') {
+                    selectLevel(levelIndex);
+                } else {
+                    console.warn('[Lancement auto] Niveau introuvable pour', pendingKey, '— navigation dégradée (currentLevel restera vide).');
+                    document.getElementById('view-levels')?.classList.remove('active');
+                    document.getElementById('view-creator')?.classList.remove('active');
+                    document.getElementById('view-app')?.classList.add('active');
+                }
+
                 // Crée un conteneur flottant pour le quiz si pas de containerId existant
                 const containerId = 'quiz-area-auto-' + pendingKey;
                 let container = document.getElementById(containerId);
