@@ -980,22 +980,31 @@ function renderChapters() {
 }
 
 /**
- * Clic sur un nœud de l'arbre de progression : lance le premier QCM non
- * encore maîtrisé (<100%) du chapitre correspondant, dans l'ordre
- * numérique du quiz_key (même heuristique de tri que pour l'ordre des
- * chapitres eux-mêmes, voir renderChapters) — ou, si le chapitre est déjà
- * entièrement maîtrisé, le premier QCM du chapitre pour permettre de le
- * rejouer. Réutilise le même mécanisme de redirection que "à revalider"
- * (index.html?quiz=... intercepté par checkPendingQuiz()).
+ * Clic sur un nœud de l'arbre de progression : lance le QCM le plus utile
+ * pour compléter ce chapitre à 100%, dans cet ordre de priorité :
+ *   1) jamais tenté (parmi les QCM au programme de la classe)
+ *   2) déjà tenté, du MOINS bon score au meilleur
+ *   3) déjà réussi à 100% (proposé en dernier, pour réviser/rejouer)
+ * À priorité égale (ex: plusieurs QCM jamais tentés), l'ordre du cours
+ * (tri numérique de la clé) sert de départage — le tri étant stable, il
+ * suffit de trier une première fois par ordre du cours avant de trier
+ * par score. Réutilise le même mécanisme de redirection que "à
+ * revalider" (index.html?quiz=... intercepté par checkPendingQuiz()).
  */
 function launchChapterFromTree(chapterKey) {
     const keys = ((window._skillTreeKeysByChapter || {})[chapterKey] || [])
         .slice()
-        .sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0));
+        .sort((a, b) => (parseInt(a, 10) || 0) - (parseInt(b, 10) || 0)); // ordre du cours (départage)
     if (keys.length === 0) return;
     const bestByKey = window._skillTreeBestByKey || {};
-    const notMastered = keys.find(k => !bestByKey[k] || bestByKey[k].pct < 1);
-    const targetKey = notMastered || keys[0];
+
+    const sorted = keys.sort((a, b) => {
+        const pa = bestByKey[a] ? bestByKey[a].pct : -1; // -1 = jamais tenté = priorité maximale
+        const pb = bestByKey[b] ? bestByKey[b].pct : -1;
+        return pa - pb;
+    });
+
+    const targetKey = sorted[0];
     console.log('[Arbre de progression] Lancement du QCM', targetKey, 'pour le chapitre', chapterKey);
     window.location.href = 'index.html?quiz=' + encodeURIComponent(targetKey);
 }

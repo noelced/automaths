@@ -74,6 +74,11 @@ main{ max-width:1100px; margin:0 auto; padding:32px 24px; }
 .class-list-item:hover{ background:var(--bg); }
 .class-list-item.active{ background:var(--primary-light); border-color:var(--primary); }
 .class-list-item .name{ font-weight:600; font-size:0.92rem; }
+.rename-btn{
+    background:none; border:none; cursor:pointer; font-size:0.85rem;
+    padding:2px 4px; border-radius:6px; opacity:0.6;
+}
+.rename-btn:hover{ opacity:1; background:rgba(0,0,0,0.06); }
 .class-list-item .count{
     font-size:0.75rem; color:var(--text-muted); background:var(--bg);
     padding:2px 8px; border-radius:10px;
@@ -323,6 +328,39 @@ input:checked + .slider::before{ transform:translateX(20px); }
     </div>
 </div>
 
+<!-- MODALE : renommer un élève (full_name) -->
+<div class="modal-overlay" id="modal-rename-student">
+    <div class="modal-box">
+        <h3>✏️ Renommer l'élève</h3>
+        <p id="rename-student-message">Nouveau nom complet :</p>
+        <div class="modal-field">
+            <label for="rename-student-input">Nom complet</label>
+            <input type="text" id="rename-student-input" placeholder="Prénom Nom">
+        </div>
+        <div class="modal-error" id="rename-student-error"></div>
+        <div class="modal-actions">
+            <button class="modal-btn-no" onclick="closeRenameStudentModal()">Annuler</button>
+            <button class="btn-primary" style="flex:1;" onclick="submitRenameStudent()" id="rename-student-submit-btn">Valider</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE : renommer une classe -->
+<div class="modal-overlay" id="modal-rename-class">
+    <div class="modal-box">
+        <h3>✏️ Renommer la classe</h3>
+        <div class="modal-field">
+            <label for="rename-class-input">Nom de la classe</label>
+            <input type="text" id="rename-class-input" placeholder="ex: 3ème A">
+        </div>
+        <div class="modal-error" id="rename-class-error"></div>
+        <div class="modal-actions">
+            <button class="modal-btn-no" onclick="closeRenameClassModal()">Annuler</button>
+            <button class="btn-primary" style="flex:1;" onclick="submitRenameClass()" id="rename-class-submit-btn">Valider</button>
+        </div>
+    </div>
+</div>
+
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -409,7 +447,10 @@ function renderClassList(){
         return '' +
             '<div class="class-list-item ' + (active ? 'active' : '') + '" onclick="selectClass(\'' + c.id + '\')">' +
                 '<span class="name">' + escapeHtml(c.name) + '</span>' +
-                '<span class="count">' + count + ' élève(s)</span>' +
+                '<span style="display:flex; align-items:center; gap:8px;">' +
+                    '<button class="rename-btn" onclick="event.stopPropagation(); openRenameClassModal(\'' + c.id + '\', ' + jsStr(c.name) + ')" title="Renommer la classe">✏️</button>' +
+                    '<span class="count">' + count + ' élève(s)</span>' +
+                '</span>' +
             '</div>' +
             '<div style="padding:0 4px 10px 4px;">' +
                 '<select onclick="event.stopPropagation()" onchange="event.stopPropagation(); setClassLevel(\'' + c.id + '\', this.value)" ' +
@@ -525,6 +566,7 @@ function renderStudentRow(student, currentClassId){
                     '<option value="">— Aucune classe —</option>' +
                     options +
                 '</select>' +
+                '<button class="btn-icon-sm" onclick="openRenameStudentModal(\'' + student.id + '\', ' + jsStr(studentName) + ')">✏️ Renommer</button>' +
                 '<button class="btn-icon-sm" onclick="openChangePasswordModal(\'' + student.id + '\', ' + jsStr(studentName) + ')">🔑 Mot de passe</button>' +
                 '<button class="btn-icon-sm danger" onclick="openDeleteStudentModal(\'' + student.id + '\', ' + jsStr(studentName) + ')">🗑️ Supprimer</button>' +
             '</div>' +
@@ -746,6 +788,106 @@ async function submitChangePassword(){
 
     closeChangePasswordModal();
     showToast('✓ Mot de passe modifié');
+}
+
+
+// ── RENOMMER UN ÉLÈVE (full_name) ──────────────────────────────────────────
+// Simple mise à jour de la table profiles — pas besoin de l'Edge Function
+// ici (contrairement au mot de passe/suppression), la policy RLS
+// "profiles: modification prof" autorise déjà un professeur à modifier
+// n'importe quel profil.
+let pendingRenameStudentId = null;
+
+function openRenameStudentModal(studentId, currentName){
+    pendingRenameStudentId = studentId;
+    document.getElementById('rename-student-message').innerHTML =
+        'Nouveau nom complet pour <strong>' + escapeHtml(currentName) + '</strong> :';
+    document.getElementById('rename-student-input').value = currentName === 'cet élève' ? '' : currentName;
+    document.getElementById('rename-student-error').textContent = '';
+    document.getElementById('modal-rename-student').classList.add('show');
+}
+
+function closeRenameStudentModal(){
+    pendingRenameStudentId = null;
+    document.getElementById('modal-rename-student').classList.remove('show');
+}
+
+async function submitRenameStudent(){
+    const errorEl = document.getElementById('rename-student-error');
+    errorEl.textContent = '';
+
+    const newName = document.getElementById('rename-student-input').value.trim();
+    if (!newName){
+        errorEl.textContent = 'Le nom ne peut pas être vide.';
+        return;
+    }
+
+    const submitBtn = document.getElementById('rename-student-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Validation…';
+
+    const { error } = await sb.from('profiles')
+        .update({ full_name: newName })
+        .eq('id', pendingRenameStudentId);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Valider';
+
+    if (error){
+        errorEl.textContent = 'Erreur : ' + error.message;
+        return;
+    }
+
+    closeRenameStudentModal();
+    await loadAll();
+    showToast('✓ Élève renommé');
+}
+
+
+// ── RENOMMER UNE CLASSE ─────────────────────────────────────────────────────
+let pendingRenameClassId = null;
+
+function openRenameClassModal(classId, currentName){
+    pendingRenameClassId = classId;
+    document.getElementById('rename-class-input').value = currentName;
+    document.getElementById('rename-class-error').textContent = '';
+    document.getElementById('modal-rename-class').classList.add('show');
+}
+
+function closeRenameClassModal(){
+    pendingRenameClassId = null;
+    document.getElementById('modal-rename-class').classList.remove('show');
+}
+
+async function submitRenameClass(){
+    const errorEl = document.getElementById('rename-class-error');
+    errorEl.textContent = '';
+
+    const newName = document.getElementById('rename-class-input').value.trim();
+    if (!newName){
+        errorEl.textContent = 'Le nom ne peut pas être vide.';
+        return;
+    }
+
+    const submitBtn = document.getElementById('rename-class-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Validation…';
+
+    const { error } = await sb.from('classes')
+        .update({ name: newName })
+        .eq('id', pendingRenameClassId);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Valider';
+
+    if (error){
+        errorEl.textContent = 'Erreur : ' + error.message;
+        return;
+    }
+
+    closeRenameClassModal();
+    await loadAll();
+    showToast('✓ Classe renommée');
 }
 
 

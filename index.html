@@ -263,29 +263,26 @@
 <script src="js/gamification.js"></script>
 
 <!-- 3. Logique applicative (doit être chargée AVANT les données : -->
-<!--    localQuestions.js appelle generateTriangleSVG() au chargement) -->
+<!--    les fichiers localQuestions_*.js, chargés à la demande par chapitre -->
+<!--    (voir app.js, loadQuizFileForChapter), appellent generateTriangleSVG() -->
+<!--    au chargement pour certaines questions — cette fonction doit donc -->
+<!--    déjà exister, d'où utils.js avant toute donnée) -->
 <script src="js/utils.js"></script>
 <script src="js/quiz.js"></script>
 <script src="js/equation-balance.js"></script>
 <script src="js/app.js"></script>
+<script src="js/quizPlacementEngine.js"></script>
 
 <!-- 4. Données pédagogiques -->
+<!--    localQuestions_<niveau>_chapitreNN.js : PAS chargés ici — un seul -->
+<!--    gros fichier par niveau alourdissait le chargement initial pour rien -->
+<!--    (un élève ne travaille qu'un chapitre à la fois). Chaque fichier est -->
+<!--    chargé à la demande par app.js (loadQuizFileForChapter) au moment où -->
+<!--    l'élève ouvre CE chapitre précis, et fusionné dans allLocalQuestions -->
+<!--    (déclaré dans app.js) — voir data/MAJ_contenu_site.js pour comment -->
+<!--    ces fichiers sont générés. -->
 <script src="data/officialStructure.js"></script>
 <script src="data/quizMeta.js"></script>
-<script src="data/localQuestions.js"></script>
-<script src="data/localQuestions5eme.js"></script>
-<script>
-    // Fusionne les questions de 5ème (allLocalQuestions5eme, défini dans
-    // localQuestions5eme.js) dans l'objet principal allLocalQuestions utilisé
-    // par app.js (startQuizFromButton). On garde deux fichiers séparés pour
-    // ne pas alourdir le chargement avec un seul gros fichier, mais tout le
-    // reste du code continue de lire un unique objet allLocalQuestions.
-    if (typeof allLocalQuestions5eme !== 'undefined') {
-        Object.assign(allLocalQuestions, allLocalQuestions5eme);
-    } else {
-        console.error('[AutoMaths] data/localQuestions5eme.js introuvable ou allLocalQuestions5eme non défini.');
-    }
-</script>
 
 <!-- 5. Graphiques -->
 <!--    chart.min.js : librairie Chart.js, conservée pour de FUTURS graphiques -->
@@ -474,7 +471,7 @@
             // Lance le quiz directement (simule un clic sur "Ai-je bien compris ?")
             // On doit d'abord afficher la vue-app, puis lancer le quiz.
             // On attend un tick pour laisser le DOM se stabiliser.
-            setTimeout(() => {
+            setTimeout(async () => {
                 // Initialise correctement l'état de l'appli (currentLevel,
                 // data, bascule de vue) EXACTEMENT comme un clic manuel sur
                 // le niveau — c'est ce qui manquait avant : le quiz se
@@ -492,6 +489,26 @@
                     document.getElementById('view-levels')?.classList.remove('active');
                     document.getElementById('view-creator')?.classList.remove('active');
                     document.getElementById('view-app')?.classList.add('active');
+                }
+
+                // Charge (si besoin) le fichier de quiz du CHAPITRE concerné
+                // et le fusionne dans allLocalQuestions — depuis le passage
+                // aux fichiers découpés par chapitre, plus rien ne charge ce
+                // fichier automatiquement pour un lancement direct par URL
+                // (contrairement à un clic normal sur un chapitre, qui passe
+                // par launchChapter -> loadQuizFileForChapter). Sans cette
+                // étape, allLocalQuestions[pendingKey] resterait introuvable.
+                if (meta && typeof officialStructure !== 'undefined' && typeof loadQuizFileForChapter === 'function') {
+                    const levelObj = officialStructure.find(l => l.name === meta.level);
+                    let chapterObj = null;
+                    (levelObj?.themes || []).forEach(t => (t.chapters || []).forEach(c => {
+                        if (c.title === meta.chapter) chapterObj = c;
+                    }));
+                    if (chapterObj) {
+                        await loadQuizFileForChapter(chapterObj);
+                    } else {
+                        console.warn('[Lancement auto] Chapitre introuvable dans officialStructure pour', pendingKey, '(niveau', meta.level, ', chapitre "' + meta.chapter + '")');
+                    }
                 }
 
                 // Crée un conteneur flottant pour le quiz si pas de containerId existant
