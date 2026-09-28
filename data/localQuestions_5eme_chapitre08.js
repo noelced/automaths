@@ -234,11 +234,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="166" y="146" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="52" y="112" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
                         '<text x="76" y="242" font-size="12" fill="#333">AB = 4,5 cm</text>' +
-                        '<polygon points="400,80 300,60 280,150 370,180" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="406" y="76" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="304" y="52" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="284" y="146" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="374" y="196" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="400,80 300,60 280,150 370,180" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="406" y="76" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="304" y="52" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="284" y="146" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="374" y="196" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<circle cx="220" cy="150" r="3.5" fill="#B5651D"/><text x="226" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que $AB = 4{,}5$ cm, quelle propriété utilise-t-on pour trouver $A\'B\' = ...$ ?</p>', a: 'La symétrie centrale conserve les longueurs' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -253,11 +253,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="144" y="256" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
                         '<text x="166" y="146" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="52" y="112" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
-                        '<polygon points="400,80 300,60 280,150 370,180" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="406" y="76" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="304" y="52" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="284" y="146" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="374" y="196" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="400,80 300,60 280,150 370,180" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="406" y="76" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="304" y="52" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="284" y="146" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="374" y="196" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<text x="286" y="100" font-size="12" fill="#333">B\'C\' = 3,2 cm</text>' +
                         '<circle cx="220" cy="150" r="3.5" fill="#B5651D"/><text x="226" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que $B\'C\' = 3{,}2$ cm, quelle propriété utilise-t-on pour trouver $BC = ...$ ?</p>', a: 'La symétrie centrale conserve les longueurs' },
@@ -273,10 +273,10 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="164" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
                         '<text x="112" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="150" y="212" font-size="12" fill="#333">$\\widehat{ABC} = 55°$</text>' +
-                        '<polygon points="440,140 340,140 380,220" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="444" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="316" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="384" y="238" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
+                        '<polygon points="440,140 340,140 380,220" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="444" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="316" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="384" y="238" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
                         '<circle cx="250" cy="180" r="3.5" fill="#B5651D"/><text x="256" y="176" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABC$ et $A\'B\'C\'$ sont symétriques par rapport à $O$. Sachant que $\\widehat{ABC} = 55°$, quelle propriété utilise-t-on pour trouver $\\widehat{A\'B\'C\'} = ...$ ?</p>', a: 'La symétrie centrale conserve les angles' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -290,10 +290,10 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="46" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">A</text>' +
                         '<text x="164" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
                         '<text x="112" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
-                        '<polygon points="440,140 340,140 380,220" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="444" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="316" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="384" y="238" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
+                        '<polygon points="440,140 340,140 380,220" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="444" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="316" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="384" y="238" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
                         '<text x="322" y="160" font-size="12" fill="#333">$\\widehat{A\'B\'C\'} = 68°$</text>' +
                         '<circle cx="250" cy="180" r="3.5" fill="#B5651D"/><text x="256" y="176" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABC$ et $A\'B\'C\'$ sont symétriques par rapport à $O$. Sachant que $\\widehat{A\'B\'C\'} = 68°$, quelle propriété utilise-t-on pour trouver $\\widehat{ABC} = ...$ ?</p>', a: 'La symétrie centrale conserve les angles' },
@@ -310,11 +310,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="196" y="134" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="70" y="102" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
                         '<text x="90" y="175" font-size="12" fill="#333">Aire(ABCD) = 14 cm²</text>' +
-                        '<polygon points="480,100 370,80 330,160 430,190" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="486" y="96" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="374" y="72" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="304" y="164" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="434" y="208" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="480,100 370,80 330,160 430,190" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="486" y="96" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="374" y="72" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="304" y="164" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="434" y="208" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<circle cx="260" cy="150" r="3.5" fill="#B5651D"/><text x="266" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que l\'aire de $ABCD$ vaut $14$ cm², quelle propriété utilise-t-on pour trouver l\'aire de $A\'B\'C\'D\' = ...$ ?</p>', a: 'La symétrie centrale conserve les aires' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -329,11 +329,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="154" y="238" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
                         '<text x="196" y="134" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="70" y="102" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
-                        '<polygon points="480,100 370,80 330,160 430,190" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="486" y="96" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="374" y="72" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="304" y="164" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="434" y="208" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="480,100 370,80 330,160 430,190" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="486" y="96" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="374" y="72" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="304" y="164" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="434" y="208" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<text x="368" y="130" font-size="12" fill="#333">Aire(A\'B\'C\'D\') = 14 cm²</text>' +
                         '<circle cx="260" cy="150" r="3.5" fill="#B5651D"/><text x="266" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que l\'aire de $A\'B\'C\'D\'$ vaut $14$ cm², quelle propriété utilise-t-on pour trouver l\'aire de $ABCD = ...$ ?</p>', a: 'La symétrie centrale conserve les aires' },
@@ -347,9 +347,9 @@ const localQuestions_5eme_chapitre08 = {
                         '<line x1="60" y1="200" x2="160" y2="160" stroke="#2E5C8A" stroke-width="2.5"/>' +
                         '<circle cx="60" cy="200" r="3.5" fill="#2E5C8A"/><text x="44" y="216" font-size="14" fill="#2E5C8A" font-weight="bold">A</text>' +
                         '<circle cx="160" cy="160" r="3.5" fill="#2E5C8A"/><text x="166" y="156" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
-                        '<line x1="420" y1="100" x2="320" y2="140" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<circle cx="420" cy="100" r="3.5" fill="#2F7D3C"/><text x="426" y="96" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<circle cx="320" cy="140" r="3.5" fill="#2F7D3C"/><text x="298" y="150" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
+                        '<line x1="420" y1="100" x2="320" y2="140" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<circle cx="420" cy="100" r="3.5" fill="#2E5C8A"/><text x="426" y="96" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<circle cx="320" cy="140" r="3.5" fill="#2E5C8A"/><text x="298" y="150" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
                         '<circle cx="240" cy="150" r="3.5" fill="#B5651D"/><text x="246" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$A\'$ et $B\'$ sont les images de $A$ et $B$ par la symétrie centrale de centre $O$. Quelle propriété utilise-t-on pour dire que $(A\'B\')$ est parallèle à $(AB)$ ?</p>', a: 'Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -362,9 +362,9 @@ const localQuestions_5eme_chapitre08 = {
                         '<line x1="80" y1="220" x2="200" y2="180" stroke="#2E5C8A" stroke-width="2.5"/>' +
                         '<circle cx="80" cy="220" r="3.5" fill="#2E5C8A"/><text x="64" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<circle cx="200" cy="180" r="3.5" fill="#2E5C8A"/><text x="206" y="176" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
-                        '<line x1="460" y1="80" x2="340" y2="120" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<circle cx="460" cy="80" r="3.5" fill="#2F7D3C"/><text x="466" y="76" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<circle cx="340" cy="120" r="3.5" fill="#2F7D3C"/><text x="318" y="130" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<line x1="460" y1="80" x2="340" y2="120" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<circle cx="460" cy="80" r="3.5" fill="#2E5C8A"/><text x="466" y="76" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<circle cx="340" cy="120" r="3.5" fill="#2E5C8A"/><text x="318" y="130" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<circle cx="270" cy="150" r="3.5" fill="#B5651D"/><text x="276" y="146" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$C\'$ et $D\'$ sont les images de $C$ et $D$ par la symétrie centrale de centre $O$. Quelle propriété utilise-t-on pour dire que $(C\'D\')$ est parallèle à $(CD)$ ?</p>', a: 'Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -380,11 +380,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="154" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="72" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
                         '<text x="90" y="205" font-size="12" fill="#333">(AB) // (DC)</text>' +
-                        '<polygon points="460,140 340,140 370,220 430,220" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="466" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="316" y="132" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="374" y="238" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="430" y="238" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="460,140 340,140 370,220 430,220" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="466" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="316" y="132" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="374" y="238" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="430" y="238" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<circle cx="260" cy="180" r="3.5" fill="#B5651D"/><text x="266" y="176" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que $(AB)$ est parallèle à $(DC)$, quelle propriété utilise-t-on pour dire que $(A\'B\')$ est parallèle à $(D\'C\')$ ?</p>', a: 'La symétrie centrale conserve le parallélisme' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -400,11 +400,11 @@ const localQuestions_5eme_chapitre08 = {
                         '<text x="184" y="246" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
                         '<text x="40" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">D</text>' +
                         '<text x="8" y="182" font-size="12" fill="#333">(AD) // (BC)</text>' +
-                        '<polygon points="460,230 340,220 340,140 460,150" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                        '<text x="466" y="244" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                        '<text x="316" y="224" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                        '<text x="316" y="136" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
-                        '<text x="466" y="146" font-size="14" fill="#2F7D3C" font-weight="bold">D\'</text>' +
+                        '<polygon points="460,230 340,220 340,140 460,150" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                        '<text x="466" y="244" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                        '<text x="316" y="224" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                        '<text x="316" y="136" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
+                        '<text x="466" y="146" font-size="14" fill="#2E5C8A" font-weight="bold">D\'</text>' +
                         '<circle cx="260" cy="185" r="3.5" fill="#B5651D"/><text x="266" y="181" font-size="13" fill="#B5651D" font-weight="bold">O</text>' +
                      '</svg><p style="margin-top:8px;">$ABCD$ et $A\'B\'C\'D\'$ sont symétriques par rapport à $O$. Sachant que $(AD)$ est parallèle à $(BC)$, quelle propriété utilise-t-on pour dire que $(A\'D\')$ est parallèle à $(B\'C\')$ ?</p>', a: 'La symétrie centrale conserve le parallélisme' },
                 options: 'La symétrie centrale conserve les longueurs ¤ La symétrie centrale conserve les aires ¤ La symétrie centrale conserve les angles ¤ La symétrie centrale conserve le parallélisme ¤ Le symétrique d\'une droite par symétrie centrale est une droite qui lui est parallèle.',
@@ -456,8 +456,8 @@ const placementQuestions_5eme_chapitre08_axiale = [
         svg: '<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">' +
                 '<line x1="100" y1="65" x2="145" y2="215" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/>' +
                 '<circle cx="100" cy="65" r="4.5" fill="#2E5C8A"/><circle cx="145" cy="215" r="4.5" fill="#2E5C8A"/>' +
-                '<line x1="300" y1="65" x2="255" y2="215" stroke="#2F7D3C" stroke-width="3" stroke-linecap="round"/>' +
-                '<circle cx="300" cy="65" r="4.5" fill="#2F7D3C"/><circle cx="255" cy="215" r="4.5" fill="#2F7D3C"/>' +
+                '<line x1="300" y1="65" x2="255" y2="215" stroke="#2E5C8A" stroke-width="3" stroke-linecap="round"/>' +
+                '<circle cx="300" cy="65" r="4.5" fill="#2E5C8A"/><circle cx="255" cy="215" r="4.5" fill="#2E5C8A"/>' +
              '</svg>',
         valid: [{ x1: 200, y1: 30, x2: 200, y2: 250 }],
         rotation: 'random',
@@ -526,9 +526,9 @@ const placementQuestions_5eme_chapitre08_axiale = [
         viewBox: { w: 400, h: 280 },
         svg: '<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">' +
                 '<circle cx="155" cy="105" r="75" fill="#3333ff" fill-opacity="0.08" stroke="#2E5C8A" stroke-width="2.5"/>' +
-                '<circle cx="245" cy="195" r="75" fill="#2F7D3C" fill-opacity="0.08" stroke="#2F7D3C" stroke-width="2.5"/>' +
+                '<circle cx="245" cy="195" r="75" fill="#3333ff" fill-opacity="0.08" stroke="#2E5C8A" stroke-width="2.5"/>' +
                 '<circle cx="155" cy="105" r="3.5" fill="#2E5C8A"/>' +
-                '<circle cx="245" cy="195" r="3.5" fill="#2F7D3C"/>' +
+                '<circle cx="245" cy="195" r="3.5" fill="#2E5C8A"/>' +
              '</svg>',
         valid: [
             { x1: 112, y1: 238, x2: 288, y2: 62 },
@@ -610,7 +610,7 @@ const placementQuestions_5eme_chapitre08_axiale = [
         viewBox: { w: 400, h: 280 },
         svg: '<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">' +
                 '<polygon points="95,101 305,64 235,217" fill="#3333ff" fill-opacity="0.12" stroke="#2E5C8A" stroke-width="2.5"/>' +
-                '<polygon points="95,179 305,216 235,63" fill="#2F7D3C" fill-opacity="0.12" stroke="#2F7D3C" stroke-width="2.5"/>' +
+                '<polygon points="95,179 305,216 235,63" fill="#3333ff" fill-opacity="0.12" stroke="#2E5C8A" stroke-width="2.5"/>' +
              '</svg>',
         valid: [{ x1: 30, y1: 140, x2: 370, y2: 140 }],
         rotation: 'random',
@@ -680,16 +680,20 @@ const placementQuestions_5eme_chapitre08_centrale = [
         explanation: 'Comme tout parallélogramme, un losange possède un centre de symétrie : le point d\'intersection de ses diagonales.'
     },
 
-    // 4) Carré -> centre (200,140)
+    // 4) Deux carrés identiques accolés par un côté commun -> centre = milieu de
+    // ce côté commun (remplace le carré seul).
+    // Carré 1 : x 80..200 ; carré 2 : x 200..320 ; y 80..200 (côté 120).
+    // Le côté commun est x=200, y 80..200 : son milieu est (200,140).
     {
         type: 'center',
-        question: '<p>Ce carré possède-t-il un centre de symétrie ?</p>',
+        question: '<p>Ces deux carrés possèdent-ils un centre de symétrie ?</p>',
         viewBox: { w: 400, h: 280 },
         svg: '<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">' +
-                '<rect x="120" y="60" width="160" height="160" fill="#2F7D3C" fill-opacity="0.1" stroke="#2F7D3C" stroke-width="2.5"/>' +
+                '<polygon points="80,80 200,80 200,200 80,200" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                '<polygon points="200,80 320,80 320,200 200,200" fill="#3333ff" fill-opacity="0.1" stroke="#2E5C8A" stroke-width="2.5"/>' +
              '</svg>',
         valid: { x: 200, y: 140 },
-        explanation: 'Le centre de symétrie d\'un carré est le point d\'intersection de ses deux diagonales, au centre exact de la figure.'
+        explanation: 'Les deux carrés sont identiques et accolés : chacun est l\'image de l\'autre par un demi-tour autour du <strong>milieu de leur côté commun</strong>. C\'est donc le centre de symétrie de la figure (et non le centre d\'un des deux carrés).'
     },
 
     // 5) Cercle -> centre (200,140)
@@ -704,16 +708,19 @@ const placementQuestions_5eme_chapitre08_centrale = [
         explanation: 'Le centre d\'un cercle est son unique centre de symétrie : toute rotation de 180° autour de ce point superpose le cercle à lui-même.'
     },
 
-    // 6) Hexagone régulier -> centre (150,110)
+    // 6) Deux triangles ayant un sommet commun O, symétriques par rapport à O
+    // (remplace l'hexagone) : O(200,140), P(80,90), Q(90,200) et leurs images
+    // P'(320,190), Q'(310,80) par la symétrie de centre O (vérifié par le calcul).
     {
         type: 'center',
-        question: '<p>Cet hexagone régulier possède-t-il un centre de symétrie ?</p>',
-        viewBox: { w: 300, h: 220 },
-        svg: '<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">' +
-                '<polygon points="220,110 185,49.38 115,49.38 80,110 115,170.62 185,170.62" fill="#3333ff" fill-opacity="0.12" stroke="#2E5C8A" stroke-width="2.5"/>' +
+        question: '<p>Ces deux triangles possèdent-ils un centre de symétrie ?</p>',
+        viewBox: { w: 400, h: 280 },
+        svg: '<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg">' +
+                '<polygon points="200,140 80,90 90,200" fill="#3333ff" fill-opacity="0.12" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                '<polygon points="200,140 320,190 310,80" fill="#3333ff" fill-opacity="0.12" stroke="#2E5C8A" stroke-width="2.5"/>' +
              '</svg>',
-        valid: { x: 150, y: 110 },
-        explanation: 'Un hexagone régulier possède un centre de symétrie : son centre. Une rotation d\'un demi-tour (180°) autour de ce point superpose exactement la figure à elle-même.'
+        valid: { x: 200, y: 140 },
+        explanation: 'Les deux triangles sont symétriques l\'un de l\'autre par rapport à leur <strong>sommet commun</strong> : ce point est le milieu de chaque segment qui joint un point d\'un triangle à son image dans l\'autre. C\'est le centre de symétrie de la figure.'
     },
 
     // 7) Deux triangles symétriques par un point O -> placer O
@@ -728,17 +735,17 @@ const placementQuestions_5eme_chapitre08_centrale = [
                 '<text x="66" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">A</text>' +
                 '<text x="164" y="236" font-size="14" fill="#2E5C8A" font-weight="bold">B</text>' +
                 '<text x="112" y="142" font-size="14" fill="#2E5C8A" font-weight="bold">C</text>' +
-                '<polygon points="360,80 280,80 320,150" fill="none" stroke="#2F7D3C" stroke-width="2.5"/>' +
-                '<text x="366" y="72" font-size="14" fill="#2F7D3C" font-weight="bold">A\'</text>' +
-                '<text x="256" y="72" font-size="14" fill="#2F7D3C" font-weight="bold">B\'</text>' +
-                '<text x="324" y="166" font-size="14" fill="#2F7D3C" font-weight="bold">C\'</text>' +
+                '<polygon points="360,80 280,80 320,150" fill="none" stroke="#2E5C8A" stroke-width="2.5"/>' +
+                '<text x="366" y="72" font-size="14" fill="#2E5C8A" font-weight="bold">A\'</text>' +
+                '<text x="256" y="72" font-size="14" fill="#2E5C8A" font-weight="bold">B\'</text>' +
+                '<text x="324" y="166" font-size="14" fill="#2E5C8A" font-weight="bold">C\'</text>' +
              '</svg>',
         valid: { x: 220, y: 150 },
         explanation: 'Le centre $O$ est le milieu de $[AA\']$, de $[BB\']$ et de $[CC\']$ à la fois : c\'est le point autour duquel on fait pivoter $ABC$ d\'un demi-tour pour obtenir $A\'B\'C\'$.'
     },
 
     // 8) Deux flèches symétriques par un point O -> placer O
-    // Flèche bleue (60,170)-(130,130) ; flèche verte (260,30)-(190,70) ;
+    // Première flèche (60,170)-(130,130) ; seconde flèche (260,30)-(190,70) ;
     // milieu(60,260)=(160,100), milieu(170,190)... vérifié : milieu(60,260)=160,
     // milieu(170,30)=100 et milieu(130,190)=160, milieu(130,70)=100 -> (160,100)
     {
@@ -748,11 +755,11 @@ const placementQuestions_5eme_chapitre08_centrale = [
         svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">' +
                 '<line x1="60" y1="170" x2="130" y2="130" stroke="#2E5C8A" stroke-width="3"/>' +
                 '<polygon points="130,130 112,132 122,148" fill="#2E5C8A"/>' +
-                '<line x1="260" y1="30" x2="190" y2="70" stroke="#2F7D3C" stroke-width="3"/>' +
-                '<polygon points="190,70 208,68 198,52" fill="#2F7D3C"/>' +
+                '<line x1="260" y1="30" x2="190" y2="70" stroke="#2E5C8A" stroke-width="3"/>' +
+                '<polygon points="190,70 208,68 198,52" fill="#2E5C8A"/>' +
              '</svg>',
         valid: { x: 160, y: 100 },
-        explanation: 'Le centre de symétrie doit être le milieu du segment reliant chaque point de la flèche bleue à son image sur la flèche verte : c\'est bien le cas ici en $(160\\,;100)$ pour les deux extrémités.'
+        explanation: 'Le centre de symétrie doit être le milieu du segment reliant chaque point d\'une flèche à son image sur l\'autre flèche : c\'est bien le cas ici en $(160\\,;100)$ pour les deux extrémités.'
     },
 
     // 9) Triangle équilatéral -> AUCUN centre (piège classique : un triangle,
