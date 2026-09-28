@@ -103,7 +103,7 @@ var chapterData_3eme_5 = {
                         </div>
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-stateffectif"
-                        onclick="startQuizFromButton('quiz-area-stateffectif', '35201')">
+                        onclick="startQuizFromButton('quiz-area-stateffectif', '305211')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-stateffectif"></div>
@@ -133,7 +133,7 @@ var chapterData_3eme_5 = {
                         </div>
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statfrequence"
-                        onclick="startQuizFromButton('quiz-area-statfrequence', '35211')">
+                        onclick="startQuizFromButton('quiz-area-statfrequence', '305221')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statfrequence"></div>
@@ -169,7 +169,7 @@ var chapterData_3eme_5 = {
                         
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statmoysimpl"
-                        onclick="startQuizFromButton('quiz-area-statmoysimpl', '35311')">
+                        onclick="startQuizFromButton('quiz-area-statmoysimpl', '305311')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statmoysimpl"></div>
@@ -186,7 +186,7 @@ var chapterData_3eme_5 = {
                         Ce qui correspond à une heure de coucher de $23\\text{h}$ et $0,34 \\times 60 = 20\\text{min}$, soit $23\\text{h}20$.</p>
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statmoypond"
-                        onclick="startQuizFromButton('quiz-area-statmoypond', '35312')">
+                        onclick="startQuizFromButton('quiz-area-statmoypond', '305312')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statmoypond"></div>
@@ -226,7 +226,7 @@ var chapterData_3eme_5 = {
                         </div>   
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statmedsimple"
-                        onclick="startQuizFromButton('quiz-area-statmedsimple', '35321')">
+                        onclick="startQuizFromButton('quiz-area-statmedsimple', '305321')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statmedsimple"></div>                        
@@ -288,7 +288,7 @@ var chapterData_3eme_5 = {
 
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statmedpond"
-                        onclick="startQuizFromButton('quiz-area-statmedpond', '35322')">
+                        onclick="startQuizFromButton('quiz-area-statmedpond', '305322')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statmedpond"></div>
@@ -320,7 +320,7 @@ var chapterData_3eme_5 = {
 
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-statetend"
-                        onclick="startQuizFromButton('quiz-area-statetend', '35411')">
+                        onclick="startQuizFromButton('quiz-area-statetend', '305411')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-statetend"></div>

@@ -50,7 +50,7 @@ var chapterData_3eme_1 = {
                                 </section>
 
                                 <!-- BOUTON 31101 -->
-                                <button class="btn-check-understanding" data-quiz-target="quiz-area-relatifs" onclick="startQuizFromButton('quiz-area-relatifs', '31101')">Ai-je bien compris ?</button>
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-relatifs" onclick="startQuizFromButton('quiz-area-relatifs', '301111')">Ai-je bien compris ?</button>
                                 <div id="quiz-area-relatifs"></div>
 
                                 <!-- SECTION II : FRACTIONS -->
@@ -65,7 +65,7 @@ var chapterData_3eme_1 = {
                                 </section>
 
                                 <!-- BOUTON 31201 -->
-                                <button class="btn-check-understanding" data-quiz-target="quiz-area-fractions" onclick="startQuizFromButton('quiz-area-fractions', '31201')">Ai-je bien compris ?</button>
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-fractions" onclick="startQuizFromButton('quiz-area-fractions', '301211')">Ai-je bien compris ?</button>
                                 <div id="quiz-area-fractions"></div>
 
                                 <!-- SECTION III : RACINES CARRÉES -->
@@ -83,7 +83,7 @@ var chapterData_3eme_1 = {
                                 </section>
 
                                 <!-- BOUTON 31301 -->
-                                <button class="btn-check-understanding" data-quiz-target="quiz-area-racines" onclick="startQuizFromButton('quiz-area-racines', '31301')">Ai-je bien compris ?</button>
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-racines" onclick="startQuizFromButton('quiz-area-racines', '301311')">Ai-je bien compris ?</button>
                                 <div id="quiz-area-racines"></div>
 
                                 <!-- SECTION IV : PUISSANCES -->
@@ -105,7 +105,7 @@ var chapterData_3eme_1 = {
                                 </section>
 
                                 <!-- BOUTON 31401 -->
-                                <button class="btn-check-understanding" data-quiz-target="quiz-area-puissances" onclick="startQuizFromButton('quiz-area-puissances', '31401')">Ai-je bien compris ?</button>
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-puissances" onclick="startQuizFromButton('quiz-area-puissances', '301411')">Ai-je bien compris ?</button>
                                 <div id="quiz-area-puissances"></div>
 
                                 <!-- SECTION V : ÉCRITURE SCIENTIFIQUE -->
@@ -120,7 +120,7 @@ var chapterData_3eme_1 = {
                                 </section>
 
                                 <!-- BOUTON 31501 -->
-                                <button class="btn-check-understanding" data-quiz-target="quiz-area-scientifique" onclick="startQuizFromButton('quiz-area-scientifique', '31501')">Ai-je bien compris ?</button>
+                                <button class="btn-check-understanding" data-quiz-target="quiz-area-scientifique" onclick="startQuizFromButton('quiz-area-scientifique', '301511')">Ai-je bien compris ?</button>
                                 <div id="quiz-area-scientifique"></div>
                             </div>
                         `

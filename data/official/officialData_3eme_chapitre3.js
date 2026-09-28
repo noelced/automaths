@@ -45,7 +45,7 @@ var chapterData_3eme_3 = {
                                         <span>Modéliser un problème de géométrie</span>
                                         <button class="btn-check-understanding"
                                                 data_quiz_target="quiz-area-CLmodeliserG"
-                                                onclick="startQuizFromButton('quiz-area-CLmodeliserG', '33101')">
+                                                onclick="startQuizFromButton('quiz-area-CLmodeliserG', '303111')">
                                             Ai-je bien compris ?
                                         </button>
                                     </div>
@@ -56,7 +56,7 @@ var chapterData_3eme_3 = {
                                         <span>Modéliser un programme de calcul</span>
                                         <button class="btn-check-understanding"
                                                 data_quiz_target="quiz-area-CLmodeliserP"
-                                                onclick="startQuizFromButton('quiz-area-CLmodeliserP', '33102')">
+                                                onclick="startQuizFromButton('quiz-area-CLmodeliserP', '303112')">
                                             Ai-je bien compris ?
                                         </button>
                                     </div>
@@ -67,7 +67,7 @@ var chapterData_3eme_3 = {
                                         <span>Modéliser un problème écrit en français</span>
                                         <button class="btn-check-understanding"
                                                 data_quiz_target="quiz-area-CLmodeliserF"
-                                                onclick="startQuizFromButton('quiz-area-CLmodeliserF', '33103')">
+                                                onclick="startQuizFromButton('quiz-area-CLmodeliserF', '303113')">
                                             Ai-je bien compris ?
                                         </button>
                                     </div>
@@ -95,7 +95,7 @@ var chapterData_3eme_3 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-CLsubstituer"
-                                    onclick="startQuizFromButton('quiz-area-CLsubstituer', '33104')">
+                                    onclick="startQuizFromButton('quiz-area-CLsubstituer', '303114')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-CLsubstituer"></div>
@@ -124,7 +124,7 @@ var chapterData_3eme_3 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-CLstructure"
-                                    onclick="startQuizFromButton('quiz-area-CLstructure', '33201')">
+                                    onclick="startQuizFromButton('quiz-area-CLstructure', '303211')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-CLstructure"></div>
@@ -174,7 +174,7 @@ var chapterData_3eme_3 = {
 
                                     <button class="btn-check-understanding"
                                     data-quiz-target="quiz-area-CLoppose"
-                                    onclick="startQuizFromButton('quiz-area-CLoppose', '33301')">
+                                    onclick="startQuizFromButton('quiz-area-CLoppose', '303311')">
                                     Ai-je bien compris ?</button>
                                     <div id="quiz-area-CLoppose"></div>
                                 </section>
@@ -221,7 +221,7 @@ var chapterData_3eme_3 = {
                                         </div>
                                         <button class="btn-check-understanding"
                                             data_quiz_target="quiz-area-CLredsom"
-                                            onclick="startQuizFromButton('quiz-area-CLredsom', '33411')">
+                                            onclick="startQuizFromButton('quiz-area-CLredsom', '303411')">
                                             Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLredsom"></div>
@@ -248,7 +248,7 @@ var chapterData_3eme_3 = {
                                         </div>
                                         <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLredpro"
-                                        onclick="startQuizFromButton('quiz-area-CLredpro', '33421')">
+                                        onclick="startQuizFromButton('quiz-area-CLredpro', '303421')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLredpro"></div>
@@ -283,7 +283,7 @@ var chapterData_3eme_3 = {
                                         </div>
                                         <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLredExp"
-                                        onclick="startQuizFromButton('quiz-area-CLredExp', '33431')">
+                                        onclick="startQuizFromButton('quiz-area-CLredExp', '303431')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLredExp"></div>
@@ -323,7 +323,7 @@ var chapterData_3eme_3 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLsimpleDistrib"
-                                        onclick="startQuizFromButton('quiz-area-CLsimpleDistrib', '33511')">
+                                        onclick="startQuizFromButton('quiz-area-CLsimpleDistrib', '303511')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLsimpleDistrib"></div>
@@ -342,7 +342,7 @@ var chapterData_3eme_3 = {
 
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLdoubleDistrib"
-                                        onclick="startQuizFromButton('quiz-area-CLdoubleDistrib', '33521')">
+                                        onclick="startQuizFromButton('quiz-area-CLdoubleDistrib', '303521')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLdoubleDistrib"></div>
@@ -361,7 +361,7 @@ var chapterData_3eme_3 = {
                                     <p>$(5 - 3a)(5 + 3a) = 5^2 - (3a)^2 = 25 - 9a^2$</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLdevIDrem"
-                                        onclick="startQuizFromButton('quiz-area-CLdevIDrem', '33601')">
+                                        onclick="startQuizFromButton('quiz-area-CLdevIDrem', '303611')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLdevIDrem"></div>
@@ -393,7 +393,7 @@ var chapterData_3eme_3 = {
                                     
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLfactoriser"
-                                        onclick="startQuizFromButton('quiz-area-CLfactoriser', '33701')">
+                                        onclick="startQuizFromButton('quiz-area-CLfactoriser', '303711')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLfactoriser"></div>
@@ -404,7 +404,7 @@ var chapterData_3eme_3 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-CLfactorIDrem"
-                                        onclick="startQuizFromButton('quiz-area-CLfactorIDrem', '33702')">
+                                        onclick="startQuizFromButton('quiz-area-CLfactorIDrem', '303712')">
                                         Ai-je bien compris ?
                                         </button>
                                         <div id="quiz-area-CLfactorIDrem"></div>

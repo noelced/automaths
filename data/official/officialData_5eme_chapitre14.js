@@ -160,6 +160,7 @@ var chapterData_5eme_14 = {
                                     </div>
 
                                     <h3 class="section-title">Le coefficient de proportionnalité</h3>
+                                    <p class="indent-text">C'est souvent la <strong>meilleure méthode</strong> lorsqu'il y a <strong>beaucoup de valeurs manquantes</strong> à trouver dans un tableau ou un problème : une fois le coefficient trouvé, il suffit de multiplier par ce même nombre pour compléter <strong>toutes</strong> les valeurs manquantes d'un coup.</p>
                                     <p><strong>Exemple :</strong> $4$ stylos coûtent $6$ €. Combien coûtent $10$ stylos ?</p>
 
                                     <div class="table-container" style="margin:10px 0;">
@@ -307,36 +308,46 @@ var chapterData_5eme_14 = {
 
                                     <p><strong>Exemple :</strong> une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité de farine pour $7$ personnes ?</p>
 
-                                    <div class="table-container" style="margin:10px 0;">
-                                        <table class="custom-table">
-                                            <tbody>
-                                                <tr>
-                                                    <th>Personnes</th>
-                                                    <td>4</td>
-                                                    <td>7</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Farine (g)</th>
-                                                    <td>300</td>
-                                                    <td>$x$</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div style="text-align:center; margin: 15px 0;">
+                                        <svg viewBox="0 0 380 235" xmlns="http://www.w3.org/2000/svg" style="max-width:380px; display:block; margin:0 auto; font-family:sans-serif;">
+                                            <defs>
+                                                <marker id="pcArrowBlue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                    <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+                                                </marker>
+                                                <marker id="pcArrowRed" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                                    <path d="M0,0 L10,5 L0,10 Z" fill="#e11d48"/>
+                                                </marker>
+                                            </defs>
+                                            <rect x="0" y="45" width="370" height="140" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="150" y1="45" x2="150" y2="185" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="260" y1="45" x2="260" y2="185" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <line x1="0" y1="115" x2="370" y2="115" stroke="#94a3b8" stroke-width="1.5"/>
+                                            <text x="12" y="85" font-size="15" fill="#1A1A1A" font-weight="bold">Personnes</text>
+                                            <text x="12" y="155" font-size="15" fill="#1A1A1A" font-weight="bold">Farine (g)</text>
+                                            <text x="205" y="85" font-size="17" fill="#1A1A1A" text-anchor="middle" font-weight="bold">4</text>
+                                            <text x="315" y="85" font-size="17" fill="#1A1A1A" text-anchor="middle" font-weight="bold">7</text>
+                                            <text x="205" y="155" font-size="17" fill="#1A1A1A" text-anchor="middle" font-weight="bold">300</text>
+                                            <text x="315" y="155" font-size="17" fill="#1A1A1A" text-anchor="middle" font-weight="bold">x</text>
+                                            <line x1="218" y1="145" x2="302" y2="95" stroke="#2563eb" stroke-width="3" marker-start="url(#pcArrowBlue)" marker-end="url(#pcArrowBlue)"/>
+                                            <line x1="218" y1="95" x2="302" y2="145" stroke="#e11d48" stroke-width="3" marker-start="url(#pcArrowRed)" marker-end="url(#pcArrowRed)"/>
+                                            <text x="185" y="210" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="bold">On multiplie : 300 × 7</text>
+                                            <text x="185" y="228" font-size="14" fill="#e11d48" text-anchor="middle" font-weight="bold">Puis on divise par 4</text>
+                                        </svg>
                                     </div>
 
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Méthode</span> Multiplier en croix, puis diviser
                                         <ol>
-                                            <li><span class="text-blue"><strong>On multiplie en diagonale</strong></span> les deux nombres reliés au nombre cherché $x$ : $300 \\times 7 = 2\\,100$.</li>
-                                            <li><span class="text-red"><strong>On divise</strong></span> ce résultat par le nombre qui reste dans le tableau : $2\\,100 \\div 4 = 525$.</li>
+                                            <li><span class="text-blue"><strong>Flèche bleue :</strong></span> on multiplie les deux nombres reliés : $300 \\times 7 = 2\\,100$.</li>
+                                            <li><span class="text-red"><strong>Flèche rouge :</strong></span> on divise ce résultat par le nombre relié à $x$ : $2\\,100 \\div 4 = 525$.</li>
                                             <li>Il faut donc <strong>$525$ g</strong> de farine pour $7$ personnes.</li>
                                         </ol>
                                     </div>
 
                                     <div class="notion-box">
                                         <strong style="color: var(--secondary);">💡 Astuce :</strong>
-                                        <p><span class="text-blue"><strong>Diagonale = multiplication</strong></span> (les deux nombres reliés à $x$).</p>
-                                        <p><span class="text-red"><strong>Colonne restante = division</strong></span> (le seul nombre qui n'a pas encore servi).</p>
+                                        <p><span class="text-blue"><strong>Flèche bleue = multiplication</strong></span> (les deux nombres qu'elle relie).</p>
+                                        <p><span class="text-red"><strong>Flèche rouge = division</strong></span> (le nombre qu'elle relie à $x$).</p>
                                     </div>
 
                                     <button class="btn-check-understanding"
@@ -454,6 +465,14 @@ var chapterData_5eme_14 = {
                                                     <td>3</td>
                                                     <td><strong>24</strong></td>
                                                 </tr>
+                                                <tr>
+                                                    <th>Pourcentage (%)</th>
+                                                    <td>?</td>
+                                                    <td>?</td>
+                                                    <td>?</td>
+                                                    <td>?</td>
+                                                    <td><strong>100</strong></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -461,15 +480,17 @@ var chapterData_5eme_14 = {
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Méthode</span> Calculer le pourcentage de voix de Chloé
                                         <ol>
-                                            <li>Chloé a obtenu $12$ voix sur $24$ votants.</li>
-                                            <li>On calcule : $\\dfrac{12 \\times 100}{24} = \\dfrac{1\\,200}{24} = 50$.</li>
+                                            <li>Chloé a obtenu $12$ voix sur $24$ votants : cela se note $\\dfrac{12}{24}$.</li>
+                                            <li><strong>On retrouve d'abord ce que Chloé obtient "pour 1" votant</strong> (comme pour le retour à l'unité !) : $12 \\div 24 = 0,5$.</li>
+                                            <li>Un pourcentage, c'est un nombre « <strong>pour 100</strong> ». On multiplie donc ce $0,5$ par $100$ : $0,5 \\times 100 = 50$.</li>
                                             <li>Chloé a obtenu <strong>$50\\%$</strong> des voix.</li>
                                         </ol>
                                     </div>
 
                                     <div class="notion-box">
                                         <strong style="color: var(--secondary);">💡 Astuce :</strong>
-                                        <p>pour trouver un pourcentage à partir d'un nombre parmi un total, on calcule toujours : $\\dfrac{\\text{nombre} \\times 100}{\\text{total}}$.</p>
+                                        <p>pour trouver un pourcentage à partir d'un nombre parmi un total, on calcule toujours : $\\dfrac{\\text{nombre}}{\\text{total}} \\times 100$.</p>
+                                        <p>C'est exactement la méthode du <strong>retour à l'unité</strong> (on divise d'abord), suivie d'une multiplication par $100$ car « pourcent » veut dire « pour $100$ ».</p>
                                     </div>
 
                                     <p><strong>Appliquer une remise ou une augmentation :</strong></p>

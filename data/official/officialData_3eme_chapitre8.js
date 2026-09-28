@@ -365,7 +365,7 @@ var chapterData_3eme_8 = {
     </div>
     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionsgene"
-                                    onclick="startQuizFromButton('quiz-area-fonctionsgene', '38121')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionsgene', '308111')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionsgene"></div>
@@ -695,7 +695,7 @@ var chapterData_3eme_8 = {
 
 <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionsexpresimante"
-                                    onclick="startQuizFromButton('quiz-area-fonctionsexpresimante', '38131')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionsexpresimante', '308121')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionsexpresimante"></div>
@@ -987,7 +987,7 @@ var chapterData_3eme_8 = {
 
 <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionstabimante"
-                                    onclick="startQuizFromButton('quiz-area-fonctionstabimante', '38132')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionstabimante', '308122')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionstabimante"></div>
@@ -1294,7 +1294,7 @@ $(x ,; f(x))$
 
 <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionsgraphimante"
-                                    onclick="startQuizFromButton('quiz-area-fonctionsgraphimante', '38133')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionsgraphimante', '308123')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionsgraphimante"></div>
@@ -1525,7 +1525,7 @@ $(x ,; f(x))$
 </div>
 <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionslineimante"
-                                    onclick="startQuizFromButton('quiz-area-fonctionslineimante', '38211')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionslineimante', '308211')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionslineimante"></div>
@@ -1875,7 +1875,7 @@ $(x ,; f(x))$
 </div>
 <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionslinecoef"
-                                    onclick="startQuizFromButton('quiz-area-fonctionslinecoef', '38212')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionslinecoef', '308212')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionslinecoef"></div>
@@ -1906,7 +1906,7 @@ $(x ,; f(x))$
                                         
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionslinemodel"
-                                    onclick="startQuizFromButton('quiz-area-fonctionslinemodel', '38213')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionslinemodel', '308221')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionslinemodel"></div>
@@ -1939,7 +1939,7 @@ $(x ,; f(x))$
 
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionsafinesdef"
-                                    onclick="startQuizFromButton('quiz-area-fonctionsafinesdef', '38311')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionsafinesdef', '308311')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionsafinesdef"></div>
@@ -2258,7 +2258,7 @@ $(x ,; f(x))$
 
                                                                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-fonctionsafinesgraphique"
-                                    onclick="startQuizFromButton('quiz-area-fonctionsafinesgraphique', '38321')">
+                                    onclick="startQuizFromButton('quiz-area-fonctionsafinesgraphique', '308321')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-fonctionsafinesgraphique"></div>    

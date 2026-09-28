@@ -138,7 +138,7 @@ var chapterData_5eme_6 = {
                                     <p class="indent-text">Ici, la graduation avance de $2$ en $2$ : $D(-8)$, $E(6)$ et $F(-4)$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-REPlireabscisse"
-                                        onclick="startQuizFromButton('quiz-area-REPlireabscisse', '56111')">
+                                        onclick="startQuizFromButton('quiz-area-REPlireabscisse', '506111')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-REPlireabscisse"></div>
@@ -256,7 +256,7 @@ var chapterData_5eme_6 = {
                                     <p class="indent-text">Comme chaque intervalle vaut $0,01$ je compte $5$ intervalles vers la droite pour placer $J$, $7$ intervalles vers la gauche pour placer $K$ et $2$ intervalles vers la droite pour placer $L$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-REPplacerabscisse"
-                                        onclick="startQuizFromButton('quiz-area-REPplacerabscisse', '56121')">
+                                        onclick="startQuizFromButton('quiz-area-REPplacerabscisse', '506121')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-REPplacerabscisse"></div>
@@ -543,7 +543,7 @@ var chapterData_5eme_6 = {
                                     <p class="indent-text">Ici, chaque carreau vaut $2$ unités : $R$ a pour coordonnées $(-6 ; 8)$ et $S$ a pour coordonnées $(8 ; -4)$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-REPlirecoord"
-                                        onclick="startQuizFromButton('quiz-area-REPlirecoord', '56211')">
+                                        onclick="startQuizFromButton('quiz-area-REPlirecoord', '506211')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-REPlirecoord"></div>
@@ -737,7 +737,7 @@ var chapterData_5eme_6 = {
                                     <p class="indent-text">Ici, chaque carreau vaut $2$ unités : pour placer $V(-4 ; -6)$, on avance de $4$ unités vers la gauche (soit $2$ carreaux) puis de $6$ unités vers le bas (soit $3$ carreaux).</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-REPplacercoord"
-                                        onclick="startQuizFromButton('quiz-area-REPplacercoord', '56221')">
+                                        onclick="startQuizFromButton('quiz-area-REPplacercoord', '506221')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-REPplacercoord"></div>
@@ -847,7 +847,7 @@ var chapterData_5eme_6 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-REPparallelogramme"
-                                        onclick="startQuizFromButton('quiz-area-REPparallelogramme', '56301')">
+                                        onclick="startQuizFromButton('quiz-area-REPparallelogramme', '506311')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-REPparallelogramme"></div>

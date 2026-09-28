@@ -66,7 +66,7 @@ var chapterData_5eme_2 = {
                                     </ul>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRdefinition"
-                                        onclick="startQuizFromButton('quiz-area-NRdefinition', '52101')">
+                                        onclick="startQuizFromButton('quiz-area-NRdefinition', '502111')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRdefinition"></div>
@@ -82,7 +82,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRprobleme"
-                                        onclick="startQuizFromButton('quiz-area-NRprobleme', '52102')">
+                                        onclick="startQuizFromButton('quiz-area-NRprobleme', '502121')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRprobleme"></div>
@@ -106,7 +106,7 @@ var chapterData_5eme_2 = {
                                     <p class="indent-text">Plus un point est loin de l'origine vers la droite, plus le nombre qu'il représente est grand. Plus un point est loin de l'origine vers la gauche, plus le nombre qu'il représente est petit.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRdroitegraduee"
-                                        onclick="startQuizFromButton('quiz-area-NRdroitegraduee', '52201')">
+                                        onclick="startQuizFromButton('quiz-area-NRdroitegraduee', '502211')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRdroitegraduee"></div>
@@ -147,7 +147,7 @@ var chapterData_5eme_2 = {
                                     <p>On range dans l'ordre croissant : $-7 ; -2 ; 0 ; 3 ; 5,2 ; 8,1$.</p>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRcomparer"
-                                        onclick="startQuizFromButton('quiz-area-NRcomparer', '52301')">
+                                        onclick="startQuizFromButton('quiz-area-NRcomparer', '502311')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRcomparer"></div>
@@ -190,7 +190,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRoppose"
-                                        onclick="startQuizFromButton('quiz-area-NRoppose', '52401')">
+                                        onclick="startQuizFromButton('quiz-area-NRoppose', '502411')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRoppose"></div>
@@ -231,7 +231,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRadditionner2"
-                                        onclick="startQuizFromButton('quiz-area-NRadditionner2', '52501')">
+                                        onclick="startQuizFromButton('quiz-area-NRadditionner2', '502511')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRadditionner2"></div>
@@ -250,7 +250,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRadditionnerN"
-                                        onclick="startQuizFromButton('quiz-area-NRadditionnerN', '52502')">
+                                        onclick="startQuizFromButton('quiz-area-NRadditionnerN', '502521')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRadditionnerN"></div>
@@ -282,7 +282,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRsoustraire"
-                                        onclick="startQuizFromButton('quiz-area-NRsoustraire', '52601')">
+                                        onclick="startQuizFromButton('quiz-area-NRsoustraire', '502611')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRsoustraire"></div>
@@ -328,7 +328,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRsimplifier"
-                                        onclick="startQuizFromButton('quiz-area-NRsimplifier', '52602')">
+                                        onclick="startQuizFromButton('quiz-area-NRsimplifier', '502621')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRsimplifier"></div>
@@ -357,7 +357,7 @@ var chapterData_5eme_2 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRenchainer"
-                                        onclick="startQuizFromButton('quiz-area-NRenchainer', '52701')">
+                                        onclick="startQuizFromButton('quiz-area-NRenchainer', '502711')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-NRenchainer"></div>

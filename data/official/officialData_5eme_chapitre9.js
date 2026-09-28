@@ -152,7 +152,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGvocabulaire"
-                                        onclick="startQuizFromButton('quiz-area-ANGvocabulaire', '59111')">
+                                        onclick="startQuizFromButton('quiz-area-ANGvocabulaire', '509111')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGvocabulaire"></div>
@@ -195,7 +195,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGnommer"
-                                        onclick="startQuizFromButton('quiz-area-ANGnommer', '59121')">
+                                        onclick="startQuizFromButton('quiz-area-ANGnommer', '509121')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGnommer"></div>
@@ -225,7 +225,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGopposesadjacents"
-                                        onclick="startQuizFromButton('quiz-area-ANGopposesadjacents', '59131')">
+                                        onclick="startQuizFromButton('quiz-area-ANGopposesadjacents', '509131')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGopposesadjacents"></div>
@@ -296,7 +296,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGbissectrice"
-                                        onclick="startQuizFromButton('quiz-area-ANGbissectrice', '59141')">
+                                        onclick="startQuizFromButton('quiz-area-ANGbissectrice', '509141')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGbissectrice"></div>
@@ -351,7 +351,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGvocsecante"
-                                        onclick="startQuizFromButton('quiz-area-ANGvocsecante', '59201')">
+                                        onclick="startQuizFromButton('quiz-area-ANGvocsecante', '509211')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGvocsecante"></div>
@@ -389,7 +389,7 @@ var chapterData_5eme_9 = {
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGcaracteriser"
-                                        onclick="startQuizFromButton('quiz-area-ANGcaracteriser', '59301')">
+                                        onclick="startQuizFromButton('quiz-area-ANGcaracteriser', '509311')">
                                         Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-ANGcaracteriser"></div>

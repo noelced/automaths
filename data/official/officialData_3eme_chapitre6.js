@@ -70,7 +70,7 @@ var chapterData_3eme_6 = {
                                     
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-probavocab"
-                                    onclick="startQuizFromButton('quiz-area-probavocab', '36101')">
+                                    onclick="startQuizFromButton('quiz-area-probavocab', '306101')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-probavocab"></div>
@@ -87,7 +87,7 @@ var chapterData_3eme_6 = {
                                     <p><em class="section-title">Exemple :</em> $P(\\text{Pile}) = \\frac{1}{2} = 0,5$. (1 issue favorable sur 2 issues possibles).</p>
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-probadef"
-                                    onclick="startQuizFromButton('quiz-area-probadef', '36211')">
+                                    onclick="startQuizFromButton('quiz-area-probadef', '306211')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-probadef"></div>
@@ -125,7 +125,7 @@ var chapterData_3eme_6 = {
 
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-probapropri"
-                                    onclick="startQuizFromButton('quiz-area-probapropri', '36221')">
+                                    onclick="startQuizFromButton('quiz-area-probapropri', '306221')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-probapropri"></div>
@@ -270,7 +270,7 @@ var chapterData_3eme_6 = {
                                     
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-probadouble"
-                                    onclick="startQuizFromButton('quiz-area-probadouble', '36321')">
+                                    onclick="startQuizFromButton('quiz-area-probadouble', '306321')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-probadouble"></div>
@@ -289,7 +289,7 @@ var chapterData_3eme_6 = {
                                     
                                     <button class="btn-check-understanding"
                                     data_quiz_target="quiz-area-probagrdnbr"
-                                    onclick="startQuizFromButton('quiz-area-probagrdnbr', '36401')">
+                                    onclick="startQuizFromButton('quiz-area-probagrdnbr', '306401')">
                                     Ai-je bien compris ?
                                     </button>
                                     <div id="quiz-area-probagrdnbr"></div>

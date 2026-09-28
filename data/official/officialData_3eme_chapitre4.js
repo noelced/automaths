@@ -108,7 +108,7 @@ var chapterData_3eme_4 = {
                     </div>
                     <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equatester"
-                        onclick="startQuizFromButton('quiz-area-Equatester', '34201')">
+                        onclick="startQuizFromButton('quiz-area-Equatester', '304211')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-Equatester"></div>
@@ -132,7 +132,7 @@ var chapterData_3eme_4 = {
                 <br>
                 <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equasomme"
-                        onclick="startQuizFromButton('quiz-area-Equasomme', '34301')">
+                        onclick="startQuizFromButton('quiz-area-Equasomme', '304311')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-Equasomme"></div>
@@ -151,7 +151,7 @@ var chapterData_3eme_4 = {
                 <br>
                         <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equaprod"
-                        onclick="startQuizFromButton('quiz-area-Equaprod', '34302')">
+                        onclick="startQuizFromButton('quiz-area-Equaprod', '304312')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-Equaprod"></div>
@@ -248,7 +248,7 @@ var chapterData_3eme_4 = {
                 </div>
                 <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equabase"
-                        onclick="startQuizFromButton('quiz-area-Equabase', '34303')">
+                        onclick="startQuizFromButton('quiz-area-Equabase', '304313')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-Equabase"></div>
@@ -271,7 +271,7 @@ var chapterData_3eme_4 = {
                 </div>
                 <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equaproduitnul"
-                        onclick="startQuizFromButton('quiz-area-Equaproduitnul', '34401')">
+                        onclick="startQuizFromButton('quiz-area-Equaproduitnul', '304511')">
                         Ai-je bien compris ?
                         </button>
                 <div id="quiz-area-Equaproduitnul"></div>
@@ -307,7 +307,7 @@ var chapterData_3eme_4 = {
                 </div>
                 <button class="btn-check-understanding"
                         data_quiz_target="quiz-area-Equaxcarre"
-                        onclick="startQuizFromButton('quiz-area-Equaxcarre', '34401')">
+                        onclick="startQuizFromButton('quiz-area-Equaxcarre', '304911')">
                         Ai-je bien compris ?
                         </button>
                         <div id="quiz-area-Equaxcarre"></div>

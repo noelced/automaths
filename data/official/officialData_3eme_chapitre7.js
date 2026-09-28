@@ -265,7 +265,7 @@ var chapterData_3eme_7 = {
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-prop-tableau"
-                onclick="startQuizFromButton('quiz-area-prop-tableau', '37101')">
+                onclick="startQuizFromButton('quiz-area-prop-tableau', '307211')">
                 Ai-je bien compris ?
                 </button>
 
@@ -385,7 +385,7 @@ var chapterData_3eme_7 = {
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-prop-graph"
-                onclick="startQuizFromButton('quiz-area-prop-graph', '37102')">
+                onclick="startQuizFromButton('quiz-area-prop-graph', '307221')">
                 Ai-je bien compris ?
                 </button>
 
@@ -483,7 +483,7 @@ Un stylo coûte donc
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-passageunite"
-                onclick="startQuizFromButton('quiz-area-passageunite', '37211')">
+                onclick="startQuizFromButton('quiz-area-passageunite', '307311')">
                 Ai-je bien compris ?
                 </button>
 
@@ -641,7 +641,7 @@ on divise toujours par 1,25.
                 </p>
 				                <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-coeffprop"
-                onclick="startQuizFromButton('quiz-area-coeffprop', '37221')">
+                onclick="startQuizFromButton('quiz-area-coeffprop', '307321')">
                 Ai-je bien compris ?
                 </button>
 
@@ -733,7 +733,7 @@ sur l'autre ligne.
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-linearite"
-                onclick="startQuizFromButton('quiz-area-linearite', '37231')">
+                onclick="startQuizFromButton('quiz-area-linearite', '307331')">
                 Ai-je bien compris ?
                 </button>
 
@@ -918,7 +918,7 @@ sur l'autre ligne.
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-lecturegraph"
-                onclick="startQuizFromButton('quiz-area-lecturegraph', '37241')">
+                onclick="startQuizFromButton('quiz-area-lecturegraph', '307341')">
                 Ai-je bien compris ?
                 </button>
 
@@ -1075,7 +1075,7 @@ sur l'autre ligne.
 
 <button class="btn-check-understanding"
 data_quiz_target="quiz-area-produitcroix"
-onclick="startQuizFromButton('quiz-area-produitcroix', '37251')">
+onclick="startQuizFromButton('quiz-area-produitcroix', '307351')">
 Ai-je bien compris ?
 </button>
 
@@ -1219,7 +1219,7 @@ Ai-je bien compris ?
 
                 <button class="btn-check-understanding"
                 data_quiz_target="quiz-area-fonctionlineaire"
-                onclick="startQuizFromButton('quiz-area-fonctionlineaire', '37301')">
+                onclick="startQuizFromButton('quiz-area-fonctionlineaire', '307411')">
                 Ai-je bien compris ?
                 </button>
 
@@ -1878,7 +1878,7 @@ margin:20px auto;
 
 <button class="btn-check-understanding"
 data_quiz_target="quiz-area-pourcentage"
-onclick="startQuizFromButton('quiz-area-pourcentage', '37401')">
+onclick="startQuizFromButton('quiz-area-pourcentage', '307511')">
 Ai-je bien compris ?
 </button>
             </section>
