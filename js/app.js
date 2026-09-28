@@ -18,6 +18,13 @@
 
   // 3. VARIABLES D'ÉTAT ET INITIALISATION
     let data = []; // La variable qui contiendra le mélange (Officiel + Élèves)
+
+    // Table des questions de QCM, remplie AU FUR ET À MESURE par
+    // loadQuizFileForChapter() (voir plus bas) à chaque chapitre ouvert par
+    // l'élève — plus de chargement statique de tout le programme d'un coup
+    // (voir data/localQuestions_<niveau>_chapitreNN.js, un fichier par
+    // chapitre, et data/MAJ_contenu_site.js qui les génère).
+    let allLocalQuestions = {};
     let currentLevel = "";
     let currentMode = "cours";
     let studentCardsGlobal = [];
@@ -90,7 +97,98 @@
         });
     }
 
-       // Variables pour gérer la session d'entraînement
+    // Cache des fichiers de quiz déjà chargés/fusionnés (clé: nom du
+    // fichier localQuestions_*.js) — comme _loadedChapterContents, pour ne
+    // jamais re-télécharger/re-fusionner deux fois le même chapitre.
+    const _loadedQuizFiles = {};
+
+    // "3ème" -> "3eme", "6ème" -> "6eme" (insensible aux accents) — doit
+    // rester IDENTIQUE à la fonction levelSlug() de data/MAJ_contenu_site.js,
+    // qui nomme les fichiers selon ce même schéma.
+    function levelSlug(level) {
+        return level.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    /**
+     * Lit la valeur d'une variable globale à NOM DYNAMIQUE, déclarée par
+     * un <script> classique. ⚠️ window[nom] NE FONCTIONNE PAS ICI : en
+     * JavaScript, une déclaration de haut niveau avec const/let (c'est le
+     * cas de chaque localQuestions_<niveau>_chapitreNN.js — voir README)
+     * crée une variable accessible par son nom nu dans TOUTE la page
+     * (les <script> classiques partagent la même portée globale), mais
+     * elle ne devient PAS une propriété de l'objet window — seul `var`
+     * ou une fonction déclarée au top-level font ça. Le seul moyen fiable
+     * de lire une variable dont on ne connaît le nom qu'au moment de
+     * l'exécution est donc de demander au moteur JS de la résoudre
+     * lui-même par ce nom, via eval — jamais avec du contenu venant de
+     * l'utilisateur, uniquement un nom de variable qu'on a nous-mêmes
+     * construit juste au-dessus.
+     */
+    function readGlobalByName(varName) {
+        try {
+            return eval(varName);
+        } catch (e) {
+            return undefined; // la variable n'existe pas (ReferenceError) : normal si le fichier n'a pas encore été chargé
+        }
+    }
+
+    /**
+     * Charge dynamiquement (si pas déjà fait) le fichier de quiz d'UN SEUL
+     * chapitre — data/localQuestions_<niveau>_chapitreNN.js — et fusionne
+     * son contenu dans allLocalQuestions, la table lue par
+     * startQuizFromButton()/launchLocalQuiz(). Même mécanisme d'injection
+     * de <script> que loadChapterContent() ci-dessus, pour la même raison
+     * (fetch() est bloqué par CORS en file://, une balise <script> non).
+     *
+     * Contrairement au contenu de cours, l'absence du fichier n'est PAS
+     * une erreur bloquante : un chapitre peut avoir son cours rédigé sans
+     * encore avoir de QCM (voir README) — le chapitre s'affiche quand
+     * même, simplement sans bouton fonctionnel "Ai-je bien compris ?".
+     */
+    function loadQuizFileForChapter(chapterSkeleton) {
+        const chapStr = String(chapterSkeleton.id).padStart(2, '0');
+        const slug = levelSlug(currentLevel);
+        const fileName = `localQuestions_${slug}_chapitre${chapStr}.js`;
+        const varName = `localQuestions_${slug}_chapitre${chapStr}`;
+
+        if (_loadedQuizFiles[fileName]) {
+            return Promise.resolve(true);
+        }
+        const already = readGlobalByName(varName);
+        if (already) {
+            // Déjà injecté par un clic précédent mais pas encore fusionné
+            // dans ce cache (cas rare) : on fusionne maintenant.
+            Object.assign(allLocalQuestions, already);
+            _loadedQuizFiles[fileName] = true;
+            return Promise.resolve(true);
+        }
+
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = `data/${fileName}`;
+            script.onload = () => {
+                const loaded = readGlobalByName(varName);
+                if (loaded) {
+                    Object.assign(allLocalQuestions, loaded);
+                    _loadedQuizFiles[fileName] = true;
+                    resolve(true);
+                } else {
+                    console.warn(`[Quiz] ${fileName} chargé mais ${varName} n'est pas défini — QCM indisponibles pour ce chapitre.`);
+                    resolve(false);
+                }
+            };
+            script.onerror = () => {
+                // Pas grave : ce chapitre n'a simplement pas encore de QCM
+                // rédigés (courant en attendant que tous les chapitres
+                // soient migrés vers le nouveau découpage par fichier).
+                console.warn(`[Quiz] ${fileName} introuvable — pas de QCM pour ce chapitre pour l'instant.`);
+                resolve(false);
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+
     let trainingSession = {
         score: 0,
         totalAnswered: 0,
@@ -815,7 +913,16 @@ if (currentMode === 'cours') {
 
         let fullChapter;
         try {
-            fullChapter = await loadChapterContent(chapter);
+            // Cours et quiz sont deux fichiers indépendants : on les charge
+            // en parallèle plutôt que l'un après l'autre, pour ne pas
+            // rallonger l'attente. loadQuizFileForChapter ne rejette jamais
+            // (l'absence de QCM pour ce chapitre n'empêche pas d'afficher le
+            // cours), donc un échec de son côté n'interrompt pas l'affichage.
+            const [chapterResult] = await Promise.all([
+                loadChapterContent(chapter),
+                loadQuizFileForChapter(chapter),
+            ]);
+            fullChapter = chapterResult;
         } catch (e) {
             console.error('[launchChapter] Erreur de chargement du chapitre :', e);
             container.innerHTML = `
