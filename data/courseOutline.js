@@ -1,10 +1,9 @@
 // ============================================================
 // data/courseOutline.js — Plan détaillé des cours (H2/H3 réels)
 // ============================================================
-// ⚙️  Fichier généré automatiquement par data/MAJcourseOutline.js
+// ⚙️  Fichier généré automatiquement par data/MAJ_contenu_site.js
 //     Ne modifiez pas ce fichier à la main : relancez plutôt
-//     "node MAJcourseOutline.js" depuis le dossier data/ après avoir
-//     modifié un fichier officialData_*.js.
+//     "node MAJ_contenu_site.js" depuis le dossier data/.
 //
 // Structure : courseOutline[niveau][titreChapitre] = {
 //     chapterId,
@@ -12,7 +11,8 @@
 //         { title: "...", items: [ { h3Title: "..."|null, quizKey: "..." } ] }
 //     ]
 // }
-// Utilisé par l'onglet "Progression" de dashboard.html.
+// Utilisé par l'onglet "Progression" de dashboard.html, et par
+// quizMeta.titles (voir MAJ_contenu_site.js) pour les titres de QCM.
 // ============================================================
 
 const courseOutline = {
@@ -26,11 +26,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Le carré",
-                            "quizKey": "54111"
+                            "quizKey": "504111"
                         },
                         {
                             "h3Title": "Le cube",
-                            "quizKey": "54121"
+                            "quizKey": "504121"
                         }
                     ]
                 },
@@ -39,15 +39,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Écrire un nombre sous la forme d'une puissance",
-                            "quizKey": "54211"
+                            "quizKey": "504211"
                         },
                         {
                             "h3Title": "Calculer une expression contenant des puissances",
-                            "quizKey": "54221"
+                            "quizKey": "504221"
                         },
                         {
                             "h3Title": "Calculer une expression littérale avec une puissance",
-                            "quizKey": "54231"
+                            "quizKey": "504231"
                         }
                     ]
                 }
@@ -61,15 +61,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Vocabulaire",
-                            "quizKey": "51111"
+                            "quizKey": "501111"
                         },
                         {
                             "h3Title": "Vocabulaire",
-                            "quizKey": "51112"
+                            "quizKey": "501112"
                         },
                         {
                             "h3Title": "Contrôler la vraisemblance d'un résultat",
-                            "quizKey": "51121"
+                            "quizKey": "501121"
                         }
                     ]
                 },
@@ -78,11 +78,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Priorités",
-                            "quizKey": "51211"
+                            "quizKey": "501211"
                         },
                         {
                             "h3Title": "Traduire un programme de calcul en une expression",
-                            "quizKey": "51221"
+                            "quizKey": "501221"
                         }
                     ]
                 },
@@ -91,7 +91,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "51301"
+                            "quizKey": "501311"
                         }
                     ]
                 },
@@ -100,19 +100,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Division euclidienne",
-                            "quizKey": "51411"
+                            "quizKey": "501411"
                         },
                         {
                             "h3Title": "Diviser par un nombre décimal",
-                            "quizKey": "51421"
+                            "quizKey": "501421"
                         },
                         {
                             "h3Title": "Multiples et diviseurs",
-                            "quizKey": "51431"
+                            "quizKey": "501431"
                         },
                         {
                             "h3Title": "Multiples et diviseurs",
-                            "quizKey": "51432"
+                            "quizKey": "501432"
                         }
                     ]
                 },
@@ -121,7 +121,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "51501"
+                            "quizKey": "501511"
                         }
                     ]
                 },
@@ -130,7 +130,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "51502"
+                            "quizKey": "501611"
                         }
                     ]
                 }
@@ -144,11 +144,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52101"
+                            "quizKey": "502111"
                         },
                         {
                             "h3Title": "Résoudre un problème avec des nombres relatifs",
-                            "quizKey": "52102"
+                            "quizKey": "502121"
                         }
                     ]
                 },
@@ -157,7 +157,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52201"
+                            "quizKey": "502211"
                         }
                     ]
                 },
@@ -166,7 +166,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52301"
+                            "quizKey": "502311"
                         }
                     ]
                 },
@@ -175,7 +175,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52401"
+                            "quizKey": "502411"
                         }
                     ]
                 },
@@ -184,11 +184,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52501"
+                            "quizKey": "502511"
                         },
                         {
                             "h3Title": "Additionner plusieurs nombres relatifs",
-                            "quizKey": "52502"
+                            "quizKey": "502521"
                         }
                     ]
                 },
@@ -197,11 +197,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52601"
+                            "quizKey": "502611"
                         },
                         {
                             "h3Title": "Simplifier l'écriture d'une somme",
-                            "quizKey": "52602"
+                            "quizKey": "502621"
                         }
                     ]
                 },
@@ -210,7 +210,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "52701"
+                            "quizKey": "502711"
                         }
                     ]
                 },
@@ -374,11 +374,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Lire une abscisse",
-                            "quizKey": "56111"
+                            "quizKey": "506111"
                         },
                         {
                             "h3Title": "Placer un point d'abscisse donnée",
-                            "quizKey": "56121"
+                            "quizKey": "506121"
                         }
                     ]
                 },
@@ -387,11 +387,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Lire les coordonnées d'un point donné",
-                            "quizKey": "56211"
+                            "quizKey": "506211"
                         },
                         {
                             "h3Title": "Placer un point de coordonnées données",
-                            "quizKey": "56221"
+                            "quizKey": "506221"
                         }
                     ]
                 },
@@ -400,7 +400,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "56301"
+                            "quizKey": "506311"
                         }
                     ]
                 }
@@ -480,25 +480,39 @@ const courseOutline = {
                     "title": "Rappel : la symétrie axiale",
                     "items": [
                         {
+                            "h3Title": "Reconnaitre",
+                            "quizKey": "508121"
+                        },
+                        {
                             "h3Title": "Construire",
-                            "quizKey": "58102"
+                            "quizKey": "508111"
                         }
                     ]
                 },
                 {
                     "title": "Découvrir la symétrie centrale (le demi-tour)",
-                    "items": []
+                    "items": [
+                        {
+                            "h3Title": "Reconnaitre",
+                            "quizKey": "508221"
+                        }
+                    ]
                 },
                 {
                     "title": "Les propriétés de la symétrie centrale",
-                    "items": []
+                    "items": [
+                        {
+                            "h3Title": null,
+                            "quizKey": "508231"
+                        }
+                    ]
                 },
                 {
                     "title": "Construire l'image d'une figure par symétrie centrale",
                     "items": [
                         {
                             "h3Title": "Symétrique d'une figure",
-                            "quizKey": "58202"
+                            "quizKey": "508411"
                         }
                     ]
                 },
@@ -520,19 +534,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Nature d'un angle",
-                            "quizKey": "59111"
+                            "quizKey": "509111"
                         },
                         {
                             "h3Title": "Nommer un angle",
-                            "quizKey": "59121"
+                            "quizKey": "509121"
                         },
                         {
                             "h3Title": "Angles opposés par le sommet, adjacents, supplémentaires",
-                            "quizKey": "59131"
+                            "quizKey": "509131"
                         },
                         {
                             "h3Title": "La bissectrice d'un angle",
-                            "quizKey": "59141"
+                            "quizKey": "509141"
                         }
                     ]
                 },
@@ -541,7 +555,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "59201"
+                            "quizKey": "509211"
                         }
                     ]
                 },
@@ -550,7 +564,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "59301"
+                            "quizKey": "509311"
                         }
                     ]
                 },
@@ -846,8 +860,20 @@ const courseOutline = {
                     "title": "Résoudre un problème de proportionnalité",
                     "items": [
                         {
+                            "h3Title": "Le coefficient de proportionnalité",
+                            "quizKey": "514211"
+                        },
+                        {
+                            "h3Title": "Le retour à l'unité",
+                            "quizKey": "514221"
+                        },
+                        {
                             "h3Title": "La linéarité (multiplicative ou additive)",
-                            "quizKey": "514201"
+                            "quizKey": "514231"
+                        },
+                        {
+                            "h3Title": "Le produit en croix",
+                            "quizKey": "514241"
                         }
                     ]
                 },
@@ -870,20 +896,11 @@ const courseOutline = {
                     ]
                 },
                 {
-                    "title": "Partager une quantité selon un ratio donné",
-                    "items": [
-                        {
-                            "h3Title": null,
-                            "quizKey": "514501"
-                        }
-                    ]
-                },
-                {
                     "title": "Utiliser une échelle",
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "514601"
+                            "quizKey": "514501"
                         }
                     ]
                 },
@@ -1036,7 +1053,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "34201"
+                            "quizKey": "304211"
                         }
                     ]
                 },
@@ -1045,15 +1062,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "34301"
+                            "quizKey": "304311"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "34302"
+                            "quizKey": "304312"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "34303"
+                            "quizKey": "304313"
                         }
                     ]
                 },
@@ -1062,7 +1079,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "34401"
+                            "quizKey": "304511"
                         }
                     ]
                 },
@@ -1071,7 +1088,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "34401"
+                            "quizKey": "304911"
                         }
                     ]
                 }
@@ -1085,7 +1102,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "31101"
+                            "quizKey": "301111"
                         }
                     ]
                 },
@@ -1094,7 +1111,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "31201"
+                            "quizKey": "301211"
                         }
                     ]
                 },
@@ -1103,7 +1120,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "31301"
+                            "quizKey": "301311"
                         }
                     ]
                 },
@@ -1112,7 +1129,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "31401"
+                            "quizKey": "301411"
                         }
                     ]
                 },
@@ -1121,7 +1138,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "31501"
+                            "quizKey": "301511"
                         }
                     ]
                 }
@@ -1135,7 +1152,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Division euclidienne",
-                            "quizKey": "32121"
+                            "quizKey": "302111"
                         }
                     ]
                 },
@@ -1144,19 +1161,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Vocabulaire",
-                            "quizKey": "32211"
+                            "quizKey": "302211"
                         },
                         {
                             "h3Title": "Vocabulaire",
-                            "quizKey": "32212"
+                            "quizKey": "302212"
                         },
                         {
                             "h3Title": "Critères de divisibilités",
-                            "quizKey": "32221"
+                            "quizKey": "302221"
                         },
                         {
                             "h3Title": "Déterminer tous les diviseurs d’un nombre entier",
-                            "quizKey": "32231"
+                            "quizKey": "302231"
                         }
                     ]
                 },
@@ -1165,11 +1182,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "32301"
+                            "quizKey": "302311"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "32302"
+                            "quizKey": "302312"
                         }
                     ]
                 },
@@ -1178,7 +1195,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "32401"
+                            "quizKey": "302411"
                         }
                     ]
                 },
@@ -1187,15 +1204,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "32501"
+                            "quizKey": "302511"
                         },
                         {
                             "h3Title": "Exemple type (diviseur) :",
-                            "quizKey": "32511"
+                            "quizKey": "302521"
                         },
                         {
                             "h3Title": "Exemple type (multiple) :",
-                            "quizKey": "32521"
+                            "quizKey": "302531"
                         }
                     ]
                 }
@@ -1209,19 +1226,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "33101"
+                            "quizKey": "303111"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "33102"
+                            "quizKey": "303112"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "33103"
+                            "quizKey": "303113"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "33104"
+                            "quizKey": "303114"
                         }
                     ]
                 },
@@ -1230,7 +1247,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "33201"
+                            "quizKey": "303211"
                         }
                     ]
                 },
@@ -1239,7 +1256,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "33301"
+                            "quizKey": "303311"
                         }
                     ]
                 },
@@ -1248,15 +1265,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Réduire une somme",
-                            "quizKey": "33411"
+                            "quizKey": "303411"
                         },
                         {
                             "h3Title": "Réduire un produit",
-                            "quizKey": "33421"
+                            "quizKey": "303421"
                         },
                         {
                             "h3Title": "Réduire une expression algébrique",
-                            "quizKey": "33431"
+                            "quizKey": "303431"
                         }
                     ]
                 },
@@ -1265,11 +1282,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Simple distributivité",
-                            "quizKey": "33511"
+                            "quizKey": "303511"
                         },
                         {
                             "h3Title": "Double distributivité",
-                            "quizKey": "33521"
+                            "quizKey": "303521"
                         }
                     ]
                 },
@@ -1278,7 +1295,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "33601"
+                            "quizKey": "303611"
                         }
                     ]
                 },
@@ -1287,11 +1304,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "33701"
+                            "quizKey": "303711"
                         },
                         {
                             "h3Title": null,
-                            "quizKey": "33702"
+                            "quizKey": "303712"
                         }
                     ]
                 }
@@ -1309,11 +1326,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "35201"
+                            "quizKey": "305211"
                         },
                         {
                             "h3Title": "Fréquence",
-                            "quizKey": "35211"
+                            "quizKey": "305221"
                         }
                     ]
                 },
@@ -1322,19 +1339,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Calcul de moyenne",
-                            "quizKey": "35311"
+                            "quizKey": "305311"
                         },
                         {
                             "h3Title": "Calcul de moyenne",
-                            "quizKey": "35312"
+                            "quizKey": "305312"
                         },
                         {
                             "h3Title": "Médiane",
-                            "quizKey": "35321"
+                            "quizKey": "305321"
                         },
                         {
                             "h3Title": "Médiane",
-                            "quizKey": "35322"
+                            "quizKey": "305322"
                         }
                     ]
                 },
@@ -1343,7 +1360,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "L'Étendue",
-                            "quizKey": "35411"
+                            "quizKey": "305411"
                         }
                     ]
                 },
@@ -1361,7 +1378,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "36101"
+                            "quizKey": "306101"
                         }
                     ]
                 },
@@ -1370,11 +1387,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Définition",
-                            "quizKey": "36211"
+                            "quizKey": "306211"
                         },
                         {
                             "h3Title": "Propriétés",
-                            "quizKey": "36221"
+                            "quizKey": "306221"
                         }
                     ]
                 },
@@ -1383,7 +1400,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Arbre des possibles",
-                            "quizKey": "36321"
+                            "quizKey": "306321"
                         }
                     ]
                 },
@@ -1392,7 +1409,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "36401"
+                            "quizKey": "306401"
                         }
                     ]
                 }
@@ -1410,11 +1427,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Dans un tableau",
-                            "quizKey": "37101"
+                            "quizKey": "307211"
                         },
                         {
                             "h3Title": "Sur un graphique",
-                            "quizKey": "37102"
+                            "quizKey": "307221"
                         }
                     ]
                 },
@@ -1423,23 +1440,23 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Passage par l'unité",
-                            "quizKey": "37211"
+                            "quizKey": "307311"
                         },
                         {
                             "h3Title": "Coefficient de proportionnalité",
-                            "quizKey": "37221"
+                            "quizKey": "307321"
                         },
                         {
                             "h3Title": "Linéarité",
-                            "quizKey": "37231"
+                            "quizKey": "307331"
                         },
                         {
                             "h3Title": "Lecture graphique",
-                            "quizKey": "37241"
+                            "quizKey": "307341"
                         },
                         {
                             "h3Title": "Produit en croix",
-                            "quizKey": "37251"
+                            "quizKey": "307351"
                         }
                     ]
                 },
@@ -1448,7 +1465,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": null,
-                            "quizKey": "37301"
+                            "quizKey": "307411"
                         }
                     ]
                 },
@@ -1457,7 +1474,7 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Attention au sens du problème",
-                            "quizKey": "37401"
+                            "quizKey": "307511"
                         }
                     ]
                 }
@@ -1471,19 +1488,19 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Notation",
-                            "quizKey": "38121"
+                            "quizKey": "308111"
                         },
                         {
                             "h3Title": "Représentation des fonctions",
-                            "quizKey": "38131"
+                            "quizKey": "308121"
                         },
                         {
                             "h3Title": "Représentation des fonctions",
-                            "quizKey": "38132"
+                            "quizKey": "308122"
                         },
                         {
                             "h3Title": "Représentation des fonctions",
-                            "quizKey": "38133"
+                            "quizKey": "308123"
                         }
                     ]
                 },
@@ -1492,15 +1509,15 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Définition",
-                            "quizKey": "38211"
+                            "quizKey": "308211"
                         },
                         {
                             "h3Title": "Définition",
-                            "quizKey": "38212"
+                            "quizKey": "308212"
                         },
                         {
                             "h3Title": "Calculer un pourcentage d’augmentation ou de diminution avec les fonctions linéaires",
-                            "quizKey": "38213"
+                            "quizKey": "308221"
                         }
                     ]
                 },
@@ -1509,11 +1526,11 @@ const courseOutline = {
                     "items": [
                         {
                             "h3Title": "Définition – Notation :",
-                            "quizKey": "38311"
+                            "quizKey": "308311"
                         },
                         {
                             "h3Title": "Représentation graphique",
-                            "quizKey": "38321"
+                            "quizKey": "308321"
                         }
                     ]
                 }
