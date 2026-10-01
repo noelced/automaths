@@ -393,13 +393,30 @@
     // de l'attribut onclick="startQuizFromButton('containerId','quizKey')"
     // plutôt que d'un data-attribute dédié, pour ne pas avoir à modifier
     // les fichiers officialData_*.js existants.
+    // Extrait la quizKey d'un bouton, qu'il s'agisse d'un QCM classique
+    // (onclick="startQuizFromButton('containerId','quizKey')") ou d'un quiz
+    // de placement (onclick="startPlacementQuiz('containerId', tableauJS,
+    // {quizKey:'quizKey', ...})") — voir js/quizPlacementEngine.js. Sans ce
+    // second cas, les boutons des quiz de placement ne recevaient jamais de
+    // couleur (le regex ne reconnaissait que startQuizFromButton).
+    function extractQuizKeyFromButton(btn) {
+        const onclick = btn.getAttribute('onclick') || '';
+        const classic = /startQuizFromButton\(\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/.exec(onclick);
+        if (classic) return classic[2];
+        const placement = /startPlacementQuiz\([^)]*\{([^}]*)\}\s*\)/.exec(onclick);
+        if (placement) {
+            const km = /quizKey\s*:\s*'([^']+)'/.exec(placement[1]);
+            if (km) return km[1];
+        }
+        return null;
+    }
+
     function applyQuizButtonStates(scopeEl) {
         const scope = scopeEl || document;
         const buttons = scope.querySelectorAll('.btn-check-understanding');
         buttons.forEach(btn => {
-            const match = /startQuizFromButton\(\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/.exec(btn.getAttribute('onclick') || '');
-            if (!match) return;
-            const quizKey = match[2];
+            const quizKey = extractQuizKeyFromButton(btn);
+            if (!quizKey) return;
             const state = getQuizButtonState(quizKey);
             if (state.color) {
                 btn.style.backgroundColor = state.color;

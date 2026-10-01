@@ -92,6 +92,18 @@ header{
 .avatar-modal-box{
     background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
     padding:26px; width:100%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    /* Adaptable en hauteur : sur un écran bas (PC non maximisé, petite
+       résolution...), la fenêtre peut devenir plus haute que l'écran une
+       fois tous les avatars débloqués affichés. Sans limite de hauteur ni
+       défilement, le bouton "Fermer" (en bas du contenu) devient alors
+       inatteignable. On plafonne la hauteur à celle de l'écran (moins les
+       20px de marge du calque semi-transparent en haut et en bas) et on
+       fait défiler le contenu à l'intérieur si besoin : le bouton "Fermer"
+       reste donc toujours atteignable, en faisant défiler jusqu'en bas.
+       La largeur était déjà adaptable (width:100% avec un max-width, dans
+       un calque qui garde toujours 20px de marge de chaque côté). */
+    max-height:calc(100vh - 40px);
+    overflow-y:auto;
 }
 .avatar-modal-box h3{ font-size:1.1rem; margin-bottom:6px; color:var(--text); }
 .avatar-modal-box .avatar-modal-sub{ font-size:0.82rem; color:var(--text-dim); margin-bottom:18px; }
