@@ -855,6 +855,13 @@ let currentParticularChapterRows = []; // [{level, chapter}] affiché à l'étap
     renderQcmTab();
     renderParticularTab();
 
+    // "Suivi statistique" a été affiché juste après loadData(), donc AVANT que
+    // buildMergedQuizMeta() ci-dessus soit prêt : on le rafraîchit maintenant
+    // pour que la colonne "Chapitre" utilise les bons noms dès l'arrivée sur
+    // le tableau de bord (sans ça, l'utilisateur devrait changer un filtre
+    // pour voir un rendu correct).
+    applyFiltersAndRender();
+
     document.getElementById('loading-screen').style.display = 'none';
 })();
 
@@ -1035,7 +1042,14 @@ function updateStats() {
 }
 
 function renderTable() {
-    let rows = [...filteredResults];
+    // Résout le VRAI nom de chapitre via quizMeta.js (comme les onglets
+    // "Suivi des QCM" et "Suivi particulier"), plutôt que de faire confiance
+    // à la valeur brute stockée en base au moment de la tentative : certaines
+    // anciennes lignes ont été enregistrées avec chapter_title = quiz_key
+    // (métadonnée manquante à l'époque), ce qui affichait la clé au lieu du
+    // nom du chapitre. resolveChapterTitle() corrige l'affichage sans jamais
+    // toucher aux données stockées.
+    let rows = filteredResults.map(r => ({ ...r, chapter_title: resolveChapterTitle(r) }));
 
     // Filtre recherche
     if (searchQuery) {
@@ -1182,6 +1196,16 @@ async function loadAllTimeResults() {
     const { data, error } = await sb.from('dashboard_view').select('*');
     if (error) { console.error('Erreur chargement résultats (QCM) :', error); return; }
     allTimeResults = data || [];
+}
+
+// Nom de chapitre affiché pour une ligne de résultat : priorité à
+// quizMeta.js (source de vérité, toujours à jour), et seulement si la clé y
+// est introuvable on retombe sur la valeur brute stockée en base pour cette
+// tentative (utile pour un QCM tout juste créé, pas encore ajouté à
+// quizMeta.js — cf. buildMergedQuizMeta ci-dessous, qui fait pareil).
+function resolveChapterTitle(r) {
+    const meta = mergedQuizMeta[r.quiz_key];
+    return (meta && meta.chapter) || r.chapter_title || 'Chapitre inconnu';
 }
 
 // ── FUSION quizMeta.js + DÉCOUVERTE DYNAMIQUE ─────────────────────────────
