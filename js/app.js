@@ -1329,6 +1329,23 @@ function launchLocalQuiz(containerId, questions) {
 
 
 
+// Cherche le titre du chapitre en lisant le DOM (h1/h2/h3/.chapter-title de
+// la carte de cours), comme le faisait autrefois startQuizFromButton().
+// Ne sert plus qu'en tout dernier recours (voir startQuizFromButton) : c'est
+// fragile, car ça suppose un attribut data-quiz-target correctement présent
+// ET un h1/h2/h3 au bon endroit — ce qui explique que certains QCM (dont la
+// clé n'était pas encore dans quizMeta.js au moment de l'appel, ou dont le
+// bouton utilisait par erreur data_quiz_target avec un underscore au lieu
+// d'un tiret) affichaient la clé au lieu du nom du chapitre dans le suivi
+// professeur. On tente les deux orthographes de l'attribut par prudence.
+function fallbackDomChapterTitle(containerId) {
+    const btn = document.querySelector(`[data-quiz-target="${containerId}"]`)
+        || document.querySelector(`[data_quiz_target="${containerId}"]`);
+    const cardEl = btn?.closest('.card');
+    const chapterTitleEl = cardEl?.querySelector('h1, h2, h3, .chapter-title');
+    return chapterTitleEl ? chapterTitleEl.textContent.trim() : null;
+}
+
 function startQuizFromButton(containerId, quizKey) {
     if (activeInjectedQuizId === containerId) {
         const targetContainer = document.getElementById(containerId);
@@ -1345,15 +1362,17 @@ function startQuizFromButton(containerId, quizKey) {
     
     if (selectedQuestions) {
         // ── GAMIFICATION : démarre le chronomètre pour le suivi élève ──────
-        // Le titre du chapitre est récupéré depuis le titre affiché en haut
-        // de la carte de cours (toujours un <h1>, voir launchChapter), avec
-        // h2/h3/.chapter-title en repli pour d'autres contextes éventuels.
-        const cardEl = document.querySelector(`[data-quiz-target="${containerId}"]`)?.closest('.card');
-        const chapterTitleEl = cardEl?.querySelector('h1, h2, h3, .chapter-title');
-        const chapterTitle = chapterTitleEl ? chapterTitleEl.textContent.trim() : stringKey;
+        // Chapitre/niveau viennent de quizMeta.js (source fiable, la même
+        // que celle utilisée par le tableau de bord professeur) plutôt que
+        // d'une lecture fragile du DOM. On ne retombe sur le DOM, puis sur
+        // la clé elle-même, que si la clé n'est vraiment pas dans
+        // quizMeta.js (par exemple un tout nouveau QCM pas encore ajouté).
+        const meta = (typeof quizMeta !== 'undefined' && quizMeta.byKey) ? quizMeta.byKey[stringKey] : null;
+        const chapterTitle = meta?.chapter || fallbackDomChapterTitle(containerId) || stringKey;
+        const levelName    = meta?.level   || currentLevel || '';
 
         if (typeof trackerStartQuiz === 'function') {
-            trackerStartQuiz(stringKey, chapterTitle, currentLevel || '');
+            trackerStartQuiz(stringKey, chapterTitle, levelName);
         }
 
         launchLocalQuiz(containerId, selectedQuestions);
