@@ -243,6 +243,45 @@
         const container = document.getElementById(containerId);
         if (!container) { console.error('startPlacementQuiz : conteneur introuvable ->', containerId); return; }
 
+        // ── Harmonisation avec les QCM classiques ──────────────────────────
+        // Même comportement que startQuizFromButton() / launchLocalQuiz()
+        // (app.js) et closeInjectedQuiz() (quiz.js) : un seul quiz ouvert à
+        // la fois sur la page (activeInjectedQuizId), bouton déclencheur qui
+        // devient "Masquer le quizz" pendant que c'est ouvert, et qui bascule
+        // (ferme) si on reclique dessus pendant que CE quiz est ouvert.
+        // activeInjectedQuizId est une variable partagée entre scripts
+        // classiques (déclarée dans app.js, lue/écrite aussi depuis quiz.js) :
+        // on la lit/écrit pareil ici, avec un typeof de garde si jamais ce
+        // moteur est utilisé seul, sans le reste du site.
+        function findTriggerBtn(id) {
+            return document.querySelector(`[data-quiz-target="${id}"]`)
+                || document.querySelector(`[data_quiz_target="${id}"]`);
+        }
+        const hasLock = typeof activeInjectedQuizId !== 'undefined';
+
+        if (hasLock && activeInjectedQuizId === containerId) {
+            // Reclic sur le bouton pendant que CE quiz est déjà ouvert -> on le
+            // referme (bascule), comme n'importe quel autre quiz du site.
+            if (typeof global.closeInjectedQuiz === 'function') {
+                global.closeInjectedQuiz(containerId);
+            } else {
+                container.innerHTML = '';
+                activeInjectedQuizId = null;
+            }
+            return;
+        }
+        if (hasLock && activeInjectedQuizId && activeInjectedQuizId !== containerId) {
+            // Un AUTRE quiz est ouvert ailleurs sur la page -> on le referme
+            // d'abord (un seul quiz ouvert à la fois, comme launchLocalQuiz).
+            const oldContainer = document.getElementById(activeInjectedQuizId);
+            if (oldContainer) oldContainer.innerHTML = '';
+            const oldBtn = findTriggerBtn(activeInjectedQuizId);
+            if (oldBtn) oldBtn.innerText = 'Ai-je bien compris ?';
+        }
+        if (hasLock) activeInjectedQuizId = containerId;
+        const triggerBtn = findTriggerBtn(containerId);
+        if (triggerBtn) triggerBtn.innerText = 'Masquer le quizz';
+
         // ── Intégration au suivi Supabase (comme les QCM classiques) ──────
         // opts.quizKey / opts.chapterTitle / opts.levelName sont optionnels :
         // s'ils sont fournis et que tracker.js est chargé, le résultat final
@@ -535,7 +574,7 @@
                         : (score >= questions.length * 0.7
                             ? "Bon travail, continue comme ça !"
                             : "N'hésite pas à relire le cours puis à recommencer.")) + '</p>' +
-                    '<button type="button" class="pq-btn pq-validate pq-restart">Recommencer</button>' +
+                    '<button type="button" class="pq-btn pq-validate pq-close">Fermer le quiz</button>' +
                 '</div>';
 
             // Enregistrement Supabase (identique aux QCM classiques) : silencieux
@@ -544,11 +583,18 @@
                 global.trackerSaveResult(score, questions.length);
             }
 
-            container.querySelector('.pq-restart').addEventListener('click', function () {
-                index = 0; score = 0;
-                questions = shuffle(questions); // nouvel ordre à chaque tentative
-                beginTracking(); // nouvelle tentative = nouveau chronométrage Supabase
-                render();
+            // "Fermer le quiz" — identique aux QCM classiques (voir quiz.js :
+            // closeInjectedQuiz), pour libérer le verrou activeInjectedQuizId
+            // et remettre le bouton "Ai-je bien compris ?" sur son état
+            // initial. On réutilise la fonction existante du site plutôt que
+            // d'en dupliquer la logique.
+            container.querySelector('.pq-close').addEventListener('click', function () {
+                if (typeof global.closeInjectedQuiz === 'function') {
+                    global.closeInjectedQuiz(containerId);
+                } else {
+                    container.innerHTML = '';
+                    if (typeof activeInjectedQuizId !== 'undefined') activeInjectedQuizId = null;
+                }
             });
         }
     }
