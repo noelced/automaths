@@ -761,6 +761,13 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="modal-confirm-delete-out-of-progress">
+    <div class="modal-box">
+        <h3>🧹 Supprimer les résultats hors programme ?</h3>
+        <div id="modal-delete-out-of-progress-body"></div>
+    </div>
+</div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2125,7 +2132,77 @@ function renderProgressionAccessPanel() {
                 `).join('')}
             </div>
         </div>
+        <div class="progress-access-box" style="margin-top:12px;">
+            <div class="progress-access-title">🧹 Nettoyage des résultats hors programme — ${escapeHtmlDb(classObj.name)}</div>
+            <div class="progress-access-hint">Supprime, pour cette classe, les résultats de QCM qui ne font pas partie du programme actuel (niveau non autorisé, ou case décochée ci-dessus / dans le détail par chapitre). N'affecte pas l'XP déjà gagné par les élèves, seul l'historique disparaît.</div>
+            <button class="modal-btn-no" style="margin-top:6px;" onclick="openDeleteOutOfProgressModal()">Supprimer les résultats hors programme…</button>
+        </div>
     `;
+}
+
+// ── NETTOYAGE DES RÉSULTATS HORS PROGRAMME ACTUELLE ───────────────────────
+async function openDeleteOutOfProgressModal() {
+    const classObj = allClasses.find(c => c.id === progressionClassId);
+    if (!classObj) return;
+
+    const box = document.getElementById('modal-delete-out-of-progress-body');
+    box.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Calcul en cours…</div>`;
+    document.getElementById('modal-confirm-delete-out-of-progress').classList.add('show');
+
+    const { data, error } = await sb.rpc('count_out_of_progression_results', { p_class_id: progressionClassId });
+
+    if (error) {
+        box.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>`;
+        return;
+    }
+
+    const row = (data && data[0]) || { total_count: 0, xp_count: 0 };
+    if (row.total_count === 0) {
+        box.innerHTML = `<p>Aucun résultat hors programme pour <strong>${escapeHtmlDb(classObj.name)}</strong> : rien à supprimer.</p>
+            <div class="modal-actions"><button class="modal-btn-no" onclick="closeDeleteOutOfProgressModal()">Fermer</button></div>`;
+        return;
+    }
+
+    const xpWarning = row.xp_count > 0
+        ? `<p style="color:var(--danger);">⚠️ Parmi eux, <strong>${row.xp_count}</strong> ${row.xp_count > 1 ? 'ont' : 'a'} déjà rapporté de l'XP à l'élève (la progression a changé depuis). Cet XP reste acquis : seule la trace de la tentative sera supprimée.</p>`
+        : '';
+
+    box.innerHTML = `
+        <p><strong>${row.total_count}</strong> résultat${row.total_count > 1 ? 's' : ''} hors programme ${row.total_count > 1 ? 'seront supprimés' : 'sera supprimé'} pour <strong>${escapeHtmlDb(classObj.name)}</strong>. Cette action est irréversible.</p>
+        ${xpWarning}
+        <div class="modal-actions">
+            <button class="modal-btn-yes" onclick="confirmDeleteOutOfProgress()">Oui, supprimer</button>
+            <button class="modal-btn-no" onclick="closeDeleteOutOfProgressModal()">Annuler</button>
+        </div>
+    `;
+}
+
+function closeDeleteOutOfProgressModal() {
+    document.getElementById('modal-confirm-delete-out-of-progress').classList.remove('show');
+}
+
+async function confirmDeleteOutOfProgress() {
+    const box = document.getElementById('modal-delete-out-of-progress-body');
+    box.innerHTML = `<div class="state-message"><div class="icon">⏳</div>Suppression en cours…</div>`;
+
+    const { data, error } = await sb.rpc('delete_out_of_progression_results', { p_class_id: progressionClassId });
+
+    if (error) {
+        box.innerHTML = `<div class="state-message"><div class="icon">⚠️</div>Erreur : ${escapeHtmlDb(error.message)}</div>
+            <div class="modal-actions"><button class="modal-btn-no" onclick="closeDeleteOutOfProgressModal()">Fermer</button></div>`;
+        return;
+    }
+
+    box.innerHTML = `<p>✅ ${data} résultat${data > 1 ? 's supprimés' : ' supprimé'}.</p>
+        <div class="modal-actions"><button class="modal-btn-no" onclick="closeDeleteOutOfProgressModal()">Fermer</button></div>`;
+
+    // Rafraîchit les onglets qui affichent l'historique, pour que les lignes
+    // supprimées disparaissent immédiatement sans recharger toute la page.
+    await loadAllTimeResults();
+    buildMergedQuizMeta();
+    renderQcmTab();
+    renderParticularTab();
+    if (typeof applyFiltersAndRender === 'function') applyFiltersAndRender();
 }
 
 async function toggleLevelAccess(level, checked) {
