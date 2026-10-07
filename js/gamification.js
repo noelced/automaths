@@ -15,11 +15,11 @@ const RANK_TIERS = [
     { key: 'diamant',  label: 'Diamant',  color: '#5b8cff', glow: '#9bb8ff', icon: '💠', minXp: 1400 },
     { key: 'master',   label: 'Master',   color: '#b042ff', glow: '#e29bff', icon: '👑', minXp: 2200 },
     // ── Rangs « élite » (au-delà de Master) — inspirés de LoL / Valorant / Apex / Rocket League ──
-    { key: 'grandmaitre', label: 'Grand Maître', color: '#e5384f', glow: '#ff8a96', icon: '🔱', minXp: 3200 },
-    { key: 'champion',    label: 'Champion',     color: '#ff8a1f', glow: '#ffbf80', icon: '⚔️', minXp: 4400 },
-    { key: 'immortel',    label: 'Immortel',     color: '#10b981', glow: '#6ee7b7', icon: '☄️', minXp: 5800 },
-    { key: 'predateur',   label: 'Prédateur',    color: '#be123c', glow: '#fb7185', icon: '🌋', minXp: 7400 },
-    { key: 'legende',     label: 'Légende',      color: '#ff4fd8', glow: '#ffd23f', icon: '🌌', minXp: 9200 },
+    { key: 'grandmaitre', label: 'Grand Maître', color: '#e5384f', glow: '#ff8a96', icon: '🔱', minXp: 3500 },
+    { key: 'champion',    label: 'Champion',     color: '#ff8a1f', glow: '#ffbf80', icon: '⚔️', minXp: 5000 },
+    { key: 'immortel',    label: 'Immortel',     color: '#10b981', glow: '#6ee7b7', icon: '☄️', minXp: 7000 },
+    { key: 'predateur',   label: 'Prédateur',    color: '#be123c', glow: '#fb7185', icon: '🌋', minXp: 9500 },
+    { key: 'legende',     label: 'Légende',      color: '#ff4fd8', glow: '#ffd23f', icon: '🌌', minXp: 12500 },
 ];
 
 // Sous-paliers (I/II/III) à l'intérieur de chaque rang (sauf Légende)
