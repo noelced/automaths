@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestion des classes — AutoMaths</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/avatar-art.js"></script>
 <style>
 :root{
     --primary:#2563eb; --primary-light:#dbeafe; --primary-dark:#1e40af;
@@ -556,7 +557,7 @@ function renderStudentRow(student, currentClassId){
 
     return '' +
         '<div class="student-row">' +
-            '<span class="avatar">' + (student.avatar_emoji || '🦊') + '</span>' +
+            '<span class="avatar">' + renderAvatarHTML(student.avatar_emoji || '🦊') + '</span>' +
             '<div class="info">' +
                 '<div class="name">' + escapeHtml(studentName) + '</div>' +
                 '<div class="email">' + escapeHtml(student.class_name || 'Aucune classe (ancien champ)') + '</div>' +

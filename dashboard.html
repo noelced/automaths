@@ -773,6 +773,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data/officialStructure.js"></script>
 <script src="data/quizMeta.js"></script>
+<script src="js/avatar-art.js"></script>
 <script src="data/courseOutline.js"></script>
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -1563,7 +1564,7 @@ async function loadSeasonTab() {
             return `
                 <div class="season-row">
                     <div class="season-rank ${rankClass}">${i + 1}</div>
-                    <div class="season-avatar">${row.avatar_emoji || '🦊'}</div>
+                    <div class="season-avatar">${renderAvatarHTML(row.avatar_emoji || '🦊')}</div>
                     <div class="season-info">
                         <div class="season-name">${escapeHtmlDb(row.pseudo || 'Élève')} <span class="season-fullname">(${escapeHtmlDb(row.full_name || '—')})</span></div>
                         <div class="season-class">${escapeHtmlDb(row.class_name || 'Aucune classe')}</div>

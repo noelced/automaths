@@ -12,6 +12,7 @@
      double-clic depuis le disque. Même mécanisme que index.html et
      dashboard.html. -->
 <script src="data/quizMeta.js"></script>
+<script src="js/avatar-art.js"></script>
 <style>
 :root{
     --bg:#0b1120; --bg-card:#141d33; --bg-card-light:#1b2742;
@@ -468,7 +469,13 @@ const RANK_TIERS = [
     { key:'or',      label:'Or',      color:'#d4af37', glow:'#f4d160', icon:'🥇', minXp:400  },
     { key:'platine', label:'Platine', color:'#3fb8af', glow:'#7eded6', icon:'💎', minXp:800  },
     { key:'diamant', label:'Diamant', color:'#5b8cff', glow:'#9bb8ff', icon:'💠', minXp:1400 },
-    { key:'master',  label:'Master',  color:'#b042ff', glow:'#e29bff', icon:'👑', minXp:2200 },
+    { key: 'master',   label: 'Master',   color: '#b042ff', glow: '#e29bff', icon: '👑', minXp: 2200 },
+    // ── Rangs « élite » (au-delà de Master) — inspirés de LoL / Valorant / Apex / Rocket League ──
+    { key: 'grandmaitre', label: 'Grand Maître', color: '#e5384f', glow: '#ff8a96', icon: '🔱', minXp: 3200 },
+    { key: 'champion',    label: 'Champion',     color: '#ff8a1f', glow: '#ffbf80', icon: '⚔️', minXp: 4400 },
+    { key: 'immortel',    label: 'Immortel',     color: '#10b981', glow: '#6ee7b7', icon: '☄️', minXp: 5800 },
+    { key: 'predateur',   label: 'Prédateur',    color: '#be123c', glow: '#fb7185', icon: '🌋', minXp: 7400 },
+    { key: 'legende',     label: 'Légende',      color: '#ff4fd8', glow: '#ffd23f', icon: '🌌', minXp: 9200 },
 ];
 const SUB_TIERS = ['III','II','I'];
 
@@ -497,6 +504,12 @@ const AVATAR_TIERS = [
     { rankKey: 'platine', icons: ['🦋', '🦁'] },
     { rankKey: 'diamant', icons: ['🧚', '🐯'] },
     { rankKey: 'master',  icons: ['🦢', '🦅'] },
+    // Rangs élite : illustrations « animaux en armure » (voir js/avatar-art.js)
+    { rankKey: 'grandmaitre', icons: ['art:loup_chevalier', 'art:panthere_samourai'] },
+    { rankKey: 'champion',    icons: ['art:lion_spartiate',  'art:aigle_royal'] },
+    { rankKey: 'immortel',    icons: ['art:cerf_spectral',   'art:phenix'] },
+    { rankKey: 'predateur',   icons: ['art:ours_guerre',     'art:minotaure'] },
+    { rankKey: 'legende',     icons: ['art:dragon_dore',     'art:kitsune_cosmique'] },
 ];
 
 function getAllAvatarsWithStatus(totalXp) {
@@ -621,7 +634,7 @@ function renderPlayerCard() {
     card.style.setProperty('--rank-color', rank.color);
     card.style.setProperty('--rank-glow', rank.glow);
 
-    document.getElementById('player-avatar-emoji').textContent = me.avatar_emoji || '🦊';
+    document.getElementById('player-avatar-emoji').innerHTML = renderAvatarHTML(me.avatar_emoji || '🦊');
     document.getElementById('player-pseudo').textContent = me.pseudo || me.full_name || 'Élève';
     document.getElementById('player-class').textContent  = me.class_name || '';
     document.getElementById('streak-count').textContent  = myStats.current_streak || 0;
@@ -1125,7 +1138,7 @@ function renderLeaderboardContent() {
             const score = row.ladder_score !== null ? row.ladder_score : '—';
             return '<div class="leaderboard-row ' + (isMe ? 'me' : '') + '">' +
                 '<div class="lb-rank-num ' + rankClass + '">' + (i+1) + '</div>' +
-                '<div class="lb-avatar">' + (row.avatar_emoji || '🦊') + '</div>' +
+                '<div class="lb-avatar">' + renderAvatarHTML(row.avatar_emoji || '🦊') + '</div>' +
                 '<div style="flex:1;">' +
                     '<div class="lb-name">' + esc(row.pseudo || 'Élève') + (isMe ? ' 👈' : '') + '</div>' +
                     '<div class="lb-class">' + esc(row.class_name || '') + '</div>' +
@@ -1285,7 +1298,7 @@ function renderAvatarGrid() {
             if (!a.unlocked) classes.push('locked');
             const clickAttr = a.unlocked ? `onclick="selectAvatar('${a.icon}')"` : '';
             const lock = a.unlocked ? '' : '<span class="lock-icon">🔒</span>';
-            html += `<div class="${classes.join(' ')}" ${clickAttr} title="${a.unlocked ? '' : 'Débloqué au rang ' + rankLabel}">${a.icon}${lock}</div>`;
+            html += `<div class="${classes.join(' ')}" ${clickAttr} title="${a.unlocked ? '' : 'Débloqué au rang ' + rankLabel}">${renderAvatarHTML(a.icon, '1.15em')}${lock}</div>`;
         });
         html += '</div>';
     });
@@ -1306,7 +1319,7 @@ async function selectAvatar(icon) {
     }
 
     me.avatar_emoji = icon;
-    document.getElementById('player-avatar-emoji').textContent = icon;
+    document.getElementById('player-avatar-emoji').innerHTML = renderAvatarHTML(icon);
     closeAvatarPicker();
 }
 
