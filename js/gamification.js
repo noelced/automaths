@@ -1,11 +1,11 @@
 // ============================================================
 // js/gamification.js — Logique de gamification AutoMaths
-// Rangs (Bronze→Master), étoiles, badges, formatage visuel
-// Dépend de : auth.js (supabaseClient, currentUser)
+// Rangs (Bronze→Légende), étoiles, badges, formatage visuel
+// Dépend de : auth.js (supabaseClient, currentUser) et js/avatar-art.js (renderAvatarHTML)
 // ============================================================
 
 // ── DÉFINITION DES RANGS (façon League of Legends / Brawl Stars) ──────────
-// Chaque rang a 3 paliers (I, II, III) sauf Master (palier unique).
+// Chaque rang a 3 paliers (I, II, III) sauf Légende (rang ultime, palier unique).
 // Le seuil est en XP cumulé total.
 const RANK_TIERS = [
     { key: 'bronze',   label: 'Bronze',   color: '#a86a3d', glow: '#cd8a5e', icon: '🥉', minXp: 0    },
@@ -14,14 +14,20 @@ const RANK_TIERS = [
     { key: 'platine',  label: 'Platine',  color: '#3fb8af', glow: '#7eded6', icon: '💎', minXp: 800  },
     { key: 'diamant',  label: 'Diamant',  color: '#5b8cff', glow: '#9bb8ff', icon: '💠', minXp: 1400 },
     { key: 'master',   label: 'Master',   color: '#b042ff', glow: '#e29bff', icon: '👑', minXp: 2200 },
+    // ── Rangs « élite » (au-delà de Master) — inspirés de LoL / Valorant / Apex / Rocket League ──
+    { key: 'grandmaitre', label: 'Grand Maître', color: '#e5384f', glow: '#ff8a96', icon: '🔱', minXp: 3200 },
+    { key: 'champion',    label: 'Champion',     color: '#ff8a1f', glow: '#ffbf80', icon: '⚔️', minXp: 4400 },
+    { key: 'immortel',    label: 'Immortel',     color: '#10b981', glow: '#6ee7b7', icon: '☄️', minXp: 5800 },
+    { key: 'predateur',   label: 'Prédateur',    color: '#be123c', glow: '#fb7185', icon: '🌋', minXp: 7400 },
+    { key: 'legende',     label: 'Légende',      color: '#ff4fd8', glow: '#ffd23f', icon: '🌌', minXp: 9200 },
 ];
 
-// Sous-paliers (I/II/III) à l'intérieur de chaque rang (sauf Master)
+// Sous-paliers (I/II/III) à l'intérieur de chaque rang (sauf Légende)
 const SUB_TIERS = ['III', 'II', 'I'];
 
 
 // ── AVATARS DÉBLOQUABLES PAR PALIER ────────────────────────────────────────
-// À chaque rang atteint (Bronze, Argent, Or, Platine, Diamant, Master),
+// À chaque rang atteint (Bronze … Master, puis Grand Maître … Légende),
 // l'élève débloque 2 nouvelles icônes (une pensée plutôt "fille", une plutôt
 // "garçon" — mais chacun peut choisir librement n'importe laquelle des icônes
 // déjà débloquées, sans distinction). Le renard 🦊 reste offert dès le départ.
@@ -32,6 +38,12 @@ const AVATAR_TIERS = [
     { rankKey: 'platine', icons: ['🦋', '🦁'] },
     { rankKey: 'diamant', icons: ['🧚', '🐯'] },
     { rankKey: 'master',  icons: ['🦢', '🦅'] },
+    // Rangs élite : illustrations « animaux en armure » (voir js/avatar-art.js)
+    { rankKey: 'grandmaitre', icons: ['art:loup_chevalier', 'art:panthere_samourai'] },
+    { rankKey: 'champion',    icons: ['art:lion_spartiate',  'art:aigle_royal'] },
+    { rankKey: 'immortel',    icons: ['art:cerf_spectral',   'art:phenix'] },
+    { rankKey: 'predateur',   icons: ['art:ours_guerre',     'art:minotaure'] },
+    { rankKey: 'legende',     icons: ['art:dragon_dore',     'art:kitsune_cosmique'] },
 ];
 
 /**
@@ -95,11 +107,11 @@ function getRankFromXp(totalXp) {
         progressToNext = Math.min(1, earned / span);
         xpToNext = Math.max(0, next.minXp - totalXp);
 
-        // Sous-palier basé sur la progression dans le rang (sauf Master qui n'en a pas)
+        // Sous-palier basé sur la progression dans le rang (sauf Légende qui n'en a pas)
         const subIndex = Math.min(2, Math.floor(progressToNext * 3));
         subTier = SUB_TIERS[subIndex];
     } else {
-        subTier = ''; // Master = pas de sous-palier
+        subTier = ''; // Légende (rang ultime) = pas de sous-palier
         progressToNext = 1;
     }
 
@@ -551,7 +563,7 @@ function showMascotReaction(pct) {
     el.className = 'mascot-widget mascot-' + reaction.mood;
     el.innerHTML =
         '<div class="mascot-bubble">' + message + '</div>' +
-        '<div class="mascot-char">' + emoji + '</div>';
+        '<div class="mascot-char">' + (typeof renderAvatarHTML === 'function' ? renderAvatarHTML(emoji, '1.1em') : emoji) + '</div>';
     document.body.appendChild(el);
 
     setTimeout(() => {
@@ -717,7 +729,7 @@ async function gamifiedSaveResult(quizKey, chapterTitle, levelName, score, total
             if (tier && tier.icons.length) {
                 setTimeout(() => {
                     showGameToast({
-                        icon: tier.icons.join(' '),
+                        icon: tier.icons.map(i => (typeof renderAvatarHTML === 'function' ? renderAvatarHTML(i, '1em') : i)).join(' '),
                         title: 'Nouveaux avatars débloqués !',
                         subtitle: 'Va les choisir dans ton profil 🎨',
                         color: newRank.color
