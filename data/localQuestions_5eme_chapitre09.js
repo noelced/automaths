@@ -500,6 +500,155 @@ const localQuestions_5eme_chapitre09 = {
 <text x="158.2" y="156.3" font-size="13" fill="#B5651D" text-anchor="middle" font-weight="bold">117°</text>
 <circle cx="120.0" cy="110.0" r="3" fill="#1A1A1A"/>
 </svg>`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 40,125 L 94.5,117.3 A 55,55 0 0,0 76.8,84.1 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 40,125 L 76.8,84.1 A 55,55 0 0,0 27.6,71.4 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="40" y1="125" x2="213.3" y2="100.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="40" y1="125" x2="120.3" y2="35.8" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="40" y1="125" x2="16.4" y2="22.7" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="40" cy="125" r="3.2" fill="#1A1A1A"/>
+<text x="79.8" y="108.8" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="51.3" y="86.3" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 40°$ et $b = 55°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `adjacents` },
+                options: `adjacents ¤ supplémentaires ¤ opposés par le sommet ¤ Ces angles n'ont aucun lien`,
+                explanation: `Les angles $a$ et $b$ ont <strong>le même sommet</strong>, ils ont <strong>un côté commun</strong> (la demi-droite du milieu) et sont situés <strong>de part et d'autre</strong> de ce côté commun : ils sont <strong>adjacents</strong>.<br>Ils ne sont pas supplémentaires, car $40° + 55° = 95°$ et non $180°$. Ils ne sont pas non plus opposés par le sommet, car deux angles opposés par le sommet n'ont aucun côté commun.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 55,112 L 85.0,112.0 A 30,30 0 0,0 43.8,84.2 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 170,112 L 200.0,112.0 A 30,30 0 0,0 181.2,84.2 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="55" y1="112" x2="125.0" y2="112.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="55" y1="112" x2="28.8" y2="47.1" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="170" y1="112" x2="232.0" y2="112.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="170" y1="112" x2="193.2" y2="54.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="55" cy="112" r="3.2" fill="#1A1A1A"/>
+<circle cx="170" cy="112" r="3.2" fill="#1A1A1A"/>
+<text x="67.1" y="99.1" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="187.9" y="104.9" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 112°$ et $b = 68°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `supplémentaires` },
+                options: `opposés par le sommet ¤ supplémentaires ¤ adjacents ¤ Ces angles n'ont aucun lien`,
+                explanation: `On calcule la somme des mesures : $112° + 68° = 180°$. Les angles $a$ et $b$ sont donc <strong>supplémentaires</strong>.<br>Ils ne sont ni adjacents ni opposés par le sommet : ils n'ont <strong>pas le même sommet</strong>. Deux angles peuvent être supplémentaires sans être côte à côte.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 120,75 L 155.7,62.0 A 38,38 0 0,0 95.6,45.9 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 120,75 L 84.3,88.0 A 38,38 0 0,0 144.4,104.1 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="190.5" y1="49.3" x2="49.5" y2="100.7" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="71.8" y1="17.5" x2="168.2" y2="132.5" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="75" r="3.2" fill="#1A1A1A"/>
+<text x="127.1" y="53.4" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="112.9" y="106.6" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">Sur la figure, les angles $a$ et $b$ sont-ils...</p>`, a: `opposés par le sommet` },
+                options: `supplémentaires ¤ adjacents ¤ opposés par le sommet ¤ Ces angles n'ont aucun lien`,
+                explanation: `Les angles $a$ et $b$ ont le même sommet, et les côtés de l'un sont dans le <strong>prolongement</strong> des côtés de l'autre : ils sont <strong>opposés par le sommet</strong>.<br>Ils n'ont aucun côté commun, donc ils ne sont pas adjacents. Ils ont la même mesure, différente de $90°$ (les droites ne sont pas perpendiculaires) : leur somme n'est donc pas égale à $180°$, ils ne sont pas supplémentaires.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 120,112 L 142.9,79.2 A 40,40 0 0,0 80.0,112.0 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 120,112 L 160.0,112.0 A 40,40 0 0,0 142.9,79.2 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="25" y1="112" x2="215" y2="112" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="120" y1="112" x2="177.4" y2="30.1" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="19.0" y1="112.0" x2="31.0" y2="112.0" stroke="#1A1A1A" stroke-width="2"/>
+<line x1="209.0" y1="112.0" x2="221.0" y2="112.0" stroke="#1A1A1A" stroke-width="2"/>
+<line x1="172.4" y1="26.6" x2="182.3" y2="33.5" stroke="#1A1A1A" stroke-width="2"/>
+<circle cx="120" cy="112" r="3.2" fill="#1A1A1A"/>
+<text x="107.3" y="93.2" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="144.5" y="105.6" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+<text x="25" y="134" font-size="14" fill="#1A1A1A" text-anchor="middle">A</text>
+<text x="120" y="134" font-size="14" fill="#1A1A1A" text-anchor="middle">B</text>
+<text x="215" y="134" font-size="14" fill="#1A1A1A" text-anchor="middle">C</text>
+<text x="189" y="28" font-size="14" fill="#1A1A1A" text-anchor="middle">D</text>
+</svg><p style="margin-top:8px;">Les points $A$, $B$ et $C$ sont alignés. Les angles $a$ et $b$ sont-ils...</p>`, a: `adjacents et supplémentaires` },
+                options: `adjacents ¤ adjacents et supplémentaires ¤ supplémentaires ¤ opposés par le sommet`,
+                explanation: `Les points $A$, $B$ et $C$ sont alignés : l'angle $\\widehat{ABC}$ est un angle plat, qui mesure $180°$. Les angles $a$ et $b$ le partagent en deux, donc $a + b = 180°$ : ils sont <strong>supplémentaires</strong>.<br>De plus, ils ont <strong>le même sommet</strong> $B$, <strong>un côté commun</strong> $[BD)$ et ils sont situés de part et d'autre de ce côté : ils sont aussi <strong>adjacents</strong>.<br>Les réponses « adjacents » et « supplémentaires » sont chacune vraie, mais incomplète : seule la réponse <strong>adjacents et supplémentaires</strong> décrit toute la situation. Ils ne sont pas opposés par le sommet, car ils ont un côté commun.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 120,22 L 90.0,74.0 A 60,60 0 0,0 125.2,81.8 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 120,22 L 125.2,81.8 A 60,60 0 0,0 166.0,60.6 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="120" y1="22" x2="67.5" y2="112.9" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="120" y1="22" x2="129.2" y2="127.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="120" y1="22" x2="199.7" y2="88.8" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="22" r="3.2" fill="#1A1A1A"/>
+<text x="109.4" y="75.0" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="142.7" y="70.6" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 35°$ et $b = 45°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `adjacents` },
+                options: `opposés par le sommet ¤ adjacents ¤ supplémentaires ¤ Ces angles n'ont aucun lien`,
+                explanation: `Les angles $a$ et $b$ ont <strong>le même sommet</strong>, <strong>un côté commun</strong> (la demi-droite tracée au milieu) et sont de part et d'autre de ce côté : ils sont <strong>adjacents</strong>.<br>Leur somme vaut $35° + 45° = 80°$, ce n'est pas $180°$ : ils ne sont pas supplémentaires. Ils ont un côté commun : ils ne sont pas opposés par le sommet.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 120,75 L 163.2,59.3 A 46,46 0 0,0 134.2,31.3 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 120,75 L 76.8,90.7 A 46,46 0 0,0 105.8,118.7 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="189.5" y1="49.7" x2="50.5" y2="100.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="142.9" y1="4.6" x2="97.1" y2="145.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="75" r="3.2" fill="#1A1A1A"/>
+<text x="146.4" y="52.7" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="93.6" y="107.3" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 52°$ et $b = 52°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `opposés par le sommet` },
+                options: `opposés par le sommet ¤ supplémentaires ¤ adjacents ¤ Ces angles n'ont aucun lien`,
+                explanation: `Les angles $a$ et $b$ sont formés par les <strong>deux mêmes droites</strong>, ont le même sommet et sont « en face » l'un de l'autre : ils sont <strong>opposés par le sommet</strong>. C'est cohérent avec leurs mesures, car deux angles opposés par le sommet ont la même mesure.<br>Ils n'ont aucun côté commun (pas adjacents) et $52° + 52° = 104°$ (pas supplémentaires).`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 50,112 L 79.0,104.2 A 30,30 0 0,0 49.5,82.0 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 180,72 L 174.8,42.5 A 30,30 0 0,0 151.8,82.3 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="50" y1="112" x2="109.9" y2="96.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="50" y1="112" x2="48.9" y2="50.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="180" y1="72" x2="170.3" y2="16.9" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="180" y1="72" x2="127.4" y2="91.2" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="50" cy="112" r="3.2" fill="#1A1A1A"/>
+<circle cx="180" cy="72" r="3.2" fill="#1A1A1A"/>
+<text x="63.0" y="99.7" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="161.3" y="66.2" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 76°$ et $b = 100°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `Ces angles n'ont aucun lien` },
+                options: `supplémentaires ¤ adjacents ¤ Ces angles n'ont aucun lien ¤ opposés par le sommet`,
+                explanation: `On calcule la somme des mesures : $76° + 100° = 176°$, ce qui est différent de $180°$ : les angles $a$ et $b$ ne sont pas supplémentaires.<br>Ils n'ont pas le même sommet : ils ne sont donc ni adjacents, ni opposés par le sommet.<br>Ces angles n'ont donc <strong>aucun lien</strong> parmi les trois relations étudiées.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 70,130 L 120.8,94.4 A 62,62 0 0,0 80.8,68.9 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 138.8,81.8 A 84,84 0 0,0 118.2,61.2 L 105.6,79.2 A 62,62 0 0,1 120.8,94.4 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="70" y1="130" x2="89.4" y2="19.7" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="70" y1="130" x2="134.2" y2="38.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="70" y1="130" x2="161.7" y2="65.8" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="70" cy="130" r="3.2" fill="#1A1A1A"/>
+<text x="84.2" y="99.8" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="121.6" y="83.4" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">Sur la figure, les angles $a$ et $b$ sont-ils...</p>`, a: `Ces angles n'ont aucun lien` },
+                options: `supplémentaires ¤ Ces angles n'ont aucun lien ¤ adjacents ¤ opposés par le sommet`,
+                explanation: `Les angles $a$ et $b$ ont le même sommet et un côté commun (la demi-droite de droite), mais ils ne sont <strong>pas situés de part et d'autre</strong> de ce côté commun : ils sont <strong>tous les deux du même côté</strong>, l'angle $b$ se trouve à l'intérieur de l'angle $a$. Ils ne sont donc pas adjacents.<br>Ils ne sont pas opposés par le sommet, puisqu'ils ont un côté commun. Ils ne sont pas non plus supplémentaires : ce sont deux angles aigus, leur somme est inférieure à $180°$.<br>Ces angles n'ont donc <strong>aucun lien</strong> parmi les trois relations étudiées.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 120,75 L 116.5,35.2 A 40,40 0 0,0 85.4,95.0 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 120,75 L 123.5,114.8 A 40,40 0 0,0 154.6,55.0 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="178.9" y1="41.0" x2="61.1" y2="109.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="114.1" y1="7.3" x2="125.9" y2="142.7" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="75" r="3.2" fill="#1A1A1A"/>
+<text x="86.3" y="62.5" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="153.7" y="97.5" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">Sur la figure, les angles $a$ et $b$ sont-ils...</p>`, a: `opposés par le sommet` },
+                options: `opposés par le sommet ¤ supplémentaires ¤ adjacents ¤ Ces angles n'ont aucun lien`,
+                explanation: `Les angles $a$ et $b$ ont le même sommet et sont formés par les mêmes droites : chacun est « en face » de l'autre, les côtés de l'un prolongeant les côtés de l'autre. Ils sont <strong>opposés par le sommet</strong>.<br>Ils n'ont aucun côté commun, donc ils ne sont pas adjacents. Étant égaux et différents de $90°$, leur somme ne vaut pas $180°$ : ils ne sont pas supplémentaires.`
+            },
+            {
+                quiz: { q: `<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:230px; display:block; margin:8px auto; font-family:sans-serif;">
+<path d="M 60,48 L 60.0,78.0 A 30,30 0 0,0 87.0,61.2 Z" fill="var(--secondary, #2F7D3C)" fill-opacity="0.35" stroke="var(--secondary, #2F7D3C)" stroke-width="1.8"/>
+<path d="M 170,102 L 170.0,72.0 A 30,30 0 0,0 143.0,115.2 Z" fill="var(--primary, #B5651D)" fill-opacity="0.35" stroke="var(--primary, #B5651D)" stroke-width="1.8"/>
+<line x1="60" y1="48" x2="60.0" y2="108.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="60" y1="48" x2="113.9" y2="74.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="170" y1="102" x2="170.0" y2="42.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="170" y1="102" x2="116.1" y2="128.3" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="60" cy="48" r="3.2" fill="#1A1A1A"/>
+<circle cx="170" cy="102" r="3.2" fill="#1A1A1A"/>
+<text x="71.4" y="71.3" font-size="15" fill="var(--secondary, #2F7D3C)" text-anchor="middle" font-weight="bold">a</text>
+<text x="151.7" y="95.6" font-size="15" fill="var(--primary, #B5651D)" text-anchor="middle" font-weight="bold">b</text>
+</svg><p style="margin-top:8px;">On sait que $a = 64°$ et $b = 116°$. Les angles $a$ et $b$ sont-ils...</p>`, a: `supplémentaires` },
+                options: `adjacents ¤ opposés par le sommet ¤ supplémentaires ¤ Ces angles n'ont aucun lien`,
+                explanation: `On calcule la somme : $64° + 116° = 180°$. Les angles $a$ et $b$ sont donc <strong>supplémentaires</strong>.<br>Ils ont deux sommets différents : ils ne peuvent être ni adjacents, ni opposés par le sommet.`
             }
         ],
 
