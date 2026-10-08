@@ -23,7 +23,7 @@ var chapterData_5eme_9 = {
         eleve: "non",
         content: `
                             <div class="course-container">
-                                <!-- SECTION : OBJECTIFS -->
+                                <!-- SECTION : OBJECTIFS (masquée : supprimer ce commentaire pour la réafficher)
                                 <section class="course-section">
                                     <p><strong>Objectifs :</strong></p>
                                     <ul>
@@ -35,6 +35,7 @@ var chapterData_5eme_9 = {
                                         <li>Je sais caractériser le parallélisme de deux droites par les angles</li>
                                     </ul>
                                 </section>
+                                -->
 
                                 <!-- SECTION : RAPPELS VOCABULAIRE DES ANGLES -->
                                 <section class="course-section">
@@ -166,8 +167,8 @@ var chapterData_5eme_9 = {
 <line x1="55.0" y1="150.0" x2="261.7" y2="49.2" stroke="#1A1A1A" stroke-width="2.5"/>
 <line x1="55.0" y1="150.0" x2="261.7" y2="250.8" stroke="#1A1A1A" stroke-width="2.5"/>
 <path d="M 85.6,164.9 L 86.1,163.7 L 86.6,162.6 L 87.0,161.3 L 87.5,160.1 L 87.8,158.9 L 88.1,157.7 L 88.4,156.4 L 88.6,155.1 L 88.8,153.8 L 88.9,152.6 L 89.0,151.3 L 89.0,150.0 L 89.0,148.7 L 88.9,147.4 L 88.8,146.2 L 88.6,144.9 L 88.4,143.6 L 88.1,142.3 L 87.8,141.1 L 87.5,139.9 L 87.0,138.7 L 86.6,137.4 L 86.1,136.3 L 85.6,135.1" fill="none" stroke="#8FAFC7" stroke-width="1.8"/>
-<line x1="172.2" y1="101.7" x2="165.2" y2="87.4" stroke="#2F7D3C" stroke-width="2.2"/>
-<text x="174.7" y="82.5" font-size="17" fill="#2F7D3C" text-anchor="middle" font-weight="bold">B</text>
+<line x1="172.2" y1="101.7" x2="165.2" y2="87.4" stroke="var(--secondary)" stroke-width="2.2"/>
+<text x="174.7" y="82.5" font-size="17" fill="var(--secondary)" text-anchor="middle" font-weight="bold">B</text>
 <line x1="179.7" y1="219.7" x2="186.7" y2="205.3" stroke="#6C5B9E" stroke-width="2.2"/>
 <text x="197.2" y="220.5" font-size="17" fill="#6C5B9E" text-anchor="middle" font-weight="bold">C</text>
 <circle cx="55.0" cy="150.0" r="3.5" fill="#C0392B"/>
@@ -177,14 +178,14 @@ var chapterData_5eme_9 = {
 <text x="190.0" y="26.0" font-size="17" fill="#1A1A1A" text-anchor="middle">Trois lettres</text>
 <polyline points="155,88 193,66 231,88" fill="none" stroke="#1A1A1A" stroke-width="2"/>
 <line x1="151" y1="116" x2="235" y2="116" stroke="#1A1A1A" stroke-width="1.4" stroke-dasharray="2,3"/>
-<text x="165.0" y="110.0" font-size="26" fill="#2F7D3C" text-anchor="middle" font-weight="bold">B</text>
+<text x="165.0" y="110.0" font-size="26" fill="var(--secondary)" text-anchor="middle" font-weight="bold">B</text>
 <text x="193.0" y="110.0" font-size="26" fill="#C0392B" text-anchor="middle" font-weight="bold">A</text>
 <text x="221.0" y="110.0" font-size="26" fill="#6C5B9E" text-anchor="middle" font-weight="bold">C</text>
-<line x1="125.0" y1="195.0" x2="157.0" y2="126.0" stroke="#2F7D3C" stroke-width="3"/><polygon points="157.0,126.0 149.6,131.2 157.8,135.0" fill="#2F7D3C"/>
+<line x1="125.0" y1="195.0" x2="157.0" y2="126.0" stroke="var(--secondary)" stroke-width="3"/><polygon points="157.0,126.0 149.6,131.2 157.8,135.0" fill="var(--secondary)"/>
 <line x1="193.0" y1="222.0" x2="193.0" y2="126.0" stroke="#C0392B" stroke-width="3"/><polygon points="193.0,126.0 188.5,133.8 197.5,133.8" fill="#C0392B"/>
 <line x1="261.0" y1="195.0" x2="229.0" y2="126.0" stroke="#6C5B9E" stroke-width="3"/><polygon points="229.0,126.0 228.2,135.0 236.4,131.2" fill="#6C5B9E"/>
-<text x="125" y="213" font-size="12.5" fill="#2F7D3C" text-anchor="middle" font-weight="bold">Un point sur</text>
-<text x="125" y="227" font-size="12.5" fill="#2F7D3C" text-anchor="middle" font-weight="bold">un côté</text>
+<text x="125" y="213" font-size="12.5" fill="var(--secondary)" text-anchor="middle" font-weight="bold">Un point sur</text>
+<text x="125" y="227" font-size="12.5" fill="var(--secondary)" text-anchor="middle" font-weight="bold">un côté</text>
 <text x="193" y="242" font-size="12.5" fill="#C0392B" text-anchor="middle" font-weight="bold">Sommet</text>
 <text x="193" y="256" font-size="12.5" fill="#C0392B" text-anchor="middle" font-weight="bold">de l&#39;angle</text>
 <text x="261" y="213" font-size="12.5" fill="#6C5B9E" text-anchor="middle" font-weight="bold">Un point sur</text>
@@ -201,27 +202,54 @@ var chapterData_5eme_9 = {
                                     <div id="quiz-area-ANGnommer"></div>
 
                                     <h3 class="section-title">Angles opposés par le sommet, adjacents, supplémentaires</h3>
-                                    <div style="text-align:center; margin: 15px 0;">
-                                        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="max-width:380px; display:block; margin:0 auto; font-family:sans-serif;">
-<polygon points="200.0,150.0 235.7,163.0 234.9,165.1 234.0,167.1 232.9,169.0 231.7,170.9 230.5,172.7 229.1,174.4 227.6,176.1 226.1,177.6 224.4,179.1 222.7,180.5 220.9,181.7 219.0,182.9 217.1,184.0 215.1,184.9 213.0,185.7 210.9,186.4 208.8,187.0 206.6,187.4 204.4,187.7 202.2,187.9 200.0,188.0 197.8,187.9 195.6,187.7 193.4,187.4" fill="#2E5C8A" fill-opacity="0.35"/>
-<polygon points="200.0,150.0 164.3,137.0 165.1,134.9 166.0,132.9 167.1,131.0 168.3,129.1 169.5,127.3 170.9,125.6 172.4,123.9 173.9,122.4 175.6,120.9 177.3,119.5 179.1,118.3 181.0,117.1 182.9,116.0 184.9,115.1 187.0,114.3 189.1,113.6 191.2,113.0 193.4,112.6 195.6,112.3 197.8,112.1 200.0,112.0 202.2,112.1 204.4,112.3 206.6,112.6" fill="#2E5C8A" fill-opacity="0.35"/>
-<polygon points="200.0,150.0 193.4,187.4 190.7,186.8 188.0,186.1 185.5,185.1 182.9,184.0 180.5,182.6 178.2,181.1 176.0,179.5 173.9,177.6 172.0,175.7 170.2,173.6 168.6,171.3 167.1,169.0 165.8,166.6 164.7,164.0 163.8,161.4 163.0,158.8 162.5,156.1 162.1,153.3 162.0,150.6 162.1,147.8 162.3,145.0 162.8,142.3 163.4,139.6 164.3,137.0" fill="#B5651D" fill-opacity="0.35"/>
-<polygon points="200.0,150.0 206.6,112.6 209.3,113.2 212.0,113.9 214.5,114.9 217.1,116.0 219.5,117.4 221.8,118.9 224.0,120.5 226.1,122.4 228.0,124.3 229.8,126.4 231.4,128.7 232.9,131.0 234.2,133.4 235.3,136.0 236.2,138.6 237.0,141.2 237.5,143.9 237.9,146.7 238.0,149.4 237.9,152.2 237.7,155.0 237.2,157.7 236.6,160.4 235.7,163.0" fill="#B5651D" fill-opacity="0.35"/>
-<line x1="59.0" y1="98.7" x2="341.0" y2="201.3" stroke="#1A1A1A" stroke-width="2.5"/>
-<line x1="226.0" y1="2.3" x2="174.0" y2="297.7" stroke="#1A1A1A" stroke-width="2.5"/>
-<circle cx="200" cy="150" r="3" fill="#1A1A1A"/>
-<text x="230.0" y="202.0" font-size="15" fill="#2E5C8A" text-anchor="middle" font-weight="bold">a</text>
-<text x="170.0" y="98.0" font-size="15" fill="#2E5C8A" text-anchor="middle" font-weight="bold">a</text>
-<text x="148.0" y="180.0" font-size="15" fill="#B5651D" text-anchor="middle" font-weight="bold">b</text>
-<text x="252.0" y="120.0" font-size="15" fill="#B5651D" text-anchor="middle" font-weight="bold">b</text>
+                                    <p class="indent-text">Voici <strong>trois relations différentes</strong> entre deux angles : à chaque fois, regarde bien ce qui change dans la figure.</p>
+                                    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:16px; margin: 15px 0; align-items:stretch;">
+                                        <div style="flex:1 1 230px; max-width:300px; border:2px solid #2E5C8A; border-radius:10px; overflow:hidden; background:#fff;">
+                                            <div style="background:#2E5C8A; color:#fff; font-weight:bold; text-align:center; padding:8px 6px;">Angles supplémentaires</div>
+                                            <div style="padding:10px 12px; text-align:left;">
+                                                <p style="margin:0 0 10px 0;">La <strong>somme</strong> de leurs mesures est égale à <strong>$180°$</strong>.</p>
+                                                <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:240px; width:100%; display:block; margin:0 auto; font-family:sans-serif;">
+<path d="M 120,125 L 172.0,125.0 A 52,52 0 0,0 129.0,73.8 Z" fill="var(--secondary)" fill-opacity="0.35" stroke="var(--secondary)" stroke-width="1.5"/>
+<path d="M 120,125 L 129.0,73.8 A 52,52 0 0,0 68.0,125.0 Z" fill="#2E5C8A" fill-opacity="0.35" stroke="#2E5C8A" stroke-width="1.5"/>
+<line x1="10" y1="125" x2="230" y2="125" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="120" y1="125" x2="138.2" y2="21.6" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="125" r="3.5" fill="#1A1A1A"/>
+<text x="98.8" y="104.7" font-size="14" fill="#2E5C8A" text-anchor="middle" font-weight="bold">100°</text><text x="146.8" y="109.1" font-size="14" fill="var(--secondary)" text-anchor="middle" font-weight="bold">80°</text>
 </svg>
-                                    </div>
-                                    <div class="notion-box">
-                                        <ul>
-                                            <li>Deux angles <strong>opposés par le sommet</strong> (les deux angles $a$, ou les deux angles $b$, sur la figure) ont la <strong>même mesure</strong>.</li>
-                                            <li>Deux angles <strong>adjacents</strong> ont le même sommet, un côté commun, et sont situés de part et d'autre de ce côté commun (par exemple, un angle $a$ et l'angle $b$ voisin).</li>
-                                            <li>Deux angles <strong>supplémentaires</strong> ont une somme de mesures égale à $180°$ : ici, $a + b = 180°$.</li>
-                                        </ul>
+                                                <p style="margin:10px 0 0 0; text-align:center; color:#2E5C8A; font-weight:bold;">$100° + 80° = 180°$</p>
+                                            </div>
+                                        </div>
+                                        <div style="flex:1 1 230px; max-width:300px; border:2px solid var(--secondary); border-radius:10px; overflow:hidden; background:#fff;">
+                                            <div style="background:var(--secondary); color:#fff; font-weight:bold; text-align:center; padding:8px 6px;">Angles adjacents</div>
+                                            <div style="padding:10px 12px; text-align:left;">
+                                                <p style="margin:0 0 10px 0;">Deux angles qui ont le <strong>même sommet</strong>, <strong style="color:#C0392B;">un côté commun</strong>, et qui sont situés <strong>de part et d'autre</strong> de ce côté commun.</p>
+                                                <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:240px; width:100%; display:block; margin:0 auto; font-family:sans-serif;">
+<path d="M 45,128 L 114.3,118.3 A 70,70 0 0,0 98.6,83.0 Z" fill="#2E5C8A" fill-opacity="0.35" stroke="#2E5C8A" stroke-width="1.5"/>
+<path d="M 45,128 L 98.6,83.0 A 70,70 0 0,0 59.6,59.5 Z" fill="var(--secondary)" fill-opacity="0.35" stroke="var(--secondary)" stroke-width="1.5"/>
+<line x1="45" y1="128" x2="193.5" y2="107.1" stroke="#1A1A1A" stroke-width="2.5"/><line x1="45" y1="128" x2="68.3" y2="18.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="45" y1="128" x2="136.9" y2="50.9" stroke="#C0392B" stroke-width="3"/>
+<circle cx="45" cy="128" r="3.5" fill="#1A1A1A"/>
+<text x="86.1" y="114.7" font-size="15" fill="#2E5C8A" text-anchor="middle" font-weight="bold">a</text><text x="68.2" y="94.4" font-size="15" fill="var(--secondary)" text-anchor="middle" font-weight="bold">b</text>
+<text x="144.9" y="54.9" font-size="11" fill="#C0392B" font-weight="bold">côté commun</text>
+</svg>
+                                            </div>
+                                        </div>
+                                        <div style="flex:1 1 230px; max-width:300px; border:2px solid var(--primary); border-radius:10px; overflow:hidden; background:#fff;">
+                                            <div style="background:var(--primary); color:#fff; font-weight:bold; text-align:center; padding:8px 6px;">Angles opposés par le sommet</div>
+                                            <div style="padding:10px 12px; text-align:left;">
+                                                <p style="margin:0 0 10px 0;">Deux angles qui ont le <strong>même sommet</strong> et dont les côtés de l'un sont dans le <strong>prolongement</strong> des côtés de l'autre.</p>
+                                                <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" style="max-width:240px; width:100%; display:block; margin:0 auto; font-family:sans-serif;">
+<path d="M 120,75 L 150.8,60.6 A 34,34 0 0,0 100.5,47.1 Z" fill="var(--primary)" fill-opacity="0.35" stroke="var(--primary)" stroke-width="1.5"/>
+<path d="M 120,75 L 89.2,89.4 A 34,34 0 0,0 139.5,102.9 Z" fill="var(--primary)" fill-opacity="0.35" stroke="var(--primary)" stroke-width="1.5"/>
+<line x1="185.3" y1="44.6" x2="54.7" y2="105.4" stroke="#1A1A1A" stroke-width="2.5"/>
+<line x1="78.7" y1="16.0" x2="161.3" y2="134.0" stroke="#1A1A1A" stroke-width="2.5"/>
+<circle cx="120" cy="75" r="3.5" fill="#1A1A1A"/>
+<line x1="127.5" y1="47.0" x2="130.1" y2="37.3" stroke="var(--primary)" stroke-width="2"/><line x1="112.5" y1="103.0" x2="109.9" y2="112.7" stroke="var(--primary)" stroke-width="2"/>
+<text x="125.2" y="60.7" font-size="14" fill="var(--primary)" text-anchor="middle" font-weight="bold">a</text><text x="114.8" y="99.3" font-size="14" fill="var(--primary)" text-anchor="middle" font-weight="bold">a</text>
+</svg>
+                                                <p style="margin:10px 0 0 0; color:var(--primary); font-weight:bold;">Propriété : deux angles opposés par le sommet ont la <u>même mesure</u>.</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-ANGopposesadjacents"
@@ -232,20 +260,20 @@ var chapterData_5eme_9 = {
 
                                     <h3 class="section-title">La bissectrice d'un angle</h3>
                                     <div class="notion-box">
-                                        <p>La <strong>bissectrice</strong> d'un angle est la demi-droite qui partage cet angle en <strong>deux angles de même mesure</strong>.</p>
+                                        <p>La <strong>bissectrice</strong> d'un angle est la demi-droite qui partage cet angle en <strong>deux angles de même mesure</strong>.<br>La bissectrice est l'<strong>axe de symétrie</strong> de l'angle.</p>
                                     </div>
                                     <div style="text-align:center; margin: 15px 0;">
                                         <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" style="max-width:320px; display:block; margin:0 auto; font-family:sans-serif;">
 <line x1="80" y1="250" x2="148.4" y2="62.1" stroke="#2E5C8A" stroke-width="2.5"/>
 <line x1="80" y1="250" x2="277.0" y2="215.3" stroke="#2E5C8A" stroke-width="2.5"/>
-<line x1="80" y1="250" x2="217.9" y2="134.3" stroke="#B5651D" stroke-width="2.5" stroke-dasharray="6,4"/>
-<path d="M 93.7,212.4 L 94.5,212.7 L 95.3,213.0 L 96.1,213.4 L 96.9,213.7 L 97.7,214.1 L 98.5,214.5 L 99.2,214.9 L 100.0,215.4 L 100.8,215.8 L 101.5,216.3 L 102.2,216.7 L 102.9,217.2 L 103.7,217.7 L 104.4,218.3 L 105.0,218.8 L 105.7,219.4 L 106.4,219.9 L 107.0,220.5 L 107.7,221.1 L 108.3,221.7 L 108.9,222.3 L 109.5,223.0 L 110.1,223.6 L 110.6,224.3" fill="none" stroke="#2F7D3C" stroke-width="1.8"/><line x1="98.0" y1="213.8" x2="107.9" y2="220.7" stroke="#2F7D3C" stroke-width="2"/>
-<path d="M 110.6,224.3 L 111.2,225.0 L 111.7,225.6 L 112.3,226.3 L 112.8,227.1 L 113.3,227.8 L 113.7,228.5 L 114.2,229.2 L 114.6,230.0 L 115.1,230.8 L 115.5,231.5 L 115.9,232.3 L 116.3,233.1 L 116.6,233.9 L 117.0,234.7 L 117.3,235.5 L 117.6,236.3 L 117.9,237.1 L 118.1,238.0 L 118.4,238.8 L 118.6,239.6 L 118.9,240.5 L 119.1,241.3 L 119.2,242.2 L 119.4,243.1" fill="none" stroke="#2F7D3C" stroke-width="1.8"/><line x1="113.7" y1="227.7" x2="118.8" y2="238.5" stroke="#2F7D3C" stroke-width="2"/>
+<line x1="80" y1="250" x2="217.9" y2="134.3" stroke="var(--primary)" stroke-width="2.5" stroke-dasharray="6,4"/>
+<path d="M 93.7,212.4 L 94.5,212.7 L 95.3,213.0 L 96.1,213.4 L 96.9,213.7 L 97.7,214.1 L 98.5,214.5 L 99.2,214.9 L 100.0,215.4 L 100.8,215.8 L 101.5,216.3 L 102.2,216.7 L 102.9,217.2 L 103.7,217.7 L 104.4,218.3 L 105.0,218.8 L 105.7,219.4 L 106.4,219.9 L 107.0,220.5 L 107.7,221.1 L 108.3,221.7 L 108.9,222.3 L 109.5,223.0 L 110.1,223.6 L 110.6,224.3" fill="none" stroke="var(--secondary)" stroke-width="1.8"/><line x1="98.0" y1="213.8" x2="107.9" y2="220.7" stroke="var(--secondary)" stroke-width="2"/>
+<path d="M 110.6,224.3 L 111.2,225.0 L 111.7,225.6 L 112.3,226.3 L 112.8,227.1 L 113.3,227.8 L 113.7,228.5 L 114.2,229.2 L 114.6,230.0 L 115.1,230.8 L 115.5,231.5 L 115.9,232.3 L 116.3,233.1 L 116.6,233.9 L 117.0,234.7 L 117.3,235.5 L 117.6,236.3 L 117.9,237.1 L 118.1,238.0 L 118.4,238.8 L 118.6,239.6 L 118.9,240.5 L 119.1,241.3 L 119.2,242.2 L 119.4,243.1" fill="none" stroke="var(--secondary)" stroke-width="1.8"/><line x1="113.7" y1="227.7" x2="118.8" y2="238.5" stroke="var(--secondary)" stroke-width="2"/>
 <circle cx="80" cy="250" r="3.5" fill="#1A1A1A"/>
 <text x="60" y="258" font-size="16" fill="#1A1A1A" font-weight="bold">O</text>
 <text x="156.4" y="58.1" font-size="16" fill="#2E5C8A" font-weight="bold">A</text>
 <text x="283.0" y="231.3" font-size="16" fill="#2E5C8A" font-weight="bold">B</text>
-<text x="225.9" y="130.3" font-size="16" fill="#B5651D" font-weight="bold">C</text>
+<text x="225.9" y="130.3" font-size="16" fill="var(--primary)" font-weight="bold">C</text>
 </svg>
                                     </div>
                                     <p class="indent-text">Sur la figure ci-dessus, $[OC)$ est la bissectrice de l'angle $\\widehat{AOB}$ : on a donc $\\widehat{AOC} = \\widehat{COB}$.</p>
@@ -338,8 +366,8 @@ var chapterData_5eme_9 = {
 <polygon points="340,74 352,80 340,86" fill="#1A1A1A"/>
 <polygon points="340,214 352,220 340,226" fill="#1A1A1A"/>
 <line x1="94.7" y1="35.9" x2="305.3" y2="264.1" stroke="#1A1A1A" stroke-width="2.5"/>
-<polygon points="135.4,80.0 161.4,80.0 161.4,80.9 161.3,81.8 161.3,82.7 161.2,83.6 161.0,84.4 160.8,85.3 160.7,86.2 160.4,87.1 160.2,87.9 159.9,88.8 159.6,89.6 159.2,90.4 158.8,91.2 158.4,92.0 158.0,92.8 157.6,93.6 157.1,94.4 156.6,95.1 156.0,95.8 155.5,96.5 154.9,97.2 154.3,97.8 153.7,98.5 153.0,99.1" fill="#B5651D" fill-opacity="0.45"/>
-<polygon points="264.6,220.0 290.6,220.0 290.6,220.9 290.5,221.8 290.5,222.7 290.4,223.6 290.2,224.4 290.0,225.3 289.9,226.2 289.6,227.1 289.4,227.9 289.1,228.8 288.8,229.6 288.4,230.4 288.0,231.2 287.6,232.0 287.2,232.8 286.8,233.6 286.3,234.4 285.8,235.1 285.2,235.8 284.7,236.5 284.1,237.2 283.5,237.8 282.9,238.5 282.2,239.1" fill="#B5651D" fill-opacity="0.45"/>
+<polygon points="135.4,80.0 161.4,80.0 161.4,80.9 161.3,81.8 161.3,82.7 161.2,83.6 161.0,84.4 160.8,85.3 160.7,86.2 160.4,87.1 160.2,87.9 159.9,88.8 159.6,89.6 159.2,90.4 158.8,91.2 158.4,92.0 158.0,92.8 157.6,93.6 157.1,94.4 156.6,95.1 156.0,95.8 155.5,96.5 154.9,97.2 154.3,97.8 153.7,98.5 153.0,99.1" fill="var(--primary)" fill-opacity="0.45"/>
+<polygon points="264.6,220.0 290.6,220.0 290.6,220.9 290.5,221.8 290.5,222.7 290.4,223.6 290.2,224.4 290.0,225.3 289.9,226.2 289.6,227.1 289.4,227.9 289.1,228.8 288.8,229.6 288.4,230.4 288.0,231.2 287.6,232.0 287.2,232.8 286.8,233.6 286.3,234.4 285.8,235.1 285.2,235.8 284.7,236.5 284.1,237.2 283.5,237.8 282.9,238.5 282.2,239.1" fill="var(--primary)" fill-opacity="0.45"/>
 <circle cx="135.4" cy="80" r="3" fill="#1A1A1A"/>
 <circle cx="264.6" cy="220" r="3" fill="#1A1A1A"/>
 <text x="113.4" y="70" font-size="15" fill="#1A1A1A" font-weight="bold">A</text>
