@@ -467,7 +467,7 @@
                 'n\'existe pas dans allLocalQuestions (questions pas encore rédigées pour ce QCM).',
                 'app-content visible =', document.getElementById('app-content')?.style.display !== 'none',
                 'allLocalQuestions chargé =', typeof allLocalQuestions !== 'undefined',
-                'clé présente =', typeof allLocalQuestions !== 'undefined' && !!allLocalQuestions[pendingKey]
+                'clé présente (après chargement du chapitre) =', typeof allLocalQuestions !== 'undefined' && !!allLocalQuestions[pendingKey]
             );
         }, 8000);
 
@@ -476,8 +476,14 @@
             const appContent = document.getElementById('app-content');
             if (!appContent || appContent.style.display === 'none') return;
 
-            // Attend que allLocalQuestions soit chargé
-            if (typeof allLocalQuestions === 'undefined' || !allLocalQuestions[pendingKey]) return;
+            // Attend seulement que l'appli soit prête (app.js chargé). On
+            // N'attend PLUS que allLocalQuestions[pendingKey] existe : les
+            // questions sont chargées à la demande par chapitre
+            // (loadQuizFileForChapter, appelé plus bas), donc cette clé est
+            // forcément absente à ce stade — l'attendre ici bloquait le
+            // lancement pour toujours et laissait l'élève sur la sélection
+            // des niveaux.
+            if (typeof allLocalQuestions === 'undefined' || typeof startQuizFromButton !== 'function') return;
 
             launched = true;
             clearTimeout(timeoutId);
@@ -501,7 +507,32 @@
                 const levelIndex = meta ? levelsOrder.indexOf(meta.level) : -1;
 
                 if (levelIndex !== -1 && typeof selectLevel === 'function') {
-                    selectLevel(levelIndex);
+                    // selectLevel() lance loadDataFromSupabase() en arrière-plan,
+                    // et cette fonction appelle renderContent() À LA FIN, ce qui
+                    // réécrit toute la zone de contenu. Si le cours du chapitre
+                    // est affiché avant qu'elle ait terminé, elle l'efface (et le
+                    // quiz avec). Cela arrive surtout la 1re fois, quand le gros
+                    // fichier du chapitre n'est pas encore en cache. On capture
+                    // donc sa promesse pour l'attendre avant d'ouvrir le chapitre.
+                    let bgLoad = null;
+                    const originalLoad = window.loadDataFromSupabase;
+                    if (typeof originalLoad === 'function') {
+                        window.loadDataFromSupabase = function () {
+                            bgLoad = originalLoad.apply(this, arguments);
+                            return bgLoad;
+                        };
+                    }
+                    try {
+                        selectLevel(levelIndex);
+                    } finally {
+                        if (typeof originalLoad === 'function') window.loadDataFromSupabase = originalLoad;
+                    }
+                    if (bgLoad) {
+                        await Promise.race([
+                            Promise.resolve(bgLoad).catch(() => {}),
+                            new Promise(r => setTimeout(r, 5000)) // plafond de sécurité
+                        ]);
+                    }
                 } else {
                     console.warn('[Lancement auto] Niveau introuvable pour', pendingKey, '— navigation dégradée (currentLevel restera vide).');
                     document.getElementById('view-levels')?.classList.remove('active');
@@ -509,27 +540,47 @@
                     document.getElementById('view-app')?.classList.add('active');
                 }
 
-                // Charge (si besoin) le fichier de quiz du CHAPITRE concerné
-                // et le fusionne dans allLocalQuestions — depuis le passage
-                // aux fichiers découpés par chapitre, plus rien ne charge ce
-                // fichier automatiquement pour un lancement direct par URL
-                // (contrairement à un clic normal sur un chapitre, qui passe
-                // par launchChapter -> loadQuizFileForChapter). Sans cette
-                // étape, allLocalQuestions[pendingKey] resterait introuvable.
-                if (meta && typeof officialStructure !== 'undefined' && typeof loadQuizFileForChapter === 'function') {
+                // Ouvre le CHAPITRE concerné exactement comme un clic manuel
+                // (launchChapter charge le cours ET le fichier de quiz du
+                // chapitre, puis affiche le cours). On retrouve ensuite le
+                // bouton \"Ai-je bien compris ?\" de cette clé et on clique
+                // dessus : ça marche pour les deux types de quiz (QCM
+                // classique ET quiz de placement sur figure, qui n'a pas
+                // d'entrée dans allLocalQuestions), sans avoir à deviner
+                // quel tableau de questions correspond à quelle clé.
+                let chapterObj = null;
+                if (meta && typeof officialStructure !== 'undefined') {
                     const levelObj = officialStructure.find(l => l.name === meta.level);
-                    let chapterObj = null;
                     (levelObj?.themes || []).forEach(t => (t.chapters || []).forEach(c => {
                         if (c.title === meta.chapter) chapterObj = c;
                     }));
-                    if (chapterObj) {
-                        await loadQuizFileForChapter(chapterObj);
-                    } else {
-                        console.warn('[Lancement auto] Chapitre introuvable dans officialStructure pour', pendingKey, '(niveau', meta.level, ', chapitre "' + meta.chapter + '")');
-                    }
                 }
 
-                // Crée un conteneur flottant pour le quiz si pas de containerId existant
+                if (chapterObj && typeof launchChapter === 'function') {
+                    try {
+                        await launchChapter(chapterObj);
+                    } catch (e) {
+                        console.warn('[Lancement auto] Erreur à l\'ouverture du chapitre :', e);
+                    }
+
+                    const area = document.getElementById('content-area');
+                    const btn = Array.from(area ? area.querySelectorAll('.btn-check-understanding') : [])
+                        .find(b => extractQuizKeyFromButton(b) === String(pendingKey));
+                    if (btn) {
+                        btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        btn.click();
+                        return;
+                    }
+                    console.warn('[Lancement auto] Bouton du QCM', pendingKey, 'introuvable dans le cours — repli sur un lancement direct.');
+                } else {
+                    console.warn('[Lancement auto] Chapitre introuvable dans officialStructure pour', pendingKey, meta);
+                }
+
+                // Repli (QCM classique uniquement) : lancement direct dans un
+                // conteneur créé à la volée, si le bouton n'a pas été trouvé.
+                if (meta && typeof officialStructure !== 'undefined' && typeof loadQuizFileForChapter === 'function' && chapterObj) {
+                    await loadQuizFileForChapter(chapterObj);
+                }
                 const containerId = 'quiz-area-auto-' + pendingKey;
                 let container = document.getElementById(containerId);
                 if (!container) {
@@ -538,9 +589,11 @@
                     wrap.innerHTML = '<div id="' + containerId + '"></div>';
                     container = document.getElementById(containerId);
                 }
-                if (typeof startQuizFromButton === 'function') {
-                    startQuizFromButton(containerId, pendingKey);
+                if (!allLocalQuestions[pendingKey]) {
+                    console.warn('[Lancement auto] Aucune question trouvée pour', pendingKey, '(quiz de placement ou questions manquantes).');
+                    return;
                 }
+                startQuizFromButton(containerId, pendingKey);
             }, 200);
         });
 

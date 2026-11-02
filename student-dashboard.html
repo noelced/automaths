@@ -1023,10 +1023,19 @@ function launchChapterFromTree(chapterKey) {
     if (keys.length === 0) return;
     const bestByKey = window._skillTreeBestByKey || {};
 
+    // Les QCM classiques ET les quiz de placement sont tous dans `keys`
+    // (tous viennent de quizMeta.byKey) : ils sont donc départagés de la
+    // même façon, uniquement selon leur score — index.html retrouve le bon
+    // bouton dans le cours, quel que soit le type de quiz.
+    // Départage à score égal : le plus ancien d'abord (un QCM réussi à 100%
+    // il y a longtemps passe avant un QCM réussi hier), puis l'ordre du cours.
     const sorted = keys.sort((a, b) => {
         const pa = bestByKey[a] ? bestByKey[a].pct : -1; // -1 = jamais tenté = priorité maximale
         const pb = bestByKey[b] ? bestByKey[b].pct : -1;
-        return pa - pb;
+        if (pa !== pb) return pa - pb;
+        const ta = bestByKey[a] && bestByKey[a].lastAt ? new Date(bestByKey[a].lastAt).getTime() : 0;
+        const tb = bestByKey[b] && bestByKey[b].lastAt ? new Date(bestByKey[b].lastAt).getTime() : 0;
+        return ta - tb;
     });
 
     const targetKey = sorted[0];

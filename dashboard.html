@@ -992,16 +992,15 @@ function buildFilterUI() {
 // ── CHARGEMENT DES DONNÉES ────────────────────────────────────────────────
 async function loadData() {
     // Requête sur la vue dashboard_view (déjà jointe avec profiles)
-    let query = sb.from('dashboard_view').select('*').order('completed_at', { ascending: false });
-
-    // Filtre période
+    // (paginé : voir fetchAllDashboardRows — limite de 1000 lignes par requête)
+    let sinceIso = null;
     if (selectedPeriod > 0) {
         const since = new Date();
         since.setDate(since.getDate() - selectedPeriod);
-        query = query.gte('completed_at', since.toISOString());
+        sinceIso = since.toISOString();
     }
 
-    const { data, error } = await query;
+    const { data, error } = await fetchAllDashboardRows(q => sinceIso ? q.gte('completed_at', sinceIso) : q);
 
     if (error) {
         console.error('Erreur chargement données :', error);
@@ -1198,10 +1197,34 @@ async function loadAllClasses() {
     allClasses = data || [];
 }
 
+// Lit TOUTES les lignes de dashboard_view, par pages de 1000.
+// Supabase (PostgREST) plafonne chaque requête à 1000 lignes (max_rows) et,
+// sans .order(), renvoie ces 1000 lignes dans un ordre quelconque : dès que
+// la base dépassait ~1000 tentatives, des tentatives récentes manquaient
+// silencieusement (sans erreur), d'où des QCM "Jamais fait" alors que les
+// élèves les avaient faits. On boucle donc avec .range() sur un tri stable
+// (completed_at puis id) jusqu'à épuisement.
+// `applyFilter` permet d'ajouter un filtre (ex. période) à chaque page.
+async function fetchAllDashboardRows(applyFilter) {
+    const PAGE = 1000;
+    let all = [];
+    for (let from = 0; ; from += PAGE) {
+        let q = sb.from('dashboard_view').select('*')
+            .order('completed_at', { ascending: false })
+            .order('id', { ascending: false });
+        if (applyFilter) q = applyFilter(q);
+        const { data, error } = await q.range(from, from + PAGE - 1);
+        if (error) return { data: null, error };
+        all = all.concat(data || []);
+        if (!data || data.length < PAGE) break;
+    }
+    return { data: all, error: null };
+}
+
 async function loadAllTimeResults() {
     // Toujours interroger dashboard_view SANS filtre de période : on a besoin
     // du meilleur score jamais obtenu, quelle que soit la date de la tentative.
-    const { data, error } = await sb.from('dashboard_view').select('*');
+    const { data, error } = await fetchAllDashboardRows();
     if (error) { console.error('Erreur chargement résultats (QCM) :', error); return; }
     allTimeResults = data || [];
 }
