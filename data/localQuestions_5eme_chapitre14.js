@@ -12,7 +12,7 @@
 const localQuestions_5eme_chapitre14 = {
     "514101": [
             {
-                quiz: { q: 'Le prix à payer pour des baguettes de pain est-il proportionnel au nombre de baguettes achetées ?', a: 'Oui' },
+                quiz: { q: 'S\'il n\'y a pas de réduction, le prix à payer pour des baguettes de pain est-il proportionnel au nombre de baguettes achetées ?', a: 'Oui' },
                 options: 'Oui ¤ Non ¤ On ne peut pas savoir ¤ Cela dépend du jour',
                 explanation: 'Chaque baguette a le <strong>même prix</strong> : le prix total s\'obtient en multipliant toujours par le même nombre (le prix d\'une baguette). C\'est donc une situation de <strong>proportionnalité</strong>.'
             },
@@ -47,9 +47,9 @@ const localQuestions_5eme_chapitre14 = {
                 explanation: 'On calcule les quotients : $4 \\div 2 = 2$ ; $8 \\div 4 = 2$ ; mais $11 \\div 6 \\approx 1,83$. Le dernier quotient est <strong>différent</strong> des deux premiers : ce n\'est pas un tableau de proportionnalité.'
             },
             {
-                quiz: { q: 'Le diamètre d\'un cercle et sa longueur (son périmètre) sont-ils proportionnels ?', a: 'Oui' },
-                options: 'Oui ¤ Non ¤ Cela dépend du cercle ¤ Impossible à dire',
-                explanation: 'La longueur d\'un cercle s\'obtient en multipliant son diamètre par le nombre $\\pi$ (toujours le même nombre) : c\'est une situation de <strong>proportionnalité</strong>, de coefficient $\\pi$.'
+                quiz: { q: 'Voici le prix du lait selon le volume acheté. Quelle opération dois-je faire sur toutes les colonnes pour savoir si ce problème est proportionnel ? <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Volume de lait (L)</th><td>3</td><td>5</td><td>8</td></tr><tr><th>Prix (€)</th><td>3,60</td><td>6</td><td>9,60</td></tr></tbody></table></div>', a: '3,60 ÷ 3  ;  6 ÷ 5  ;  9,60 ÷ 8' },
+                options: '3,60 ÷ 3  ;  6 ÷ 5  ;  9,60 ÷ 8 ¤ 3 ÷ 3,60  ;  5 ÷ 6  ;  8 ÷ 9,60 ¤ 3 × 3,60  ;  5 × 6  ;  8 × 9,60 ¤ 3 + 3,60  ;  5 + 6  ;  8 + 9,60',
+                explanation: 'Dans chaque colonne, on calcule le quotient <strong>(nombre du bas) $\\div$ (nombre du haut)</strong>, toujours dans le même sens : $3,60 \\div 3 = 1,2$  ;  $6 \\div 5 = 1,2$  ;  $9,60 \\div 8 = 1,2$.<style>.prop-side{flex:none;height:110px;display:flex;align-items:center;gap:4px}.prop-label{color:#e11d48;font-weight:bold;white-space:nowrap}@media (max-width:480px){.prop-arrow-row{gap:0 !important;padding-top:26px}.prop-side{position:relative;display:block;width:30px}.prop-side svg{width:30px;height:110px}.prop-label{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:0.8rem}.prop-arrow-row .custom-table th,.prop-arrow-row .custom-table td{padding:4px 3px;font-size:0.85rem}.prop-arrow-row .custom-table th{width:54px;font-size:0.75rem;white-space:normal}}</style><div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;"><div class="prop-side"><span class="prop-label">$\\times 1,2$</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><defs><marker id="quizArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#quizArrowHead)"/></svg></div><div class="table-container" style="margin:0;"><table class="custom-table"><tbody><tr style="height:50px;"><th>Volume de lait (L)</th><td>3</td><td>5</td><td>8</td></tr><tr style="height:50px;"><th>Prix (€)</th><td>3,60</td><td>6</td><td>9,60</td></tr></tbody></table></div><div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#quizArrowHead)"/></svg><span class="prop-label">$\\div 1,2$</span></div></div>Tous les quotients sont égaux : c\'est un tableau de proportionnalité, de coefficient $1,2$. Une multiplication ou une addition ne permet pas de comparer les colonnes.'
             },
             {
                 quiz: { q: 'Si on divise « masse ÷ prix » pour certaines colonnes d\'un tableau et « prix ÷ masse » pour d\'autres, peut-on conclure correctement si le tableau est proportionnel ?', a: 'Non, il faut toujours diviser dans le même sens' },
@@ -65,9 +65,9 @@ const localQuestions_5eme_chapitre14 = {
 
     "514211": [
             {
-                quiz: { q: '3 cahiers coûtent 9 €. Quel est le coefficient de proportionnalité permettant de passer du nombre de cahiers au prix ?', a: '3' },
+                quiz: { q: 'Voici un tableau de proportionnalité. <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Cahiers</th><td>3</td><td>5</td></tr><tr><th>Prix (€)</th><td>9</td><td>15</td></tr></tbody></table></div> Quel est le coefficient de proportionnalité permettant de passer du nombre de cahiers au prix ?', a: '3' },
                 options: '3 ¤ 6 ¤ 9 ¤ 12',
-                explanation: 'Le coefficient de proportionnalité s\'obtient en divisant le prix par le nombre de cahiers : $9 \\div 3 = 3$. Un cahier coûte $3$ €.'
+                explanation: 'Le coefficient de proportionnalité s\'obtient en divisant le prix par le nombre de cahiers : $9 \\div 3 = 3$  ;  $15 \\div 5 = 3$.<style>.prop-side{flex:none;height:110px;display:flex;align-items:center;gap:4px}.prop-label{color:#e11d48;font-weight:bold;white-space:nowrap}@media (max-width:480px){.prop-arrow-row{gap:0 !important;padding-top:26px}.prop-side{position:relative;display:block;width:30px}.prop-side svg{width:30px;height:110px}.prop-label{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:0.8rem}.prop-arrow-row .custom-table th,.prop-arrow-row .custom-table td{padding:4px 3px;font-size:0.85rem}.prop-arrow-row .custom-table th{width:54px;font-size:0.75rem;white-space:normal}}</style><div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;"><div class="prop-side"><span class="prop-label">$\\times 3$</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><defs><marker id="qzArrow1" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow1)"/></svg></div><div class="table-container" style="margin:0;"><table class="custom-table"><tbody><tr style="height:50px;"><th>Cahiers</th><td>3</td><td>5</td></tr><tr style="height:50px;"><th>Prix (€)</th><td>9</td><td>15</td></tr></tbody></table></div><div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow1)"/></svg><span class="prop-label">$\\div 3$</span></div></div>Un cahier coûte $3$ €.'
             },
             {
                 quiz: { q: '5 tickets de bus coûtent 7,50 €. Combien coûtent 8 tickets, en utilisant le coefficient de proportionnalité ?', a: '12 €' },
@@ -80,14 +80,14 @@ const localQuestions_5eme_chapitre14 = {
                 explanation: 'Coefficient $= 6 \\div 4 = 1,5$ : chaque kg de pommes coûte $1,5$ €.'
             },
             {
-                quiz: { q: '6 places de cinéma coûtent 48 €. Quel est le coefficient de proportionnalité (prix d\'une place) ?', a: '8' },
+                quiz: { q: 'Voici un tableau de proportionnalité. <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Places de cinéma</th><td>6</td><td>8</td></tr><tr><th>Prix (€)</th><td>48</td><td>64</td></tr></tbody></table></div> Quel est le coefficient de proportionnalité ?', a: '8' },
                 options: '6 ¤ 7 ¤ 8 ¤ 9',
-                explanation: 'Coefficient $= 48 \\div 6 = 8$ : une place coûte $8$ €.'
+                explanation: 'Dans chaque colonne, on divise le prix par le nombre de places : $48 \\div 6 = 8$  ;  $64 \\div 8 = 8$.<style>.prop-side{flex:none;height:110px;display:flex;align-items:center;gap:4px}.prop-label{color:#e11d48;font-weight:bold;white-space:nowrap}@media (max-width:480px){.prop-arrow-row{gap:0 !important;padding-top:26px}.prop-side{position:relative;display:block;width:30px}.prop-side svg{width:30px;height:110px}.prop-label{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:0.8rem}.prop-arrow-row .custom-table th,.prop-arrow-row .custom-table td{padding:4px 3px;font-size:0.85rem}.prop-arrow-row .custom-table th{width:54px;font-size:0.75rem;white-space:normal}}</style><div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;"><div class="prop-side"><span class="prop-label">$\\times 8$</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><defs><marker id="qzArrow2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow2)"/></svg></div><div class="table-container" style="margin:0;"><table class="custom-table"><tbody><tr style="height:50px;"><th>Places de cinéma</th><td>6</td><td>8</td></tr><tr style="height:50px;"><th>Prix (€)</th><td>48</td><td>64</td></tr></tbody></table></div><div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow2)"/></svg><span class="prop-label">$\\div 8$</span></div></div>Le coefficient de proportionnalité est $8$ : une place coûte $8$ €.'
             },
             {
-                quiz: { q: 'Avec un coefficient de proportionnalité de $8$ € par place, combien coûtent $11$ places ?', a: '88 €' },
+                quiz: { q: 'Voici un tableau de proportionnalité. <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Places de cinéma</th><td>6</td><td>11</td></tr><tr><th>Prix (€)</th><td>48</td><td>?</td></tr></tbody></table></div> Avec un coefficient de proportionnalité de $8$ € par place, combien coûtent $11$ places ?', a: '88 €' },
                 options: '80 € ¤ 84 € ¤ 88 € ¤ 96 €',
-                explanation: 'Prix de $11$ places $= 11 \\times 8 = 88$ €.'
+                explanation: 'Prix de $11$ places $= 11 \\times 8 = 88$ €.<style>.prop-side{flex:none;height:110px;display:flex;align-items:center;gap:4px}.prop-label{color:#e11d48;font-weight:bold;white-space:nowrap}@media (max-width:480px){.prop-arrow-row{gap:0 !important;padding-top:26px}.prop-side{position:relative;display:block;width:30px}.prop-side svg{width:30px;height:110px}.prop-label{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:0.8rem}.prop-arrow-row .custom-table th,.prop-arrow-row .custom-table td{padding:4px 3px;font-size:0.85rem}.prop-arrow-row .custom-table th{width:54px;font-size:0.75rem;white-space:normal}}</style><div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;"><div class="prop-side"><span class="prop-label">$\\times 8$</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><defs><marker id="qzArrow3" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow3)"/></svg></div><div class="table-container" style="margin:0;"><table class="custom-table"><tbody><tr style="height:50px;"><th>Places de cinéma</th><td>6</td><td>11</td></tr><tr style="height:50px;"><th>Prix (€)</th><td>48</td><td>88</td></tr></tbody></table></div><div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true"><path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#qzArrow3)"/></svg><span class="prop-label">$\\div 8$</span></div></div>On vérifie : $48 \\div 6 = 8$  ;  $88 \\div 11 = 8$.'
             },
             {
                 quiz: { q: 'Pour calculer un coefficient de proportionnalité entre deux grandeurs A et B (où B = k × A), quelle opération doit-on effectuer ?', a: 'Diviser une valeur de B par la valeur de A correspondante' },
@@ -211,8 +211,8 @@ const localQuestions_5eme_chapitre14 = {
                 explanation: 'Si on multiplie (ou divise) la première grandeur par un nombre, alors la seconde grandeur est multipliée (ou divisée) par ce <strong>même nombre</strong>.'
             },
             {
-                quiz: { q: 'La linéarité additive consiste à...', a: 'additionner ou soustraire deux lignes du tableau pour en obtenir une nouvelle' },
-                options: 'multiplier deux lignes entre elles ¤ additionner ou soustraire deux lignes du tableau pour en obtenir une nouvelle ¤ diviser toutes les valeurs par 2 ¤ ignorer une des deux grandeurs',
+                quiz: { q: 'La linéarité additive consiste à...', a: 'additionner ou soustraire deux colonnes du tableau pour en obtenir une nouvelle' },
+                options: 'multiplier deux colonnes entre elles ¤ additionner ou soustraire deux colonnes du tableau pour en obtenir une nouvelle ¤ diviser toutes les valeurs par 2 ¤ ignorer une des deux grandeurs',
                 explanation: 'Si on connaît les valeurs correspondant à deux quantités, on peut les additionner (ou les soustraire) pour obtenir la valeur correspondant à la somme (ou la différence) de ces quantités.'
             },
             {
@@ -241,9 +241,9 @@ const localQuestions_5eme_chapitre14 = {
                 explanation: 'Dans une situation de proportionnalité, toutes les procédures correctes (coefficient, retour à l\'unité, linéarité, produit en croix) mènent au <strong>même résultat</strong> ; on choisit celle qui est la plus pratique.'
             },
             {
-                quiz: { q: '4 places de concert coûtent 100 €. Par linéarité multiplicative, combien coûtent 2 places (moitié de 4) ? <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Places</th><td>4</td><td>2</td></tr><tr><th>Prix (€)</th><td>100</td><td>?</td></tr></tbody></table></div>', a: '50 €' },
-                options: '25 € ¤ 40 € ¤ 50 € ¤ 60 €',
-                explanation: '<p style="text-align:center; color:#2563eb; font-weight:bold; margin:6px 0;">4 ⟶ 2 &nbsp;(on divise par 2)</p><div class="table-container" style="margin:6px 0;"><table class="custom-table"><tbody><tr><th>Places</th><td>4</td><td>2</td></tr><tr><th>Prix (€)</th><td>100</td><td>50</td></tr></tbody></table></div><p style="text-align:center; color:#2563eb; font-weight:bold; margin:6px 0;">100 ⟶ 50 &nbsp;(on divise par 2)</p><p>$2$ places, c\'est la moitié de $4$ places : $100 \\div 2 = 50$ €.</p>'
+                quiz: { q: '12 places de concert coûtent 180 €. Par linéarité multiplicative, combien coûtent 4 places (tiers de 12) ? <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Places</th><td>12</td><td>4</td></tr><tr><th>Prix (€)</th><td>180</td><td>?</td></tr></tbody></table></div>', a: '60 €' },
+                options: '20 € ¤ 45 € ¤ 60 € ¤ 90 €',
+                explanation: '<p style="text-align:center; color:#2563eb; font-weight:bold; margin:6px 0;">12 ⟶ 4 &nbsp;(on divise par 3)</p><div class="table-container" style="margin:6px 0;"><table class="custom-table"><tbody><tr><th>Places</th><td>12</td><td>4</td></tr><tr><th>Prix (€)</th><td>180</td><td>60</td></tr></tbody></table></div><p style="text-align:center; color:#2563eb; font-weight:bold; margin:6px 0;">180 ⟶ 60 &nbsp;(on divise par 3)</p><p>$4$ places, c\'est le tiers de $12$ places : $180 \\div 3 = 60$ €.</p>'
             },
             {
                 quiz: { q: 'Une recette pour 4 personnes utilise 300 g de farine, et 150 g suffisent pour 2 personnes. Quelle est la valeur manquante ? <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Personnes</th><td>4</td><td>2</td><td>6</td></tr><tr><th>Farine (g)</th><td>300</td><td>150</td><td>?</td></tr></tbody></table></div>', a: '450 g' },
@@ -254,19 +254,19 @@ const localQuestions_5eme_chapitre14 = {
 
     "514241": [
             {
-                quiz: { q: 'Dans la méthode du produit en croix, on multiplie deux nombres situés...', a: 'sur la même diagonale du tableau que le nombre cherché' },
-                options: 'dans la même colonne ¤ sur la même diagonale du tableau que le nombre cherché ¤ dans la même ligne ¤ au hasard',
-                explanation: 'On multiplie les deux nombres reliés au nombre cherché $x$ « en croix » (sur la diagonale), puis on divise par le nombre restant du tableau.'
+                quiz: { q: 'Dans la méthode du produit en croix, quels nombres multiplie-t-on entre eux ?', a: 'Deux nombres connus sur une même diagonale' },
+                options: 'Deux nombres connus dans la même colonne ¤ Deux nombres connus sur une même diagonale ¤ Deux nombres connus dans la même ligne ¤ Le nombre cherché et le nombre qui est sur sa diagonale',
+                explanation: 'On multiplie les deux nombres connus situés sur une même diagonale (en croix), puis on divise par le dernier nombre connu, celui qui est seul sur la diagonale du nombre cherché $x$.'
             },
             {
-                quiz: { q: '6 baguettes coûtent 7,20 €. En utilisant le produit en croix, quel est le prix de 10 baguettes ?', a: '12 €' },
-                options: '10 € ¤ 11 € ¤ 12 € ¤ 14 €',
-                explanation: '$x = \\dfrac{7,20 \\times 10}{6} = \\dfrac{72}{6} = 12$ €.'
+                quiz: { q: '6 baguettes coûtent 7,20 €. Par produit en croix, quel calcul permet de trouver le prix $x$ de 10 baguettes ?', a: '$x = 7,20 \\times 10 \\div 6$' },
+                options: '$x = 6 \\times 10 \\div 7,20$ ¤ $x = 7,20 \\times 10 \\div 6$ ¤ $x = 6 \\times 7,20 \\div 10$ ¤ $x = 6 + 7,20 + 10$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $7,20$ et le $10$), puis on divise par le nombre connu restant (le $6$) : $x = \\dfrac{7,20 \\times 10}{6} = \\dfrac{72}{6} = 12$ €.'
             },
             {
-                quiz: { q: 'Une recette pour 5 personnes utilise 250 g de sucre. Par produit en croix, quelle quantité de sucre pour 8 personnes ?', a: '400 g' },
-                options: '350 g ¤ 380 g ¤ 400 g ¤ 420 g',
-                explanation: '$x = \\dfrac{250 \\times 8}{5} = \\dfrac{2\\,000}{5} = 400$ g.'
+                quiz: { q: 'Une recette pour 5 personnes utilise 250 g de sucre. Par produit en croix, quel calcul permet de trouver la quantité $x$ de sucre pour 8 personnes ?', a: '$x = 250 \\times 8 \\div 5$' },
+                options: '$x = 5 \\times 8 \\div 250$ ¤ $x = 250 \\times 8 \\div 5$ ¤ $x = 5 \\times 250 \\div 8$ ¤ $x = 5 + 250 + 8$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $250$ et le $8$), puis on divise par le nombre connu restant (le $5$) : $x = \\dfrac{250 \\times 8}{5} = \\dfrac{2\\,000}{5} = 400$ g.'
             },
             {
                 quiz: { q: 'Voici un tableau de proportionnalité incomplet. Quel calcul permet de trouver $x$ par produit en croix ? <div class="table-container" style="margin:10px 0;"><table class="custom-table"><tbody><tr><th>Grandeur A</th><td>4</td><td>10</td></tr><tr><th>Grandeur B</th><td>6</td><td>$x$</td></tr></tbody></table></div>', a: '$x = 6 \\times 10 \\div 4$' },
@@ -274,29 +274,29 @@ const localQuestions_5eme_chapitre14 = {
                 explanation: 'On multiplie en croix les deux nombres reliés à $x$ (le $6$ et le $10$), puis on divise par le nombre restant (le $4$) : $x = 6 \\times 10 \\div 4$.'
             },
             {
-                quiz: { q: 'Un robinet verse 15 L en 3 min à débit constant. Par produit en croix, quel volume en 7 min ?', a: '35 L' },
-                options: '30 L ¤ 32 L ¤ 35 L ¤ 40 L',
-                explanation: '$x = \\dfrac{15 \\times 7}{3} = \\dfrac{105}{3} = 35$ L.'
+                quiz: { q: 'Un robinet verse 15 L en 3 min à débit constant. Par produit en croix, quel calcul permet de trouver le volume $x$ en 7 min ?', a: '$x = 15 \\times 7 \\div 3$' },
+                options: '$x = 3 \\times 7 \\div 15$ ¤ $x = 15 \\times 7 \\div 3$ ¤ $x = 3 \\times 15 \\div 7$ ¤ $x = 3 + 15 + 7$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $15$ et le $7$), puis on divise par le nombre connu restant (le $3$) : $x = \\dfrac{15 \\times 7}{3} = \\dfrac{105}{3} = 35$ L.'
             },
             {
-                quiz: { q: '9 tickets de manège coûtent 22,50 €. Par produit en croix, quel est le prix de 4 tickets ?', a: '10 €' },
-                options: '8 € ¤ 9 € ¤ 10 € ¤ 12 €',
-                explanation: '$x = \\dfrac{22,50 \\times 4}{9} = \\dfrac{90}{9} = 10$ €.'
+                quiz: { q: '9 tickets de manège coûtent 22,50 €. Par produit en croix, quel calcul permet de trouver le prix $x$ de 4 tickets ?', a: '$x = 22,50 \\times 4 \\div 9$' },
+                options: '$x = 9 \\times 4 \\div 22,50$ ¤ $x = 22,50 \\times 4 \\div 9$ ¤ $x = 9 \\times 22,50 \\div 4$ ¤ $x = 9 + 22,50 + 4$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $22,50$ et le $4$), puis on divise par le nombre connu restant (le $9$) : $x = \\dfrac{22,50 \\times 4}{9} = \\dfrac{90}{9} = 10$ €.'
             },
             {
-                quiz: { q: 'Dans la méthode du produit en croix, à quoi correspond le signe « ÷ » ?', a: 'à la colonne qui reste dans le tableau' },
-                options: 'à la diagonale du tableau ¤ à la colonne qui reste dans le tableau ¤ à la ligne du haut uniquement ¤ à rien de particulier',
-                explanation: 'Le signe « $\\times$ » correspond à la diagonale (les deux nombres reliés à $x$), et le signe « $\\div$ » correspond au nombre de la <strong>colonne restante</strong> du tableau.'
+                quiz: { q: 'Par quel nombre doit-on diviser dans la méthode du produit en croix ?', a: 'Par le nombre qui est seul sur sa diagonale' },
+                options: 'Par le nombre du haut ¤ Par le nombre sur la même colonne que le nombre cherché ¤ Par le nombre sur la même ligne que le nombre cherché ¤ Par le nombre qui est seul sur sa diagonale',
+                explanation: 'On multiplie les deux nombres connus situés sur une même diagonale, puis on divise par le troisième nombre connu : celui qui est <strong>seul sur sa diagonale</strong> (la diagonale du nombre cherché $x$).'
             },
             {
-                quiz: { q: 'Une voiture parcourt 180 km avec 12 L d\'essence. Par produit en croix, quelle distance peut-elle parcourir avec 20 L (à consommation constante) ?', a: '300 km' },
-                options: '260 km ¤ 280 km ¤ 300 km ¤ 320 km',
-                explanation: '$x = \\dfrac{180 \\times 20}{12} = \\dfrac{3\\,600}{12} = 300$ km.'
+                quiz: { q: 'Une voiture parcourt 180 km avec 12 L d\'essence. Par produit en croix, quel calcul permet de trouver la distance $x$ qu\'elle peut parcourir avec 20 L (à consommation constante) ?', a: '$x = 180 \\times 20 \\div 12$' },
+                options: '$x = 12 \\times 20 \\div 180$ ¤ $x = 180 \\times 20 \\div 12$ ¤ $x = 12 \\times 180 \\div 20$ ¤ $x = 12 + 180 + 20$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $180$ et le $20$), puis on divise par le nombre connu restant (le $12$) : $x = \\dfrac{180 \\times 20}{12} = \\dfrac{3\\,600}{12} = 300$ km.'
             },
             {
-                quiz: { q: '14 œufs pèsent 840 g. Par produit en croix, quel est le poids de 5 œufs (à masse identique par œuf) ?', a: '300 g' },
-                options: '280 g ¤ 300 g ¤ 320 g ¤ 350 g',
-                explanation: '$x = \\dfrac{840 \\times 5}{14} = \\dfrac{4\\,200}{14} = 300$ g.'
+                quiz: { q: '14 œufs pèsent 840 g. Par produit en croix, quel calcul permet de trouver le poids $x$ de 5 œufs (à masse identique par œuf) ?', a: '$x = 840 \\times 5 \\div 14$' },
+                options: '$x = 14 \\times 5 \\div 840$ ¤ $x = 840 \\times 5 \\div 14$ ¤ $x = 14 \\times 840 \\div 5$ ¤ $x = 14 + 840 + 5$',
+                explanation: 'On multiplie en croix les deux nombres connus situés sur une même diagonale (le $840$ et le $5$), puis on divise par le nombre connu restant (le $14$) : $x = \\dfrac{840 \\times 5}{14} = \\dfrac{4\\,200}{14} = 300$ g.'
             },
             {
                 quiz: { q: 'Quel est l\'avantage du produit en croix par rapport aux autres méthodes ?', a: 'Il fonctionne directement, même quand les nombres ne se divisent pas "joliment" entre eux' },
