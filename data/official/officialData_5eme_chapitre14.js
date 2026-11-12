@@ -41,7 +41,20 @@ var chapterData_5eme_14 = {
         eleve: "non",
         content: `
                             <div class="course-container">
-                                <!-- SECTION : OBJECTIFS -->
+                                <style>
+                                    .prop-side { flex: none; height: 110px; display: flex; align-items: center; gap: 4px; }
+                                    .prop-label { color: #e11d48; font-weight: bold; white-space: nowrap; }
+                                    @media (max-width: 480px) {
+                                        .prop-arrow-row { gap: 0 !important; padding-top: 26px; }
+                                        .prop-side { position: relative; display: block; width: 30px; }
+                                        .prop-side svg { width: 30px; height: 110px; }
+                                        .prop-label { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; }
+                                        .prop-arrow-row .custom-table th,
+                                        .prop-arrow-row .custom-table td { padding: 4px 3px; font-size: 0.85rem; }
+                                        .prop-arrow-row .custom-table th { width: 54px; font-size: 0.75rem; white-space: normal; }
+                                    }
+                                </style>
+                                <!-- SECTION : OBJECTIFS (masquée sur le site, volontairement mise en commentaire)
                                 <section class="course-section">
                                     <p><strong>Objectifs :</strong></p>
                                     <ul>
@@ -54,6 +67,7 @@ var chapterData_5eme_14 = {
                                         <li>Je sais reconnaître graphiquement qu'un nuage de points est ou n'est pas associé à une situation de proportionnalité.</li>
                                     </ul>
                                 </section>
+                                -->
 
                                 <!-- SECTION : RECONNAITRE UNE SITUATION DE PROPORTIONNALITE -->
                                 <section class="course-section">
@@ -66,17 +80,26 @@ var chapterData_5eme_14 = {
 
                                     <p><strong>Exemple :</strong> le prix de tomates selon leur masse.</p>
 
-                                    <div class="table-container" style="margin:10px 0;">
+                                    <div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;">
+                                        <div class="prop-side"><span class="prop-label">$\\times$ …. ?</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true">
+                                            <defs>
+                                                <marker id="tomArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto">
+                                                    <path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/>
+                                                </marker>
+                                            </defs>
+                                            <path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#tomArrowHead)"/>
+                                        </svg></div>
+                                    <div class="table-container" style="margin:0;">
                                         <table class="custom-table">
                                             <tbody>
-                                                <tr>
+                                                <tr style="height:50px;">
                                                     <th>Masse (kg)</th>
                                                     <td>1</td>
                                                     <td>2</td>
                                                     <td>3</td>
                                                     <td>5</td>
                                                 </tr>
-                                                <tr>
+                                                <tr style="height:50px;">
                                                     <th>Prix (€)</th>
                                                     <td>2,50</td>
                                                     <td>5</td>
@@ -86,14 +109,28 @@ var chapterData_5eme_14 = {
                                             </tbody>
                                         </table>
                                     </div>
+                                        <div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true">
+                                            <path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#tomArrowHead)"/>
+                                        </svg><span class="prop-label">$\\div$ …. ?</span></div>
+                                    </div>
 
-                                    <p class="indent-text">Pour passer de la masse au prix, on multiplie <strong>toujours</strong> par $2,5$ :</p>
+                                    <div class="notion-box">
+                                        <p><strong>Prérequis :</strong> savoir résoudre des opérations à trou.</p>
+                                        <p>Pour résoudre une opération à trou, on utilise l'opération « <strong>contraire</strong> » de celle que l'on cherche à résoudre.</p>
+                                        <p class="indent-text">$3 +$ <span style="color:#e11d48; font-weight:bold;">….</span> $= 25$ $\\Rightarrow$ je vais transformer le $+3$ en son « opération contraire » $-3$</p>
+                                        <p class="indent-text" style="margin-left:2em;">donc <span style="color:#e11d48; font-weight:bold;">…</span> $= 25 - 3 =$ <span style="color:#e11d48; font-weight:bold;">$21$</span></p>
+                                        <p class="indent-text">$3 \\times$ <span style="color:#e11d48; font-weight:bold;">…</span> $= 12$ $\\Rightarrow$ le « contraire de » $\\times 3$ c'est $\\div 3$</p>
+                                        <p class="indent-text" style="margin-left:2em;">donc je vais effectuer l'opération <span style="color:#e11d48; font-weight:bold;">…</span> $= 12 \\div 3 =$ <span style="color:#e11d48; font-weight:bold;">$4$</span></p>
+                                    </div>
+
+                                    <p class="indent-text">Dans chaque colonne, on divise le prix par la masse :</p>
                                     <ul>
-                                        <li>$1 \\times 2,5 = 2,5$</li>
-                                        <li>$2 \\times 2,5 = 5$</li>
-                                        <li>$3 \\times 2,5 = 7,5$</li>
-                                        <li>$5 \\times 2,5 = 12,5$</li>
+                                        <li>$2,5 \\div 1 = 2,5$</li>
+                                        <li>$5 \\div 2 = 2,5$</li>
+                                        <li>$7,5 \\div 3 = 2,5$</li>
+                                        <li>$12,5 \\div 5 = 2,5$</li>
                                     </ul>
+                                    <p class="indent-text">Pour passer de la masse au prix, on multiplie <strong>toujours</strong> par $2,5$.</p>
                                     <p class="indent-text">C'est toujours le même nombre ($2,5$) : ce tableau est donc un <strong>tableau de proportionnalité</strong>, et $2,5$ est le coefficient de proportionnalité.</p>
 
                                     <div class="method-box">
@@ -103,20 +140,9 @@ var chapterData_5eme_14 = {
                                             <li>On calcule ce quotient <strong>toujours dans le même sens</strong> pour toutes les colonnes.</li>
                                             <li>Si tous les quotients trouvés sont <strong>égaux</strong>, alors c'est un tableau de proportionnalité.</li>
                                         </ol>
-                                        <p>Avec l'exemple des tomates : $2,5 \\div 1 = 2,5$ ; $\\ 5 \\div 2 = 2,5$ ; $\\ 7,5 \\div 3 = 2,5$ ; $\\ 12,5 \\div 5 = 2,5$.</p>
-                                        <p>Les $4$ quotients sont égaux à $2,5$ : c'est bien un tableau de proportionnalité.</p>
                                     </div>
 
-                                    <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Attention :</strong>
-                                        <p>il faut toujours diviser dans le <strong>même sens</strong>.</p>
-                                        <p>Par exemple, on fait toujours « prix $\\div$ masse ». On ne fait jamais « prix $\\div$ masse » pour une colonne puis « masse $\\div$ prix » pour une autre colonne.</p>
-                                    </div>
-
-                                    <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Exemple de situation NON proportionnelle :</strong>
-                                        <p>l'aire d'un carré selon son côté.</p>
-                                    </div>
+                                    <p><strong>Exemple de situation NON proportionnelle :</strong> l'aire d'un carré selon son côté.</p>
 
                                     <div class="table-container" style="margin:10px 0;">
                                         <table class="custom-table">
@@ -135,8 +161,16 @@ var chapterData_5eme_14 = {
                                         </table>
                                     </div>
 
-                                    <p class="indent-text">Un carré de côté $4$ cm est <strong>deux fois</strong> plus grand qu'un carré de côté $2$ cm. Pourtant, son aire ($16$ cm²) n'est pas deux fois plus grande, mais <strong>quatre fois</strong> plus grande ($4 \\times 4 = 16$). Il n'y a pas de coefficient unique : ce n'est <strong>pas</strong> une situation de proportionnalité.</p>
+                                    <ul>
+                                        <li>$4 \\div 2 = 2$</li>
+                                        <li>$16 \\div 4 = 4$</li>
+                                    </ul>
+                                    <p class="indent-text">$2 \\neq 4$</p>
+                                    <p class="indent-text">Il n'y a pas de coefficient unique : ce n'est <strong>pas</strong> une situation de proportionnalité.</p>
+                                    <br>
+                                    <p class="indent-text"><em>Un carré de côté $4$ cm est <strong>deux fois</strong> plus grand qu'un carré de côté $2$ cm. Pourtant, son aire ($16$ cm²) n'est pas deux fois plus grande, mais <strong>quatre fois</strong> plus grande ($4 \\times 4 = 16$).</em></p>
 
+                                    <br>
                                     <p><strong>D'autres exemples classiques à connaître :</strong></p>
                                     <ul>
                                         <li>proportionnels : le côté et le périmètre d'un carré, le diamètre et la longueur d'un cercle, la masse et le prix d'une denrée ;</li>
@@ -163,21 +197,34 @@ var chapterData_5eme_14 = {
                                     <p class="indent-text">C'est souvent la <strong>meilleure méthode</strong> lorsqu'il y a <strong>beaucoup de valeurs manquantes</strong> à trouver dans un tableau ou un problème : une fois le coefficient trouvé, il suffit de multiplier par ce même nombre pour compléter <strong>toutes</strong> les valeurs manquantes d'un coup.</p>
                                     <p><strong>Exemple :</strong> $4$ stylos coûtent $6$ €. Combien coûtent $10$ stylos ?</p>
 
-                                    <div class="table-container" style="margin:10px 0;">
+                                    <div class="prop-arrow-row" style="display:flex; align-items:center; justify-content:center; gap:4px; margin:10px 0;">
+                                        <div class="prop-side"><span class="prop-label">$\\times$ …. ?</span><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true">
+                                            <defs>
+                                                <marker id="stylosArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto">
+                                                    <path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/>
+                                                </marker>
+                                            </defs>
+                                            <path d="M54,12 C4,12 4,98 42,98" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#stylosArrowHead)"/>
+                                        </svg></div>
+                                    <div class="table-container" style="margin:0;">
                                         <table class="custom-table">
                                             <tbody>
-                                                <tr>
+                                                <tr style="height:50px;">
                                                     <th>Stylos</th>
                                                     <td>4</td>
                                                     <td>10</td>
                                                 </tr>
-                                                <tr>
+                                                <tr style="height:50px;">
                                                     <th>Prix (€)</th>
                                                     <td>6</td>
                                                     <td>?</td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                    </div>
+                                        <div class="prop-side"><svg viewBox="0 0 60 110" preserveAspectRatio="none" width="60" height="110" xmlns="http://www.w3.org/2000/svg" style="flex:none;" aria-hidden="true">
+                                            <path d="M6,98 C56,98 56,12 18,12" fill="none" stroke="#1d4e6b" stroke-width="7" marker-end="url(#stylosArrowHead)"/>
+                                        </svg><span class="prop-label">$\\div$ …. ?</span></div>
                                     </div>
 
                                     <div class="method-box">
@@ -242,22 +289,15 @@ var chapterData_5eme_14 = {
                                     <h3 class="section-title">La linéarité (multiplicative ou additive)</h3>
                                     <p><strong>Exemple :</strong> une recette pour $4$ personnes utilise $300$ g de farine. Quelle quantité pour $2$ personnes ? Pour $6$ personnes ?</p>
 
-                                    <div class="table-container" style="margin:10px 0;">
-                                        <table class="custom-table">
+                                    <div style="max-width:360px; margin:10px auto;">
+                                        <table class="custom-table" style="table-layout:fixed; width:100% !important; min-width:0 !important; max-width:none !important; margin:0;">
+                                            <colgroup><col style="width:33.333%;"><col style="width:22.222%;"><col style="width:22.222%;"><col style="width:22.222%;"></colgroup>
+                                            <thead style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><tr style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><td colspan="4" style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; line-height:0;"><svg viewBox="0 0 360 50" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto; font-family:sans-serif;" aria-hidden="true"><defs><marker id="linDivHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M160,46 C160,14 240,14 240,40" fill="none" stroke="#1d4e6b" stroke-width="3" marker-end="url(#linDivHead)"/><text x="200" y="12" font-size="16" font-weight="bold" fill="#e11d48" text-anchor="middle">÷ 2</text></svg></td></tr></thead>
                                             <tbody>
-                                                <tr>
-                                                    <th>Personnes</th>
-                                                    <td>4</td>
-                                                    <td>2</td>
-                                                    <td>6</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Farine (g)</th>
-                                                    <td>300</td>
-                                                    <td>?</td>
-                                                    <td>?</td>
-                                                </tr>
+                                                <tr><th>Personnes</th><td>4</td><td>2</td><td>6</td></tr>
+                                                <tr><th>Farine (g)</th><td>300</td><td>?</td><td>?</td></tr>
                                             </tbody>
+                                            <tfoot style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><tr style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><td colspan="4" style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; line-height:0;"><svg viewBox="0 0 360 52" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto; font-family:sans-serif;" aria-hidden="true"><defs><marker id="linDivHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M160,6 C160,38 240,38 240,12" fill="none" stroke="#1d4e6b" stroke-width="3" marker-end="url(#linDivHead)"/><text x="200" y="50" font-size="16" font-weight="bold" fill="#e11d48" text-anchor="middle">÷ 2</text></svg></td></tr></tfoot>
                                         </table>
                                     </div>
 
@@ -275,22 +315,15 @@ var chapterData_5eme_14 = {
                                         </ol>
                                     </div>
 
-                                    <div class="table-container" style="margin:10px 0;">
-                                        <table class="custom-table">
+                                    <div style="max-width:360px; margin:10px auto;">
+                                        <table class="custom-table" style="table-layout:fixed; width:100% !important; min-width:0 !important; max-width:none !important; margin:0;">
+                                            <colgroup><col style="width:33.333%;"><col style="width:22.222%;"><col style="width:22.222%;"><col style="width:22.222%;"></colgroup>
+                                            <thead style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><tr style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><td colspan="4" style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; line-height:0;"><svg viewBox="0 0 360 54" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto; font-family:sans-serif;" aria-hidden="true"><defs><marker id="linAddHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M160,54 V26 H320 V46" fill="none" stroke="#1d4e6b" stroke-width="3" stroke-linejoin="miter" marker-end="url(#linAddHead)"/><path d="M240,54 V26" fill="none" stroke="#1d4e6b" stroke-width="3" stroke-linejoin="miter"/><text x="200" y="18" font-size="18" font-weight="bold" fill="#e11d48" text-anchor="middle">+</text></svg></td></tr></thead>
                                             <tbody>
-                                                <tr>
-                                                    <th>Personnes</th>
-                                                    <td>4</td>
-                                                    <td>2</td>
-                                                    <td>6</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Farine (g)</th>
-                                                    <td>300</td>
-                                                    <td>150</td>
-                                                    <td>450</td>
-                                                </tr>
+                                                <tr><th>Personnes</th><td>4</td><td>2</td><td>6</td></tr>
+                                                <tr><th>Farine (g)</th><td>300</td><td>150</td><td>450</td></tr>
                                             </tbody>
+                                            <tfoot style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><tr style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important;"><td colspan="4" style="background:transparent !important; background-color:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; line-height:0;"><svg viewBox="0 0 360 54" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto; font-family:sans-serif;" aria-hidden="true"><defs><marker id="linAddHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1d4e6b"/></marker></defs><path d="M160,0 V28 H320 V8" fill="none" stroke="#1d4e6b" stroke-width="3" stroke-linejoin="miter" marker-end="url(#linAddHead)"/><path d="M240,0 V28" fill="none" stroke="#1d4e6b" stroke-width="3" stroke-linejoin="miter"/><text x="200" y="50" font-size="18" font-weight="bold" fill="#e11d48" text-anchor="middle">+</text></svg></td></tr></tfoot>
                                         </table>
                                     </div>
 
