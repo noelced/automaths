@@ -196,9 +196,11 @@ var chapterData_5eme_2 = {
                                     <div id="quiz-area-NRoppose"></div>
                                 </section>
 
-                                <!-- SECTION : ADDITIONNER -->
+                                <!-- SECTION : CALCULS SANS PARENTHÈSES -->
                                 <section class="course-section">
-                                    <h2 class="section-title">Additionner des nombres relatifs</h2>
+                                    <h2 class="section-title">Calculs sans parenthèses</h2>
+
+                                    <h3 class="section-title">Règle</h3>
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Règle</span>
                                         <ul>
@@ -209,24 +211,103 @@ var chapterData_5eme_2 = {
                                     <p><strong>Exemples :</strong></p>
                                     <div class="calculation-container">
                                         <div class="calculation-block">
-                                            <p>$A = (-3) + (-5)$</p>
+                                            <table style="border-collapse:collapse; border:none; margin:6px auto;">
+<tr><td style="border:none; padding:2px 4px;" align="right">$A$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-5$<span style="color: var(--secondary);">&nbsp;$+$&nbsp;</span>$7$</td></tr>
+<tr><td style="border:none; padding:2px 4px;" align="right">$A$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$+2$</td></tr>
+</table>
+                                            <p>Signes différents : on soustrait la plus petite valeur absolue à la plus grande, $7 - 5 = 2$, et on garde le signe du nombre qui a la plus grande valeur absolue ($7$ est positif).</p>
+                                        </div>
+                                        <div class="calculation-block">
+                                            <table style="border-collapse:collapse; border:none; margin:6px auto;">
+<tr><td style="border:none; padding:2px 4px;" align="right">$B$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-3$<span style="color: var(--secondary);">&nbsp;$-$&nbsp;</span>$5$</td></tr>
+<tr><td style="border:none; padding:2px 4px;" align="right">$B$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-8$</td></tr>
+</table>
+                                            <p>Même signe : on additionne les valeurs absolues, $3 + 5 = 8$, et on garde le signe commun ($-$).</p>
+                                        </div>
+                                    </div>
+
+                                    <h3 class="section-title">Une méthode plus visuelle</h3>
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Méthode</span>
+                                        <p>On imagine un axe gradué, on place le premier nombre du calcul sur l'axe, puis on effectue mentalement les déplacements avec les opérations qui suivent :</p>
+                                        <ul>
+                                            <li><strong>$+$</strong> : on avance dans le sens de l'axe (vers la droite) ;</li>
+                                            <li><strong>$-$</strong> : on recule (vers la gauche).</li>
+                                        </ul>
+                                    </div>
+                                    <p><strong>Exemples :</strong></p>
+                                    <div class="calculation-container">
+                                        <div class="calculation-block">
+                                            <table style="border-collapse:collapse; border:none; margin:6px auto;">
+<tr><td style="border:none; padding:2px 4px;" align="right">$A$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-5$<span style="color: var(--secondary);">&nbsp;$+$&nbsp;</span>$7$</td></tr>
+<tr><td style="border:none; padding:2px 4px;" align="right">$A$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$+2$</td></tr>
+</table>
+                                            <p>On part de $-5$ et on <span style="color: var(--secondary);"><strong>avance</strong></span> de $7$.</p>
+                                            <svg viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" style="max-width:380px; width:100%; display:block; margin:8px auto; font-family:sans-serif;">
+<defs><marker id="flecheA" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" style="fill:var(--secondary);"/></marker></defs>
+<line x1="15" y1="75" x2="380" y2="75" stroke="#333" stroke-width="2"/>
+<polygon points="385,75 374,70 374,80" fill="#333"/>
+<line x1="200" y1="69" x2="200" y2="81" stroke="#333" stroke-width="2"/>
+<text x="200" y="97" font-size="14" text-anchor="middle" fill="#333">0</text>
+<circle cx="50" cy="75" r="4.5" fill="#2E5C8A"/>
+<text x="50" y="97" font-size="14" text-anchor="middle" fill="#2E5C8A" font-weight="bold">-5</text>
+<circle cx="260" cy="75" r="4.5" fill="#2E5C8A"/>
+<text x="260" y="97" font-size="14" text-anchor="middle" fill="#2E5C8A" font-weight="bold">+2</text>
+<line x1="50" y1="52" x2="260" y2="52" style="stroke:var(--secondary);" stroke-width="3" marker-end="url(#flecheA)"/>
+<text x="155" y="40" font-size="15" text-anchor="middle" style="fill:var(--secondary);" font-weight="bold">+7</text>
+</svg>
+                                        </div>
+                                        <div class="calculation-block">
+                                            <table style="border-collapse:collapse; border:none; margin:6px auto;">
+<tr><td style="border:none; padding:2px 4px;" align="right">$B$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-3$<span style="color: var(--secondary);">&nbsp;$-$&nbsp;</span>$5$</td></tr>
+<tr><td style="border:none; padding:2px 4px;" align="right">$B$</td><td style="border:none; padding:2px 4px;">$=$</td><td style="border:none; padding:2px 4px;" align="left">$-8$</td></tr>
+</table>
+                                            <p>On part de $-3$ et on <span style="color: var(--secondary);"><strong>recule</strong></span> de $5$.</p>
+                                            <svg viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" style="max-width:380px; width:100%; display:block; margin:8px auto; font-family:sans-serif;">
+<defs><marker id="flecheB" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polygon points="0,0 10,5 0,10" style="fill:var(--secondary);"/></marker></defs>
+<line x1="15" y1="75" x2="380" y2="75" stroke="#333" stroke-width="2"/>
+<polygon points="385,75 374,70 374,80" fill="#333"/>
+<line x1="290" y1="69" x2="290" y2="81" stroke="#333" stroke-width="2"/>
+<text x="290" y="97" font-size="14" text-anchor="middle" fill="#333">0</text>
+<circle cx="200" cy="75" r="4.5" fill="#2E5C8A"/>
+<text x="200" y="97" font-size="14" text-anchor="middle" fill="#2E5C8A" font-weight="bold">-3</text>
+<circle cx="50" cy="75" r="4.5" fill="#2E5C8A"/>
+<text x="50" y="97" font-size="14" text-anchor="middle" fill="#2E5C8A" font-weight="bold">-8</text>
+<line x1="200" y1="52" x2="50" y2="52" style="stroke:var(--secondary);" stroke-width="3" marker-end="url(#flecheB)"/>
+<text x="125" y="40" font-size="15" text-anchor="middle" style="fill:var(--secondary);" font-weight="bold">-5</text>
+</svg>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <!-- SECTION : CALCULS AVEC PARENTHÈSES -->
+                                <section class="course-section">
+                                    <h2 class="section-title">Calculs avec parenthèses</h2>
+                                    <p>En mathématiques, on aime bien quelquefois <strong>différencier l'opération du signe du nombre</strong>. C'est pourquoi on peut écrire les nombres relatifs <strong>entre parenthèses</strong>.</p>
+                                    <div class="notion-box">
+                                        <strong style="color: var(--secondary);">⚠️ Remarque : pourquoi les parenthèses sont indispensables</strong>
+                                        <p class="indent-text">Sans parenthèses, une écriture comme $5 - - 3$ ou $5 + - 3$ n'a pas de sens clair (deux signes qui se suivent). Les parenthèses permettent de bien séparer le <strong>signe de l'opération</strong> (addition ou soustraction) du <strong>signe du nombre</strong> relatif.</p>
+                                    </div>
+
+                                    <h3 class="section-title">Additionner des nombres relatifs</h3>
+                                    <div class="method-box">
+                                        <span class="method-badge">🚀 Règle</span>
+                                        <ul>
+                                            <li><strong>Nombres de même signe</strong> : on additionne leurs valeurs absolues et on garde le signe commun.</li>
+                                            <li><strong>Nombres de signes différents</strong> : on soustrait la plus petite valeur absolue à la plus grande, et on garde le signe du nombre qui a la plus grande valeur absolue.</li>
+                                        </ul>
+                                    </div>
+                                    <p><strong>Exemples :</strong></p>
+                                    <div class="calculation-container">
+                                        <div class="calculation-block">
+                                            <p>$C = (-3) + (-5)$</p>
                                             <p>mêmes signes : $3 + 5 = 8$</p>
-                                            <p>$A = -8$</p>
+                                            <p>$C = -8$</p>
                                         </div>
                                         <div class="calculation-block">
-                                            <p>$B = (+4) + (+7)$</p>
-                                            <p>mêmes signes : $4 + 7 = 11$</p>
-                                            <p>$B = 11$</p>
-                                        </div>
-                                        <div class="calculation-block">
-                                            <p>$C = (-9) + (+6)$</p>
+                                            <p>$D = (-9) + (+6)$</p>
                                             <p>signes différents : $9 - 6 = 3$</p>
-                                            <p>$C = -3$</p>
-                                        </div>
-                                        <div class="calculation-block">
-                                            <p>$D = (+2,5) + (-7)$</p>
-                                            <p>signes différents : $7 - 2,5 = 4,5$</p>
-                                            <p>$D = -4,5$</p>
+                                            <p>$D = -3$</p>
                                         </div>
                                     </div>
                                     <button class="btn-check-understanding"
@@ -236,29 +317,7 @@ var chapterData_5eme_2 = {
                                     </button>
                                     <div id="quiz-area-NRadditionner2"></div>
 
-                                    <h3 class="section-title">Additionner plusieurs nombres relatifs</h3>
-                                    <div class="notion-box">
-                                        <p>Pour additionner plusieurs nombres relatifs, on peut <strong>regrouper les nombres positifs entre eux</strong> et <strong>les nombres négatifs entre eux</strong>, puis additionner les deux résultats obtenus.</p>
-                                    </div>
-                                    <div class="calculation-container">
-                                        <div class="calculation-block">
-                                            <p>$E = (-4) + (+7) + (-2) + (+3)$</p>
-                                            <p>$E =$<font color="blue">$ (+7) + (+3)$</font>$ +$<font color="purple">$ (-4) + (-2)$</font></p>
-                                            <p>$E =$<font color="blue">$ 10$</font>$ +$<font color="purple">$ (-6)$</font></p>
-                                            <p>$E = 4$</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn-check-understanding"
-                                        data_quiz_target="quiz-area-NRadditionnerN"
-                                        onclick="startQuizFromButton('quiz-area-NRadditionnerN', '502521')">
-                                        Ai-je bien compris ?
-                                    </button>
-                                    <div id="quiz-area-NRadditionnerN"></div>
-                                </section>
-
-                                <!-- SECTION : SOUSTRAIRE -->
-                                <section class="course-section">
-                                    <h2 class="section-title">Soustraire des nombres relatifs</h2>
+                                    <h3 class="section-title">Soustraire des nombres relatifs</h3>
                                     <div class="notion-box">
                                         <p><strong>Soustraire un nombre relatif revient à additionner son opposé.</strong></p>
                                         <blockquote>$a - b = a + (-b)$</blockquote>
@@ -266,19 +325,15 @@ var chapterData_5eme_2 = {
                                     <p><strong>Exemples :</strong></p>
                                     <div class="calculation-container">
                                         <div class="calculation-block">
-                                            <p>$F = (+5) - (+8)$</p>
-                                            <p>$F = (+5) +$<font color="blue">$ (-8)$</font></p>
-                                            <p>$F = -3$</p>
+                                            <p>$E = (+5) - (+8)$</p>
+                                            <p>$E = (+5) +$<font color="blue">$ (-8)$</font></p>
+                                            <p>$E = -3$</p>
                                         </div>
                                         <div class="calculation-block">
-                                            <p>$G = (-6) - (-2)$</p>
-                                            <p>$G = (-6) +$<font color="blue">$ (+2)$</font></p>
-                                            <p>$G = -4$</p>
+                                            <p>$F = (-6) - (-2)$</p>
+                                            <p>$F = (-6) +$<font color="blue">$ (+2)$</font></p>
+                                            <p>$F = -4$</p>
                                         </div>
-                                    </div>
-                                    <div class="notion-box">
-                                        <strong style="color: var(--secondary);">⚠️ Remarque : pourquoi les parenthèses sont indispensables</strong>
-                                        <p class="indent-text">Sans parenthèses, une écriture comme $5 - - 3$ ou $5 + - 3$ n'a pas de sens clair (deux signes qui se suivent). Les parenthèses permettent de bien séparer le <strong>signe de l'opération</strong> (addition ou soustraction) du <strong>signe du nombre</strong> relatif.</p>
                                     </div>
                                     <button class="btn-check-understanding"
                                         data_quiz_target="quiz-area-NRsoustraire"
@@ -334,25 +389,36 @@ var chapterData_5eme_2 = {
                                     <div id="quiz-area-NRsimplifier"></div>
                                 </section>
 
-                                <!-- SECTION : ENCHAÎNER ADDITIONS ET SOUSTRACTIONS -->
+                                <!-- SECTION : ENCHAÎNEMENT DE CALCULS -->
                                 <section class="course-section">
-                                    <h2 class="section-title">Enchaîner additions et soustractions de nombres relatifs</h2>
+                                    <h2 class="section-title">Enchaînement de calculs</h2>
                                     <div class="method-box">
                                         <span class="method-badge">🚀 Méthode</span>
                                         <ul>
-                                            <li>Ligne 1) On transforme chaque soustraction en addition de l'opposé, puis on simplifie l'écriture (on enlève les parenthèses en appliquant la règle des signes).</li>
+                                            <li>Ligne 1) On supprime toutes les parenthèses et on simplifie les signes.</li>
                                             <li>Ligne 2) On regroupe les nombres positifs entre eux et les nombres négatifs entre eux.</li>
                                             <li>Ligne 3) On calcule et on donne le résultat.</li>
                                         </ul>
                                     </div>
-                                    <p><strong>Exemple :</strong></p>
+                                    <p><strong>Exemples :</strong></p>
                                     <div class="calculation-container">
                                         <div class="calculation-block">
-                                            <p>$H = 4 - 9 + (-6) - (-3)$</p>
-                                            <p>$H = 4 - 9$<font color="blue">$ - 6$</font>$ +$<font color="blue">$ 3$</font></p>
-                                            <p>$H =$<font color="purple">$ 4 + 3$</font>$ -$<font color="purple">$ 9 - 6$</font></p>
-                                            <p>$H = 7 - 15$</p>
-                                            <p>$H = -8$</p>
+                                            <table style="border-collapse:collapse; border:none; margin:4px 0;">
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$G$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$4$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$+$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$+$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$7$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$+$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$2$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$+$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$3$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$G$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><font color="red">$-$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$4$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><font color="red">$+$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$7$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><font color="red">$-$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$2$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><font color="red">$-$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$3$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$G$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--primary);">$7$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$4$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$2$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$3$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$G$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--primary);">$7$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$9$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$G$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$2$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+</table>
+                                        </div>
+                                        <div class="calculation-block">
+                                            <table style="border-collapse:collapse; border:none; margin:4px 0;">
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$H$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$4$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$9$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$+$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$6$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$($</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$3$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$)$</td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$H$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$4$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$9$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><font color="red">$-$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$6$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><font color="red">$+$</font></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$3$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$H$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--primary);">$4$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--primary);">$+$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--primary);">$3$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$9$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$6$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$H$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--primary);">$7$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;" colspan="3"><span style="color: var(--secondary);">$-$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"><span style="color: var(--secondary);">$15$</span></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+<tr><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$H$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$=$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$-$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;">$8$</td><td style="border:none; padding:2px 1px; text-align:center; white-space:nowrap;"></td></tr>
+</table>
                                         </div>
                                     </div>
                                     <button class="btn-check-understanding"
