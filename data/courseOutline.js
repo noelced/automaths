@@ -180,23 +180,18 @@ const courseOutline = {
                     ]
                 },
                 {
-                    "title": "Additionner des nombres relatifs",
+                    "title": "Calculs sans parenthèses",
+                    "items": []
+                },
+                {
+                    "title": "Calculs avec parenthèses",
                     "items": [
                         {
-                            "h3Title": null,
+                            "h3Title": "Additionner des nombres relatifs",
                             "quizKey": "502511"
                         },
                         {
-                            "h3Title": "Additionner plusieurs nombres relatifs",
-                            "quizKey": "502521"
-                        }
-                    ]
-                },
-                {
-                    "title": "Soustraire des nombres relatifs",
-                    "items": [
-                        {
-                            "h3Title": null,
+                            "h3Title": "Soustraire des nombres relatifs",
                             "quizKey": "502611"
                         },
                         {
@@ -206,7 +201,7 @@ const courseOutline = {
                     ]
                 },
                 {
-                    "title": "Enchaîner additions et soustractions de nombres relatifs",
+                    "title": "Enchaînement de calculs",
                     "items": [
                         {
                             "h3Title": null,

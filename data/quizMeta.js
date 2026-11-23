@@ -908,13 +908,13 @@ const quizMeta = {
         "506221": 10,
         "506311": 10,
         "508111": 20,
-        "508121": 10,
+        "508121": 11,
         "508221": 10,
         "508231": 10,
         "508411": 20,
         "509111": 10,
         "509121": 10,
-        "509131": 10,
+        "509131": 20,
         "509141": 10,
         "509211": 10,
         "509311": 10,
@@ -1012,10 +1012,9 @@ const quizMeta = {
         "502311": "Comparer et ranger des nombres relatifs",
         "502411": "Opposé et valeur absolue d'un nombre",
         "502511": "Additionner des nombres relatifs",
-        "502521": "Additionner plusieurs nombres relatifs",
         "502611": "Soustraire des nombres relatifs",
         "502621": "Simplifier l'écriture d'une somme",
-        "502711": "Enchaîner additions et soustractions de nombres relatifs",
+        "502711": "Enchaînement de calculs",
         "504111": "Le carré",
         "504121": "Le cube",
         "504211": "Écrire un nombre sous la forme d'une puissance",
@@ -1026,11 +1025,11 @@ const quizMeta = {
         "506211": "Lire les coordonnées d'un point donné",
         "506221": "Placer un point de coordonnées données",
         "506311": "Résoudre un problème avec des coordonnées",
-        "508111": "Bilan symétrie axiale",
+        "508111": "Construire",
         "508121": "Reconnaitre",
         "508221": "Reconnaitre",
         "508231": "Les propriétés de la symétrie centrale",
-        "508411": "Bilan symétrie centrale",
+        "508411": "Symétrique d'une figure",
         "509111": "Nature d'un angle",
         "509121": "Nommer un angle",
         "509131": "Angles opposés par le sommet, adjacents, supplémentaires",
@@ -1049,6 +1048,6 @@ const quizMeta = {
 
     totalByLevel: {
         "3ème": 1310,
-        "5ème": 569
+        "5ème": 580
     }
 };
